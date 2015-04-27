@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户名绑定成功</title>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container login-hd">
+    <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <div class="pad100">
+        <h2 class="success">完成用户名绑定</h2>
+        <div class="sucessbox" style="margin-left:360px;">
+            <h5>恭喜绑定成功！</h5>
+            <p>通行证账号：<?php echo $userInfo['username'];?></p>
+            <p>账号ID：<?php echo $userInfo['uin'];?> </p>
+        </div>
+        <div class="sucessbox" style="margin-left:380px;">
+            <button class="btn btn-large btn-info" type="button" onclick="javascript:location.href='/group/reg_information.php';">完善账号资料</button>
+            </div>
+    </div>
+    <div class="bind">
+        <p>为了您的资金安全，请绑定安全邮箱或手机</p>
+        <div><a href="/service/safe_setting.php?module=email" class="bindmail"><i class="bindmail-icon"></i>绑定邮箱</a><a href="/service/safe_setting.php?module=phone" class="bindphone"><i class="bindphone-icon"></i>绑定手机</a></div>
+    </div>
+</div>
+<?php include "new-footer.html"; ?>
+</body>
+</html>

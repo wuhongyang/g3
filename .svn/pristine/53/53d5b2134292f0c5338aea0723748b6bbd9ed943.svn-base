@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>印章管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">印章管理</div>
+  <div class="header-button right">
+  {if $link_array[102]['url']}<a class="add-button" href="{$link_array[102]['url']}&cate_edit=1">添加分类</a>{/if}
+  </div>
+</div>
+<br/>
+<table class="table-list main-width" >
+	<tr>
+    <th width="15%">编号</th>
+    <th width="15%">印章分类名称</th>
+    <th width="15%">价格</th>
+    <th width="15%">创建时间</th>
+    <th width="15%">是否启用</th>
+    <th>操作</th>
+  	</tr>
+  	{foreach $list $one}
+  	<tr>
+  	<td>{$one['parent_id']}</td>
+  	<td>{$one['name']}</td>
+  	<td>{$one['price']}</td>
+  	<td>{eval echo date("Y-m-d H:i:s", $one['create_time'])}</td>
+  	<td>{if $one['status']==1}启用{else}不启用{/if}</td>
+  	<td>
+  	<a href="{$link_array[101]['url']}&parent_id={$one['parent_id']}">印章列表</a>&nbsp;&nbsp;
+  	<a href="{$link_array[102]['url']}&parent_id={$one['parent_id']}&cate_edit=1">修改分类</a>
+  	</td>
+  	</tr>
+  	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

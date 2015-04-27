@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>加入我们-{$groupInfo['name']}</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+</head>
+<body class="diy-body">
+{include file="header.html"}
+
+<div class="container">
+	<div class="body clearfix">
+        <div class="join-side pull-left">
+			<ul class="join-list">
+            	{foreach $joinList $val}
+				<li{if $id==$val['id']} class="active"{/if}><div><a href="join_{$val['id']}.html">招募{$val['role']}</a></div></li>
+				{/foreach}
+            </ul>
+        </div>
+        
+		<div class="join-main pull-left">
+			<h3 class="minor_text">招募{$title}条件详细信息介绍</h3>
+            <p class="minor_text">岗位描述：</p>
+            <p>$articleInfo['content']</p>
+            <p class="minor_text">联系电话：
+            {foreach $articleInfo['phone'] $val}
+            	{$val['phone']}{if !$val['end']}，{/if}
+            {/foreach}
+            </p>
+            <p class="minor_text">QQ：
+            {foreach $articleInfo['qq'] $val}
+            	<a class="minor_text" href="http://wpa.qq.com/msgrd?v=3&uin={$val['qq']}&site=qq&menu=yes" target="_blank">{$val['qq']}</a>{if !$val['end']}，{/if}
+            {/foreach}
+            </p>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

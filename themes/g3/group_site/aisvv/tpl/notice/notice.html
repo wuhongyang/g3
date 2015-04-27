@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>{php echo $notice['title'].'_'.$groupInfo['name'];}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="Keywords" content="{php echo str_replace(' ',',',$notice['keywords']);}" />
+<meta name="Description" content="{php echo mb_substr(preg_replace("'([\r\n])[\s]+'","",strip_tags($notice['content'])),0,100,'UTF-8');}" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css">
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/css/layout.css');}" rel="stylesheet" type="text/css">
+</head>
+<body>
+{include file="header_group_site.html"}
+{include file="header.html"}
+
+<div class="container mgt20">
+    <div class="body clearfix ">
+        <div class="zhengwen">
+            <h1><a href="/"><i class="home-icon home"></i>返回大厅</a></h1>
+            <div class="content">
+                <h5>{$notice['title']}</h5>
+            	<p>{$notice['content']}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

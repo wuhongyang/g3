@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgL50 mgt20 clearfix fs14">
+        <form method="post" id="form">
+        <input type="hidden" name="hv" value="1">
+        
+        <p class="fs12 st"><input id="turn" name="turn" type="checkbox" class="checks" {if $data['turn']}checked="checked"{/if}> 开启人气票赠送奖励</p>
+        
+        <div class="mgt10 fs12 st clearfix">
+            <div class="fl">人气票奖励时间：</div>
+            <div class="fl">
+                <input id="start_time" readOnly="true" onfocus="WdatePicker({dateFmt:'H:mm'})" name="start_time" type="text" value="{$data['start_time']}"> 至 
+                <input id="end_time" readOnly="true" onfocus="WdatePicker({dateFmt:'H:mm'})" name="end_time" type="text" value="{$data['end_time']}">
+                <p class="gray mgt10 fs12 st">(设置只有在该时间段内用户赠送人气票才能得到站的金币奖励)</p>
+            </div>
+        </div>
+        
+        
+        <div class="mgt20 fs12 st clearfix">
+            <div class="fl">人气票奖励金额：</div>
+            <div class="fl">
+                <input id="weight" name="weight" type="text" value="{$data['weight']}">
+                <p class="gray mgt10 st fs12">(用户每赠送一张人气票所能得到的金币金额)</p>
+            </div>
+        </div>
+        <div class="mgL100 mgt20"><input name="" type="submit" class="bluebtn2" value="保存"></div>
+        </form>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript">
+$(function(){
+	var start_time = $("#start_time");
+	var end_time = $("#end_time");
+	var weight = $("#weight");
+	var turn = $("#turn")
+	turn.click(function(){
+		if($(this).prop("checked")){
+			start_time.prop("disabled", false);
+			end_time.prop("disabled", false);
+			weight.prop("disabled", false);
+		}else{
+			start_time.val("");
+			end_time.val("");
+			weight.val("");
+			start_time.prop("disabled", true);
+			end_time.prop("disabled", true);
+			weight.prop("disabled", true);
+		}
+	})
+	if(!turn.prop("checked")){
+		start_time.val("");
+		end_time.val("");
+		weight.val("");
+		start_time.prop("disabled", true);
+		end_time.prop("disabled", true);
+		weight.prop("disabled", true);
+	}
+	weight.keyup(function(){
+		var value = Math.abs(parseInt($(this).val()));
+		if(value){
+			$(this).val(value);
+		}else{
+			$(this).val("");
+		}
+	})
+	$("#form").submit(function(){
+		var start = start_time.val();
+		var end = end_time.val();
+		if($("#turn").prop("checked")){
+			if(!start || !end){
+				alert('人气票奖励时间段不能为空')
+				return false;
+			}
+			if(!weight.val()){
+				alert('金额不能为空')
+				return false;
+			}
+			var sv = start.split(":");
+			var ev = end.split(":");
+			var svi = parseInt(sv[0]+sv[1]);
+			var evi = parseInt(ev[0]+ev[1]);
+			if(svi > evi){
+				alert('开始时间不能大于结束时间');
+				return false;
+			}
+		}
+	})
+})
+</script>
+</body>
+</html>

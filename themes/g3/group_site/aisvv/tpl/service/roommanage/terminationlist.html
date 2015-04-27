@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="grouptopmenu.html"}
+        <div class="content">
+            <div class="tabletab">
+                <ul>
+                    <li><a href="room_channel_user.php?module=signed_manage"{if $module=='signed_manage'} class="hover"{/if}>已签约人员</a></li>
+                    <li><a href="room_channel_user.php?module=termination_list"{if $module=='termination_list'} class="hover"{/if}>已解约人员</a></li>
+                    <li><a href="room_channel_user.php?module=guardian"{if $module=='guardian'} class="hover"{/if}>签约艺人守护列表</a></li>
+                </ul>
+                <a href="room_channel_user.php?module=signed" class="greenbtn ar" style="right:0;top:20px;"><span>签约人员绑定房间</span></a>
+                <a href="room_channel_user.php?module=signed_list" class="greenbtn ar" style="right:150px;top:20px;"><span>查看签约人员账户</span></a>
+            </div>
+            <div class="tablewrap">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgtb15">
+                  <tr>
+                    <th>解约用户ID</th>
+                    <th>解约类型</th>
+                    <th>解约房间ID</th>
+                    <th>所属站ID</th>
+                    <th>解约时间</th>
+                    <th>操作</th>
+                  </tr>
+                  {foreach $signedList['recordsList'] $val}
+                  <tr>
+                    <td>{$val['userInfo']['nick']}（{$val['uin']}）</td>
+                    <td>{if $val['channel_type']==9}室主{elseif $val['channel_type']==15}艺人{/if}</td>
+                    <td>{$val['room_id']}</td>
+                    <td>{$val['group_id']}</td>
+                    <td>{php echo date('Y-m-d H:i',$val['times'])}</td>
+                    <td>--</td>
+                  </tr>
+                  {/foreach}
+                  <tr>
+                  	<td colspan="6">{$signedList['page']}</td>
+                  </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

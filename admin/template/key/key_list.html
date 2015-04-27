@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>积分规则主键配置</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">积分规则主键配置</div>
+  <div class="header-button right">
+  {if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加主键</a>{/if}
+  </div>
+</div >
+<ul class="page-tab">
+	<li>{if $link_array[101]['url']}<a href="{$link_array[101]['url']}"  class="active">主键列表</a>{/if}</li>
+	<li>{if $link_array[103]['url']}<a href="{$link_array[103]['url']}">主键组</a>{/if}</li>
+</ul>
+<div style="padding:20px;">
+<form method="get">
+主键名称：<input type="text" name="search[name]" value="{$_GET['search']['name']}" /> 
+&nbsp;&nbsp;类别：<select name="search[type]">
+<option value="-1">请选择</option>
+<option value="RoleId" {if $_GET['search']['type'] == "RoleId"}selected="selected"{/if}>身份</option>
+<option value="ChannelId" {if $_GET['search']['type'] == "ChannelId"}selected="selected"{/if}>房间</option>
+<option value="ParentId" {if $_GET['search']['type'] == "ParentId"}selected="selected"{/if}>三级科目</option>
+<option value="GroupId" {if $_GET['search']['type'] == "GroupId"}selected="selected"{/if}>站ID</option>
+</select>
+&nbsp;&nbsp;状态：
+<select name="search[status]">
+<option value="-1">请选择</option>
+<option value="0" {if isset($_GET['search']['status']) and $_GET['search']['status'] == 0}selected="selected"{/if}>不启用</option>
+<option value="1" {if $_GET['search']['status'] == 1}selected="selected"{/if}>启用</option>
+</select>
+&nbsp;&nbsp;<input type="submit" value="搜索" />
+</form>
+<table class="table-list main-width" style="margin-top:10px;">
+	<tr>
+		<th>编号</th>
+		<th>主键名称</th>
+		<th>主键类型</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $list $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['name']}</td>
+		<td>{$one['type_name']}</td>
+		<td>{$one['status_name']}</td>
+		<td>{if $link_array[102]['url']}<a href="{$link_array[102]['url']}&key_id={$one['id']}">编辑</a>{/if}</td>
+	</tr>
+	{/foreach}
+</table>
+{$page}
+</div>
+</body>
+</html>

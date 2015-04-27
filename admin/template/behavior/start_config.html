@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>站科目启动配置</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	getOptions("bigcase=1","bigcase","{$_GET['bigcase_id']}");
+	$("#add").click(function(){
+		var val = $("#parent").val()
+		var c_val = $("#case").val()
+		var b_val = $("#bigcase").val()
+		var html = $("#parent option:selected").html()
+		var exist = false
+		if(val==0 || c_val==0 || b_val==0){
+			alert("没有选择科目")
+			return false
+		}
+		$(".ids").each(function(){
+			var parent_val = $(this).val().split(",").pop()
+			if(!exist && val == parent_val){
+				alert(html+"已经存在！")
+				exist = true
+			}
+		})
+		if(exist){
+			return false
+		}
+		var content = "<tr><td>"+html+"<input class='ids' type='hidden' name='ids[]' value='"+b_val+","+c_val+","+val+"'></td><td><input class='min' type='text' name='min[]'></td><td><input class='need' type='text' name='need[]'></td><td><input class='wait_time' type='text' name='wait_time[]'></td><td>&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='allow_balance["+val+"][]' value='1'>允许提取余额</td><td>&nbsp;&nbsp;&nbsp;&nbsp;<input type='checkbox' name='allow_close["+val+"][]' value='1' {if $one['allow_close']==1}checked{/if}>允许关闭</td><td><button class='del'>删除</button></td></tr>"
+		$("#table").append(content)
+	})
+	$(".del").live("click", function(){
+		if(confirm("确认要删除吗?")){
+			$(this).parent().parent().remove()	
+		}
+	})
+	$("#form").submit(function(){
+		var wrong = false
+		$(".min").each(function(i){
+			if(!wrong && (isNaN($(this).val()) || isNaN($($(".need")[i]).val()))){
+				alert("只能是数字!")
+				$(this).focus()
+				wrong = true
+			}
+			if(!wrong && parseInt($(this).val()) > parseInt($($(".need")[i]).val())){
+				alert("基础值不能小于最小值");
+				wrong = true
+				$(this).focus()
+			}
+		})
+		if(wrong){
+			return false
+		}
+	})
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">站科目启动配置</div>
+</div>
+<div style="margin:20px;">
+	站科目启动配置：<br/>
+	<p style="color:#888;margin-top:20px;">
+	设置站下的涉及需要贮备资金的相关科目，如幸运礼物、道具游戏所需要的资金库余额的最小值和基础值;<br/>
+	当科目余额库资金到达“最小值"时，系统自动从站预存账户充值资金补足到"基础值"；
+	</p>
+	<p style="margin-top:20px;"">
+	请选择业务科目:
+    <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select>
+    &nbsp;&nbsp;
+    <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select>
+    &nbsp;&nbsp;
+    <select name="parent_id" id="parent"><option value="0">请选择</option></select>
+    &nbsp;&nbsp;
+    <button id="add">添加</button>
+    </p>
+    <form method="post" id="form">
+    <table width="1000" style="margin-top:20px;" id="table">
+    <tr>
+    	<td width="18%">科目名称</td><td width="17%">最小值（V点）</td><td width="17%">基础值（V点）</td><td>等待时间（秒）</td><td width="15%">&nbsp;</td><td width="10%">&nbsp;</td><td width="15%">&nbsp;</td>
+    </tr>
+    {foreach $list $key $one}
+    <tr>
+    	<td>{$one['parent_names']}
+    	<input class='ids' type='hidden' name='ids[]' value='{$one["ids"]}'>
+    	</td>
+    	<td><input class='min' type='text' name='min[]' value='{$one["min"]}'></td>
+    	<td><input class='need' type='text' name='need[]' value='{$one["need"]}'></td>
+    	<td><input class='wait_time' type='text' name='wait_time[]' value='{$one["wait_time"]}'></td>
+    	<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="allow_balance[<?php echo $one['parent_id']; ?>][]" value="1" {if $one['allow_balance']==1}checked{/if}>允许提取余额</td>
+    	<td>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" name="allow_close[<?php echo $one['parent_id']; ?>][]" value="1" {if $one['allow_close']==1}checked{/if}>允许关闭</td>
+    	<td><button class='del'>删除</button></td>
+    </tr>
+    {/foreach}
+    </table>
+    <input style="margin-top:20px" type="submit" value="保存设置" />
+    </form>
+    <br/>
+</div>
+
+
+
+</body>
+</html>

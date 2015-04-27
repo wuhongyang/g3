@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色分组管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">角色分组管理</div>
+  <div class="header-button right">
+  <!--
+  {if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">角色列表</a>{/if}
+  -->
+  {if $link_array[147]['url']}<a href="{$link_array[147]['url']}&tpl_id={$_GET['search']['tpl_id']}" class="add-button">添加角色分组</a>{/if}
+  </div>
+</div>
+
+<script>
+active_li = 0;
+</script>
+{include file="template/tpl_header.html"}
+
+<div class="page-tools main-width">
+	<form action="{$link_array[138]['url']}" method="get" name="myform" class="search-form">
+   角色组名称：<input type="text" name="search[cate_name]" value="{$_GET['search']['cate_name']}" />&nbsp;&nbsp;&nbsp;&nbsp;
+         状态：<select name="search[status]">
+        		<option value="-1">请选择</option>
+                <option value="1" {if $_GET['search']['status']==1}selected{/if}>启用</option>
+                <option value="0" {if isset($_GET['search']['status'])&&$_GET['search']['status']==0}selected{/if}>不启用</option>
+        	 </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" value="cate_list" />
+        <input type="hidden" name="search[tpl_id]" value="{$_GET['search']['tpl_id']}" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>角色主名称</th>
+    <th>描述</th>
+    <th>角色数量</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $cateList $one}
+  <tr>
+  	<td>{$one['cate_id']}</td>
+  	<td>{$one['cate_name']}</td>
+  	<td>{$one['cate_desc']}</td>
+  	<td>{$one['role_total']}</td>
+  	<td>{if $one['status']==1}启用{else}不启用{/if}</td>
+  	<td>
+  	{if $link_array[138]['url']}<a href="{$link_array[138]['url']}&search[cate_id]={$one['cate_id']}&tpl_id={$_GET['search']['tpl_id']}">查看</a>{/if}&nbsp;&nbsp;&nbsp;&nbsp;
+  	{if $link_array[147]['url']}<a href="$link_array[147]['url']&cate_id={$one['cate_id']}&tpl_id={$_GET['search']['tpl_id']}">修改</a>{/if}&nbsp;&nbsp;&nbsp;&nbsp;
+  	<!--{if $link_array[105]['url']}<a href="?module=cate_del&cate_id={$one['cate_id']}">删除</a>{/if}&nbsp;&nbsp;&nbsp;&nbsp;-->
+  	</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

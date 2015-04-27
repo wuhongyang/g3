@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>上传头像</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/topnav-min.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');} " rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body class="bdnew">
+{include file="../common/header_group_site.html"}
+<div class="container bd bd-radius">
+	<div class="upload-head-hd">
+    	<span>上传头像</span>
+        <a href="?module=finish&step=2&group_id={$group_id}" class="tiaoguo">跳过&gt;&gt;</a>
+    </div>
+    <div class="upload-head-bd">
+        <div class="upload-head-main">
+        	<div class="left-col">
+            <iframe src="/group/upload_face.php" height="350" width="350" frameborder="0" scrolling="no"></iframe>
+            </div>
+        	<div class="mid-col">
+                <img src="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/img/rightjian.png" width="30" height="50"></div>
+        	<div class="right-col">
+            	<p>头像预览</p>
+                <div><img src="{if $hasFace}/pic/uin/{$user['Uin']}big/320/240.jpg{else} {STATIC_API_PATH}/frontend/modules/passport/img/320240.jpg{/if}" width="320" height="240" id="face"></div>
+                <div><button class="btn btn-danger" type="button" onclick="location.href='?module=finish'">完成</button></div>
+            </div>
+        </div>
+        <div class="wxxts">
+            <h5>温馨小贴士</h5>
+            <ul>
+                <li>据本网统计，90%的会员在搜索时会优无搜索有头像照的会员。</li>
+                <li>清晰生动的照片能为您吸引更多的目光，让更多的会员关注您。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

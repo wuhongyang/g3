@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+            	<h1>签约房间</h1>
+                <div class="box1">
+                    <span class="yellow"><span class="tanhao"></span>签约房间成功后，在签约房间内获得的收入才能够计入税收账户兑换收入！</span>
+                </div>
+                <p class="border3 relative mgtb15"><span class="yellow fs16 bold">已签约房间</span><a href="room_channel_user.php?module=user_termination_list" class="ahover ar">查看解约历史</a></p>
+                <table width="750" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20">
+                  <tr>
+                    <th>签约房间ID</th>
+                    <th>签约类型</th>
+                    <th>所属站</th>
+                    <th>签约时间</th>
+                    <th>解约</th>
+                  </tr>
+                  {foreach $signedList['userList'] $val}
+                  <tr>
+                    <td>{$val['room_id']}（$val['roomInfo']['name']）</td>
+                    <td>{if $val['type']==9}室主{elseif $val['type']==15}艺人{/if}</td>
+                    <td>{$val['up_uid']}</td>
+                    <td>{$val['uptime']}</td>
+                    <td><a href="room_channel_user.php?module=user_termination&id={$val['id']}" class="ahover">与房间解约</a></td>
+                  </tr>
+                  {/foreach}
+                  <tr>
+                  	<td colspan="5">{$signedList['page']}</td>
+                  </tr>
+                </table>
+                {if !$signedList['userList']}
+                <p class="mgt30 mgL20"><span class="fl red fs14 lineh30">若无目标签约房间，请联系官方人员，推荐签约房间。</span></p>
+                {/if}         
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

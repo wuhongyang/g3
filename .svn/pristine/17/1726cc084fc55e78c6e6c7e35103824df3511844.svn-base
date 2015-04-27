@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script src="template/js/jquery.min.js"></script>
+<style>
+	#main_div{
+		border:1px solid #999999;
+		background:#E7E7E7;
+		padding:5px;
+		width:800px;
+		margin:0 auto;
+		margin-top:5px;
+	}
+	#main_div p{
+		margin-bottom:5px;
+		margin-top:5px;
+	}
+	#main_div hr{
+		border: #666666 dotted;
+	}
+	#add_bind{
+		float:right;
+		cursor:pointer;
+		color:blue;
+		text-decoration:underline;
+	}
+	body{
+		background:#F7F7F7;
+	}
+</style>
+<script>
+	$(function(){
+		var example = $("#example");
+		var uins    = $("#uins");
+		$("#add_bind").click(function(){
+			if( uins.children().length <5 ){
+				uins.append(example.clone());
+			}else{
+				alert("最多绑定五个");
+			}
+		})
+		$("input[type='radio']").live("click", function(){
+			$("input[type='radio']").each(function(){
+				$(this).attr("checked",false);
+			})
+			$(this).attr("checked",true);
+		})
+		$("#form").submit(function(){
+			var i = 0;
+			$(".default").each(function(){
+				if($(this).attr("checked")){
+					$(this).attr("value", $(".uin").get(i).value);
+				}
+				i++;
+			})
+		})
+	})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">通行证绑定UIN</div>
+</div>
+<form method="post" id="form">
+<div id="main_div">
+		<div>
+			<p>通行证邮箱账号:{$email}</p>
+			<p>通行证手机账号:{$phone}</p>
+			<div id="add_bind">添加绑定UIN</div>
+			<p>UID:{$uid}</p>
+			<hr />
+		</div>
+	<input type="hidden" name="uid" value="{$uid}" />
+	
+<div id="uins">
+	{foreach $info $one}
+	<div>
+		<p>绑定UIN:&nbsp;&nbsp;&nbsp;&nbsp;<input class="uin" type="text" name="uin[]" value="{$one['Uin']}" /><input class="default" type="radio"  name="default" {if $one['IsUse']==1}checked="checked"{/if} />设为默认登陆账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {if $link_array['106']['url']}<a href="{$link_array['106']['url']}&del=1&uid={$uid}&uin={$one['Uin']}" onclick="return confirm('确定要解除{$one['Uin']}的绑定吗？')";>解除绑定</a>{/if}</p>
+		<hr />
+	</div>
+	{/foreach}
+</div>
+<div>
+	<input type="submit" value="保存提交" />
+</div>
+</div>
+</form>
+<div style="display:none">
+	<div id="example">
+		<p>绑定UIN:&nbsp;&nbsp;&nbsp;&nbsp;<input class="uin" type="text" name="add_uin[]" /><input class="default" type="radio"  name="default" />设为默认登陆账号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+		<hr />
+	</div>
+</div>
+
+</body>
+</html>

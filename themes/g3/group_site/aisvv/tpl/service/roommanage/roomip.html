@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+                {include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                    <div class="roomhd">在线人数统计</div>
+                    <form method="get">
+                    <input type="hidden" name="module" value="roomip" />
+                    <div class="mgtb15">
+                        &nbsp;&nbsp;时间：<input type="text" name="start" value="{$startDate}" size="18" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'})" />&nbsp;至&nbsp;<input type="text" name="end" value="{$endDate}" size="18" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'})" />
+                        &nbsp;<input type="submit" class="normalbtn" value="查询">
+                    </div>
+                    </form>
+                    <table width="95%" border="0" cellspacing="0" cellpadding="0" class="tablecss" style="margin:0 auto;">
+                      <tr>
+                        <th>房间</th>
+                        <th>所属站点</th>
+                        <th>在线人数</th>
+                        <th>IP数</th>
+                        <th>时间</th>
+                      </tr>
+                    <{foreach $rooms_online $list}>  
+                      <tr>
+                        <td><{$list['roomid']}></td>
+                        <td>{$userGroupInfo['name']}({$userGroupInfo['groupid']})</td>
+                        <td><{$list['curuser']}></td>
+                        <td><{$list['curip']}></td>
+                        <td><{php echo date('Y-m-d H:i:s',$list['createtime']);}></td>
+                      </tr>
+                    <{/foreach}>  
+                    </table>
+                    <div class="page" id="lopage">
+                        <{$page}>
+                    </div>
+                </div>
+            </div>
+     	</div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script> 
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

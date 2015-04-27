@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+                {include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                <form method="post" id="form" onSubmit="return checkForm()" action="">
+                <input type="hidden" name="roomid" value="{$info['id']}">
+                <input type="hidden" name="region_id" value="{$info['region_id']}">
+                    <div class="roomhd">推荐位申请</div>
+                    <div class="box1 mg5 fs12">
+                    {if $info['status'] == 1}
+                    <div style="color:#669933;"><img src="{THEMES_URL}group_site/{$themes}/src/service/icons/rec_success.png" class="alignimg"/>恭喜您！您的房间推荐位申请已通过审核！您将会免费享用分站推荐位以及导航站推荐位！</div>
+                    <p>推荐位排序规则：</p>
+                    <p>1、房间艺人在表演麦，房间真实IP越多越靠前。</p>
+                    <p>2、房间非表演时间挂视频或者照片，房间真实IP越多越靠前。</p>
+                    {elseif $info['status'] == 2}
+                    <div style="color:#CC0000;"><img src="{THEMES_URL}group_site/{$themes}/src/service/icons/rec_error.png" class="alignimg"/>对不起，您的推荐位申请未通过。</div>
+                    <p><span>退回原因：</span>{$info['desc']}</p>
+                    <p><a href="javascript:void(0);" id="reapply" style="color:#06C">返回修改并重新申请</a></p>
+                    {elseif $info['status'] == '0'}
+                    <img src="{THEMES_URL}group_site/{$themes}/src/service/icons/rec_wait.png" class="alignimg"/>您的申请已提交，我们会在1-2个工作日内为您审核，届时请查看此处或者联系房间经理。
+                    {else}
+                    <img src="{THEMES_URL}group_site/{$themes}/src/service/icons/rec_warning.png" class="alignimg"/>完善房间简介和房间封面，是通过审核的重要依据，一旦通过审核，您的房间将免费享用分站及导航站广告推荐位！
+                    {/if}
+                    </div>
+                    <h1 class="mg5 relative">一、房间基本资料 {if empty($info['roomid']) || $info['status']==-1}<a href="/service/roommanage.php?module=room" class="arT5 ahover">修改房间基本资料</a>{/if}</h1>
+                    <ul class="formlist formlist5 mg0">
+                        <li class="clearfix"><label>所属站点：</label><span>{$userGroupInfo['name']}({$userGroupInfo['groupid']})</span></li>
+                        <li class="clearfix"><label>房间名称：</label><span>{$info['name']}</span><label>房间编号：</label><span>{$info['id']}</span></li>
+                        <li class="clearfix"><label>房间简介：</label><span>{$info['description']}</span></li>
+                        <li class="clearfix"><label>房间封面：</label><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$info['id'].'/200/150.jpg');}" width="200" height="149"></li>
+                        <li class="clearfix">
+                            <p class="gray">温馨提示：</p>
+                            <p class="gray">1、为了达到更好的宣传效果，请选择分辨率高的图片，并采用4：3规格。</p>
+                            <p class="gray">2、请选择与本房间运营主题相关的图片，以达到宣传的效果。</p>
+                        </li>
+                    </ul>
+                    <h1 class="mg5 relative">二、承诺工作时间料 {if empty($info['roomid']) || $info['status']==-1}<a href="javascript:void(0);" id="J_add_time" class="ar ahover"><span class="addimg"></span>添加工作时间</a>{/if}</h1>
+                    <ul class="formlist formlist5 mg0">
+                        <li class="clearfix" id="time">
+                        {if $info['worktime']}
+                            {foreach $info['worktime'] $key $val}
+                            <p class="clearfix relative">
+                                <input type="text" name="start[]" value="{$val['start']}" {if !empty($info['roomid']) && $info['status']>-1}disabled{/if} onfocus="WdatePicker({dateFmt:'HH:mm:ss'})">
+                                <span>--</span>
+                                <input type="text" name="end[]" value="{$val['end']}" {if !empty($info['roomid']) && $info['status']>-1}disabled{/if} onfocus="WdatePicker({dateFmt:'HH:mm:ss'})">
+                                {if $key > 0}{if empty($info['roomid']) || $info['status']==-1}<a href="javascript:void(0);" class="ar ahover" id="del"><span class="delimg"></span>删除工作时间</a>{/if}{/if}
+                            </p>
+                            {/foreach}
+                        {else}
+                            <p class="clearfix">
+                                <input type="text" name="start[]" value="{$val['start']}" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})">
+                                <span>--</span>
+                                <input type="text" name="end[]" value="{$val['end']}" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})">
+                            </p>
+                        {/if}    
+                        </li>
+                        <li class="clearfix">
+                            <p class="gray">承诺工作时间要求：</p>
+                            <p class="gray">1、在承诺工作时间内，需签约艺人在麦上进行表演；</p>
+                            <p class="gray">2、在非承诺工作时间内，需非签约艺人在麦上表演、播放房间宣传视频或相册。</p>
+                            <p class="gray">3、如有违反，一经查处，第一次给予警告，第二次取消推荐位。</p>
+                        </li>
+                        <li class="clearfix">
+                        {if empty($info['roomid']) || $info['status']==-1}
+                        <a href="javascript:checkForm();" class="bluebtn" style="margin-left:150px;"><span>确认如上信息，提交</span></a>
+                        {/if}
+                        </li>
+                    </ul>
+                </div>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script> 
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script>
+$(function(){
+	$('#J_add_time').click(function(){
+		var p = $('<p class="clearfix"></p>');
+		p.appendTo($('#time'));
+		var input_start = $('<input type="text" name="start[]" onfocus="WdatePicker({dateFmt:\'HH:mm:ss\'})">');
+		var html = '<span>--</span>';
+		var input_end = $('<input type="text" name="end[]" onfocus="WdatePicker({dateFmt:\'HH:mm:ss\'})">');
+		var del = $('<a href="javascript:void(0);" class="a1 pre" id="del"><span class="red">-</span>删除工作时间</a>');
+		p.append(input_start).append(html).append(input_end).append(del);
+		
+		del.click(function(){
+			p.remove();
+		});
+	});
+	
+	$('#del').live('click',function(){
+		$(this).parent().remove();
+	});
+	
+	$('#reapply').click(function(){
+		var roomid = '{$info["id"]}';
+		$.ajax({
+			url: '?module=reapply',
+			type: 'GET',
+			data: {roomid:roomid},
+			success: function(data){
+				window.location.href = '?module=recommend';
+			}
+		});
+	});
+});
+
+function checkForm(){
+	var sflag = false,
+		eflag = false,
+		starts = $('input[name="start[]"]');
+	for(var i=0; i<starts.length; i++){
+		if(starts[i].value){
+			sflag = true;
+		}
+	}
+	var ends = $('input[name="end[]"]');
+	for(var i=0; i<ends.length; i++){
+		if(ends[i].value){
+			eflag = true;
+		}
+	}
+	if(sflag && eflag){
+		document.getElementById('form').submit();
+		return;
+	}
+	art.dialog({content:'承诺工作时间不能为空！',lock:true,cancel:false,ok:true});
+	return;
+}
+</script>
+</body>
+</html>

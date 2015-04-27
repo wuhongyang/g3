@@ -1,0 +1,19 @@
+<div id="leftmenu">
+  <dl>
+      <dt class="qianTitle">我的签约</dt>
+      <dd><a href="room_channel_user.php?module=user_signed_list"{if $serviceType=='room_channel_user'} class="hover"{/if}>签约房间</a></dd>
+  </dl>
+  <dl>
+      <dt class="rmbTitle">人民币账户管理</dt>
+      <dd><a href="manage_imformation.php?module=bind_account"{if $serviceType=='manage_imformation' && ($_GET['module']=='bind_account')} class="hover"{/if}>绑定提现账户</a></dd>
+      {if getChannelUserInfo($Uin,8)}
+      <dd><a href="manage_imformation.php?module=RMB_details"{if $serviceType=='manage_imformation' && ($_GET['module']=='RMB_details')} class="hover"{/if}>人民币账户</a></dd>
+	  <dd><a href="manage_imformation.php?module=RMB_pick_up"{if $serviceType=='manage_imformation' && ($_GET['module']=='RMB_pick_up')} class="hover"{/if}>账户提现</a></dd>
+	  {/if}
+  </dl>
+  <dl>
+      <dt class="agencyTitle">代理专区</dt>
+       <dd><a href="proxy_remit_account.php"{if $serviceType=='proxy_remit_account'} class="hover"{/if}>代理划账</a></dd>
+       <dd><a href="proxy_remit_account.php?module=integration"{if $serviceType=='proxy_integration'} class="hover"{/if}>代理积分</a></dd>
+  </dl>
+</div>

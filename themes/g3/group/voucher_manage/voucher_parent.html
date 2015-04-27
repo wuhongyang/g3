@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab">
+        <ul>
+            <li><a href="?module=voucher_balance">用户余额表</a></li>
+            <li><a href="?module=voucher_running">资金流水表</a></li>
+            <li><a href="?module=voucher_parent" class="hover">金币净平衡表</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <form action="?module=voucher_parent" id="payment-form" method="get">
+        <div class="mgb10">
+            <span>日期：</span>
+            <input realvalue="" name="startDate" id="startDate" value="{$StartDate}" onfocus="WdatePicker({startDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})" style="width: 150px;" type="text">至 <input realvalue="" name="endDate" id="endDate" value="{$EndDate}" onfocus="WdatePicker({startDate:'%y-%M-%d',dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})" style="width: 150px;" type="text">
+            <input name="" type="submit" value="查询" class="normalbtn">
+            <input name="module" type="hidden" value="voucher_parent" class="normalbtn">
+        </div>
+        </form>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>编号</th>
+            <th>日期</th>
+            <th>平台净存入</th>
+            <th>账户净存入</th>
+            <th>平台净支出</th>
+            <th>账户净支出</th>
+            <th>余额</th>
+          </tr>
+          {foreach $lists $key $val}
+          <tr>
+            <td>{echo $key+1}</td>
+            <td>{echo date('Y-m-d',$val['uptime'])}</td>
+            <td>{echo floatval($val['deposit_money'])}</td>
+            <td>{echo floatval($val['account_deposit'])}</td>
+            <td>{echo floatval($val['pay_money'])}</td>
+            <td>{echo floatval($val['account_pay'])}</td>
+            <td>{$val['last_balance']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

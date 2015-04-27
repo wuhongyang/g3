@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人主页</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content mgt10">
+            <!--通行证开始-->
+            <div class="clearfix">
+                <div class="fl relative">
+                    <div class="headEdit">
+                        <img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$user['Uin'].'/160/160.jpg');}" width="160" height="160">
+                        <div class="alpbg"><a href="/service/account.php?module=changeFace" style="color:#fff;">更改头像</a></div>
+                    </div>
+                    {if $channelInfo['room_id']}
+                    <div style="margin-top:5px;"><a href="/v/{$channelInfo['room_id']}" target="_blank"><img src="{THEMES_URL}/group_site/{$themes}/src/img/live_button.png"></a></div>
+                    {/if}
+                </div>
+                <div class="fl box810">
+                    <a href="account.php?module=vdianlist&group_id={$group_id}" class="greenbtn arT5" style="top:50px;"><span>进入站金币管理</span></a>
+                    <div class="E4graybg">
+                        <span class="txzicon"></span>
+                        <span class="fL">用户名：{if !empty($passInfo['username'])}{$passInfo['username']}{else}未绑定{/if}</span> 
+                        <div class="passsafe">
+                            <span class="fL mgL20">通行证安全：</span> 
+                            <span class="yyzicon mgL10"></span>
+                            {if !empty($passInfo['name']) && !empty($passInfo['idcard'])}
+                                <span class="fL green">已验证</span> 
+                            {else}
+                                <a class="fL gray" href="/service/safe_setting.php?module=idcard">未验证</a> 
+                            {/if}
+                            <span class="ybdicon mgL20"></span>
+                            {if !empty($passInfo['phone'])}
+                                <span class="fL green">已绑定</span> 
+                            {else}
+                                <a class="fL gray" href="/service/safe_setting.php?module=phone">未绑定</a> 
+                            {/if}
+                            <span class="wbdicon mgL20"></span>
+                            {if !empty($passInfo['email'])}
+                                <span class="fL green">已绑定</span> 
+                            {else}
+                                <a class="fL gray" href="/service/safe_setting.php?module=email">未绑定</a> 
+                            {/if}
+                        </div>
+                    </div>
+                    <p class="f2 mgL20 mgt10">用户昵称：<a href="/service/account.php" style="color:#983436;" id="J_account">{echo !empty($currentUinInfo['nick']) ? $currentUinInfo['nick'] : $user['Uin']}</a></p>
+                    <p class="mgL20 mgt10">用户码：{$user['Uin']}</a></p>
+                    <p class="mgL20 mgt10">手机：{if !empty($user['Phone'])}{$user['Phone']}{else}<a href="/service/safe_setting.php?module=phone">未绑定</a>{/if}</p>
+                    <p class="mgL20 mgt10">邮箱：{if !empty($user['Email'])}{$user['Email']}{else}<a href="/service/safe_setting.php?module=email">未绑定</a>{/if}</p>
+                    <p class="mgL20 mgt10">金币：{$currentUinInfo['vmoney']}</p>
+                    <p class="mgL20 mgt10 clearfix">
+                        {foreach $currentUinInfo['icon'] $val}
+                    	<img src="{$val}">
+                        {/foreach}
+                    </p>
+
+                    <div class="boxWfG bold fs14">
+                    	<div class="mgL30 fl mgt10">
+							<a href="weibo.php">
+                            <p class="center blue">{$weiboNum}</p>
+                            <p class="mgt10">微博</p>
+							</a>
+                        </div>
+                    	<div class="mgL30 fl mgt10">
+							<a href="weibo.php?module=myfollower">
+                            <p class="center blue">{$fansNum}</p>
+                            <p class="mgt10">粉丝</p>
+							</a>
+                        </div>
+                    	<div class="mgL30 fl mgt10">
+							<a href="weibo.php?module=myfollowing">
+                            <p class="center blue">{$followerNum}</p>
+                            <p class="mgt10">关注</p>
+							</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--待办事项开始-->
+            {if !empty($handleMatters)}
+            <div>
+            	<div class="dbsximg border2 mgtb15">待办事项</div>
+                <ul>
+                    {foreach $handleMatters $val}
+                    <li class="clearfix mgt10" id="{$val['id']}">
+                        <span class="point"></span>
+                        <p class="fL fs14 w700">{echo $val['content']}</p>
+                        <a href="{$val['link']}&hmid={$val['id']}" class="fL fs14 ahover mgL10">{$val['link_name']}</a>
+                        <span class="fR">{echo date('Y-m-d H:i',$val['uptime']);}<em class="mgL20 red J_read" style="cursor:pointer;">X</em></span>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function() {    
+    $('#J_account').mouseover(function(){
+        $(this).css('text-decoration','underline');
+    }).mouseout(function(){
+        $(this).css('text-decoration','none');
+    });
+
+    //待办事项已读
+    $('.J_read').click(function(){
+        var that = $(this);
+        art.dialog({
+            content: '您确定要删除吗?',
+            ok: function(){
+                var id = that.parents('li').attr('id');
+                $.ajax({
+                    url: 'handle_matter.php?module=setRead',
+                    type: 'POST',
+                    data: {id:id},
+                    dataType: 'JSON',
+                    success: function(data){
+                        if(data.Flag == 100){
+                            that.parents('li').remove();
+                        }else{
+                            art.dialog({
+                                content: '服务器异常，稍后再试',
+                                time: 2,
+                                lock: true,
+                                icon: 'warning'
+                            });
+                        }
+                    }
+                });
+            },
+            cancel: true,
+            width: 200,
+            lock: true
+        });
+        
+    });
+
+    //设为默认账号
+    $('input[name="set_default"]').click(function(){
+        var status = $(this).attr('status');
+        if(status == 1){
+            return false;
+        }
+        var uin = $(this).val();
+        $.ajax({
+            url: 'pass_manager.php?module=setDefaultUin',
+            type: 'POST',
+            data: {uin:uin},
+            dataType: 'JSON',
+            success: function(data){
+                if(data.Flag == 100){
+                    art.dialog({
+                        content: '设置默认账号成功',
+                        ok: function(){
+                            location.href='/service/profile.php';
+                        },
+                        esc:false,
+                        cancel: false,
+                        icon: 'succeed',
+                        lock:true
+                    });
+                }else{
+                    art.dialog({
+                        content: '设置默认账号失败，请联系客服',
+                        ok: true,
+                        esc:false,
+                        cancel: false,
+                        icon: 'error',
+                        lock:true
+                    });
+                }
+            }
+        })
+    });
+});
+</script>
+</body>
+</html>

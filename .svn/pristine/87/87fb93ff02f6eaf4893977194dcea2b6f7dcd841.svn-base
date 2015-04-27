@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>签约管理-室主/艺人签约资料</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <form method="get" action="signed_manage.php" class="fl" id="search_form">
+            <input type="hidden" name="module" value="apply_list" />
+            <span class="mgL10">用户码：</span>
+            <input type="text" name="uin" value="{$_GET['uin']}">
+            <span class="mgL10">状态：</span>
+            <span class="mgL10">日期：</span>
+            <input name="stime" type="text" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" value="{$s_time}">&nbsp;至
+            <input name="etime" type="text" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" value="{$e_time}">
+            <input name="" type="submit" class="normalbtn" value="查询">
+        </form>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20">
+      <tr>
+        <th>申请用户</th>
+        <th>申请类型</th>
+        <th>真实姓名</th>
+        <th>联系电话</th>
+        <th>联系QQ</th>
+        <th>申请时间</th>
+        <th>状态</th>
+      </tr>
+      {foreach $res $val}
+      <tr>
+        <td>{$val['nick']}({$val['uin']})</td>
+        <td>{echo $val['type']==2 ? '艺人' : '室主'}</td>
+        <td>{$val['name']}</td>
+        <td>{$val['phone']}</td>
+        <td>{$val['qq']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['apply_time'])}</td>
+        <td>{echo $sign_status[$val['sign_status']]}</td>
+      </tr>
+      {/foreach}
+      <tr>
+        <td colspan="7">{$page}</td>
+      </tr>
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</html>

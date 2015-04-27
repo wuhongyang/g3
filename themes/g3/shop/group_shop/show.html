@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购买{$categories[$category_id]['pack_name']}</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+
+<div class="container flow">
+    <ul class="nav nav-pills">
+        <li class="active lis"><span class="num">1 </span>选择购买商品</li>
+        <li class="jian">&nbsp;</li>
+        <li class="lis"><span class="num">2</span>填写购买信息</li>
+        <li class="jian gray">&nbsp;</li>
+        <li class="lis"><span class="num">3</span>购买成功</li>
+    </ul>
+</div>
+
+{if $categories[$category_id]['group_back_config'] == 1}
+    {include file="group_shop/view_without_image.html"}
+{else}
+    {include file="group_shop/view_with_image.html"}
+{/if}
+
+{include file="foot.html"}
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.thumbnail').hover(function(){
+		$(this).addClass('redline');
+	}, function(){
+		$(this).removeClass('redline');
+	})
+})
+
+</script>
+</body>
+</html>

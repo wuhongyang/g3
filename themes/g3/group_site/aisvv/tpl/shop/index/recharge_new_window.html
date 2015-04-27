@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>购物商城——充值</title>
+</head>
+<body>
+正在处理，请稍候....
+<form id="recharge_form" action="?module=payment_save" method="post"></form>
+
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+var win = window.opener;
+var doc = win.document;
+var form = doc.getElementById('form');
+var form_data = $(form).serialize();
+var data_arr = form_data.split('&');
+var html = '';
+for(var i=0, len=data_arr.length; i<len; i++){
+	var e = data_arr[i].split('=');
+	html += '<input type="hidden" name="' + e[0] + '" value="' + e[1] + '">';
+}
+var recharge_form = $('#recharge_form');
+recharge_form.html(html);
+recharge_form.submit();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>活动中心-{$groupInfo['name']}</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/featurecarousel/css/featureCarousel.css');}" charset="utf-8" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/css/layout.css');}" rel="stylesheet" type="text/css">
+<style>
+.pagenavi{
+	color:#EC3B45;
+	text-align:center;
+}
+.pagenavi a{
+	color:#EC3B45;
+}
+</style>
+</head>
+<body>
+{include file="header_group_site.html"}
+{include file="header.html"}
+
+<div class="container mgt20">
+    <div class="body clearfix">
+        <div style="width:960px;height:240px;">
+            <div id="featureCarousel">
+                {if empty($activeAdList)}
+                <div class="feature"><img alt="Image Caption" src="{STATIC_API_PATH}/frontend/modules/dianpu/img/scroll.jpg"></div>
+                {else}
+                    {foreach $activeAdList $val}
+                    <div class="feature"><a href="active_{$val['id']}.html" title="{$val['title']}"><img alt="{$val['title']}" title="{$val['title']}" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['image'].'/540/200.jpg');}"></a></div>
+                    {/foreach}
+                {/if}
+            </div>
+        </div>
+        <div class="clearfix hot-activity">
+            <h1>热门活动</h1>
+            <ul class="thumbnails">
+            {foreach $activeList['activeList'] $val}
+                <li>
+                    <div class="thumbnail">
+                      <a href="active_{$val['id']}.html" title="{$val['title']}">
+                      <img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" class="img" data-original="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['image'].'/280/100.jpg');}" alt="{$val['title']}" title="{$val['title']}" width="280" height="100">
+                      </a>
+                      <div class="caption">
+                        <p class="name">{$val['title']}</p>
+                        <p class="canjia">参与人数：<span>{$val['player_num']}</span>人
+                        <span id="active_{$val['id']}"></span>
+                        </p>
+                      </div>
+                    </div>
+                </li>
+            {/foreach}
+            </ul>
+            {$activeList['page']}
+        </div>    
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/lazyload/lazyload.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/featurecarousel/js/jquery.featureCarousel.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/js/bootstrap.min.js');}"></script>
+<script type="text/javascript">
+{if $activeIds!=''}
+$.ajax({
+	url: 'active.html?module=index_json&gid={$groupId}&activeIds={$activeIds}',
+	type: 'GET',
+	async: false,
+	cache: false,
+	data: {},
+	success: function(data){
+		var json = $.parseJSON(data);
+		for(var i in json){
+			  var html = '';
+			  if(json[i].status=='2'){
+			  	html='<a class="btn btn-danger already" href="active_'+json[i].id+'.html" title="活动即将开始">活动即将开始</a>';
+			  }
+			  else if(json[i].status=='3'){
+			  	html='<a class="btn btn-danger active-over" href="active_'+json[i].id+'.html" title="活动已结束">活动已结束</a>';
+			  }
+			  else if(json[i].status=='4'){
+			  	html='<a class="btn btn-danger already" href="active_'+json[i].id+'.html" title="已参与">已参与</a>';
+			  }
+			  else{
+			  	html='<a class="btn btn-danger" href="active_'+json[i].id+'.html" title="我要参与">我要参与</a>';
+			  }
+			  $('#active_'+json[i].id).html(html);
+		}
+	}
+});
+{/if}
+
+$(document).ready(function() {
+    $(".img").lazyload({skip_invisible:false,failure_limit:20,effect:"fadeIn"});
+	$("#featureCarousel").featureCarousel({autoPlay:3,carouselSpeed:600,displayCutoff:5,largeFeatureWidth:540,largeFeatureHeight:200});
+});
+</script>
+
+</body>
+</html>

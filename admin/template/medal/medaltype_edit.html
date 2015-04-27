@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>勋章分类</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">勋章分类</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加分类</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">分类列表</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}">勋章列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width"></div>
+
+<form method="post" class="form">
+	<input type="hidden" name="id" value="{$edit['id']}" />
+	<p>
+		<label>分类名称：</label>
+		<input type="text" name="name" value="{$edit['name']}" />
+	</p>
+	<p>
+		<label>分类类别：</label>
+		<select name="category">
+			{foreach $category $key $val}
+			<option value="{$key}" {if $key == $edit['category']}selected{/if}>{$val}</option>
+			{/foreach}
+		</select>
+	</p>
+	<p>
+		<label>关联业务参数：</label>
+		<select name="business_id">
+			{foreach $paramConfigList $key $val}
+			<option value="{$val['id']}" {if $val['id'] == $edit['business_id']}selected{/if}>{$val['name']}</option>
+			{/foreach}
+		</select>
+	</p>
+	<p>
+		<label>排序值：</label>
+		<input type="text" name="order" value="{$edit['order']}" />
+	</p>
+	<p>
+		<label>状态：</label>
+		<input type="radio" name="status" value="1" {if $edit['status'] == 1}checked="checked"{/if} /> 启用
+		<input type="radio" name="status" value="0" {if $edit['status'] == 0}checked="checked"{/if}/> 不启用
+	</p>
+	<p>
+		<label></label>
+		<input type="submit" value="提交" class="submit" />
+	</p>
+</form>
+
+</body>
+</html>

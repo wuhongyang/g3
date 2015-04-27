@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgtb15 clearfix relative">
+        <span class="i-icon"></span>
+        <span class="fs14 fl lineh26">金币账户余额：</span>
+        <span class="yellow fs16 fl">{echo $voucher} 金币</span>
+    </div>
+    <div class="tabletab">
+        <ul>
+            <li><a href="?module=voucher_recharge" class="hover">金币账户充值</a></li>
+            <li><a href="?module=voucher_to_vip">给用户充值</a></li>
+            <li><a href="?module=voucher_deduct">给用户扣钱</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+    <!-- 
+        <div class="mgtb15 border2 clearfix">
+            <h3>一、在线充值</h3>
+        </div>
+        <div class="mgL50" id="radio_ids">
+            <form action="?module=voucher_payment" id="payment-form" method="post">
+            <input name="weight" id='weight' type="hidden" value="30">
+            <div class="clearfix">
+                <div class="fl">选择充值金额：</div>
+                <div class="fl">
+                    <div>
+                        <label class="mgR20"><input name="money" type="radio" value="30" id="30" checked> 30元</label>
+                        <label class="mgR20"><input name="money" type="radio" value="300" id="300"> 300元</label>
+                        <label class="mgR20"><input name="money" type="radio" value="3000" id="3000"> 3000元</label>
+                        <label class="mgR20"><input name="money" type="radio" value="30000" id="30000"> 30000元</label>
+                    </div>
+                    <div class="mgt20 gray">（注：充值比例 人民币:金币 = 3:100000）</div>
+                    <div class="mgt20">可获得：<em class="yellow" id='voucher'>1000000</em>金币</div>
+                    <div class="mgt20"><input type="submit" value="立即充值" class="bluebtn2" id="pay_buy"></div>
+                </div>
+            </div>
+            </form>
+        </div>
+         -->
+        <div class="mgtb15 border2 clearfix">
+            <h3>一、站税收划账</h3>
+        </div>
+        <div class="mgL50">
+            <form action="?module=tax_recharge" id="tax-form" method="post">
+                <div class="mgt20">
+                    <span>当前站税收余额：</span>
+                    <span><em class="yellow">{echo (int)$taxInfo['LastBalance']}</em></span>
+                </div>
+                <div class="mgt20">
+                    <label style="display:inline-block;width:95px;text-align:right;">划转金额：</label>
+                    <input name="Weight" id="Weight" type="text"  onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+                    <span class="gray">兑换规则为1:1</span>
+                </div>
+                <div class="mgt20">
+                    <label style="display:inline-block;width:100px;text-align:right;"></label>
+                    <input type="submit" class="bluebtn2" id="tax_buy" value="确定划转">
+                </div>
+            </form>
+        </div>
+        <div class="mgtb15 border2 clearfix">
+            <h3>二、线下转账</h3>
+        </div>
+        <div class="mgL50">
+        	<!-- 
+            <p class="mgt20">
+                <span>如果没有网银，亦支持线下汇款方式充值！</span>
+            </p>
+             -->
+            <p class="mgt20">
+                <span class="fl">选用线下汇款方式可联系销售代表：</span><a class="qqimg" href="http://wpa.qq.com/msgrd?v=3&amp;uin=4006772115&amp;site=qq&amp;menu=yes" target="_blank"></a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=4006772115&amp;site=qq&amp;menu=yes" target="_blank">官方销售</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{include file="foot.html"}
+ 
+<script type="text/javascript">
+$(function(){
+    var custom_money = $('#weight'),
+    	getVbao = $('#voucher'),
+        pay_buy = $('#pay_buy'),
+        tax_buy = $('#tax_buy'),
+        tax_weight = $('#Weight');
+	
+	$("#radio_ids :radio").click(function(){
+		custom_money.val($(this).val());
+		getVbao.html($(this).val()/3*100000);
+	});
+    pay_buy.click(function(e){
+    	var money = custom_money.val();
+    	if(isNaN(money) || money < 10){
+    		return false;
+    	}else{
+    		$("#payment-form").submit();
+    	}
+    	return false;
+    });
+    tax_buy.click(function(){
+    	var tax = tax_weight.val();
+    	if(isNaN(tax) || tax < 1){
+    		return false;
+    	}else{
+    		$("#tax-form").submit();
+    	}
+    	return false;
+    });
+});
+</script>

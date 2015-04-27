@@ -1,0 +1,14 @@
+{if $total > $limit}
+<div id="lopage" class="pagenavi">
+    <div>
+        有<span class="num">{$total}</span>条记录&nbsp;&nbsp;&nbsp;共<span class="num">{$pages}</span>页&nbsp;&nbsp;|&nbsp;&nbsp; 
+        {for $i=1; $i<=$pages; $i++}
+            {if $page==$i}
+            <span class="curr">{$i}</span>
+            {else}
+            <a href="{$url}&page={$i}">{$i}</a>
+            {/if}
+        {/for}
+    </div>
+</div>
+{/if}

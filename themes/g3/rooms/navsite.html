@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta property="qc:admins" content="2500050515647716666356375" />
+<meta name="keywords" content="免费聊天室,免费聊天网页,视频聊天室,在线视频聊天,视频聊天网站,美女视频, 美女直播,多人视频聊天,真人视频聊天,在线聊天室,vv酷,网上娱乐商圈" /> 
+<meta name="description" content="VV酷(www.vvku.com)是免费的视频聊天网站,免费提供同城视频聊天,多人视频在线K歌,美女主播为您带来精彩表演,真人的视频聊天室，同时支持视频游戏，VV酷为您打造全新的网上娱乐商圈。"/>
+<title>VV酷网上娱乐商圈_免费视频聊天网站_同城聊天室_在线多人视频聊天_美女真人视频聊天</title>  
+<link type="text/css" rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/index.min.css');}">
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/static/js/index.min.js');}"></script>
+</head>
+<body class="navsite-body">
+
+{include file="head.html"}
+
+<div class="bodywrap">
+    <div class="bd clearfix">
+		<div class="slidebar fl">
+			<!--区块一 当前在线用户-->
+			<div class="bar-online">
+				<h3 class="title-online">当前在线玩家共有</h3>
+				<p class="bar-online-count">{$curTotalUser}</p>
+			</div>
+			<!--区块二 我的脚印-->
+			<div class="bar-myhistory" id="J_foot_block">
+				<h3 class="title">
+					<div class="bar-title">我的脚印</div>
+				</h3>
+				<div class="caicai">
+					<p>您还未有房间访问记录，</p>
+					<p>快去踩踩吧！</p>
+					<div class="jiaoyin"></div>
+				</div>
+			</div>
+            <!--区块三 站点导航-->
+            <div class="bar-navsite">
+                <h2 class="title">
+                    <div class="bar-title">热门站点</div>
+                </h2>
+                <ul class="bar-navsite-list" id="J_regions">
+                    {foreach $rooms_case $parent}
+                    <li>
+                        <a href="http://{$parent['groupid']}.'.'.{$_SERVER['HTTP_HOST']}">
+                            <span class="fl">{$parent['name']}</span>
+                        </a>
+                    </li>
+                    {/foreach}
+                    <!-- <li id="J_all_regions"><a href="javascript:void(0);"><span class="fl">所有分站&gt;&gt;</span></a></li> -->
+               </ul>
+            </div>
+            <!--区块四 公告新闻活动-->
+            <div class="bar_new">
+                <h2 class="news-tabs title" style="border-top:none;">
+                    <ul class="bar-title">
+                        <li class="active">公告</li>
+                        <li>新闻</li>
+                        <li>活动</li>
+                    </ul>
+                </h2>
+                <div class="news-conts">
+                    <ul class="new_list">
+                        {foreach $notice $row}
+                        <li><a href="/notice/{$row['id']}.html" title="{$row['title']}" target="_blank">{if $row['top']}<img src="{STATIC_API_PATH}/static/images/top.gif" width="22" height="9" border="0" style="margin-right:5px;">{/if}{$row['title']}{if $row['new']}<img src="{STATIC_API_PATH}/static/images/new.gif" width="21" height="16" border="0">{/if}</a></li>
+                        {/foreach}
+                    </ul>
+                    <div class="new-more">
+						<a href="/notice/index.html" target="_blank">更多&gt;&gt;</a>
+                    </div>
+                </div>
+                <div class="news-conts" style="display:none;">
+                    <ul class="new_list">
+                        {foreach $news $row}
+                        <li><a href="/notice/{$row['id']}.html" title="{$row['title']}" target="_blank">{if $row['top']}<img src="{STATIC_API_PATH}/static/images/top.gif" width="22" height="9" border="0" style="margin-right:5px;">{/if}{$row['title']}{if $row['new']}<img src="{STATIC_API_PATH}/static/images/new.gif" width="21" height="16" border="0">{/if}</a></li>
+                        {/foreach}
+                    </ul>
+                    <div class="new-more">
+						<a href="/notice/index.html" target="_blank">更多&gt;&gt;</a>
+                    </div>
+                </div>
+                <div class="news-conts" style="display:none;">
+                    <ul class="new_list">
+                        {foreach $activity $row}
+                        <li><a href="/notice/{$row['id']}.html" title="{$row['title']}" target="_blank">{if $row['top']}<img src="{STATIC_API_PATH}/static/images/top.gif" width="22" height="9" border="0" style="margin-right:5px;">{/if}{$row['title']}{if $row['new']}<img src="{STATIC_API_PATH}/static/images/new.gif" width="21" height="16" border="0">{/if}</a></li>
+                        {/foreach}
+                    </ul>
+                    <div class="new-more">
+						<a href="/notice/index.html" target="_blank">更多&gt;&gt;</a>
+                    </div>
+                </div>
+            </div>
+            <!--区块五 帮助中心-->
+        	<div class="help-center">
+                <h2 class="title">
+                    <div class="bar-title">帮助中心<a href="/help/index.html" class="more" target="_blank">更多</a></div>
+                </h2>
+                <ul class="help-list">
+                	{foreach $help $row}
+                    <li><a href="/help/{$row['id']}.html" title="{$row['title']}" target="_blank">{$row['title']}</a></li>
+                    {/foreach}
+               </ul>
+            </div>
+			<!--区块六 客服热线-->
+			<div class="bar-service">
+				<h3 class="title">
+					<div class="bar-title">客服专区</div>
+				</h3>
+				<ul class="bar-service-list">
+					<li class="kefumm">
+						<p>打造全新娱乐互动社区我们热忱为您服务</p>
+					</li>
+				  <li><a href="/v/10000" target="_blank" class="kefu-btn">进入客服房间</a></li>
+				</ul>
+			</div>
+		</div>
+	
+		<div class="middleright">
+			<div class="main fl">
+				<!--轮播图-->
+				{include file="cycleimg.html"}
+				  
+				<div class="main-navsite clearfix">
+					<!--热门房间-->
+					{include file="navsite_rooms_list.html"}
+					<!--新签艺人榜-->
+					{include file="new_artist_rank.html"}
+				</div>
+			</div>
+			<div class="rightbox fr">
+				{include file="login.html"}
+				<!--排行信息-->
+				<div class="ranklist">
+					{include file="navsite_rooms_rank.html"}
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
+<div class="dashedline" style="height:3px;"></div>
+<!--footer-->
+<div class="foot">
+    <div class="foot-ali clearfix">
+        <div>
+           <div class="afriend">友情链接 <a href="/link.html">更多...</a></div>
+           <div style="width:200px;float:right;">
+               <p><a href="/link.html" class="apply-link">申请友链：</a> <a href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" target="_blank"><img src="{STATIC_API_PATH}/static/images/qqtalk.png" width="79" height="20"></a></p>
+           </div>
+        </div>
+        {if $friendLink}
+        <ul>
+        	{foreach $friendLink $fl}
+            <li><a href="{$fl['url']}" target="_blank">{$fl['site_name']}</a></li>
+            {/foreach}
+      </ul>
+      {/if}
+    </div>
+    <div class="foot-nav clearfix">
+        <div class="nav1">
+            <h3>关于VV酷</h3>
+            <ul>
+                <li><a href="/about.html" target="_blank">关于我们</a></li>
+                <li><a href="/employ.html" target="_blank">高薪诚聘</a></li>
+                <li><a href="/agreement.html" target="_blank">用户协议</a></li>
+                <li><a href="/help/index.html" target="_blank">帮助中心</a></li>
+            </ul>
+        </div>
+        <div class="nav2">
+            <h3>关注VV酷</h3>
+            <ul>
+				<li><a href="http://{$_SERVER['SERVER_NAME']}/HQPlugin/index.html" target="_blank">高清插件下载</li>
+                <li><img src="{STATIC_API_PATH}/static/images/sina.png" width="16" height="16" class="img"><a href="http://weibo.com/vvku" target="_blank">新浪微博</a></li>
+                <li><img src="{STATIC_API_PATH}/static/images/qqwb.png" width="16" height="16" class="img"><a href="#" target="_blank">腾讯微博</a></li>
+            </ul>
+        </div>
+        <div class="nav3">
+            <h3>联系我们</h3>
+            <ul>
+                <li><a href="/contactus.html" target="_blank">联系我们</a></li>
+                <li><a href="/custom.html" target="_blank">客服中心</a></li>
+                <li><a href="/sitemap.html" target="_blank">网站地图</a></li>
+            </ul>
+        </div>
+        <div class="nav4">
+            <h3>诚招伙伴</h3>
+            <ul>
+                <li><a href="/rooms/recruit.php" target="_blank">站长加盟</a></li>
+                <li><a href="/rooms/join.php?module=info&type=2" target="_blank">诚招艺人</a></li>
+                <li><a href="/passport/" target="_blank">免费注册</a></li>
+                <li><a href="/agent.html" target="_blank">渠道代理</a></li>
+            </ul>
+        </div>
+        <a href="#" class="foot-logo">
+        <img alt="VV酷视频社区" title="VV酷-打造全新网上娱乐商圈" src="{STATIC_API_PATH}/static/images/logo.png">
+        </a>    
+    </div>
+    <div class="gray">Copyright © 2006-2012 vvku.com 版权所有 浙ICP备12027086号-1</div>
+</div>
+<!-- WPA Button Begin -->
+<div id="floatdiv">
+    <div class="floatdiv_outter">
+        <div id="showPannelBt" class="undis" style="display: block;"></div>
+        <div id="showPannelbar" style="display:none;"></div>
+        <div id="Pannel_con" class="undis" style="display: block;">
+            <div id="imOnline_open" class="imOnline_open" style="display: block;">
+                <h3 class="imProH2"></h3>
+                <div class="pannel_mid">
+                    <div style="padding:10px 0 0 15px;"><a href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" class="zxkf" target="_blank"></a></div>
+                    <div style="padding:10px 0 10px 15px;"><a href="http://www.vvku.com/help/index.html" class="bzzx" target="_blank"></a></div>
+                </div>
+                <div class="pannel_bottom">
+                    <div style="padding:10px 0 10px 40px;"><a href="http://weibo.com/vvku" class="jgz" target="_blank"></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- WPA Button End -->
+
+<div style="display:none">
+<script type="text/javascript">
+$("img").lazyload({skip_invisible:false,failure_limit:20,effect:"fadeIn"});
+window.onload = function(){
+	var onLoadTime = new quality().getPageLoadTime();
+	new quality().addlog({onLoadTime:onLoadTime});
+}
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+</html>

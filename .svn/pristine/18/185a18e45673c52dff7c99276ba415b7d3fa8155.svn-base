@@ -1,0 +1,43 @@
+<style type="text/css">
+.region-name{background:url({echo PIC_API_PATH.'/p/'.$site['item_url'].'/0/0.jpg'}) repeat-x;color:#222;}
+.custom-img{background:url({echo PIC_API_PATH.'/p/'.$site['header_url'].'/0/0.jpg'}) no-repeat center;}
+</style>
+<!--top-->
+{include file="../common/header.html"}
+<div class="help-header-box">
+    <!--header-->
+    <div class="hd-sub clearfix" id="top">
+        <div class="logo fl">
+            <a href="/" class="fl logo-pic">VV酷视频聊天</a>
+            {if $site['region_id'] > 0}
+            <div class="region fl">
+                <span class="region-name">{$site['city_name']}</span>
+                <a href="javascript:;" onClick="art.dialog.open('/rooms/allcity.html',{follow:this});" style="margin-left:-5px;">[切换城市]</a>
+            </div>
+            {else}
+            <div class="dhz"></div>
+            {/if}
+        </div>
+        <div class="search fr">
+            <form action="javascript:void(0);" onsubmit="return search();">
+                <input type="hidden" name="search_type" value="1" id="search_type" />
+                <input type="text" class="search-text" name="keyword" id="keyword" />
+                <input type="submit" class="search-submit" value="搜索" id="J_search" />
+            </form>
+            <ul class="search-type" id="J_search_type">
+                <li>搜房间</li>
+                <li class="li2" style="display: none;">搜艺人</li>
+            </ul>
+            <div class="search-type-bg"></div>
+        </div>
+    </div>
+    <!--/header-->
+    <script type="text/javascript">
+    function search(){
+        var keyword = $('#keyword').val();
+        var search_type = $('#search_type').val();
+        var region_id='{$site["region_id"]}';
+        ajaxSearch({keyword:keyword,region_id:region_id,type:search_type});
+    }
+    </script>
+</div>

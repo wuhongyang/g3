@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站在线人数明细</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">分站在线人数明细</div>
+</div>
+
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">总在线人数汇总</a></li>{/if}
+    {if $link_array[102]['url']}<li><a href="{$link_array[102]['url']}">总在线人数明细</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}">分站在线人数汇总</a></li>{/if}
+	{if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}" class="active">分站在线人数明细</a></li>{/if}
+	{if $link_array[105]['url']}<li><a href="{$link_array[105]['url']}">房间在线人数汇总</a></li>{/if}
+	{if $link_array[106]['url']}<li><a href="{$link_array[106]['url']}">房间在线人数明细</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+	<form action="{$link_array[101]['url']}" method="get" name="myform" class="search-form">
+    	 当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）&nbsp;&nbsp;
+		 时间：<input type="text" name="search[s_time]" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="{$_GET['search']['s_time']}" class="Wdate" style="width:150px;"> 至
+				<input type="text" name="search[e_time]" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" value="{$_GET['search']['e_time']}" class="Wdate" style="width:150px;">
+		<!--排序：<select id="order" name="search[order]"><option value="desc" {if $_GET['search']['order'] == 'desc'} selected{/if}>降序</option><option value="asc" {if $_GET['search']['order'] == 'asc'} selected{/if}>升序</option></select>-->
+		<input type="hidden" name="data_group_id" value="{$__ADMIN_CURGROUP['groupid']}">
+        <input type="hidden" name="module" value="rooms_user_history" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+	<th>所属站</th>
+    <th>总在线人数</th>
+    <th>真实用户在线人数</th>
+    <th>在线IP数</th>
+    <th>时间</th>
+  </tr>
+  {foreach $list $k $arr}
+  <tr>
+    <td>{echo $k+1}</td>
+	<td>{$arr['siteName']}（{$arr['region_id']}）</td>
+    <td>{$arr['curusertotal']}</td>
+    <td>{$arr['curregusertotal']}</td>
+    <td>{$arr['curiptotal']}</td>
+    <td>{echo date('Y-m-d H:i:s',$arr['createtime'])}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width"><div class="pagenavi" id="lopage">{$page}</div></div>
+
+</body>
+</html>

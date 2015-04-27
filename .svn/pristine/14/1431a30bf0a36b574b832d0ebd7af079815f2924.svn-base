@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/weibo.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="weibo-wrap clearfix">
+            <div class="weibo-main">
+                <div class="box-commit">
+                    <div class="publish-title clearfix">
+                        <span style="display: none;">来说说你的新鲜事！</span>
+                        <p class="right num-word">还可以输入<span class="text-num" id="J_num_text">120</span>个字</p>
+                    </div>
+                    <form enctype="multipart/form-data" class="clearfix" method="post" action="?module=publish">
+                    <input type="hidden" value="web" name="client">
+                    <div id="smileys_list"></div>
+                    <div class="textarea">
+                        <textarea maxlength="120" id="tbody" onClick="initInput(this)" name="tbody" cols="76" rows="5"></textarea>
+                    </div>
+                    <div class="fenlei">
+                    	<div class="mgt10">
+                        <a onClick="showtool('add_pic')" href="javascript:;" class="yellow">图片</a> 
+                        <span class="yellow mgL5">|</span>
+                        <a onClick="showtool('add_mus')" href="javascript:;" class="yellow mgL5">音乐</a> 
+                        <span class="yellow mgL5">|</span>
+                        <a onClick="showtool('add_vid')" href="javascript:;" class="yellow mgL5">视频</a>
+                        </div>
+                        <div id="add_pic">
+                            <h4>请选择要上传的图片</h4>
+                            <p><input type="file" onChange="checkPic(this)" size="30" id="upimg" name="pic"></p>
+                            <p align="center">
+                                <input type="button" class="greenbtn2" value="确定" onClick="addOK('add_pic','分享照片')"> &nbsp;
+                                <input type="button" class="bluebtn2" value="取消" onClick="addCancel('add_pic','upimg')">
+                            </p>
+                        </div>
+                        <div id="add_mus">
+                            <h4>添加MP3歌曲地址</h4>
+                            <p>
+                                <input type="text" size="30" onChange="checkMp3(this)" id="up_music" name="music">
+                            </p>
+                            <p align="center">
+                                <input type="button" class="greenbtn2" value="确定" onClick="addOK('add_mus','分享音乐')"> &nbsp;
+                                <input type="button" class="bluebtn2" value="取消" onClick="addCancel('add_mus','up_music')">
+                            </p>
+                            <p></p>
+                        </div>
+                        <div id="add_vid">
+                            <h4>添加视频地址</h4>
+                            <p>
+                                <span id="status"></span>
+                                <input type="hidden" id="video" name="video">
+                                <input type="text" size="30" onChange="checkVideo(this)">
+                            </p>
+                            <p align="center">
+                                <input type="button" class="greenbtn2" disabled="disabled" value="确定" id="vidbtn"> &nbsp;
+                                <input type="button" class="bluebtn2" value="取消" onClick="addCancel('add_vid','video')">
+                            </p>
+                            <p></p>
+                        </div>
+                    </div>
+                    <div class="publish right"><input type="submit" value="发 布" class="yellowbtn2" style="width:60px;height:24px;"></div>
+                    </form>
+                </div>
+                <div class="weibo-tab clearfix">
+                    <ul>
+                        <li class="{if empty($_GET['type'])}active{/if} tab-left"><a href="weibo.php?module=infocenter">信息中心</a></li>
+                        <li class="{if $_GET['type']=='atme'}active{/if} tab-right"><a href="weibo.php?module=infocenter&type=atme">提到我的</a></li>
+                    </ul>
+                </div>
+                <div class="weibo-content">
+                {if $count < 1}
+                    {if $tag == 'getRelayMyWeibo'}
+                    <div class="center"><img src="{THEMES_URL}service/images/nomention.png"></div>
+                    {else}
+                	<div class="center"></div>
+                    {/if}
+                {else}
+                {foreach $lists $list} {php $tid = $list['tid']; $tbody = ''; $source_uid = $list['tuid']}
+                    <div class="weibo-rows clearfix">
+                        <div class="weibo-face">
+                            <a href="home.php?user={$list['tuid']}"><img src="{PIC_API_PATH}/uin/{$list['tuid']}/50/50.jpg" width="50" height="50"/></a>
+                        </div>
+                        <div class="weibo-row right">
+                            <div class="weibo-msg">
+                                <a href="home.php?user={$list['tuid']}">{$list['tuser']}</a>：<!--微博内容-->{$list['tbody']}
+                                <!--图片-->
+                                <p class="tpic">
+                                {if !empty($list['pic'])}
+                                <img src="{PIC_API_PATH}/p/{$list['pic']}/120/0.jpg" lang="{PIC_API_PATH}/p/{$list['pic']}/420/0.jpg" onclick="thumb(this)" border="0"/>
+                                </p>
+                                {/if}
+                                <!--音乐-->
+                                {if !empty($list['music'])}
+                                <p class="tmusic">
+                                    <object type="application/x-shockwave-flash"
+                                            data="{THEMES_URL}service/js/player/dewplayer.swf" width="200" height="20"
+                                            id="dewplayer" name="dewplayer">
+                                        <param name="movie" value="{THEMES_URL}service/js/player/dewplayer.swf"/>
+                                        <param name="flashvars" value="mp3={$list['music']}"/>
+                                        <param name="wmode" value="transparent"/>
+                                    </object>
+                                </p>
+                                {/if}
+                                <!--视频-->
+                                {if empty($list['video'])}
+                                <div class="tvideo" title="{$list['video']}"></div>
+                                {/if}
+                                <!--转播内容-->
+                                {if !empty($list['source'])}
+                                {php $tsource = $list['source']; $tid = $tsource['tid']; $source_uid = $tsource['tuid'];}
+                                {if $tsource['flag'] > 0}
+                                <div class="weibo-row">
+                                    <div class="weibo-msg">
+                                        <a href="home.php?user={$tsource['tuid']}">{$tsource['tuser']}</a>：{$tsource['tbody']}
+            
+                                        <!--图片-->
+                                        {if !empty($tsource['pic'])}<p class="tpic">
+                                        <img src="{PIC_API_PATH}/p/{$tsource['pic']}/120/0.jpg" lang="{PIC_API_PATH}/p/{$tsource['pic']}/420/0.jpg" onclick="thumb(this)" border="0"/>
+                                    </p>{/if}
+            
+                                        <!--音乐-->
+                                        {if !empty($tsource['music'])}
+                                        <p class="tmusic">
+                                            <object type="application/x-shockwave-flash"
+                                                    data="{THEMES_URL}member/js/player/dewplayer.swf" width="200"
+                                                    height="20" id="dewplayer" name="dewplayer">
+                                                <param name="movie" value="{THEMES_URL}member/js/player/dewplayer.swf"/>
+                                                <param name="flashvars" value="mp3={$tsource['music']}"/>
+                                                <param name="wmode" value="transparent"/>
+                                            </object>
+                                        </p>
+                                        {/if}
+            
+                                        <!--视频-->
+                                        {if !empty($tsource['video'])}
+                                        <div class="tvideo" title="{$tsource['video']}"></div>
+                                        {/if}
+                                    </div>
+                                    <div class="weibo-info clearfix">
+                                        <div class="weibo-date left"><a href="javascript:;">{echo date('m月d日
+                                            H:i',$tsource['posttime'])}</a> <a href="javascript:;">{$client[$tsource['client']]}</a>
+                                        </div>
+                                                <span class="weibo-reply right"><a
+                                                        href="javascript:;">全部转播({$tsource['counts']})</a></span>
+                                    </div>
+                                </div>
+                                {else}
+                                <div class="weibo-row">原文已被删除！</div>
+                                {/if}
+                                {/if}
+                                <!--转播内容结束-->
+                            </div>
+                            <div class="weibo-info clearfix">
+                                <span class="weibo-date left"><a href="javascript:;">{echo date('m月d日
+                                H:i',$list['posttime'])}</a> <a href="javascript:;">{$client[$list['client']]}</a></span>
+                                <span class="weibo-reply right">
+                                    <a href="javascript:;" onclick="initReInput('{$list['tid']}');">转播</a>
+                                    <span class="gray">|</span>
+                                    <a href="weibo.php?module=delete&tid={$list['tid']}" onclick="return confirm('确定删除？');">删除</a>
+                                </span>
+                            </div>
+                            <div class="box-commit" style="display:none;" id="relay-{$list['tid']}">
+                                <form method="post" class="relay-wbform" action="weibo.php?module=publish">
+                                <p id="smileys-{$list['tid']}"></p>
+                                <input type="hidden" value="web" name="client">
+                                <input type="hidden" value="{$source_uid}" name="source_uid">
+                                <input type="hidden" value="{$tid}" name="source">
+                                <div class="wbform-textarea">
+                                    <textarea id="tbody-{$list['tid']}" name="tbody"></textarea>
+                                </div>
+                                <div class="clearfix">
+                                    <p style="float: left;line-height:26px;">还可以输入<span class="text-num">120</span>个字</p>
+                                    <p align="right" style="float: right;"><input type="submit" value="广播" class="yellowbtn2"></p>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {/foreach}    
+                {/if}
+                	<div id="lopage" class="pagenavi">{$page}</div>   
+                </div>
+            </div>
+            <div class="weibo-sidebar right">
+                <div class="my-userinfo">
+                    <div class="clearfix">
+                        <div class="my-face">
+                            <a href="home.php?user={$user['Uin']}"><img width="100" height="100" src="{PIC_API_PATH}/uin/{$user['Uin']}/100/100.jpg"></a>
+                        </div>
+                        <div class="my-status">
+                            <p class="yellow">{$user['Nick']}</p>
+                            <p>用户码：{$user['Uin']}</p>
+                            {if $rolesIcon}
+                            <div>
+                            {foreach $rolesIcon $key $val}
+                                <img src="{$val}" />
+                            {/foreach}
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                    <ul class="my-weibo clearfix">
+                        <li><a href="home.php?user={$user['Uin']}"><span>{$countWeibo}</span><strong>微博</strong></a></li>
+                        <li><a href="weibo.php?module=myfollower&user={$user['Uin']}"><span>{$countFriends}</span><strong>粉丝</strong></a></li>
+                        <li><a href="weibo.php?module=myfollowing&user={$user['Uin']}"><span>{$countFans}</span><strong>关注</strong></a></li>
+                    </ul>
+                </div>
+                <!--<h1>当前动态</h1>
+                <ul class="my-tidings clearfix">
+                    <li>正在热爱音乐吧(100098) <a href="javascript:;" class="ahover">去看看</a></li>
+                    <li>正在热爱音乐吧(100098) <a href="javascript:;" class="ahover">去看看</a></li>
+                    <li>正在热爱音乐吧(100098) <a href="javascript:;" class="ahover">去看看</a></li>
+                </ul>--><!--
+                <h1>粉丝推荐</h1>
+                <ul class="recommend-user clearfix">
+                {foreach $recommendFans $fans}
+                    <li class="clearfix">
+                        <div class="user-face left"><a href="?module=home&uid={$fans['uin']}"><img width="50" height="50" src="{PIC_API_PATH}/uin/{$fans['uin']}/50/50.jpg"></a></div>
+                        <div class="user-info left">
+                            <p>{$fans['nick']}</p>
+                            <p><a class="follow-link" href="?module=addfollow&uin={$fans['uin']}">立即关注</a></p>
+                        </div>
+                    </li>
+                {/foreach}    
+                </ul>-->
+            </div>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">var mysmile = "{THEMES_URL}";</script>
+<script type="text/javascript" src="{THEMES_URL}service/js/taobao.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/textNum_change.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/common.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/weibo.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/ajax.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/jquery.livequery.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/video.js"></script>
+</body>
+</html>

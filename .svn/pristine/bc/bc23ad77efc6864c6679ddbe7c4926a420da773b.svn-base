@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购买成功</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+
+<div class="container flow">
+    <ul class="nav nav-pills">
+        <li class="lis disable"><span class="num">1 </span>选择购买商品</li>
+        <li class="jian yellow">&nbsp;</li>
+        <li class="lis disable"><span class="num">2</span>填写购买信息</li>
+        <li class="jian yellow">&nbsp;</li>
+        <li class="lis active"><span class="num">3</span>购买成功</li>
+    </ul>
+</div>
+
+<div class="container">
+    <div class="successwrap">
+    	<h1>购买成功</h1>
+        <div class="successbox">
+            <h5>购买 <span class="text-waring">{$categories[$info['CategoryId']]['pack_name']}</span> 成功</h5>
+            <dl class="clearfix">
+                <dt class="pull-left">接受用户：</dt>
+                <dd class="pull-left"><span class="text-waring">{$nick}({$info['Uin']})</span></dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="pull-left">{if $info['GroupBackConfig'] == 1}靓号ID{else}商品名称{/if}：</dt>
+                <dd class="pull-left"><span class="text-waring">{$commodityName}</span></dd>
+            </dl>
+            {if $info['IsAging'] == 1}
+            <dl class="clearfix">
+                <dt class="pull-left">有效期：</dt>
+                <dd class="pull-left">{$info['Count']} 天</dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="pull-left">到期日间：</dt>
+                <dd class="pull-left">{echo date('Y年m月d日',$info['Expire'])}</dd>
+            </dl>
+            {/if}
+            <dl class="clearfix">
+                <dt class="pull-left">商品数量：</dt>
+                <dd class="pull-left">{$info['Num']}</dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="pull-left">总金额：</dt>
+                <dd class="pull-left">{$info['Money']} {$unit}</dd>
+            </dl>
+            <dl class="clearfix">
+                <dt class="pull-left">可用余额：</dt>
+                <dd class="pull-left">{$money} {$unit}</dd>
+            </dl>
+        </div>
+        <div class="btnwrap">
+            <button class="btn btn-danger" onclick="location.href='?category_id={$category_id}'">继续购物</button>
+            <a href="/service/account.php?module=vdianlist&group_id={$GroupData['groupid']}" class="btn btn-link">查看交易记录</a>
+        </div>
+    </div>
+</div>
+
+{include file="foot.html"}
+
+</body>
+</html>

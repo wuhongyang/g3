@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加模板管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+table{margin:10px;}
+td{padding:5px;}
+</style>
+</head>
+<body>
+
+<div class="header clean">
+  <div class="header-title left">添加模板管理</div>
+  <div class="header-button right">
+  <a class="add-button" href="{$link_array[101]['url']}">返回</a>
+  </div>
+</div>
+
+<br />
+
+<form method="post">
+<table>
+	<tr>
+        <td>模板名称：</td><td><input type="text" name="tpl_name" value="{$row['name']}" /></td>
+    </tr><tr>
+        <td>模板描述：</td><td><textarea rows="5" name="tpl_desc">{$row['desc']}</textarea></td>
+    </tr><tr>
+        <td>是否开启：</td><td>
+        <input type="radio" name="status" value="1" {if $row['status'] || !isset($row['status'])} checked="checked" {/if} />启用&nbsp;&nbsp;
+        <input type="radio" name="status" value="0" {if !$row['status'] && isset($row['status'])} checked="checked" {/if} />不启用
+        </td>
+    </tr><tr>
+        <input type="hidden" name="id" value="{$row['id']}" />
+        <td colspan="2"><input type="submit" value="保存" /></td>
+    </tr>
+</table>
+</form>
+
+<div class="main-width">{$page}</div>
+
+</body>
+</html>

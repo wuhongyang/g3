@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">角色管理</div>
+  <div class="header-button right">
+  {if $link_array[142]['url']}<a href="{$link_array[142]['url']}&tpl_id={$_GET['tpl_id']}&cate_id={$_GET['search']['cate_id']}" class="add-button">定义新角色</a>{/if}
+  <!--
+  {if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">分组列表</a>{/if}
+  -->
+  </div>
+</div>
+
+<script>
+active_li = 0;
+</script>
+{include file="template/tpl_header.html"}
+
+<div class="page-tools main-width">
+	<form action="{$link_array[138]['url']}" method="get" name="myform" class="search-form">
+    	 角色名称：<input type="text" name="search[name]" value="{$_GET['search']['name']}" />&nbsp;&nbsp;&nbsp;&nbsp;
+       角色ID：<input type="text" name="search[id]" value="{$_GET['search']['id']}">&nbsp;&nbsp;&nbsp;&nbsp;
+         状态：<select name="search[status]">
+        		<option value="-1">请选择</option>
+                <option value="1" {if $_GET['search']['status']==1}selected{/if}>启用</option>
+                <option value="0" {if isset($_GET['search']['status'])&&$_GET['search']['status']==0}selected{/if}>不启用</option>
+        	 </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" value="list" />
+        <input type="hidden" name="search[cate_id]" value="{$_GET['search']['cate_id']}" />
+        <input type="hidden" name="search[tpl_id]" value="{$_GET['tpl_id']}" />
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>角色ID</th>
+    <th>角色名称</th>
+    <th>描述</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $roleList $k $arr}
+  <tr>
+    <td>{echo $k+1}</td>
+    <td>{$arr['id']}</td>
+    <td>{$arr['name']}</td>
+    <td>{$arr['desc']}</td>
+    <td>{if $arr['status']==1}启用{else}不启用{/if}</td>
+    <td>
+    	{if $link_array[142]['url']}<a href="{$link_array[142]['url']}&id={$arr['id']}&tpl_id={$_GET['tpl_id']}">查看/修改</a>{/if}&nbsp;
+      <a href="user_permission.php?id={$arr['id']}&tpl_id={$_GET['tpl_id']}">修改角色权限</a>&nbsp;
+      <a href="javascript:copyRole({$arr['id']});">复制角色</a>&nbsp;
+      <!--
+      {if $link_array[103]['url']}<a href="javascript:delRole({$arr['id']});">删除</a>{/if}&nbsp;
+      -->
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+function delRole(roleid){
+  if(confirm('真的要删除该角色吗？')){
+    $.ajax({
+      url: '?module=del',
+      type: 'POST',
+      data: {roleid:roleid},
+      success: function(data){
+        var data = $.parseJSON(data);
+        if(data.Flag == 100){
+          alert('删除成功');
+          {if $_GET['search']['cate_id']}
+          location.href = '?module=list&search[cate_id]={$_GET['search']['cate_id']}';
+          {else}
+          location.href = '?module=list';
+          {/if}
+        }else{
+          alert(data.FlagString);
+        }
+      }
+    });
+  }
+}
+
+function copyRole(roleid){
+  if(confirm('真的要复制角色吗？')){
+    $.ajax({
+      url: '?module=copy',
+      type: 'POST',
+      data: {roleid:roleid},
+      success: function(data){
+        var data = $.parseJSON(data);
+        if(data.Flag == 100){
+          alert('复制成功');
+          {if $_GET['search']['cate_id']}
+          location.href = '?module=list&search[cate_id]={$_GET['search']['cate_id']}&tpl_id={$_GET['tpl_id']}';
+          {else}
+          location.href = '?module=list';
+          {/if}
+        }else{
+          alert(data.FlagString);
+        }
+      }
+    });
+  }
+}
+</script>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-房间分类管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.mgr20{margin-right: 20px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab" style="border-bottom:none;height:25px;">
+        <span></span><strong>{$sortName}</strong> 分类列表</span>
+        <a href="javascript:;" class="bluebtn fr" id="J_add"><span>添加</span></a>
+        <span class="mgr20 fr">&nbsp;</span>
+        <a href="/group/room_sort.php" class="bluebtn fr"><span>返回</span></a>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt30">
+      <tr>
+        <th>编号</th>
+        <th>房间号</th>
+        <th>房间名称</th>
+        <th>添加日期</th>
+        <th>操作</th>
+      </tr>
+      {foreach $roomList $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['room_id']}</td>
+        <td>{$val['name']}</td>
+        <td>{echo date('Y-m-d',$val['uptime'])}</td>
+        <td>
+            <a href="javascript:delRoom({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var sortId = '{$sortId}';
+$(function(){
+    $('#J_add').click(function(){
+        var content = '<p><span>房间：</span><select name="roomid"><option value="-1">--请选择--</option>';
+        {foreach $rooms $key $val}
+            content += '<option value="{$key}">{echo addslashes($val)}</option>'
+        {/foreach}
+        content += '</select>';
+        art.dialog({
+            title: '添加分类房间',
+            content: content,
+            ok: function(){
+                var room_id = $('select[name="roomid"]').val();
+                if(room_id < 1){
+                    return false;
+                }
+                $.ajax({
+                    url: '?module=room_add',
+                    type: 'POST',
+                    data: {room_id:room_id,sort_id:sortId},
+                    dataType: 'JSON',
+                    success: function(data){
+                        if(data.Flag == 100){
+                            art.dialog({
+                                content: '添加成功',
+                                lock: true,
+                                icon: 'succeed',
+                                ok: function(){
+                                    location.href = '?module=room_list&sort_id='+sortId;
+                                },
+                                cancel: false,
+                                esc: false
+                            });
+                        }else{
+                            art.dialog({
+                                content: data.FlagString,
+                                lock: true,
+                                time: 2
+                            });
+                        }
+                    }
+                })
+            },
+            cancel: true,
+            lock: true
+        })
+    });
+});
+
+function delRoom(id){
+    art.dialog({
+        title: '删除分类房间',
+        content: '您真的要删除该房间吗？',
+        ok: function(){
+            $.ajax({
+                url: '?module=room_del',
+                type: 'POST',
+                data: {id:id},
+                dataType: 'JSON',
+                success: function(data){
+                    if(data.Flag == 100){
+                        art.dialog({
+                            content: '房间删除成功',
+                            lock: true,
+                            icon: 'succeed',
+                            ok: function(){
+                                location.href = '?module=room_list&sort_id='+sortId;
+                            },
+                            cancel: false,
+                            esc: false
+                        });
+                    }else{
+                        art.dialog({
+                            content: data.FlagString,
+                            icon: 'error',
+                            lock: true,
+                            time: 2
+                        });
+                    }
+                }
+            });
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+
+</script>

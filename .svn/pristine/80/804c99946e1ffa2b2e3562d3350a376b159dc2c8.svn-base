@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>排行榜-{$groupInfo['name']}</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+</head>
+<body>
+<body class="diy-body">
+{include file="header.html"}
+<div class="container">
+    <div class="body clearfix">
+    {foreach $rankList $n $val}
+        <div class="rank-list" style=" height:580px;">
+            <div class="rank-item">
+                <div class="rank-header clearfix">
+                    <h3 class="pull-left">{$val['name']}</h3>
+                    <ul class="nav nav-pills pull-left">
+                      <li class="active"><a href="#week_{$n}" data-toggle="tab">本周</a></li>
+                      <li><a href="#last_week_{$n}" data-toggle="tab">上周</a></li>
+                      <li><a href="#month_{$n}" data-toggle="tab">月榜</a></li>
+                      <li><a href="#total_{$n}" data-toggle="tab">总榜</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="week_{$n}">
+                        <table>
+                        {foreach $val['week'] $key $val2}
+                            <tr>
+                            	<td width="30" align="center">
+                            	{if $key<3}
+                                    <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                                {else}
+                                    <span>{echo $key+1}</span>
+                                {/if}
+                                </td>
+                                {if $val2['SortType']==2}
+                                <td align="left">
+                                    <a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{$val2['Nick']}</a>
+                                </td>    
+                                {else}
+                                <td align="left">
+                                    <a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{$val2['Nick']}</a>
+                                </td>
+                                <td width="30" align="left">
+                                	{if !empty($val2['Level'])}
+                                	<img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val2['Level']}.png" />
+                                	{/if}
+                                </td>
+                                {/if}
+                                <td width="80" align="right">
+                                	{$val2['Weight']}
+                                </td>
+                        	</tr>
+                        {/foreach}
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="last_week_{$n}">
+                        <table>
+                        {foreach $val['last_week'] $key $val2}
+                            <tr>
+                            	<td width="30" align="center">
+                            	{if $key<3}
+                                    <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                                {else}
+                                    <span>{echo $key+1}</span>
+                                {/if}
+                                </td>
+                                {if $val2['SortType']==2}
+                                <td align="left">
+                                    <a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{$val2['Nick']}</a>
+                                </td>    
+                                {else}
+                                <td align="left">
+                                    <a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{$val2['Nick']}</a>
+                                </td>
+                                <td width="30" align="left">
+                                	{if !empty($val2['Level'])}
+                                	<img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val2['Level']}.png" />
+                                	{/if}
+                                </td>
+                                {/if}
+                                <td width="80" align="right">
+                                	{$val2['Weight']}
+                                </td>
+                        	</tr>
+                        {/foreach}
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="month_{$n}">
+                        <table>
+                        {foreach $val['month'] $key $val2}
+                            <tr>
+                            	<td width="30" align="center">
+                            	{if $key<3}
+                                    <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                                {else}
+                                    <span>{echo $key+1}</span>
+                                {/if}
+                                </td> 
+                                {if $val2['SortType']==2}
+                                <td align="left">
+                                    <a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{$val2['Nick']}</a>
+                                </td>    
+                                {else}
+                                <td align="left">
+                                    <a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{$val2['Nick']}</a>
+                                </td>
+                                <td width="30" align="left">
+                                	{if !empty($val2['Level'])}
+                                	<img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val2['Level']}.png" />
+                                	{/if}
+                                </td>
+                                {/if}
+                                <td width="80" align="right">
+                                	{$val2['Weight']}
+                                </td>
+                        	</tr>
+                        {/foreach}
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="total_{$n}">
+                        <table>
+                        {foreach $val['total'] $key $val2}
+                            <tr>
+                            	<td width="30" align="center">
+                            	{if $key<3}
+                                    <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                                {else}
+                                    <span>{echo $key+1}</span>
+                                {/if}
+                                </td> 
+                                {if $val2['SortType']==2}
+                                <td align="left">
+                                    <a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{$val2['Nick']}</a>
+                                </td>    
+                                {else}
+                                <td align="left">
+                                    <a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{$val2['Nick']}</a>
+                                </td>
+                                <td width="30" align="left">
+                                	{if !empty($val2['Level'])}
+                                	<img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val2['Level']}.png" />
+                                	{/if}
+                                </td>
+                                {/if}
+                                <td width="80" align="right">
+                                	{$val2['Weight']}
+                                </td>
+                        	</tr>
+                        {/foreach}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+	{/foreach}
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

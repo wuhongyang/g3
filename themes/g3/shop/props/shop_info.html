@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>商城</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+
+	<!--主体-->
+    <div class="bd clearfix" id="bd-daoju">
+        <ul class="step-list clearfix">
+            <li>选择购买道具</li>
+            <li class="active">填写购买信息</li>
+            <li>确认购买信息</li>
+            <li>购买成功</li>
+        </ul>
+        <div class="step3-1">
+          <div class="desc">
+              <span>当前账户：{$user['Nick']}（{$user['Uin']}）</span>
+              <span  style="width:150px;float:right;display:inline-block;">当前余额：<span class="red" id="J_my_wealth">{$money}</span> V宝</span>
+          </div>
+          <form method="post" action="?module=confirm" id="J_form_buyInfo">
+            <input type="hidden" name="id" value="{$id}" />
+            <div class="cont1">
+              <table width="897" cellspacing="0" cellpadding="0" border="0" class="tbl_info">
+                <caption> 
+                  <label>选择购买对象：<input name="who" type="radio" isChecked="1" value="1" {if $who==1}checked{/if}>给自己购买</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <label><input name="who" type="radio" value="2" {if $who==2}checked{/if}>给好友购买</label>
+                  <span id="J_other" class="other" {if $who==1}style="display:none;"{/if}>&nbsp;&nbsp;&nbsp;&nbsp;好友ID：<input type="text" name="other_uin" id="other_uin" {if $target_uin>0}value="{$target_uin}"{/if}><em style="margin-left:20px;"></em>好友昵称：<span id="J_nick"></span></span>
+                </caption>
+                <tbody>
+                  <tr>
+                    <th width="180">商品</th>
+                    <th width="120">购买数量</th>
+                    <th>使用期限</th>
+                    <th>单价</th>
+                    <th>总价</th>
+                  </tr>
+                  <tr>
+                    <td>{$info['name']}</td>
+                    <td>
+                      <div class="num">
+                        <input type="text" class="text" name="buy_num" id="J_num_again" value="{$buynum}" maxlength="4" price="{$info['price']}" send_money="{$info['money']}" expire="{$info['expire']}">
+                        <div class="left" id="J_btn_minus"></div>
+                        <div class="right" id="J_btn_plus"></div>
+                      </div>
+                    </td>
+                    <td id="J_expire">{echo $info['expire']*$buynum}天</td>
+                    <td>{$info['price']} V宝</td>
+                    <td id="J_total_price">{echo $info['price'] * $buynum} V宝</td>
+                  </tr>
+                </tbody>
+              </table>  
+            </div>     
+                <p>赠送V豆：<span id="J_send_money">{if $info['send_money']==1}{echo $info['money'] * $buynum}{else}无{/if}</span></p>
+                <p style="line-height:24px;text-align:right;">应付总额：<span class="red" id="J_pay_money">{echo $info['price'] * $buynum}</span> V宝</p>
+                <p style="line-height:24px;text-align:right;">我的当前余额：{$money} V宝</p>
+                <div style="margin-top:30px;text-align:center;">    
+                  <input type="button" value="下一步" class="btn btn-next" id="J_submit"><a href="buyprops.php" class="btn-prev">&lt;&lt;返回上一步</a>
+                </div>
+          </form>
+        </div>
+    </div>
+
+	{include file="footer.html"}
+</div>
+
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{THEMES_URL}shop/js/shop.js"></script>
+<!--[if  IE 6]>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/fixTopNavForIE6.min.js"></script>
+<![endif]-->
+</body>
+</html>
+
+
+

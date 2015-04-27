@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>友情链接</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+{include file="head.html"}
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+<script type="text/javascript">
+	function checkParam(){
+		var siteName = $('input[name="SiteName"]').val();
+		if(siteName == ''){
+			alert('网站名称不能为空');
+			return false;
+		}
+		var url = $('input[name="Url"]').val();
+		var url_pattern = /^http:\/\/.+$/;
+		if(!url_pattern.test(url)){
+			alert('网址必须以http://开头');
+			return false;
+		}
+		var order = $('input[name="Order"]').val();
+		if(order=='' || isNaN(order)){
+			alert('排序必须为数字');
+			return false;
+		}
+		return true;
+	}
+</script>
+<body>
+<div class="header clean">
+  <div class="header-title left">{if isset($_GET['id']) && $_GET['id']>0}修改{else}添加{/if}友情链接</div>
+  {if $link_array[101]['url']}<div class="header-button right"><a href="{$link_array[101]['url']}" class="add-button">返回</a></div>{/if}
+</div>
+<form method="post" class="form" action="{if $_GET['module']=='add'}$link_array[102]['url']{else}$link_array[103]['url']{/if}" onsubmit="return checkParam();">
+	{if $_GET['module']=='update'}
+	<input type="hidden" name="Id" value="{$id}">
+	{/if}
+    <p>
+		<label>网站名称：</label>
+		<input type="text" name="SiteName" value="{$info['site_name']}" size="30">
+    </p>
+    <p>
+		<label>网址：</label>
+		<input type="text" name="Url" value="{if $info['url']}{$info['url']}{else}http://{/if}" size="30">
+    </p>
+    <p>
+		<label>排序：</label>
+		<input type="text" name="Order" value="{$info['order']}" size="30">
+    </p>
+    <p>
+		<label>网站LOGO：</label>
+		<span id="review">
+			<select name="ImgCatId" onchange="showPic('pic',this.value);" id="category">
+				<option value="-1">请选择图片分类</option>
+			</select>
+			<select name="ImgPicId" id="pic">
+				<option value="-1">请选择图片</option>
+			</select>
+			<input type="button" onclick="showPicture('pic','show_gif','review');" value="图片预览" style="width:87px;">
+			<input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;">
+		</span>
+    </p>
+    <p>
+    	<label></label>
+    	<input type="submit" class="submit" value="保存信息">
+    </p>
+</form>
+<script type="text/javascript">
+	//图片和分类联动
+	var cat = '<{$cat}>';
+	cat = (typeof JSON == 'object') ? JSON.parse(cat) : eval('(' + cat + ')');
+	var pic = '<{$pic}>';
+	pic = (typeof JSON == 'object') ? JSON.parse(pic) : eval('(' + pic + ')');
+	//gif图
+	showCategory("category","<{$info['img_cat_id']}>");
+	<{if $info['img_cat_id']!='' && $info['img_cat_id']!=-1}>
+	showPic("pic","$info['img_cat_id']",'<{$info["img_pic_id"]}>');
+	<{/if}>
+
+	//pic:图片所在select的id
+	//pic_show:创建样式id
+	//show_area:显示位置
+	function showPicture(pic_select_id,pic_show,show_area){
+		var picObj = document.getElementById(pic_select_id);
+		var val = picObj.options[picObj.selectedIndex].value;
+		var obj = document.getElementById(pic_show);
+		if(val == -1){
+			if(obj)
+				obj.parentNode.removeChild(obj);
+			alert("没有可以预览的图片");
+			return false;
+		}
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		for(var k in pic){
+			if(pic[k].id == val){
+				var review = document.getElementById(show_area);
+				var div = document.createElement("div");
+				div.id = pic_show;
+				div.style.marginLeft = '120px';
+				div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+				review.insertBefore(div,null);
+				//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+			}
+		}
+	}
+
+	function showOriginal(pic_select_id){
+		var picObj = document.getElementById(pic_select_id);
+		var val = picObj.options[picObj.selectedIndex].value;
+		
+		if(val == -1){
+			alert("没有可以查看的图片");
+			return false;
+		}
+		
+		for(var k in pic){
+			if(pic[k].id == val){
+				window.open("{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg");
+			}
+		}
+	}
+
+</script>
+</body>
+</html>

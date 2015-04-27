@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>印章列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">印章列表</div>
+  <div class="header-button right">
+  {if $link_array[102]['url']}<a class="add-button" href="{$link_array[102]['url']}&stamp_add=1&parent_id={$_GET['parent_id']}">添加印章</a>{/if}
+  {if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}">返回</a>{/if}
+  </div>
+</div>
+<br/>
+<table class="table-list main-width" >
+	<tr>
+    <th width="5%">编号</th>
+    <th width="15%">印章分类名称</th>
+    <th width="15%">印章名称</th>
+    <th >印章图片</th>
+    <th width="15%">更新时间</th>
+    <th width="15%">操作</th>
+  	</tr>
+  	{foreach $list $one}
+  	<tr>
+  	<td>{$one['stamp_id']}</td>
+  	<td>{$cate_name}</td>
+  	<td>{$one['stamp_name']}</td>
+  	<td>
+  	<object width="50" height="50" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0">
+	<param name="movie" value="{php echo cdn_url(PIC_API_PATH.'/p/'.$one['stamp_img_path'].'/0/0.jpg')}">
+	<param name="quality" value="high">
+	<embed width="50" height="50" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$one['stamp_img_path'].'/0/0.jpg')}" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash">
+	</object>
+  	</td>
+  	<td>{eval echo date("Y-m-d H:i:s", $one['uptime'])}</td>
+  	<td>
+  	<a href="{$link_array[102]['url']}&stamp_id={$one['stamp_id']}&stamp_edit=1&parent_id={$_GET['parent_id']}">印章修改</a>&nbsp;&nbsp;
+  	<a onclick="return confirm('确认要删除吗?')" href="{$link_array[102]['url']}&stamp_id={$one['stamp_id']}&parent_id={$_GET['parent_id']}&stamp_del=1">删除</a>
+  	</td>
+  	</tr>
+  	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

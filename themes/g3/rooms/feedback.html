@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>建议反馈 - VV酷视频聊天-在线KTV-聊天交友-视频游戏</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+
+<body class="navsite-body">
+{include file="header.html"}
+<div class="bd clearfix">
+  <div class="feed-box">
+    <h1>意见、建议、投诉信箱</h1>
+    <h2>“<span class="red">*</span>”必填</h2>
+    <form class="feed-form" onsubmit="return checkform()" method="post" >
+      <div>
+        <label><span class="red">*</span> 请填写您的意见、建议或投诉内容（最多500字）</label>
+        <textarea id="content" name="content" onkeydown="lengthLimit('content', 'counter', 500);" onkeyup="lengthLimit('content', 'counter', 500);" ></textarea>
+		<div style="margin:0;padding:0;"><span id="counter">0</span>/500字</div>
+      </div>
+      <iframe frameborder="0" scrolling="no" width="680" height="60" src="/rooms/feedback_upfile.php"></iframe>
+      <div>
+        <h3>已上传图片：</h3>
+        <ul id="upfile-list" class="upfile clearfix"></ul>
+      </div>
+      <div> <span class="red">*</span> 联系方式：
+        <input type="text" id="qq" name="qq" placeholder="请输入QQ" />
+        或
+        <input type="text" id="phone" name="phone" placeholder="请输入手机号" />
+        <span class="red">联系方式至少填一个</span>
+        <p style="margin-top:12px;margin-left:78px;">请输入您的联系方式，以便我们尽快为您解决问题。您的联系方式将会严格保密，绝不向第三方泄露。</p>
+      </div>
+      <div class="submit-feedback">
+        <input type="submit" value="提交反馈" />
+      </div>
+    </form>
+  </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript">
+function removefile(obj){
+	obj.parentNode.parentNode.removeChild(obj.parentNode);
+}
+
+function checkform(){
+	var content = document.getElementById('content');
+	var phone = document.getElementById('phone');
+	var qq = document.getElementById('qq');
+	var rst = true;
+	if(content.value == ''){
+		content.style.border = 'solid 1px #DA8585';
+		content.style.background = '#FFEFEF';
+		rst = false;
+	}else{
+		content.style.border = 'solid 1px #7F9DB9';
+		content.style.background = '#FFF';
+	}
+	if((phone.value == '' && qq.value == '')){
+		phone.style.border = 'solid 1px #DA8585';
+		phone.style.background = '#FFEFEF';
+		qq.style.border = 'solid 1px #DA8585';
+		qq.style.background = '#FFEFEF';
+		rst = false;
+	}else if((isNaN(qq.value) || qq.value < 10000) && (isNaN(phone.value) || phone.value.length < 11)){
+		qq.style.border = 'solid 1px #DA8585';
+		qq.style.background = '#FFEFEF';
+		phone.style.border = 'solid 1px #DA8585';
+		phone.style.background = '#FFEFEF';
+		rst = false;
+	}else{
+		qq.style.border = 'solid 1px #7F9DB9';
+		qq.style.background = '#FFF';
+		phone.style.border = 'solid 1px #7F9DB9';
+		phone.style.background = '#FFF';
+	}
+	return rst;
+}
+
+function lengthLimit(elem, showElem, max){ 
+     var elem = document.getElementById(elem); 
+     var showElem = document.getElementById(showElem); 
+     var max = max || 50;// 最大限度字符，汉字按两个字符计算 
+
+     function getTextLength(str){// 获取字符串的长度 一个汉字为2个字符 
+        return str.replace(/[^\x00-\xff]/g,"xx").length; 
+     }; 
+
+// 监听textarea的内容变化 
+     if(/msie (\d+\.\d)/i.test(navigator.userAgent) == true) {// 区分IE 
+       elem.onpropertychange = textChange; 
+     }else{ 
+       elem.addEventListener("input", textChange, false); 
+     }
+     function textChange(){// 内容变化时的处理 
+          var text = elem.value; 
+          var count = getTextLength(text); 
+          if(count > max){// 文字超出截断 
+             for(var i=0; i<text.length; i++){ 
+                if(getTextLength(text.substr(0, i)) >= max){ 
+                elem.value = text.substr(0, i); 
+                if(showElem) showElem.innerHTML = elem.value.length;// 显示输出结果 
+                break; 
+                }; 
+             } 
+         }else{ 
+            if(showElem) showElem.innerHTML = elem.value.length;// 显示输出结果 
+         }; 
+
+     };
+     textChange();// 加载时先初始化 
+};
+
+</script>
+</body>
+</html>

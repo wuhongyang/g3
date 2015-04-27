@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.disable{background:#CCCCCC;}
+#member_value, #deny_value{display:none;}
+#members{width:222px;height:120px;overflow-y:scroll;padding:2px;border:solid 1px #CCC;float:left; margin-left:20px; position:relative;}
+#members li{line-height:20px;padding-left:5px;margin:0px;}
+.selected{background:#3399FF;}
+</style>
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+                {include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                    <div class="roomhd">管理员设置</div>
+                    <form method="post" id="form">
+                    <input type="hidden" value='{$member}' id='member_value' name="member"/>
+                    <ul class="formlist formlist5">
+                    	<li class="clearfix">
+                            <label>类型：</label>
+                            <p class="st clearfix">
+                            {foreach $roleList $key $val}
+                                <input type="radio" name="role_id" value="{$val['id']}"{if $key==0} checked{/if} />
+                                <span class="txt4">{$val['name']}</span>
+                            {/foreach}
+                            </p>
+                        </li>
+                        <li class="clearfix">
+                            <p>
+                                <ul id="members"></ul>
+                                <input type="hidden" name="deny_value" id="deny_value" value="{$deny}">
+                                <p style="width:75px;float:left; padding-left:10px;">
+                                <input type="button" value="添加" id="add_id" class="greenbtn2" /><br />
+                                <input type="button" value="删除" id="del_id" class="bluebtn2" />
+                                </p>
+                                <table style="text-align:center; display:none; float:left;" id="d_members">
+                                    <tr>
+                                        <td colspan="2" height="30" style="background:#E6EDF3; border:1px solid #D7D7D7;"><b>添加用户</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="30" style="border-left:1px solid #D7D7D7">&nbsp;&nbsp;用户id：</td>
+                                        <td height="30" style="border-right:1px solid #D7D7D7"><input type="text" name="member_id" id="new_id" size="15" />&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" height="30" style="border:1px solid #D7D7D7; border-top:none;"><a href="javascript:void(0);" id="ok" class="greenbtn" style="margin-left:25px;"><span>确定</span></a><a href="javascript:void(0);" id="cancel" class="bluebtn" style="margin-left:5px;"><span>取消</span></a></td>
+                                    </tr>
+                                </table>
+                            </p>
+                        </li>
+                        <li class="clearfix">
+                            <p><input type="submit" value="保存" class="yellowbtn2" /></p>
+                        </li>
+                    </ul>
+                    </form>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$(function(){
+	showVal();
+})
+//获取当前选中类型下的uin
+function getVal(){
+	var member_value = $('#member_value').val();
+	member_value = eval("("+member_value+")"); 
+	var role_id = $('[name=role_id]:checked').val();
+	var member_ids = member_value[role_id] = member_value[role_id]?member_value[role_id]:"";
+	return member_ids;
+}
+//展示
+function showVal(){
+	var member_ids = getVal();
+	member_ids = member_ids.split(",");
+	var html    = "";
+	for(var i=0;i<member_ids.length;i++){
+		html += "<li>"+member_ids[i]+"</li>";
+	}
+	$("#members").html(html);
+}
+//切换类型时，框内内容转换
+$('[name=role_id]').change(function(){
+	showVal();
+})
+//添加
+$("#add_id").click(function(){
+	$("#d_members").show();
+})
+//取消
+$("#cancel").click(function(){
+	$("#d_members").hide();
+})
+//
+$("#members li").live("click", function(){
+	$("#members li").removeClass("selected");
+	$(this).addClass("selected");
+})
+//删除
+$("#del_id").click(function(){
+	var new_ids    = new Array();
+	var selected   = $("li.selected");
+	var value 	   = selected.html();
+	if(!value){
+		alert("没有选中删除成员");
+		return;
+	}
+	/***********/
+	var member_value = $('#member_value').val();
+	member_value = eval("("+member_value+")"); 
+	var role_id = $('[name=role_id]:checked').val();
+	var member_ids = member_value[role_id] = member_value[role_id]?member_value[role_id]:"";
+	member_ids = member_ids.split(",");
+	/***********/
+	for(var i=0;i<member_ids.length;i++){
+		if(member_ids[i] != value){
+			var j = 0;
+			new_ids.push(member_ids[i]);	
+			j++;
+		}
+	}
+	member_value[role_id] = new_ids.join(",");
+	$('#member_value').val(JSON.stringify(member_value));
+	showVal();
+})
+//添加
+$("#ok").click(function(){
+	var new_id_value = $("#new_id").attr("value");
+	if(!new_id_value){
+		alert("不能为空");
+		$("#new_id").attr("value","");
+		$("#d_members").hide();
+		return;
+	}
+	/***********/
+	var member_value = $('#member_value').val();
+	member_value = eval("("+member_value+")"); 
+	var role_id = $('[name=role_id]:checked').val();
+	var member_ids = member_value[role_id] = member_value[role_id]?member_value[role_id]:"";
+	member_ids = member_ids.split(",");
+	/***********/
+	for(var i=0;i<member_ids.length;i++){
+		if(member_ids[i] == new_id_value){
+			alert("已存在该ID");
+			$("#new_id").attr("value","");
+			$("#d_members").hide();
+			return;
+		}
+	}
+
+	member_ids.push(new_id_value);
+	member_value[role_id] = member_ids.join(",");
+	$("#new_id").attr("value","");
+	$('#member_value').attr("value", JSON.stringify(member_value));
+	$("#d_members").hide();
+	showVal();
+})
+</script>
+</body>
+</html>

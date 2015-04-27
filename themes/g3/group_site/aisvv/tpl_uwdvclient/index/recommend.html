@@ -1,0 +1,19 @@
+<div class="recom_room">
+    <h3>热门房间</h3>
+	<div class="rooms">
+		<ul>
+			{foreach $roomList['roomList'] $key $val}
+			{if $key<12 }      
+				<li id="{$val['id']}">
+					<a href="/v/{$val['id']}"  target="_blank" title="{$val['name']}" class="img">
+						<img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$val['id'].'/150/110.jpg');}"  width="100" height="73" alt="{$val['name']}" title="{$val['name']}" />
+					</a>
+					<a href="/v/{$val['id']}" target="_blank" title="{$val['name']}" class="name">{$val['name']}</a>
+					<p>房间号：{$val['id']}</p>
+					<p>人数：<span class="num">{$val['curuser']}</span></p>
+				</li>
+			{/if}
+			{/foreach}
+		</ul>
+	</div>
+</div>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <p class="weltit">欢迎进入渠道管理</p>
+                <p class="fs14 mgL50">您现在还不是渠道人员，渠道管理的大部分信息还不能看到，您可以：</p>
+                <ul class="formlist mgL30">
+                    <!--<li class="clearfix mgt30">
+                        <div class="sqdzbg"></div>
+                    	<div>
+                            <p class="fs20 yellow bold"><a href="/rooms/join.php?module=info&type=1" class="yellow">申请站长</a></p>
+                            <p>通过申请站长和真实性验证后，即可成为站长并拥有您的站。</p>
+                        </div>
+                    </li>-->
+                    <li class="clearfix mgt30">
+                        <div class="sqszbg"></div>
+                        <div>
+                            <p class="fs20 yellow bold"><a href="/rooms/join.php?module=info&type=3&group_id={$user['GroupId']}" class="yellow">申请室主</a></p>
+                            <p>通过申请室主并签约房间后，即能正常兑换收入。</p>
+                        </div>
+                    </li>
+                    <li class="clearfix mgt30">
+                        <div class="sqszbg"></div>
+                        <div>
+                            <p class="fs20 yellow bold"><a href="/rooms/join.php?module=info&type=2&group_id={$user['GroupId']}" class="yellow">申请艺人</a></p>
+                            <p>通过申请艺人并签约房间后，即可赚取您的演艺收入。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

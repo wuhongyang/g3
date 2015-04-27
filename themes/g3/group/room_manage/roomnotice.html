@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="room_manage/userroommenu.html"}
+    <div class="mgtb15">
+        <form id="uproomnotice" method="post" enctype="multipart/form-data" style="margin:0 0 100px 50px;">
+            <p><label>轮播图片：<input type="file" name="cover" /></label></p>
+            <p style="margin:10px 0;">
+                <label>图片链接：<input type="text" id="url" style="width:194px;" name="url" /></label>
+                <span style="color:#aaa">例：http://www.baidu.com</span>
+            </p>
+            <p>
+                <a href="javascript:$('#uproomnotice').submit();" class="yellowbtn fs14 mglr20"><span>上&nbsp;&nbsp;传</span></a>
+            </p>    
+        </form>
+        <p class="mglr20">轮播图预览：</p>
+        <div class="formCplay" id="formCplay">
+        <{foreach $roomNotice $notice}>
+            <div class="picwrap">
+                {if {$notice['desc']}}
+                <a target="_blank" href="<{$notice['desc']}>"><img src="<{$notice['img_name']}>" width="80" height="90"></a>
+                {else}
+                <img src="<{$notice['img_name']}>" width="80" height="90">
+                {/if}
+                <p><a href="javascript:del('<{$notice['del_key']}>');">删除</a></p>
+            </div>
+        <{/foreach}> 
+        </div>
+
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+function del(key){
+	if( ! confirm('确定删除？')) return;
+	window.location.href='?module=roomnotice&del_roomnotice='+key;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    <div class="graywrap" style="background:#FFF;">
+       <h4>修改站资料</h4>
+       <a href="group.php?module=group_info" class="bluebtn arT5"><span>&gt;返回站信息</span></a>
+       <form action="group.php?module=group_update_submit" onsubmit="return checkForm(this);" method="post">
+       <div class="centerdiv" style="padding:30px;">
+           <h3 style="font-size:14px;font-weight:bold;">站资料</h3>
+           <ul class="formlist">
+               <li class="clearfix">
+                   <label>站ID：</label>
+                   <span>{$userGroupInfo['groupid']}</span>
+               </li>
+               <li class="clearfix">
+                    <label>站名称：</label>
+                    <input name="name" size="64" id="name" value="{$userGroupInfo['name']}" type="text">
+                                <span style="color:#F00">* 站名称不能大于10个字</span>
+               </li>
+                         <li class="clearfix">
+                   <label>站公告：</label>
+                   <textarea name="notice" style="width:456px;height:80px;">{$userGroupInfo['notice']}</textarea>
+                               <span style="color:#F00">* 站公告不能多于100字</span>
+               </li>
+               <li class="clearfix">
+                  <label>站LOGO：</label>
+                  <iframe frameborder="0" scrolling="no" height="30" width="80%" src="?module=upload_logo"></iframe>
+                  <input type="hidden" name="logo" id="logo" value="{$userGroupInfo['logo']}">
+               </li>
+               <li class="clearfix" id="logo-img">
+                  <label>&nbsp;</label>
+                  {if !empty($userGroupInfo['logo'])}
+                  <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$userGroupInfo['logo'].'/100/30.jpg');}">
+                  {/if}
+               </li>
+               <li class="mgt20 clearfix"><input type="submit" value="保存" class="yellowbtn2" style="margin-left:150px;"></li>
+           </ul> 
+       </div>
+       </form>
+       
+
+       <div class="centerdiv" style="padding:30px;">
+           <h3 style="font-size:14px;font-weight:bold;">站轮播图</h3>
+           <ul class="formlist">
+               <li class="clearfix">
+                    <label>已经上传轮播图：</label>
+                    <div class="formCplay" id="formCplay" style="width:520px;">
+                    {foreach $roomNotice $notice}
+                        <div class="picwrap">
+                            <a href="{php echo cdn_url(PIC_API_PATH.'/p/'.$notice['img_name'].'/540/200.jpg');}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$notice['img_name'].'/540/200.jpg');}" width="225" height="84"></a>
+                            <p><a href="javascript:del('<{$notice['del_key']}>');">删除</a></p>
+                        </div>
+                    {/foreach}
+                    </div>
+               </li>
+               <li class="clearfix">
+                   <label>请选择：</label>
+                   <iframe scrolling="no" frameborder="0" width="540" height="360" src="?module=uproomnotice"></iframe>
+               </li>
+           </ul> 
+       </div>
+    </div>                
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+function checkForm(form){
+	if(form.name.value.length>10){
+		alert('站名称长度不能超过10个汉字');
+		return false;
+	}
+	if(form.name.value==''){
+		alert('站名称不能为空');
+		return false;
+	}
+	return true;
+}
+function del(key){
+	if( ! confirm('确定删除？')) return;
+	window.location.href='?module=group_update&del='+key;
+}
+</script>
+</body>
+</html>

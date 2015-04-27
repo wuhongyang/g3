@@ -1,0 +1,16 @@
+<?php
+/**[BUSINESS_BASE]**/
+define('ROOMS_LIST_COUNT','30');//房间列表显示个数
+define('ROOMS_SWAP_PRICE','5');//房间信息互换价格
+define('CLEAN_FLAG','0');//清除标签
+define('CLEAN_DATE','0');//清除时间
+define('BEGIN_DATE','123456');//开始时间
+define('END_DATE','1234567');//结束时间
+define('GRADE_SPACE','180');//升级最小间隔时间
+define('GRADE_SPEED','1.0');//升级加速倍数
+define('VOID_BEGIN','01:00:01');//无效开始时间
+define('VOID_END','09:00:00');//无效结束时间
+define('VIP1','1.1');//VIP加速
+define('VIP2','1.2');//VIP加速
+define('VIP3','1.3');//VIP加速
+define('USER_LIST','30');//VIP加速

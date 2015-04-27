@@ -1,0 +1,84 @@
+<div class="slidebar fl">
+    <!--区块一 当前在线用户-->
+    <div class="bar-online">
+        <h3 class="title-online">当前在线玩家共有</h3>
+        <p class="bar-online-count">{$rooms_case['total_user']}</p>
+    </div>
+    <!--区块二 我的脚印-->
+    <div class="bar-myhistory" id="J_foot_block">
+        <h3 class="title">
+            <div class="bar-title">我的脚印</div>
+        </h3>
+        <div class="caicai">
+            <p>您还未有房间访问记录，</p>
+            <p>快去踩踩吧！</p>
+            <div class="jiaoyin"></div>
+        </div>
+    </div>
+    <!--区块三 站点导航-->
+    <div class="bar-navsite">
+        <h2 class="title">
+            <div class="bar-title">热门站点</div>
+        </h2>
+        <ul class="bar-navsite-list" id="J_regions">
+            {foreach $rooms_case $parent}
+            <li>
+                <a href="http://{$parent['groupid']}./{$_SERVER['HTTP_HOST']}">
+                    <span class="fl">{$parent['name']}</span>
+                </a>
+            </li>
+            {/foreach}
+            <!-- <li id="J_all_regions"><a href="javascript:void(0);"><span class="fl">所有分站&gt;&gt;</span></a></li> -->
+       </ul>
+    </div>
+	<!---区块四 官方公告-->
+	<div class="official-notice">
+		<h2 class="title">
+			<div class="bar-title">新闻公告<a href="/notice/index.html" class="more" target="_blank">更多</a></div>
+		</h2>
+		<ul class="notice-list">
+			{foreach $notice $row}
+			<li><a href="/notice/{$row['id']}.html" target="_blank">{$row['title']}</a></li>
+			{/foreach}
+	   </ul>
+	</div>
+    <!--区块五 帮助中心-->
+    <div class="help-center">
+        <h2 class="title">
+            <div class="bar-title">帮助中心<a href="/help/index.html" class="more" target="_blank">更多</a></div>
+        </h2>
+        <ul class="help-list">
+			{foreach $help $row}
+			<li><a href="/help/{$row['id']}.html" target="_blank">{$row['title']}</a></li>
+			{/foreach}
+       </ul>
+    </div>
+    <!--区块六 客服热线-->
+    <div class="bar-service">
+        <h3 class="title">
+            <div class="bar-title">客服专区</div>
+        </h3>
+        <ul class="bar-service-list">
+            <li class="kefumm">
+                <p>打造全新娱乐互动社区我们热忱为您服务</p>
+            </li>
+          <li><a href="/v/10000" target="_blank" class="kefu-btn">进入客服房间</a></li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+/*$(function(){
+    $('#J_all_regions').on('click',function(){
+        $('#J_regions').find('li.nothot').show();
+        $(this).find('.fl').html('热门分站&gt;&gt;');
+        $(this).attr('id','J_hot_regions');
+    });
+
+    $('#J_hot_regions').on('click', function(){
+        $('#J_regions').find('li.nothot').hide();
+        $(this).find('.fl').html('所有分站&gt;&gt;');
+        $(this).attr('id','J_all_regions');
+    });
+});*/
+</script>

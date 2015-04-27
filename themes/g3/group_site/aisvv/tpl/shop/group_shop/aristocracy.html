@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link rel="stylesheet" href="{THEMES_URL}group_site/{$themes}/src/css/reset.css" />
+<link rel="stylesheet" href="{THEMES_URL}group_site/{$themes}/src/css/shop.css" />
+<link rel="stylesheet" href="{THEMES_URL}group_site/{$themes}/src/css/topnav-min.css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--左边侧边栏-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+                <a href="{$categoryInfo['img_src']}" target="_blank"><img src="{echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg')}" width="960" height="230" /></a>
+            {else}
+                <img src="{echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg')}" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--右边主内容区-->
+        <div class="shopwrap btbr">
+            <h2>
+                <div class="shopnav">{$categoryInfo['cate_name']}特权介绍</div>
+            </h2>
+            <p class="redp">{$categoryInfo['cate_name']}是网站最尊贵的会员，他们象征着荣誉，更象征着更多的特权，同时也享受着至高无上的服务。</p>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="noble-tablecs">
+              <tr>
+                <th width="240">特权</th>
+                {foreach $list $val}
+                <th>{$val['commodity_name']}</th>
+                {/foreach}                             
+              </tr>
+              <tr>
+                <th>贵族标识</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/mennoble.gif" width="55" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/childnoble.gif" width="55" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/bonoble.gif" width="55" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/huonoble.gif" width="55" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/gongnoble.gif" width="55" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/kingnoble.gif" width="55" height="18"></td>
+                {/if}
+              </tr>
+              <tr>
+                <th>排名靠前</th>
+                {if 1 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>     
+                {/if}           
+              </tr>
+              <tr>
+                <th>优先进入人满房间</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if} 
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if} 
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if} 
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if} 
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if} 
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>      
+                {/if}           
+              </tr>
+              <tr>
+                <th>贵族专用印章</th>
+                {if 1 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>    
+                {/if}            
+              </tr>
+              <tr>
+                <th>贵族专用礼物</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}
+             </tr>
+              <tr>
+                <th>拒绝抱麦</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}          
+              </tr>
+              <tr>
+                <th>可购买贵族座驾</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}          
+              </tr>
+              <tr>
+                <th>所有VIP功能</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}              
+              </tr>
+              <tr>
+                <th>房间内免踢权（室主不可踢）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}           
+              </tr>
+              <tr>
+                <th>房间内免踢权（副室不可踢）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}           
+              </tr>
+              <tr>
+                <th>房间内免踢权（管理不可踢）</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}              
+              </tr>
+              <tr>
+                <th>免禁文本权（室主不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}              
+              </tr>
+              <tr>
+                <th>免禁文本权（副室不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}             
+              </tr>
+              <tr>
+                <th>免禁文本权（管理不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}               
+              </tr>
+              <tr>
+                <th>免禁语音权（室主不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}              
+              </tr>
+              <tr>
+                <th>免禁语音权（副室不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}              
+              </tr>
+              <tr>
+                <th>免禁语音权（管理不可禁）</th>
+                {if 1 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 2 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 3 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 4 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 5 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>
+                {/if}
+                {if 6 <= $aristCount}
+                <td class="white"><img src="{THEMES_URL}group_site/{$themes}/src/img/guo.png" width="23" height="18"></td>                
+                {/if}                
+              </tr>
+              <tr>
+                <th style="color:#ee4b00;font-size:18px;">购买价格</th>
+                {foreach $list $val}
+                <td>
+                    <p style="color:#ee4b00; font-size:12px;">{echo intval($val['price']/10000)}元</p>
+                    <p><button type="button" class="btn btn-warning" onclick="location.href='shop.php?module=info&category_id={$category_id}&goods_id={$val['id']}&room_id={$room_id}'">立即购买</button></p>
+                </td>
+                {/foreach}
+              </tr>
+            </table>
+            <h2>
+                <div class="shopnav">贵族升级规则</div>
+            </h2>
+            <p class="redp">贵族的获得与晋级以用户在网站的消费金额作为判定条件，如果用户达到了升级数额的标准后，即向高一等级升级。如果用户未达到所在爵位的每月最低消费标准，那么就向低一等级降级。</p>
+            <p class="text-muted mgt10">贵族爵位获得、保级、晋级标准积分表（1金币=1积分）：</p>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="noble-tablecs mgt10">
+              <tr>
+                <th>贵族等级名称</th>
+                <th>当月获得爵位累计消费积分</th>
+                <th>当月保级累计消费积分</th>
+                <th>当月晋级累计消费积分</th>
+              </tr>
+              <tr>
+                <th>国王</th>
+                <td class="white">500000000</td>
+                <td class="white">200000000</td>
+                <td class="white">/</td>
+              </tr>
+              <tr>
+                <th>公爵</th>
+                <td>300000000</td>
+                <td>100000000</td>
+                <td>200000000</td>
+              </tr>
+              <tr>
+                <th>候爵</th>
+                <td class="white">150000000</td>
+                <td class="white">50000000</td>
+                <td class="white">150000000</td>
+              </tr>
+              <tr>
+                <th>伯爵</th>
+                <td>80000000</td>
+                <td>25000000</td>
+                <td>700000000</td>
+              </tr>
+              <tr>
+                <th>子爵</th>
+                <td class="white">40000000</td>
+                <td class="white">10000000</td>
+                <td class="white">40000000</td>
+              </tr>
+              <tr>
+                <th>男爵</th>
+                <td>20000000</td>
+                <td>5000000</td>
+                <td>20000000</td>
+              </tr>
+            </table>
+            <p class="text-muted mgt10">例如：某男爵用户A，截至1月15日累计消费获得80000000积分（即消费8000元），达到当月升级伯爵等级服务，添加贵族标识（即自1月15日起）。其贵族使用日期为升级日至下个月的月末，即1月15日-2月28日。若2月1日-2月28日期间，该项用户的累计消费没有达到25000000积分（即消费2500元），则次月即3月1日起降级为子爵。</p>
+        </div>
+    </div>
+</div>
+
+{include file="footer.html"}
+
+</body>
+</html>

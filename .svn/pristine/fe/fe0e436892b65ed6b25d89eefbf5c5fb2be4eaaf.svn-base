@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/number.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/kcost.js"></script>
+<title>站V点充值</title>
+<script>
+$(function(){
+	
+	
+	$("#form").submit(function(){
+		var value = $("#MoneyWeight").attr("value");
+		var uin = $("#uin").val();
+		var reuin = $("#reuin").val();
+		var group_id = $("#GroupId").val();
+		var regroup_id = $("#regroup_id").val();
+		var str = "未填写金额数或超出范围";
+		if(group_id < 1 || regroup_id < 1){
+			alert("请输入站ID");
+			return false;
+		}
+		if( group_id != regroup_id){
+			alert("两次输入站ID不一致");
+			return false;
+		}
+		if(uin < 1 || reuin < 1){
+			alert("请输入用户ID");
+			return false;
+		}
+		if( uin != reuin){
+			alert("两次输入用户ID不一致");
+			return false;
+		}
+		if(!value || value<0){
+			alert(str);
+			return false;
+		}
+		//if(value > 10000000000){
+		//	alert(str);
+		//	return false;
+		//}
+		if($("#Desc").val() == ""){
+			alert("请填写备注");
+			return false;
+		}
+	})
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">站点用户划账</div>
+</div >
+{include "kcost/vtab.html"}
+
+<form method="post" class="form" action="" id="form">
+	<p>
+		<label style="width:150px;">站ID：</label>
+		<input type="text" name="GroupId" id="GroupId" value="{$__ADMIN_CURGROUP_ID}"  readonly="readonly" />
+	</p>
+	<p>
+		<label style="width:150px;">确认站ID：</label>
+		<input type="text" name="regroup_id" id="regroup_id" value="{$__ADMIN_CURGROUP_ID}"  readonly="readonly" />
+	</p>
+	<p>
+		<label style="width:150px;">用户ID：</label>
+		<input type="text" name="uin" id="uin" />
+	</p>
+	<p>
+		<label style="width:150px;">确认用户ID：</label>
+		<input type="text" name="reuin" id="reuin" />
+	</p>
+	<p>
+		<label style="width:150px;">操作类型：</label>		
+		<select name="child_id" id="child_sel">
+			<option value="106">存入</option>
+			<option value="107">支出</option>
+		</select>
+	</p>
+    <p>
+        <label style="width:150px;">金额：</label>
+        <input type="text" name="MoneyWeight" size="32" value="" id="MoneyWeight" />
+        <p>
+			<label style="width:150px;">备注：</label>
+			<input type="text" name="Desc" size="32" value="" id="Desc" />
+		</p>
+		<p style="margin-left:125px;color:blue" name="string" id="string">零</p>        
+    </p>
+    <p>
+    	<label></label>
+    	<input type="submit" class="submit" value="提交信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+</body>
+</html>

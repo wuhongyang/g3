@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form p{margin-top: 10px;}
+.form .hide{display: none;}
+.form p span{margin-right:10px;}
+.form p .tp5 input{position: relative;top:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">房间分类列表</h3>
+        <div class="fr">
+            <span style="display:inline-block;margin-right:20px;" class="gray">最多添加10个分类</span>
+            <span style="display:inline-block;"><a href="javascript:;" class="bluebtn" id="J_add"><span>添加</span></a></span>
+        </div>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="table">
+      <tr>
+        <th>分类ID</th>
+        <th>分类名称</th>
+        <th>添加日期</th>
+        <th>操作</th>
+      </tr>
+      {foreach $sortList $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['name']}</td>
+        <td>{echo date('Y-m-d',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+            <a href="javascript:up({$val['id']});">上移</a>
+            {else}
+            <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($sortList)-1}
+            <a href="javascript:down({$val['id']});">下移</a>
+            {else}
+            <span style="color:#999;">下移</span>
+            {/if}
+            <a href="javascript:editSort({$val['id']},'{$val['name']}');">编辑</a>
+            <a href="?module=room_list&sort_id={$val['id']}">查看</a>
+            <a href="javascript:delSort({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#J_add').click(function(){
+        var nums = $('#table').find('tr').length;
+        if(nums >= 11){
+            _show_msg('最多添加10个分类');
+            return false;
+        }
+        var content = getHtml();
+        art.dialog({
+            title: '添加分类',
+            content: content,
+            ok: function(){
+                if(!checkParam()){
+                    return false;
+                }
+                $('#form').submit();
+                return false;
+            },
+            cancel: true,
+            lock: true
+        })
+    });
+
+    $(document).on('click', 'input[name="style"]', function(){
+        var style = $(this).val();
+        if(style == 1){
+            $('#upload_text').removeClass('hide');
+        }else{
+            $('#upload_text').addClass('hide');
+        }
+    })
+});
+
+//只有两个选项，根据是否有MD5值来判断哪个选中
+function getHtml(id,name,icon){ 
+    name = name || '';
+    icon = icon || '';
+    var none_selected = 'checked';
+    var custom_selected = '';
+    if(icon){
+        custom_selected = 'checked';
+        none_selected = '';
+    }
+    var action = name ? 'sort_edit' : 'sort_add';
+    var content = '<form class="form" action="?module=' + action + '" method="post" id="form" enctype="multipart/form-data" target="iframe">';
+    if(id > 0){
+        content += '<input type="hidden" name="id" value="'+id+'">';
+    }
+        content += '<p><span>分类名称：</span><input type="text" name="name" size="30" value="' + name + '"></p>';
+        content += '<p>';
+            content += '<span>菜单图标：</span>';
+            content += '<span class="tp5"><input type="radio" name="style" value="1" ' + custom_selected + ' id="custom"><label for="custom">自定义</label></span>';
+            content += '<span class="tp5"><input type="radio" name="style" value="0" ' + none_selected + ' id="none"><label for="none">无</label></span>';
+        content += '</p>';
+        if(icon){
+            content += '<p><span>当前图标：</span><img src="{php echo cdn_url(PIC_API_PATH."/p/'+icon+'/0/0.jpg");}" /></p>'
+            content += '<p id="upload_text">';
+            content += '<input type="hidden" name="icon" value="' + icon + '">';
+        }else{
+            content += '<p id="upload_text" class="hide">';
+        }
+        content += '<span>上传图片：</span><input type="file" name="custom_icon"></p>';
+        content += '<iframe name="iframe" style="display:none;"></iframe>';
+    content += '</form>'
+    return content;
+}
+
+function checkParam(){
+    var name = $('input[name="name"]').val();
+    var length = $('input[name="name"]').val().length;
+    if(length == 0){
+    	alert('请输入分类名称');
+    	return false;
+    }
+    if(length > 6){
+    	alert('字数不能超过6个');
+    	return false;
+    }
+    var   pattern   =   /^[a-z\d\u4E00-\u9FA5]+$/i; 
+	if(!pattern.test(name)) {
+		alert( "分类名称只能包含中文、字母、数字 "); 
+    	return false;
+	}
+    return true;
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=sort_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+
+function editSort(id,name){
+    $.ajax({
+        url: '?module=sort_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.length <= 0){
+                return ;
+            }
+            var content = getHtml(id,json.name,json.icon);
+            art.dialog({
+                title: '编辑分类',
+                content: content,
+                ok: function(){
+                    if(!checkParam()){
+                        return false;
+                    }
+                    $('#form').submit();
+                    return false;
+                },
+                cancel: true,
+                lock: true
+            });
+        }
+    });
+   
+}
+
+function delSort(id){
+    art.dialog({
+        title: '删除分类',
+        content: '您真的要删除该房间分类吗？',
+        ok: function(){
+            $.ajax({
+                url: '?module=sort_del',
+                type: 'POST',
+                data: {id:id},
+                dataType: 'JSON',
+                success: function(data){
+                    if(data.Flag == 100){
+                        art.dialog({
+                            content: '分类删除成功',
+                            lock: true,
+                            icon: 'succeed',
+                            ok: function(){
+                                location.href = '?module=sort_list';
+                            },
+                            cancel: false,
+                            esc: false
+                        });
+                    }else{
+                        art.dialog({
+                            content: data.FlagString,
+                            icon: 'error',
+                            lock: true,
+                            time: 2
+                        });
+                    }
+                }
+            });
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+
+function up(id){
+    $.ajax({
+        url: '?module=up',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '上移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=sort_list';
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+
+function down(id){
+    $.ajax({
+        url: '?module=down',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '下移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=sort_list';
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+</script>

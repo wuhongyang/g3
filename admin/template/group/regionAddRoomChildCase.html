@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file="head.html"}
+<title>添加城市配置</title>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+window.onload = function(){
+	show_province("{$case['province']}");//默认选中省编号
+	show_city("{$case['province']}","{$case['city']}");//省编号，默认选中市编号
+	show_area("{$case['city']}","{$case['area']}");//市编号,默认选中区/县编号
+}
+</script>
+</head>
+<body>
+<h3 class="pageTitle">添加二级分类</h3>
+
+<div class="body">
+    <div class="menuTab"></div>
+    <form method="post" style="padding:20px;">
+    	<input type="hidden" name="id" value="{$case['id']}" />
+        <input type="hidden" name="parent_id" value="{$parent['id']}" />
+        <p><label>一级分类名称：</label> {$parent['name']}</p>
+        <p><label>二级分类名称 ：</label> <input type="text" name="name" value="{$case['name']}" size="25" /></p>
+        <p style="margin-left:90px;"><label>状态：</label>
+        	<input type="radio" name="status" value="1" {if $case['status']==1} checked {/if} />使用 &nbsp;
+        	<input type="radio" name="status" value="0" {if $case['status']==0} checked {/if} />不使用</p>
+        <p style="margin-left:90px;"><input type="submit" value="更新配置"> &nbsp; <input type="reset" value="重置"></p>
+	</form>
+</div>
+
+</body>
+</html>

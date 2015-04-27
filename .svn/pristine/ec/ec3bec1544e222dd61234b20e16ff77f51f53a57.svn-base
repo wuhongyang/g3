@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>渠道类别管理</title>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改渠道类别</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="{if $info}?module=update{else}?module=add{/if}" method="post" class="form">
+    {if $info}<input type="hidden" name="id" value="{$info['id']}" />{/if}
+    <p>
+        <label>对应规则：</label>
+        <select name="cate[rule]">
+        	<option value="-1">请选择</option>
+            {foreach $rules $rule}
+            <option value="{$rule['id']}" {if $info['rule_id']==$rule['id']}selected{/if}>{$rule['name']}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+        <label>渠道类别名称：</label>
+        <input type="text" name="cate[name]" id="name" value="{$info['name']}" size="32" />
+    </p>
+    <p>
+        <label>类别描述：</label>
+        <textarea name="cate[desc]" rows="2" cols="26" id="desc">{$info['desc']}</textarea>&nbsp;&nbsp;<font color="red">（请描述该渠道类别的功能概要等）</font>
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="cate[status]" id="yes" value="1" {if $info['status']==1}checked{/if} /><label for="yes" style="position:relative;top:-2px; padding-left:5px; width:auto;">启用</label>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="cate[status]" value="0" id="no" {if $info['status']!=1}checked{/if} /><label for="no" style="position:relative;top:-2px; padding-left:5px; width:auto;">不启用</label>
+    </p>
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+</body>
+</html>

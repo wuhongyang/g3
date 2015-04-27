@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>基本资料完善成功</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/topnav-min.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body class="bdnew">
+{include file="header_group_site.html"}
+<div class="container bd bd-radius">
+	<div class="upload-head-hd">
+    	<span><i class="sucimg"></i>基本资料完善成功，去房间看看~</span>
+        <a href="/" class="tiaoguo">&gt;去首页</a>
+    </div>
+    <div class="upload-head-bd">
+        <ul class="thumbnails">
+            {foreach $rooms $val}
+            <li>
+                <a href="/v/{$val['id']}" class="thumbnail" target="_blank">
+                    <img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$val['id'].'/260/190.jpg');}" width="260" height="190" alt="{$val['description']}">
+                    <div class="mask">
+                        <span>{echo empty($val['name']) ? $val['id'] : $val['name']}（{$val['id']}）</span>
+                        <em>{echo intval($val['curuser'])}人</em>
+                    </div>
+                </a>
+                <a class="name">————{echo empty($val['name']) ? $val['id'] : $val['name']}————</a>
+            </li>
+            {/foreach}
+        </ul>        
+  </div>
+</div>
+</body>
+</html>

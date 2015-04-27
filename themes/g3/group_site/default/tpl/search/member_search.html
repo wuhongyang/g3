@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>会员搜索-{$groupInfo['name']}</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+<style type="text/css">
+.mg{margin-left:20px;}
+.rank-member ul li .iborder{
+	border:1px solid #c13d66 !important;
+}
+.thumbnail .caption{ line-height:10px; padding:0px;}
+.rank-member .thumbnail .caption .intro { margin:0 0 5px;}
+</style>
+</head>
+<body class="diy-body">
+{include file="header.html"}
+<div class="container">
+    <form class="form-search form-inline" method="get" action="search.php">
+    <input type="hidden" name="module" value="s" />
+        <div class="input-append">
+            <input type="text" name="keywords" class="span2 search-query"{if $_GET['keywords']!=''} value="{$_GET['keywords']}"{/if} />
+            <button type="submit" class="btn">搜索</button>
+        </div>
+        <div class="search-way">
+        <div style="padding-left:160px;">
+            <span class="mg">性别：</span>
+            <label class="radio">
+                <input type="radio" name="gender" value="1" style="width:16px;" class="checkbox-ie"{if $_GET['gender']==1} checked{/if} /> 男
+            </label>
+            <label class="radio">
+                <input type="radio" name="gender" value="2" style="width:16px;" class="checkbox-ie"{if $_GET['gender']==2} checked{/if}> 女
+            </label>
+            <span class="mg">年龄:</span>
+            <select name="age_min" style="width:65px;">
+                <option value="">请选择</option>
+                {foreach $age $val}
+                <option value="{$val}"{if $_GET['age_min']==$val} selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+            <span>~</span>
+            <select name="age_max" style="width:65px;">
+            	<option value="">请选择</option>
+                {foreach $age $val}
+                <option value="{$val}"{if $_GET['age_max']==$val} selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+            <span class="mg">地区:</span>
+            <select style="width:100px;" name="province">
+                <option value="-1">请选择</option>
+                {foreach $provinces $key $val}
+                <option value="{$key}" {if $_GET['province']==$key}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+            <select style="width:100px;" name="city" id="city">
+                <option value="-1">请选择</option>
+            </select>
+        </div>
+        </div>
+    </form>
+</div>
+<div class="container rank-member">
+	<div class="body clearfix">
+        <ul class="thumbnails">
+        {foreach $vipList['list'] $val}
+            <li>
+                <div class="thumbnail">
+                  <a href="/service/home.php?user={$val['uin']}" title="{$val['nick']}" target="_blank"><img alt="{$val['nick']}" title="{$val['nick']}" style="width:150px;height:188px;" src="{PIC_API_PATH}/uin/{$val['uin']}middle/150/188.jpg"></a>
+                  <div class="caption">
+                    <p class="name"><a href="/service/home.php?user={$val['uin']}" title="{$val['nick']}" class="main_text" target="_blank">{$val['nick']}</a></p>
+                    <p class="intro">{$val['age']}岁{php if($val['cityname'])echo '，'.str_cut_out($val['cityname']);}</p>
+                  </div>
+                </div>
+            </li>
+        {/foreach}
+        </ul>
+        {$vipList['page']}
+    </div> 
+</div>
+
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript">
+var phpVar = {
+    province: '{$_GET["province"]}',
+    city: '{$_GET["city"]}'
+}
+$(function(){
+    //初始化所在地区
+    if(phpVar.province > 0){
+        _display_cities(phpVar.province,phpVar.city);
+    }
+    $('select[name="province"]').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+	{if $_GET["province"]>0&&$_GET["city"]>0}
+	_display_cities({$_GET["province"]},{$_GET["city"]});
+	{/if}
+});
+</script>
+</body>
+</html>

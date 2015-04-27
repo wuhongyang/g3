@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>积分规则主键组列表</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">积分规则主键组列表</div>
+  <div class="header-button right">
+  {if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">添加主键组</a>{/if}
+  </div>
+</div >
+<ul class="page-tab">
+	<li>{if $link_array[101]['url']}<a href="{$link_array[101]['url']}">主键列表</a>{/if}</li>
+	<li>{if $link_array[103]['url']}<a href="{$link_array[103]['url']}"  class="active">主键组</a>{/if}</li>
+</ul>
+<div style="padding:20px;">
+
+<table class="table-list main-width" style="margin-top:10px;">
+	<tr>
+		<th>编号</th>
+		<th>名称</th>
+		<th>说明</th>
+		<th>状态</th>
+		<th>添加时间</th>
+		<th>操作</th>
+	</tr>
+	{foreach $list $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['name']}</td>
+		<td>{$one['desc']}</td>
+		<td>{$one['status_name']}</td>
+		<td>{$one['add_time_name']}</td>
+		<td>{if $link_array[102]['url']}<a href="?module=compose_update&compose_id={$one['id']}">编辑</a>{/if}</td>
+	</tr>
+	{/foreach}
+</table>
+{$page}
+</div>
+</body>
+</html>

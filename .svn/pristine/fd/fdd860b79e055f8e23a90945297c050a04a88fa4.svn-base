@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>KMS_userModify</title>
+<script type="text/javascript">
+function allSelect(obj,level_div) {
+	var res;
+	if (obj.checked == true){
+		res = true;
+	} else {
+		res = false;
+	}
+	checkArr = document.getElementById(level_div).getElementsByTagName('input');
+	for (var i = 0; i < checkArr.length; i++) {
+		checkArr[i].checked = res;
+	}
+	if (res == false){
+		obj.checked = false;
+	}
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">权限管理</div>
+  <div class="header-button right"><a href="?module=group_list" class="add-button">返回</a></div>
+</div>
+<form name="myform" method="post" onsubmit='javascript:return sysuser_modify();' class="form">
+	<p>
+		<label>权限组分类：</label>
+		<select name="CId" id="CId" >
+		<option value="">请选择</option>
+		{foreach $cluster $key $cluster_arr}
+		<option value="{$cluster_arr['id']}" {if $cluster_arr['id'] == $group_info['cid']}selected{/if}>{$cluster_arr['cluster_name']}</option>
+		{/foreach}
+		</select>
+	</p>
+	<p>
+		<label>权限组名称：</label>
+		<input type="text" name="user" id="user" value="<{$group_info['group_name']}>" maxlength="15" style="width:150">&nbsp;<font color="red">*&nbsp;&nbsp;</font>
+	</p>
+	<p>
+		<label>赋予权限：</label>
+		请勾选您想赋予给该帐号的权限，权限最小化原则。
+	</p>
+	<table id ='level_all' >
+		<tr class="tr3">
+          <td width="10%" height=45 align="right"><input name="level_b" id="level_b" value="level" onclick="allSelect(this,'level_all')" type="checkbox">&nbsp;&nbsp;</td>
+          <td width="90%">&nbsp;<strong>选中所有权限</strong></td>
+        </tr>
+	{foreach $levels $key $level_arr}
+		{foreach $level_arr['parent'] $par_key $par_arr}
+        <tr class="tr3">
+          <td width="10%" height=45 align="right"><input name="level_a" id="level_a" value="level" onclick="allSelect(this,'lev{$level_arr['case_id'].$par_arr['parent_id']}')" type="checkbox">&nbsp;&nbsp;</td>
+          <td width="90%">&nbsp;<strong>{$level_arr['case_name']} --- {$par_arr['parent_name']}</strong></td>
+        </tr>
+        <tr class="tr3">
+          <td width="10%" height=45 align="right">&nbsp;&nbsp;</td>
+          <td width="90%" id="lev{$level_arr['case_id'].$par_arr['parent_id']}">&nbsp;
+		{foreach $par_arr['child'] $ch_key $ch_name}
+			<input type="checkbox" name="levels[]" id="levels" value="{$level_arr['case_id'].'_'.$par_arr['parent_id'].'_'.$ch_name['child_id']}" {if $group_info['levels'][$level_arr['case_id']][$par_arr['parent_id']][$ch_name['child_id']] > 0 && $Id >0} checked {/if}/>&nbsp;{$ch_name['child_name']}&nbsp;
+	  	{/foreach}
+		  </td>
+        </tr>
+		{/foreach}
+	{/foreach}
+	</table>
+	<p>
+		<label></label>
+		<input type="submit" name="btnSubmit" value=" 立 即 修 改 >>> " style="width:140;height:32"><input type="hidden" id="id" name="id" value="<{$group_info['id']}>"><input type="hidden" name="userID" id="userID" value="<{$userID}>">
+	</p>
+</form>
+</body>
+</html>

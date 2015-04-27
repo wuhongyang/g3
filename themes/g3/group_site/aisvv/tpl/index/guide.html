@@ -1,0 +1,88 @@
+<div class="navbar-fixed-bottom" id="navbar-fixed-bottom">
+    <div class="navbar-wrap">
+        <div class="transparent-layer" style="display:block;"></div>
+        <div class="container">
+            <ul class="nav navbar-nav unstyled" id="navx">
+                <li class="pull-left"><span>当前测试角色：</span></li>
+                <li class="pull-left">
+                    <div class="btn-group normal-user dropup"  id="dropdown-user">
+                        <button type="button" class="btn dropdown-toggle">{$current_role['role_name']}</button>
+                        {if $rst_role}
+                        <ul class="dropdown-menu">
+                        	{foreach $rst_role $one_role}
+                            <li><a href="#" onclick="changeRole('{$one_role['role_name']}');">{$one_role['role_name']}</a></li>
+                            {/foreach}                          
+                        </ul>
+                        {/if}
+                    </div>
+                </li>
+                {if $current_role['account_details'][$account_pos]['room_id']}
+                <li class="pull-left">
+                    <a target="_blank" href="/v/$current_role['account_details'][$account_pos]['room_id']" class="btn btns btn-enterroom">进入房间</a>
+                </li>
+                {/if}
+                <li class="pull-left">
+                    <a target="_blank" href="/shop/index.php" class="btn btns btn-checkshop">查看商城</a>
+                </li>
+                <li class="pull-left">
+                    <a target="_blank" href="http://www.yagusoft.com/mm.html" class="btn btns btn-template">模版特色</a>
+                </li>
+                <li class="pull-left">
+                    <a target="_blank" href="/help.html" class="btn btns btn-helpcenter">帮助中心</a>
+                </li>
+                <li class="pull-left">
+                    <div class="btn-group cooperation"  id="dropdown-cooperation">
+                        <button type="button" class="btn btns btn-cooperation dropdown-toggle">合作联系</button>
+                        <ul class="dropdown-menu">
+                            <li><span>合作热线</span></li>
+                            <li><span class="red">400-677-2115</span></li>
+                            <li><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" class="qqtalk"></a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+            <a href="javascript:void(0);" class="nav-close close-arrow" id="nav-close">收起引导栏</a>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(function(){
+	//底部引导栏效果 
+	$("#nav-close").click(
+		function(){
+			$(".transparent-layer").toggle(),
+			$("#navx").toggle(),
+			$(this).toggleClass("open-arrow")
+			if($(this).text()=="收起引导栏")
+			{
+				$(this).text("展开引导栏")
+			}
+			else{
+				$(this).text("收起引导栏")
+			}
+			return false;
+		})
+	$("#dropdown-user").hover(function(){
+		$(this).find(".dropdown-menu").toggle()
+	})
+	$("#dropdown-cooperation").hover(function(){
+		$(this).find(".dropdown-menu").toggle(),
+		$(this).find(".btn-cooperation").toggleClass("btn-cooperation-hover")
+	})
+})
+//更改角色
+function changeRole(role_name){
+	$.ajax({
+        url: '/group_site/intentional_customer.php?module=changeRole',
+        type: 'POST',
+        data: "role_name="+role_name,
+        dataType: 'JSON',
+        success: function(data){
+        	location.href = "?is_guide=1&role_name="+data['role_name']+"&account_pos="+data["account_pos"];
+        }
+    });
+	
+}
+</script>

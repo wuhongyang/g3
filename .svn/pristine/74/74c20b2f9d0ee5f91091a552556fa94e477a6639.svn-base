@@ -1,0 +1,41 @@
+<div class="body-side">
+	<ul class="body-side-menu">
+    	{if $GroupData['EXT']['chinabank_id']['value']}
+    	<li {if $type=='index'}class="active"{/if}><a href="/shop/index.php?roomid={$roomid}">网银</a></li>
+        {/if}
+        {if $GroupData['EXT']['tenpay_id']['value']}
+        <li {if $type=='tenpay'}class="active"{/if}><a href="/shop/index.php?type=tenpay&roomid={$roomid}">财付通</a></li>
+        {/if}
+        {if $GroupData['EXT']['baofoo_id']['value']}
+        <li {if $type=='mobilecard'}class="active"{/if}><a href="/shop/index.php?type=mobilecard&roomid={$roomid}">手机充值卡</a></li>
+        <li {if $type=='gamecard'}class="active"{/if}><a href="/shop/index.php?type=gamecard&roomid={$roomid}">游戏卡</a></li>
+        {/if}
+        <li {if $type=='vdouexchange'}class="active"{/if}><a href="/shop/index.php?type=vdouexchange&roomid={$roomid}">金豆兑换</a></li>
+    </ul>
+    <div class="service clean" style="display:none;">
+    	<span class="left" style="padding-left:10px;">充值中遇到问题联系</span>
+        <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" class="left">
+        <img border="0" src="http://wpa.qq.com/pa?p=2:7040494:52" alt="在线客服" title="在线客服" class="left"/>在线客服
+        </a>
+    </div>
+    
+    <div class="notice">
+    	<h3>郑重声明</h3>
+        <div class="clean">
+        	<i class="left">&raquo;</i>
+            <p class="right">金币是站内使用的虚拟币，仅限于站内房间内获取礼物道具，或在某些游戏场次做为记分单位，以增加游戏乐趣。</p>
+        </div>
+        <div class="clean">
+        	<i class="left">&raquo;</i>
+            <p class="right">金币不能兑换为现钞，也不能公开拍卖。</p>
+        </div>
+        <div class="clean">
+        	<i class="left">&raquo;</i>
+            <p class="right">站内严禁用户、代理私下买卖金币的行为，一经发现给予永久冻结帐号的处罚。</p>
+        </div>
+        <div class="clean">
+        	<i class="left">&raquo;</i>
+            <p class="right">对用户或代理私下买卖金币所造成的损失，站内不承担责任。</p>
+        </div>
+    </div>
+</div>

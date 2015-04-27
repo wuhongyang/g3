@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>广告统计</title>
+<link href="{THEMES_URL}template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">广告统计</div>
+</div>
+<div class="page-tools main-width">
+    <form action="" method="get" name="myform" class="search-form">
+        时间：<input type="text" style="width:100px;" class="Wdate" value="{$_GET['search']['stime']}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="search[stime]"> 至 
+              <input type="text" style="width:100px;" class="Wdate" value="{$_GET['search']['etime']}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="search[etime]"> &nbsp;&nbsp;
+              <input value="{$_GET['from']}" name="from" type="hidden" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table id="table-list" border="0" align="left" >
+  <tr align="left">
+    <th width='20%' align="left">注册时间</th>
+    <th width='20%' align="left">用户ID</th>
+    <th width='20%' align="left">昵称</th>
+    <th width='20%' align="left">注册ip</th>
+    <th width='20%' align="left">联盟ID</th>
+    <th width='20%' align="left">联盟站id</th>
+  </tr>
+  {foreach $list['list'] $key $val}
+  <tr align="left">
+    <td width='20%'>{echo date('Y-m-d H:i:s',$val['RegisterTime'])}</td>
+    <td width='20%'>{$val['Uin']}</td>
+    <td width='20%'>{$val['Nick']}</td>
+    <td width='20%'>{$val['RegisterIp']}</td>
+    <td width='20%'>{$val['Fromname']}</td>
+    <td width='20%'>{$val['Fromuid']}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width"><div class="pagenavi" id="lopage">{$list['page']}</div></div>
+</body>
+</html>

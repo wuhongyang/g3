@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-公告和帮助</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form action="?module={if empty($info)}add{else}update{/if}" method="post" id="J_form" onSubmit="return checkParam();" target="iframe">
+    {if !empty($info)}<input type="hidden" name="id" value="{$info['id']}">{/if}
+    <ul class="formlist">
+        <li class="clearfix">
+            <label>标题：</label>
+            <div class="fl">
+                <input type="text" name="title" value="{$info['title']}" size="30"><span class="txt2">不能超过25个字。</span>
+            </div>
+        </li>
+        <li class="clearfix">
+            <label>分类：</label>
+            <select name="category">
+                <option value="-1">请选择</option>
+                {foreach $classify $key $val}
+                <option value="{$key}" {if $info['category']==$key}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+        </li>
+        <li class="clearfix">
+            <label>&nbsp;</label>
+            <div class="fl">
+                <textarea name="content" id="content" cols="90" rows="20">{$info['content']}</textarea>
+            </div>
+        </li>
+        <li class="clearfix">
+        	<label>文章标签：</label>
+        	<div class="fl">
+        		<input type="text" name="keywords" value="{$info['keywords']}" size="60"/><span class="txt2">多个标签请用空格隔开</span>
+        	</div>
+        </li>
+        <li class="clearfix">
+            <label>&nbsp;</label>
+            <div class="fl">
+                <input type="submit" class="bluebtn2" value="保存" />
+            </div>
+        </li>
+    </ul>
+    </form>
+            <iframe name="iframe" style="display:none;"></iframe>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="content"]', {
+        allowFileManager : true
+    });
+    K('input[name=getHtml]').click(function(e) {
+        alert(editor.html());
+    });
+    K('input[name=isEmpty]').click(function(e) {
+        alert(editor.isEmpty());
+    });
+    K('input[name=getText]').click(function(e) {
+        alert(editor.text());
+    });
+    K('input[name=selectedHtml]').click(function(e) {
+        alert(editor.selectedHtml());
+    });
+    K('input[name=setHtml]').click(function(e) {
+        editor.html('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=setText]').click(function(e) {
+        editor.text('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=insertHtml]').click(function(e) {
+        editor.insertHtml('<strong>插入HTML</strong>');
+    });
+    K('input[name=appendHtml]').click(function(e) {
+        editor.appendHtml('<strong>添加HTML</strong>');
+    });
+    K('input[name=clear]').click(function(e) {
+        editor.html('');
+    });
+});
+</script>
+<script type="text/javascript">
+
+function checkParam(){
+    var title = $('input[name="title"]').val();
+    if(title == ''){
+        _show_msg('标题不能为空');
+        return false;
+    }
+    if(title.length > 25){
+        _show_msg('标题不能超过25个字');
+        return false;
+    }
+    var category = $('select[name="category"]').val();
+    if(category < 1){
+        _show_msg('请选择分类');
+        return false;
+    }
+    var keywords = $('input[name="keywords"]').val();
+    if(keywords.length > 80){
+    	 _show_msg('关键字不能超过80个字符');
+         return false;
+    }
+    return true;
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed',
+			init: function () {
+				var that = this, i = 6;
+				var fn = function () {
+					that.title(i + '秒后跳转');
+					!i && that.close();
+					i --;
+				};
+				timer = setInterval(fn, 1000);
+				fn();
+			},
+			close: function () {
+				clearInterval(timer);
+				location.href = '?module=list';
+			}
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+</script>
+</body>
+</html>

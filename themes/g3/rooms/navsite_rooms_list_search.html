@@ -1,0 +1,27 @@
+<div class="navsite-column">
+<div class="column-title"><span><a href="http://{$_SERVER['HTTP_HOST']}">首页</a> &gt; {$title}</span></div>
+<div class="content-left-box">
+{if !empty($room_list)}
+	<ul class="rooms-list clean">
+	{foreach $room_list $room}
+		<li class="clean">
+			<table width="100%">
+				<tr>
+                <td class="cover"><a href="http://{$_SERVER['HTTP_HOST']}/v/{$room['id']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/75/55.jpg');}" width="75" height="55" border="0" title="{$room['description']}" /></a></td>
+				<td class="info">
+					<p title="{$room['name']}">{$room['name']}</p>
+					<p>{$room['id']}</p>
+					<p><span style="color:#F70;">{$room['curuser']}</span>/{$room['maxuser']}</p>
+				</td>
+				</tr>
+			</table>
+		</li>
+	{/foreach}
+	</ul>
+{else}
+	<h2>找不到房间哦！</h2>
+{/if}
+
+{$page}
+</div>
+</div>

@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>总在线人数汇总</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">总在线人数汇总</div>
+</div>
+
+<ul class="page-tab">
+  {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">总在线人数汇总</a></li>{/if}
+  {if $link_array[102]['url']}<li><a href="{$link_array[102]['url']}">总在线人数明细</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}">分站在线人数汇总</a></li>{/if}
+	{if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}">分站在线人数明细</a></li>{/if}
+	{if $link_array[105]['url']}<li><a href="{$link_array[105]['url']}">房间在线人数汇总</a></li>{/if}
+	{if $link_array[106]['url']}<li><a href="{$link_array[106]['url']}">房间在线人数明细</a></li>{/if}
+</ul>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>最大总在线人数</th>
+    <th>最大真实用户数</th>
+    <th>最大IP数</th>
+    <th>平均总在线人数</th>
+    <th>平均真实用户数</th>
+    <th>平均IP数</th>
+    <th>时间</th>
+  </tr>
+  {foreach $list $k $arr}
+  <tr>
+    <td>{echo $k+1}</td>
+    <td>{$arr['maxcuruser']}</td>
+    <td>{$arr['maxcurreguser']}</td>
+    <td>{$arr['maxcurip']}</td>
+    <td>{echo intval($arr['curusersum']/$arr['count'])}</td>
+    <td>{echo intval($arr['curregusersum']/$arr['count'])}</td>
+    <td>{echo intval($arr['curipsum']/$arr['count'])}</td>
+    <td>{echo date('Y-m-d',$arr['createtime'])}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width"><div class="pagenavi" id="lopage">{$page}</div></div>
+
+</body>
+</html>

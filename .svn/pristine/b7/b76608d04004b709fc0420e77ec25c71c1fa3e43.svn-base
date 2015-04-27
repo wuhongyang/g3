@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>站点风格模板</title>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">站点风格模板添加/修改</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form method="post" class="form" action="?module=save" onsubmit="return check_form(this);">
+	<p>
+    	<label>站id：</label>
+        <input type="text" name="group_id" value="{$_GET['group_id']}" />
+    </p>
+    <p>
+    	<label>站名称：</label>
+        {$info['group_name']}
+    </p>
+    <p>
+   		<label>分类：</label>
+        <select name="cat_id" id="cat_id" onchange="change_category(this);">
+        	<option value="0" {if !isset($info['style_cat_id'])}selected{/if}>不指定</option>
+        	{foreach $category $val}
+        	<option value="{$val['id']}" {if isset($info['style_cat_id']) && $info['style_cat_id'] == $val['id']}selected{/if}>{$val['name']}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+   		<label>风格选择：</label>
+        <select name="style_id" id="style_id" onchange="change_style(this);">
+        	{foreach $style_lists $val}
+        	<option value="{$val['id']}" thumb="{$val['thumb']}" {if $info['style_id'] == $val['id']}selected{/if}>{$val['name']}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+    	<label>缩略图：</label>
+    	<img src="" id="thumb" />
+    </p>
+    <p><label></label><input type="submit" value=" 提 交 " /></p>
+</form>
+
+<script type="text/javascript">
+var style_id="{$info['style_id']}";
+var style_lists=$.parseJSON('{$style_lists}');
+change_category($('#cat_id'),true);
+function change_category(obj,s){
+	var cat_id=$(obj).find("option:selected").val();
+	var html='<option value="">请选择</option>';
+	for(var i=0;i<style_lists.length;i++){
+		if(cat_id==style_lists[i].cat_id){
+			if(s==true&&style_id==style_lists[i].id){
+				html+='<option value="'+style_lists[i].id+'" thumb="'+style_lists[i].thumb+'" selected>'+style_lists[i].name+'</option>';
+			}
+			else{
+				html+='<option value="'+style_lists[i].id+'" thumb="'+style_lists[i].thumb+'">'+style_lists[i].name+'</option>';
+			}
+		}
+	}
+	$('#style_id').html(html);
+	change_style($('#style_id'));
+}
+function change_style(obj){
+	var thumb=$(obj).find("option:selected").attr('thumb');
+	if(!thumb){
+		var img_path='';
+	}
+	else{
+		var img_path='{php echo cdn_url(PIC_API_PATH."/p/'+thumb+'/100/100.jpg") }';
+	}
+	$('#thumb').attr('src',img_path);
+}
+function check_form(form){
+	if(form.group_id.value==''){
+		alert('站id不能为空');
+		return false;
+	}
+	if(form.style_id.value==''){
+		alert('请选择风格');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

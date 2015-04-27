@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/reset.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/shop.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--左边侧边栏-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" /></a>
+            {else}
+                <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--右边主内容区-->
+        <div class="shopwrap btbr">
+            <h2>
+                <div class="shopnav">{$categoryInfo['cate_name']}</div>
+            </h2>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="ward-tablecs">
+              <tr>
+                <th>&nbsp;</th>
+                <th>{if $goodsList[10473]}<span class="fs16">{$goodsList[10473]['commodity_name']}</span>{/if}</th>
+                <th>{if $goodsList[10472]}<span class="fs16">{$goodsList[10472]['commodity_name']}</span>{/if}</th>
+              </tr>
+              <tr>
+                <th>尊贵标识</th>
+                <td>{if $goodsList[10473]}<img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou1.jpg" />{/if}</td>
+                <td>{if $goodsList[10472]}<img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou2.jpg" />{/if}</td>
+              </tr>
+              <tr>
+                <th>价格</th>
+                <td>
+                	{if $goodsList[10473]}
+                	<p class="text-muted">{$goodsList[10473]['price']}{$unit}/{$goodsList[10473]['duration']}天</p>
+                    <button type="button" class="btn btn-warning" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$goodsList[10473]['id']}&room_id={$room_id}';">立即购买</button>
+                    {/if}
+                </td>
+                <td>
+                	{if $goodsList[10472]}
+                	<p class="text-muted">{$goodsList[10472]['price']}{$unit}/{$goodsList[10472]['duration']}天</p>
+                    <button type="button" class="btn btn-warning" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$goodsList[10472]['id']}&room_id={$room_id}';">立即购买</button>
+                    {/if}
+                </td>
+              </tr>
+              <tr>
+                <th>专属坐席</th>
+                <td>
+                {if $goodsList[10473]}
+                    <p class="text-muted">进入房间自动落座专属坐席，排序更靠前</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou3.jpg" />
+                {/if}
+                </td>
+                <td>
+                {if $goodsList[10472]}
+                    <p class="text-muted">进入房间自动落座专属坐席，排序更靠前</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou4.jpg" />
+                {/if}
+                </td>
+              </tr>
+              <tr>
+                <th>进场提示</th>
+                <td>
+                {if $goodsList[10473]}
+                    <p class="text-muted">进入房间醒目提示，伴有奢华座驾（奔驰E），身份更尊贵</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou5.jpg"/>
+                {/if}
+                </td>
+                <td>
+                {if $goodsList[10472]}
+                    <p class="text-muted">进入房间醒目提示，伴有豪华座驾（阿斯顿马丁）</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou6.jpg"/>
+                {/if}
+                </td>
+              </tr>
+              <tr>
+                <th>聊天特效</th>
+                <td>{if $goodsList[10473]}<p class="text-muted">聊天标识白银守护身份，专属动态表情</p>{/if}</td>
+                <td>{if $goodsList[10472]}<p class="text-muted">聊天标识黄金守护身份，专属动态表情</p>{/if}</td>
+              </tr>
+              <tr>
+                <th>专属礼物</th>
+                <td>
+                {if $goodsList[10473]}
+                    <p class="text-muted">拥有专属守护礼物</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou9.jpg"/>
+                {/if}
+                </td>
+                <td>
+                {if $goodsList[10472]}
+                    <p class="text-muted">拥有专属守护礼物</p>
+                    <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou7.jpg"/>
+                {/if}
+                </td>
+              </tr>
+              <tr>
+                <th>房间特权</th>
+                <td>{if $goodsList[10473]}<p class="text-muted">防管理踢出房间、禁言</p>{/if}</td>
+                <td>{if $goodsList[10472]}<p class="text-muted">防管理踢出房间、禁言、更可防特权踢人、禁言</p>{/if}</td>
+              </tr>
+            </table>
+            <p class="text-muted mgt10">注：守护者拥有的房间特权，只能在您所守护的主播房间中生效。</p>
+            <h2>
+                <div class="shopnav">如何开通守护</div>
+            </h2>
+            <p class="text-muted mgt10">登录状态下进入要守护的主播房间，点击直播窗口左侧的"开通守护",如图所示：</p>
+            <div class="mgt20"><img src="{THEMES_URL}group_site/{$themes}/src/shop/img/shou8.jpg" width="368" height="203" /></div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

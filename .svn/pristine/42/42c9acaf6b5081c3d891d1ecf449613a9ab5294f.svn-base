@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——充值</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+#wanmei{display: none;}
+#zhengtu{display: none;}
+#junwang{display: none;}
+#wangyi{display: none;}
+</style>
+</head>
+<body>
+{include file="../header_group_site.html"}
+{include file="index/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="content clearfix">
+        <!--左边侧边栏-->
+        {include file="index/left_menu.html"}
+        <!--右边主内容区-->
+        <div class="rightmain">
+            {include file="index/type.html"}     
+            <form method="post" action="?module=payment_save" class="form-horizontal mgt20" id="form">
+            <input type="hidden" name="pay_type" value="gamecard">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+            <input type="hidden" name="roomid" value="{echo intval($roomid)}">
+            {include file="index/recharge_account.html"}
+            <div class="control-group">
+                <label class="control-label">充值卡类型：</label>
+                <div class="controls">
+                    <select class="input-medium" name="pay_id">
+                        <option value="11">盛大卡</option>
+                        <option value="12">完美卡</option>
+                        <option value="14">征途卡</option>
+                        <option value="15">骏网一卡通</option>
+                        <option value="16">网易卡</option>
+                    </select>
+                </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">充值金额：</label>
+                <div class="controls" id="charge_card">     
+                    <select class="input-medium" name="pay_expense" id="snda">
+                        <option value="5">5元</option>
+                        <option value="10">10元</option>
+                        <option value="30">30元</option>
+                        <option value="35">35元</option>
+                        <option value="45">45元</option>
+                        <option value="50" selected>50元</option>
+                        <option value="100">100元</option>
+                        <option value="300">300元</option>
+                        <option value="500">500元</option>
+                        <option value="1000">1000元</option>
+                    </select>
+                    <select class="input-medium" name="pay_expense" id="wanmei" disabled="disabled">
+                        <option value="15">15元</option>
+                        <option value="30">30元</option>
+                        <option value="50" selected>50元</option>
+                        <option value="100">100元</option>
+                    </select>
+                    <select class="input-medium" name="pay_expense" id="zhengtu" disabled="disabled">
+                        <option value="10">10元</option>
+                        <option value="15">15元</option>
+                        <option value="20">20元</option>
+                        <option value="25">25元</option>
+                        <option value="30">30元</option>
+                        <option value="50" selected>50元</option>
+                        <option value="60">60元</option>
+                        <option value="100">100元</option>
+                        <option value="300">300元</option>
+                    </select>
+                    <select class="input-medium" name="pay_expense" id="junwang" disabled="disabled">
+                        <option value="5">5元</option>
+                        <option value="6">6元</option>
+                        <option value="10">10元</option>
+                        <option value="15">15元</option>
+                        <option value="30">30元</option>
+                        <option value="50" selected>50元</option>
+                        <option value="100">100元</option>
+                    </select>
+                    <select class="input-medium" name="pay_expense" id="wangyi" disabled="disabled">
+                        <option value="5">5元</option>
+                        <option value="10">10元</option>
+                        <option value="10">15元</option>
+                        <option value="20">20元</option>
+                        <option value="30">30元</option>
+                        <option value="50" selected>50元</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <p class="mgt10">
+                        <span class="text-info">共可获得<span class="text-warning" id="total_vdian">40</span>万金币</span>
+                        <span class="text-muted">兑换比率：1元=8000 {$GroupData['currency_unit']}</span>
+                    </p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-danger btn-lg" id="J_recharge">立即充值</button>
+                </div>
+            </div>
+            </form>            
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{THEMES_URL}group_site/{$themes}/src/shop/js/charge.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$(function(){
+	$("#form").submit(function(){
+		if(parseFloat($("#ba").val()) < parseFloat($("#total_vdian").html())){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.gamecard;
+}
+
+$('select[name="pay_id"]').change(function(){
+    var card_type = $(this).val();
+
+    var selects = $('#charge_card').find('select');
+    selects.hide();
+    selects.attr('disabled','disabled');
+    
+    if(card_type == 11){
+        $('#snda').show();
+        $('#snda').attr('disabled',false);
+    }else if(card_type == 12){
+        $('#wanmei').show();
+        $('#wanmei').attr('disabled',false);
+    }else if(card_type == 14){
+        $('#zhengtu').show();
+        $('#zhengtu').attr('disabled',false);
+    }else if(card_type == 15){
+        $('#junwang').show();
+        $('#junwang').attr('disabled',false);
+    }else if(card_type == 16){
+        $('#wangyi').show();
+        $('#wangyi').attr('disabled',false);
+    }
+
+});
+
+$('select[name="pay_expense"]').change(function(){
+    var money = $(this).val();
+    $('#total_vdian').html(money*getRebate()/10000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>业务参数配置</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+function checkParam(){
+	var rule = $("#rule").find("option:selected").val();
+	if(rule == 0){
+		alert('请选择业务规则');
+		return false;
+	}
+	
+	var name = $("#name").val();
+	if(name.replace(/^\s+|\s+$/g,"") == ''){
+		alert('请填写业务参数配置名称');
+		return false;
+	}
+
+	
+	var period = $("input[name='info[period]']:checked").val();
+	if(period=='' || period==undefined){
+		alert('请选择积分时长');
+		return false;
+	}
+
+	var style = $("input[name='info[style]']:checked").val();
+	if(style!=1 && style!=2){
+		alert('请选择获取方式');
+		return false;
+	}
+	if(style == 1){
+		var value = $("#value").val();
+		if(isNaN(value) || value.replace(/^\s+|\s+$/g,"")==""){
+			alert('变量值必须为数字');
+			return false;
+		}
+	}else if(style == 2){
+		$(".interregional").each(function(){
+			var interregional = $(this).val();
+			if(isNaN(interregional) || interregional.replace(/^\s+|\s+$/g,"")==""){
+				alert('区间值必须为数字');
+				return false;
+			}
+		});
+	}
+	
+	var property = $("input[name='info[property]']:checked").val();
+	if(style!=1 && style!=2){
+		alert('请选择变量属性');
+		return false;
+	}
+	return true;
+}
+</script>
+<style>
+p{
+	width:1800px;
+}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">业务参数配置</div>
+    <div class="header-button right">{if $link_array[139]['url']}<a href="{$link_array[139]['url']}&search[tpl_id]={$_GET['tpl_id']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<script>
+active_li = 2;
+</script>
+{include file="template/tpl_header.html"}
+
+<form name="myform" action="{if $info}?module=update{else}?module=add{/if}" method="post" onSubmit="return checkParam();" class="form" id="form">
+    {if $info}<input type="hidden" name="id" value="<{$info['id']}>" />{/if}
+    <p>
+    	<label>业务规则：</label>
+        <select name="info[rule]" id="rule">
+        	<option value="0">请选择</option>
+            {foreach $rules $arr}
+            	<option value="{$arr['id']}" {if $info['rule_id'] == $arr['id']}selected{/if}>{$arr['name']}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+        <label>业务参数配置名称：</label>
+        <input type="text" name="info[name]" value="{$info['name']}" id="name" size="32" />
+    </p>
+    <p>
+        <label>描述：</label>
+        <textarea rows="2" cols="26" name="info[desc]">{$info['desc']}</textarea>
+    </p>
+    <p>
+        <label>请选择积分时长：</label>
+        <input type="radio" name="info[period]" value="1" {if $info['period']==1}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">日</span>
+        <input type="radio" name="info[period]" value="2" {if $info['period']==2}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">周</span>
+        <input type="radio" name="info[period]" value="3" {if $info['period']==3}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">月</span>
+        <input type="radio" name="info[period]" value="5" {if $info['period']==5}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">年</span>
+        <input type="radio" name="info[period]" value="6" {if $info['period']==6}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">总</span>
+    </p>
+    <p>
+        <label>选择获取方式：</label>
+        <input type="radio" name="info[style]" value="1" {if $info['style']==1}checked{/if} /><span style="position:relative; top:-2px; margin:0 33px 0 2px;">固定</span>
+        <input type="radio" name="info[style]" value="2" {if $info['style']==2}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">区间</span>
+    </p>
+    <p>
+        <label>选择变量属性：</label>
+        <input type="radio" name="info[property]" value="1" {if $info['property']==1}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">固定数值</span>
+        <input type="radio" name="info[property]" value="2" {if $info['property']==2}checked{/if} /><span style="position:relative; top:-2px; margin:0 10px 0 2px;">百分比</span>
+        <span style="color:red; margin-left:10px; position:relative; top:-2px;">该选项为区间值对应的变量值的数值属性</span>
+    </p>
+    <p>
+        <div id="hv">{if $info['style']==2}<label>积分区间定义：</label><a href="javascript:;" onclick="addInterval('info[style]')">+ 增加区间</a>{/if}</div>
+        <span id="interval"></span>
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="info[status]" value="0" id="no" {if $info['status']!=1}checked{/if}><label for="no" style="padding:0 20px 0 5px; width:auto;">不启用</label>
+        <input type="radio" name="info[status]" value="1" id="yes" {if $info['status']==1}checked{/if}><label for="yes" style="padding-left:5px; width:auto;">启用</label>
+    </p>
+    <p>
+        <label></label>
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+</center>
+<script>
+roleOptions = {};
+id_to_cate = {};
+roleOptions["0"] = '<option value="0">无</option>';
+{foreach $roleListArr $cate_id $arr}
+	roleOptions["{$cate_id}"] = "";
+	id_to_cate["{$cate_id}"] = [];
+	{foreach $arr $one}
+	roleOptions["{$cate_id}"] += '<option value="{$one[0]}">{$one[1]}</option>';
+	id_to_cate["{$cate_id}"].push("{$one[0]}");
+	{/foreach}
+{/foreach}
+$(function(){
+	//获取方式不同展现
+	$("input[name='info[style]']").change(function(){
+		var obj = $("#interval");
+		if($(this).val() == 1){
+			$("#hv").css('display','none');
+		}else{
+			$("#hv").html('<label>积分区间定义：</label><a href="javascript:;" onclick="addInterval(\'info[style]\')">+ 增加区间</a>');
+			$("#hv").css('display','block');
+		}
+		obj.html('');
+		toHtml(obj,$(this).val());
+	});
+	
+	{if $info}
+	//展示数据库里的数据
+	var integration = '{echo urldecode($info["integration"])}';
+	integration = str2obj(integration);
+	var style = "{$info['style']}";
+	if(style == 1){
+		toHtml('','{$info["style"]}',integration);
+	}else{
+		for(var i in integration){
+			toHtml('','{$info["style"]}',integration[i]);
+		}
+	}
+	{/if}
+});
+function roleOption(selected){
+	var select_cate_id;
+	for(var cate_id in id_to_cate){
+		var length = id_to_cate[cate_id].length;
+		for(var i=0;i<length;i++){
+			if(selected == id_to_cate[cate_id][i]){
+				return [roleOptions[cate_id], cate_id];
+			}
+		}
+	}
+	return ['<option value="0">无</option>', 0];
+}
+
+function roleCate(){
+	var options = '<option value="0">无</option>';
+	{foreach $cateList $val}
+		options += '<option value="{$val["cate_id"]}">{$val["cate_name"]}</option>';
+	{/foreach}
+	return options;
+}
+
+function toHtml(obj,type,json){
+	obj = obj || $("#interval");
+	type = type || $("input[name='info[style]']:checked").val();
+	json = json || {};
+	var num = obj.find("p").length;
+	if(type == 1){
+		var val = json.value || '';
+		var content = $('<p><span style="margin-left:73px;">变量值：</span><input type="text" id="value" name="fixed[value]" value="'+val+'" size="10"></p>');
+		//var del = $('<a href="javascript:void(0);" style="margin-left:10px;">删除</a>');
+		obj.append(content);
+	}else if(type == 2){
+		var one = json.one || '';
+		var two = json.two || '';
+		var val = json.value || '';
+		var role = json.role || 0;
+		var min_role = json.min_role || 0;
+		var min = json.min || '';
+		var cate_id1, cate_id2;
+		var content = '<p><span style="margin-left:73px;" id="exist">区间' + parseInt(num+1) + '：</span><input type="text" class="interregional" name="interval['+num+'][one]" value="'+ one +'" size="15">&nbsp;&nbsp;至&nbsp;&nbsp;<input type="text" class="interregional" name="interval['+num+'][two]" value="'+two+'" size="15"><span style="margin-left:10px;">变量值：<input type="text" class="interregional" name="interval['+num+'][value]" value="'+val+'" size="10"></span>';
+		
+		content += '<label>角色赋予：</label>';
+		content += '<select class="role_cate" >'+roleCate()+'</select>&nbsp;&nbsp;&nbsp;&nbsp;';
+		var arr = roleOption(role);
+		cate_id = arr[1];
+		content += '<select class="role_list" name="interval[' + num + '][role]">' + arr[0] + '</select>';
+		content += '<span style="margin-left:73px;">保级积分：</span><input type="text" name="interval[' + num + '][min]" value="'+min+'" />&nbsp;&nbsp;';
+		var arr = roleOption(min_role);
+		cate_id2 = arr[1];
+		content += '降级角色：<select class="role_cate2">'+roleCate()+'</select>&nbsp;&nbsp;<select class="role_list2" name="interval[' + num + '][min_role]">' + arr[0] + '</select></p>';
+		content = $(content);
+		var del = $('<a href="javascript:void(0);" style="margin-left:10px;">删除</a>');
+		
+		obj.append(content);
+		var role_list = obj.find(".role_list");
+		var role_cate = obj.find(".role_cate");
+		$(role_list[role_list.length-1]).val(role);
+		$(role_cate[role_cate.length-1]).val(cate_id);
+		var role_list = obj.find(".role_list2");
+		var role_cate = obj.find(".role_cate2");
+		$(role_list[role_list.length-1]).val(min_role);
+		$(role_cate[role_cate.length-1]).val(cate_id2);
+	}else{
+		alert('请选择获取方式');
+		return ;
+	}
+	
+	if(del){
+		obj.find("p:last").append(del);
+		del.click(function(){
+			del.remove();
+			content.remove();
+		});
+	}
+}
+
+$('.role_cate').live('change', function(){
+	if(roleOptions[$(this).val()]){
+		$($(this).next(".role_list")[0]).html(roleOptions[$(this).val()]);
+	}else{
+		$($(this).next(".role_list")[0]).html("<option value=0>无</option>");
+	}
+});
+$('.role_cate2').live('change', function(){
+	if(roleOptions[$(this).val()]){
+		$($(this).next(".role_list2")[0]).html(roleOptions[$(this).val()]);
+	}else{
+		$($(this).next(".role_list2")[0]).html("<option value=0>无</option>");
+	}
+});
+
+//增加区间
+function addInterval(styleName){
+	var obj = $("#interval");
+	var style = $("input[name='"+styleName+"']:checked").val();
+	toHtml(obj,style);
+}
+</script>
+</body>
+</html>

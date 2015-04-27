@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-友情链接分类</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script>
+function edit(type){
+	if(type == 1){
+		var typ = "图片";
+		var title_content = $('#img_title').val();
+	}
+	if(type == 2){
+		var typ = "文字";
+		var title_content = $('#txt_title').val();
+	}
+	
+	var html = '<table>\
+				<tr><td>标题：</td><td><input type="text" name="title" value="'+title_content+'"/><br/><span><font color="red" id="title_notice"></font></span></td></tr>\
+				<tr><td>链接类型：</td><td>'+typ+'</td></tr>\
+				</table>';
+	dlg=art.dialog({
+		title:"友情链接分类编辑",
+		content: html,
+		lock: true,
+		ok: function(){
+            var title = $.trim($('input[name="title"]').val());
+            if(title == ''){
+                $('#title_notice').html('标题不能为空');
+                return false;
+            }
+            if(title.length > 8){
+                $('#title_notice').html('标题不能超过8个字');
+                return false;
+            }
+            $.post("/group/link.php?module=cate_save", {"type":type,"title":title}, function(data){
+            	var json = eval("("+data+")");	
+        		alert(json.FlagString);
+        		if(json.Flag == 100){
+        			dlg.close();
+        			location.reload();
+        		}
+        	})
+        },
+        cancel: true
+	});
+}
+
+function change_show(status, type){
+	var is_show = status==1?0:1;
+	$.post("/group/link.php?module=cate_show", {"is_show":is_show,"type":type}, function(data){
+		var json = eval("("+data+")");	
+		alert(json.FlagString);
+		if(json.Flag == 100){
+			location.reload();
+		}
+	})
+}
+
+function show_alert(){
+	alert("该友情链接分类暂不存在，请先编辑分类");
+}
+</script>
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+td{
+	padding:5px;
+}
+</style>
+</head>
+<body>
+
+<div class="bodywrap">
+    {include file="header.html"}
+	<p>友情链接分类列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="10%">标题</th><th width="15%">链接类型</th><th width="15%">是否显示</th><th width="15%">操作</th>
+        </tr>
+        <tr>
+        	<td>{if $imgCate}{$imgCate['title']}{else}暂无{/if}<input type='hidden' id='img_title' value="{$imgCate['title']}"></td>
+        	<td>图片</td>
+        	<td>{if $imgCate['is_show']}是{else}否{/if}</td>
+            <td>
+            <a onclick="edit(1);" style="cursor:pointer;">编辑</a>&nbsp;
+            {if $imgCate}
+            <a href="/group/link.php?module=link_list&type=img">查看</a>&nbsp;
+            <a onclick="change_show({$imgCate['is_show']}, 1)" style="cursor:pointer;">{if $imgCate['is_show']}不显示{else}显示{/if}</a>
+            {/if}
+            </td>
+        </tr>
+        <tr>
+        	<td>{if $txtCate}{$txtCate['title']}{else}暂无{/if}<input type='hidden' id='txt_title' value="{$txtCate['title']}"></td>
+        	<td>文字</td>
+        	<td>{if $txtCate['is_show']}是{else}否{/if}</td>
+            <td>
+            <a onclick="edit(2);" style="cursor:pointer;">编辑</a>&nbsp;
+            {if $txtCate}
+            <a href="/group/link.php?module=link_list&type=txt">查看</a>&nbsp;
+            <a onclick="change_show({$txtCate['is_show']}, 2)" style="cursor:pointer;">{if $txtCate['is_show']}不显示{else}显示{/if}</a>
+            {/if}
+            </td>
+        </tr>
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>

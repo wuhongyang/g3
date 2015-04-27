@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>修改房间额度</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">修改房间额度</div>
+</div>
+
+<div class="body">
+    <form method="post" action="?module=openNum" class="form">
+    	<input type="hidden" name="groupid" value="{$_GET['groupid']}" />
+    	<input type="hidden" name="uin" value="{$_GET['uin']}" />
+        <p>
+        	<label>站ID：</label>
+            {$_GET['groupid']}
+        </p>
+		<p>
+        	<label>站长ID：</label>
+            {$_GET['uin']}
+        </p>
+        <p>
+        	<label>房间额度：</label>
+			<input type="text" name="open_num" value="{$_GET['open_num']}" />
+        </p>
+        <p>
+        	<label></label><input type="submit" value="保存信息" />
+        </p>
+	</form>
+</div>
+
+</body>
+</html>

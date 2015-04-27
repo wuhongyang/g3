@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>艺人税收查看</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="get">
+        <div class="mgtb15 clearfix">
+            &nbsp;艺人：<select name="uin">
+                            {foreach $artistList $val}
+                            <option value="{$val['uid']}" {if $_GET['uin']==$val['uid']}selected{/if}>{$val['nick']}({$val['uid']})</option>
+                            {/foreach}
+                        </select>&nbsp;&nbsp;&nbsp;&nbsp;
+            选择时间：<input name="stime" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$info['stime']}"> 至 
+            <input name="etime" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$info['etime']}">
+            <input type="hidden" name="module" value="artist_tax_detail" />
+            <input name="" type="submit" class="normalbtn" value="查询">
+        </div>
+    </form>
+    <div class="mgt10 clearfix relative">
+        <span class="i-icon fl"></span>
+        <span class="fs14 fl">该艺人当月税收积分：</span>
+        <span class="yellow fl fs16">{$currentMonthTax}</span>
+    </div>
+    <p class="lineh30">发生税收合计：<span class="yellow mgR10">{$totalTax}</span></p>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+            <tr>
+                <th>流水编号</th>
+                <th>艺人ID</th>
+                <th>备注</th>
+                <th>发生金额</th>
+                <th>发生时间</th>
+            </tr>
+            {foreach $list $key $val}
+            <tr>
+                <td>{echo $key+1}</td>
+                <td>{$val['UinId']}</td>
+                <td>{$val['Desc']}</td>
+                <td>{$val['Weight']}</td>
+                <td>{echo date('Y-m-d H:i',$val['Uptime'])}</td>
+            </tr>
+            {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

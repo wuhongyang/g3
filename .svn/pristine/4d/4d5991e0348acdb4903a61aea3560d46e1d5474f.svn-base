@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title><{$room_info['name']}>|<{$room_info['description']}></title>
+<style type="text/css">
+html,body{width:100%;height:100%;margin:0;padding:0;}
+body{
+{if $room_info['width']=='100%' && $room_info['height']=='100%'}
+overflow:hidden;
+{/if}
+text-align:center;background:#FFF}
+object:focus{outline:none;}
+#swfObjectBox{height:100%;}
+</style>
+<script type="text/javascript" src="{$g3_ktv}/swfobject.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/modules/rooms/js/share.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/quality.js"></script>
+<script type="text/javascript">
+var swfVersionStr = "11.0.0"; //最低Flash版本要求
+var xiSwfUrlStr = "<{$g3_ktv_xiswf}>";
+var flashvars = {};
+var userinfo;
+var ajaxtime;
+var onloadtime = (new Date()).getTime();
+var client = /vclient/.test(window.location.href)? '_v' : '';
+$.ajax({
+    url: '/rooms/ajax_info.php',
+    type: 'POST',
+    async:false,
+    data: {Tag:"GetRoomLoginUser","GroupId":"{$room_info['group']}"},
+    dataType:'JSON',
+    success: function(data){
+        userinfo = data;
+        flashvars = {top_color:"#d3eafa",ui_version:{$room_info['ui_version']},roombg:"{PIC_API_PATH}/roombg/{$_GET['roomid']}/0/0.jpg",ui_path:"{$room_info['ui_path']}",bottom_color:"#6eacdb",bgalign:"{$room_info['bgalign']}",uin:data.Uin,sessionkey:data.Token,url:"ws://{$room_info['host']}:{$room_info['port']}/client",roomid:"{$_GET['roomid']}",Ip:"{$ip}",GroupId:"{$room_info['group']}",roomurl:"{PIC_API_PATH}/roomid/{$_GET['roomid']}/0/0.jpg",roomname:"{$room_info['name']}","tim":"{$tim}"};
+        //flashvars.ui_path += client;
+        flashvars.fromname = getCookie("FROMNAME");
+        flashvars.fromuid = getCookie("FROMUID");
+        ajaxtime = (new Date()).getTime() - onloadtime;
+    },
+    error: function(){
+        //alert('房间信息获取失败');
+        //window.location.href="/";
+    }
+});
+
+var timestamp = Date.parse(new Date());
+function getTime(){
+    return timestamp;
+}
+
+function getPath() {
+    return xiSwfUrlStr;
+}
+function getHost(){
+    return "http://{$_SERVER['HTTP_HOST']}";
+}
+function getParams() {
+    return flashvars;
+}
+function GetGiftGameTip(){
+    return getCookie( "GiftGameTip" );
+}
+function SetGiftGameTip(){
+    setCookie("GiftGameTip",2,365);
+}
+function setCookie(c_name,value,expiredays){
+    var exdate=new Date()
+    exdate.setDate(exdate.getDate()+expiredays)
+    document.cookie=c_name+ "=" +escape(value)+
+    ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+}
+function getCookie(c_name){
+    if (document.cookie.length>0){ 
+        c_start=document.cookie.indexOf(c_name + "=")
+        if (c_start!=-1){ 
+            c_start=c_start + c_name.length+1 
+            c_end=document.cookie.indexOf(";",c_start);
+            if (c_end==-1) c_end=document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end))
+        } 
+    }
+    return ""
+}
+function getOS(){
+    var OsObject = ""; 
+    if(navigator.userAgent.indexOf("MSIE")>0) { 
+        return "IE";
+    }
+    if(isFirefox=navigator.userAgent.indexOf("Firefox")>0){ 
+        return "Firefox";
+    }
+    if(isSafari=navigator.userAgent.indexOf("Safari")>0) { 
+        return "Safari";
+    }
+    if(isCamino=navigator.userAgent.indexOf("Camino")>0){ 
+        return "Camino";
+    }
+    if(isMozilla=navigator.userAgent.indexOf("Gecko")>0){ 
+        return "Gecko";
+    }
+    return "未知";
+}
+
+function SetTitle(str) {
+    //document.title = str;
+}
+
+var playerVersion = swfobject.getFlashPlayerVersion();
+var flashCurVer = playerVersion.major + "." + playerVersion.minor + "." + playerVersion.release;
+
+//升级flash
+if(flashCurVer < swfVersionStr){
+    location.href="/rooms/getflash.html";
+}
+if(client == ''){
+    window.onbeforeunload = UnloadCancel;
+}
+function UnloadCancel() { 
+    var waring = "你是否真的要关闭窗口？ "; 
+    return waring;
+}
+function UnloadConfirm() { 
+    var obj=swfobject.getObjectById("ktv");
+    if(!obj){
+        obj = swfobject.getObjectById("ktvie");
+    }
+    if(obj){
+        obj.closeWindow();
+    }
+}
+function resizeKtv(){
+    var obj=swfobject.getObjectById("ktv");
+    if(!obj){
+        obj = swfobject.getObjectById("ktvie");
+    }
+    obj.width = '{$room_info['width']}';
+    obj.height = '{$room_info['height']}';
+}
+function openlogin(type){
+    var childWindow;
+    var redirect = window.location.href;
+    var rep = "http://{$_SERVER['HTTP_HOST']}"
+    redirect = redirect.replace(rep,'');
+    childWindow = window.open("http://{$callback}/passport/openlogin/"+type+"/login.php?back={$_SERVER['HTTP_HOST']}&redirect="+redirect,"OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+function refresh(){
+    window.onbeforeunload = '';
+    window.location.href = window.location.href;
+}
+
+function getBrowserKernel(){
+    var Sys = {};
+    var ua = navigator.userAgent.toLowerCase();
+    var s;
+    (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+    (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+    (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+    (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+    (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+    //以下进行测试
+    var browserKernel = "未知";
+    if (Sys.ie) browserKernel = 'IE ' + Sys.ie;
+    if (Sys.firefox) browserKernel = 'Firefox ' + Sys.firefox;
+    if (Sys.chrome) browserKernel = 'Chrome ' + Sys.chrome;
+    if (Sys.opera) browserKernel = 'Opera ' + Sys.opera;
+    if (Sys.safari) browserKernel = 'Safari ' + Sys.safari;
+    return browserKernel;
+}
+
+var message = {
+     time: 0,
+     title: document.title,
+     timer: null,
+     // 显示新消息提示
+     show: function () {
+         var title = message.title.replace("【　　　】", "").replace("【新消息】", "");
+         // 定时器，设置消息切换频率闪烁效果就此产生
+         message.timer = setInterval(function () {
+             message.time++;
+           //  message.show();
+             if (message.time % 2 == 0) {
+                 document.title = "【新消息】" + title
+             }
+
+             else {
+                 document.title = "【　　　】" + title
+             };
+         }, 600);
+         return [message.timer, message.title];
+     },
+     // 取消新消息提示
+     clear: function () {
+         clearInterval(message.timer);
+         document.title = message.title;
+         message.timer = null;
+     }
+ };
+ 
+ function blink(){
+     if(!message.timer){
+         message.show(); 
+     }
+ }
+ 
+ function clear_blink(){     
+     message.clear();
+ }
+</script>
+</head>
+<body onunload="UnloadConfirm()">
+<div id="swfObjectBox">
+    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="100%" height="100%" id="ktvie">
+        <param name="movie" value="{$g3_ktv}/game.swf?{$tim}" />
+        <param name="quality" value="high" />
+        <param name="bgcolor" value="#d3eafa" />
+        <param name="allowScriptAccess" value="always" />
+        <param name="allowFullScreen" value="true" />
+        <object type="application/x-shockwave-flash" data="{$g3_ktv}/game.swf?{$tim}" width="100%" height="100%" id="ktv">
+            <param name="quality" value="high" />
+            <param name="bgcolor" value="#d3eafa" />
+            <param name="allowScriptAccess" value="always" />
+            <param name="allowFullScreen" value="true" />
+        </object>
+    </object>
+</div>
+<div id="HQPlugin"></div>
+<div style="display:none">
+<script type="text/javascript">
+window.onload = function(){
+    onLoadTime = new quality().getPageLoadTime();
+    new quality().addlog({onLoadTime:onLoadTime,ajaxTime:ajaxtime},'Response',1000);
+    $('body').css('background-image',"url({PIC_API_PATH}/roombg/{$_GET['roomid']}/0/0.jpg) repeat top left;");
+    //var swfobjbox = '';
+    //$('#swfObjectBox').html(swfobjbox);
+}
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+</html>

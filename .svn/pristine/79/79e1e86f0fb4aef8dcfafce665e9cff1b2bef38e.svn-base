@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账号管理-全部勋章</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+			<div class="rightdiv">
+                <h1>我的勋章</h1>
+                <div class="tabletab">
+                    <ul>
+                    	<li><a href="?module=allmedal" class="hover">全部勋章</a></li>
+                    	{foreach $result['Category'] $k $name}
+                        <li><a href="?module=mymedal&id={$k}">{$name}</a></li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <div class="tablewrap" style="padding:0;">
+                    <div class="medal-wrap">
+                        <div class="allmedal">
+                            <ul class="clearfix">
+                            	{foreach $result['Result'] $item}
+                                <li>
+                                    <a href="?module=mymedal&id={$item['category']}&tid={$item['id']}" class="imgwrap"><img src="{PIC_API_PATH}/p/{$item['icon']}/48/48.jpg" width="48" height="48" alt="{$item['name']}"></a>
+                                    <p><a href="?module=mymedal&id={$item['category']}&tid={$item['id']}">{$item['name']}</a></p>
+                                </li>
+                                {/foreach}
+                           </ul>
+                        </div>
+                        <div class="page" id="lopage">{$result['Page']}</div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>
+<script  type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bootstrap/js/bootstrap.min.js"></script>

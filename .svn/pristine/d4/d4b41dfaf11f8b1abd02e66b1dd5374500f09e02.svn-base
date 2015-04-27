@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>印章添加</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	//科目联动
+	
+	var stamp = "<tr class=\"stamp\">\
+		<td>\
+		印章名称:\
+		</td><td>\
+		<input type=\"text\" name=\"stamp_name[]\" />\
+		印章图标:<input type=\"file\" name=\"img[]\" />&nbsp;&nbsp;&nbsp;&nbsp;\
+		<a href=\'#\' class=\'del\'>删除</a>\
+		</td>\
+		</tr>";
+	$("#add_stamp").click(function(){
+		$(this).parent().parent().after(stamp);
+		return false;
+	})
+	$(".del").live("click", function(){
+		$(this).parent().parent().remove();	
+		return false;
+	})
+	$("#add_stamp").trigger("click");
+})
+</script>
+<style>
+	td{
+		padding:10px;
+	}
+</style>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加/修改印章</div>
+  <div class="header-button right">
+  {if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}&parent_id={$_GET['parent_id']}">返回</a>{/if}
+  </div>
+</div>
+<br/>
+<form method="post" enctype="multipart/form-data">
+<table width="100%">
+	<tr>
+		<td colspan="2"><a href="#" id="add_stamp">+增加印章</a></td>
+	</tr>
+	<tr>
+		<td align="right">&nbsp;</td><td><input type="submit" value="保存信息" /></td>
+	</tr>
+</table>
+</form>
+
+</body>
+</html>

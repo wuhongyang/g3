@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="grouptopmenu.html"}
+        <div class="content pd10" style="min-height:800px;_height:800px;">
+            <div class="box4">
+            	<span class="yellow">签约人员账户</span>
+                <a href="room_channel_user.php?module=signed_manage" class="bluebtn arT5"><span>返回签约管理</span></a>
+            </div>
+            <div>
+            <form method="get" action="room_channel_user.php" id="search_form">
+            	<input type="hidden" name="module" value="signed_list" />
+                <span class="mgL10">角色类型：</span>
+                <select name="type">
+                    <option value="0"{if $_GET['type']=='0'} selected="selected"{/if}>所有</option>
+                    <option value="1"{if $_GET['type']=='1'} selected="selected"{/if}>室主</option>
+                    <option value="2"{if $_GET['type']=='2'} selected="selected"{/if}>艺人</option>
+                </select> 
+                <span class="mgL10">签约人员ID：</span>
+                <input name="signed_uin" value="{$_GET['signed_uin']}" type="text">
+                <input name="" type="submit" class="normalbtn" value="查询">
+            </form>
+            </div>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt30">
+              <tr>
+                <th>签约人员ID</th>
+                <th>签约类型</th>
+                <th>姓名</th>
+                <th>身份证</th>
+                <th>银行名称</th>
+                <th>开户行地址</th>
+                <th>银行卡号</th>
+              </tr>
+              {foreach $signedList['userList'] $val}
+              <tr>
+                <td>{$val['uid']}</td>
+                <td>{if $val['type']==9}室主{elseif $val['type']==15}艺人{/if}</td>
+                <td>$val['name']</td>
+                <td>$val['idcard']</td>
+                <td>$val['bank_name']</td>
+                <td>$val['bank_address']</td>
+                <td>$val['bank_id']</td>
+              </tr>
+              {/foreach}
+              <tr>
+                <td colspan="7">{$signedList['page']}</td>
+              </tr>
+            </table>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

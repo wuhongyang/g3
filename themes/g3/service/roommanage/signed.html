@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="grouptopmenu.html"}
+        <div class="content">
+            <div class="centerdiv">
+            	<h2 class="yellow16">签约人员绑定房间</h2>
+                <ul class="formlist mgt30">
+                    <li class="clearfix">
+                        <label class="mgL150">签约绑定房间：</label>
+                        <select name="room_id" id="room_id" onchange="surplusEntertainer(this);" class="mg5">
+                        {foreach $userRooms['roomList'] $val}
+                            <option value="{$val['id']}" surplus="{$val['surplus_entertainer']}">{$val['name']}</option>
+                        {/foreach}
+                        </select>
+                    </li>
+                    <li class="clearfix">
+                        <label class="mgL150">剩余签约艺人数：</label>
+                        <span id="entertainer_quota"></span>
+                    </li>
+                    <li class="clearfix">
+                        <label class="mgL150">签约绑定类型：</label>
+                        <input name="signed_type" type="radio" value="1" onchange="$('.errortip').hide();" class="radios"><span>室主</span>
+                        <span class="mglr20">&nbsp;</span>
+                        <input name="signed_type" type="radio" value="2" onchange="$('.errortip').hide();" class="radios"><span>艺人</span>
+                    </li>
+                    <li class="clearfix">
+                        <label class="mgL150">签约人员ID：</label>
+                        <input name="signed_uin" id="signed_uin" type="text" class="input">
+                        <div style="position:absolute;left:460px;top:0;">
+                        	<span class="errortip" style="display:none;"></span>
+                        </div>
+                    </li>
+                    <li class="clearfix mgL30 mgt50">
+                        <a href="javascript:checkForm();" class="yellowbtn mgL200"><span>确定签约</span></a>
+                        <a href="room_channel_user.php?module=signed_manage" class="bluebtn mgL30"><span>返回</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$("input[type=reset]").trigger("click");
+var surplus_entertainer=0;
+$("#room_id").change();
+function surplusEntertainer(obj){
+	var index=obj.selectedIndex;
+	var surplus=$(obj.options[index]).attr("surplus");
+	$("#entertainer_quota").html(surplus+'人');
+	surplus_entertainer=surplus;
+}
+function checkForm(){
+	var signed_type=$('input[name="signed_type"]:checked').val();
+	if(!signed_type){
+		alert('请选择签约绑定类型');
+		return;
+	}
+	var signed_uin=$("#signed_uin").val();
+	if(signed_uin==''){
+		alert('请填写签约人员ID');
+		return;
+	}
+	if(signed_type==2&&surplus_entertainer<=0){
+		alert('该房间签约艺人已满');
+		return;
+	}
+	$.ajax({
+		url:'/service/room_channel_user.php?module=signed_submit',
+		type:'POST',
+		async:false,
+		cache:false,
+		data:{'room_id':$("#room_id").val(),'signed_type':signed_type,'signed_uin':signed_uin},
+		success:function(data){
+			json=jQuery.parseJSON(data);
+			if(json.Flag==100){
+				alert('绑定成功');
+				window.location='room_channel_user.php?module=signed_manage';
+			}
+			else if(json.Flag==110){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else if(json.Flag==111){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else{
+				$(".errortip").html('<span class="error"></span>'+json.FlagString);
+				$(".errortip").show();
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

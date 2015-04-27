@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>商城</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style-min.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+	
+	<!--主体-->
+    <div class="bd clearfix" id="bd-daoju">
+        <ul class="step-list clearfix">
+            <li>选择购买会员</li>
+            <li>填写购买信息</li>
+            <li class="active">确认购买信息</li>
+            <li>购买成功</li>
+        </ul>
+        <div class="step3-1">
+                    <div class="desc">
+                        <span>当前账户：{$user['Nick']}（{$user['Uin']}）</span>
+                        <span  style="width:150px;float:right;display:inline-block;">当前余额：<span class="red">{$amount} V宝</span></span>
+                    </div>
+                    <form method="post" action="?module=paymoney">
+                        <input type="hidden" name="buy_id" value="{$id}">
+                        <input type="hidden" name="buy_num" value="{$num}">
+                        <input type="hidden" name="target_uin" value="{$target_uin}">
+                        <div class="cont1">
+                            <table width="897" cellspacing="0" cellpadding="0" border="0" class="tbl_info">
+                                  <caption>确认购买对象：<span class="red">{$target_nick}（{$target_uin}）</span></caption>
+                                  <tbody>
+                                  <tr>
+                                    <th width="180">商品</th>
+                                    <th>数量</th>
+                                    <th>使用期限</th>
+                                    <th>单价</th>
+                                    <th>总价</th>
+                                  </tr>
+                                  <tr>
+                                    <td>{$info['name']}</td>
+                                    <td>{$num}</td>
+                                    <td>{echo $num * $info['expire']}</td>
+                                    <td>{$info['price']} V宝</td>
+                                    <td>{echo $info['price'] * $num} V宝</td>
+                                  </tr>
+                                 </tbody>
+                           </table>  
+                        </div>     
+                        <p>赠送V豆：{if $info['send_money']==1}{echo $info['money']*$buy_num}{else}无{/if}</p>
+                        <p style="line-height:24px;text-align:right;">应付总额：<span class="red">{echo $info['price'] * $num} V宝</span></p>
+                        <p style="line-height:24px;text-align:right;">我的当前余额：{$amount} V宝</p>
+                        <div style="margin-top:30px;text-align:center;">
+                         <input type="submit" class="btn btn-ok-buy" value="立即购买"><a href="buyprops.php?module=shopInfo&id={$id}&buynum={$num}&who={$_POST['who']}&target_uin={$_POST['other_uin']}" class="btn-prev">&lt;&lt;返回上一步</a>
+                         </div>                       
+                        
+                    </form>
+                </div>
+    </div>
+	
+	{include file="footer.html"}
+</div>
+<script type="text/javascript" src="{THEMES_URL}shop/js/buy_vip.js"></script>
+</body>
+</html>
+
+
+
+

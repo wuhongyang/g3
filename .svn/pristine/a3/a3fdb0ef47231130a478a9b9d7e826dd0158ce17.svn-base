@@ -1,0 +1,49 @@
+<div class="fl search-result" id="search-result">
+	<h2 class="search-result-nav"><a href="/">首页</a>>>{$title1}>>{$title2}</h2>
+	{if $result['Flag'] == 100}
+		<ul class="search-result-list clearfix">
+			{foreach $result[$k]  $val}
+			<li class="fl">
+				<div class="fl">
+					<div class="room-pic">
+						<a href="http://{$_SERVER['HTTP_HOST']}/v/{$val['id']}"><img src="{PIC_API_PATH}/roomid/{$val['id']}/80/60.jpg" alt="{$val['name']}" title="{$val['description']}" width="80" height="60"></a>
+					</div>
+					<div class="room-site"><a href="/">[ {$val['RegionName']}站 ]</a></div>
+				</div>
+				<div class="fl list-info">
+					<p class="cliptext"><a href="http://{$_SERVER['HTTP_HOST']}/v/{$val['id']}" title="{$val['name']}">{$val['name']}</a></p>
+					<p>{$val['id']}</p>
+					<p><span class="red">{$val['curuser']}</span>/{$val['maxuser']}</p>
+				</div>
+			</li>
+			{/foreach}
+		</ul>
+		{if $result['Page']['Pages'] > 1}
+			<div class="page fr" id="J_page">
+				<a class="pre fl" {if $result['Page']['CurPage']>1}href="javascript:void(0);" onclick="getHistoryAccess({$region_id},{php echo $result['Page']['CurPage']-1});"{/if}>上一页</a>
+				<div class="pagelist fl">
+					<div class="page-cur">第 {$result['Page']['CurPage']} 页 <em></em></div>
+					<ul class="page-items" style="display: none;top:-{php echo $result['Page']['Pages']*100-26}%;"><!--动态设置ul 的top样式的值=页数*100-26     -->
+						{php for($i=1; $i<=$result['Page']['Pages'];$i++):}
+						<li><a {if $result['Page']['CurPage'] == $i}class="cur"{else}href="javascript:void(0);" onclick="get{$k}({$region_id},{$i});"{/if}>第 {$i} 页</a></li>
+						{php endfor;}
+					</ul>
+				</div>
+				<a class="next fl" {if $result['Page']['CurPage']<$result['Page']['Pages']}href="javascript:void(0);" onclick="get{$k}({$region_id},{php echo $result['Page']['CurPage']+1});"{/if}>下一页</a>
+			</div>
+		{/if}
+	{else}
+		无结果
+	{/if}
+</div>
+<script type="text/javascript">
+var pagebox=$('#J_page'),
+	page_cur=pagebox.find('.page-cur'),
+	page_items=pagebox.find('.page-items'),
+	page_list=pagebox.find('.pagelist');
+	page_list.hover(function (){
+		page_items.show();
+	},function (){
+		page_items.hide();
+	});
+</script>

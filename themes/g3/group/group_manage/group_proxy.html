@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+     <form method="get" action="group.php" class="fl" id="search_form">
+        <input type="hidden" name="module" value="group_proxy" />
+        <span class="mgL10">用户码：</span>
+        <input type="text" value="{$_GET['signed_uin']}" name="signed_uin"/>
+        <span class="mgL10">房间ID：</span>
+        <input type="text" value="{$_GET['RoomId']}" name="RoomId"/>
+        <span class="mgL10">签约类型：</span>
+         <select name="role_id">
+         <option value="">所有</option>
+        {foreach $roleList $val}
+            <option value="{$val['id']}" {if $_GET['role_id'] == $val['id']}selected{/if}>{$val['name']}</option>
+        {/foreach}
+      	</select>
+        <input name="" type="submit" class="normalbtn" value="查询">
+    </form>
+    <div class="mgt10 clearfix">
+       <a href="group.php?module=group_proxy_add" class="bluebtn fr"><span>添加角色</span></a>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgtb15">
+      <tr>
+      	<th>赋予角色</th>
+        <th>用户ID</th>
+        <th>绑定房间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $proxyList['Result'] $val}
+      <tr>
+      	<td>{$val['role']}</td>
+        <td>{$val['Uin']}({$val['nick']})</td>
+        <td>{if $val['ChannelId']==0}所有房间{else}{$val['ChannelId']}{/if}</td>
+        <td><!--  <a href="group.php?module=group_proxy_add&id={$val['_id']['$id']}" class="ahover">编辑</a>-->  <a href="group.php?module=group_proxy_remove&id={$val['_id']['$id']}" class="ahover" onClick="return confirm('确认删除吗');">删除</a></td>
+      </tr>
+      {/foreach}
+      <tr>
+      	<td colspan="5">{$proxyList['Page']}</td>
+      </tr>
+    </table>
+</div>                
+{include file="foot.html"}
+</body>
+</html>

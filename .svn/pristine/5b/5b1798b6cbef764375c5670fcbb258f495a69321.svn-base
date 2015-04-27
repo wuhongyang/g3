@@ -1,0 +1,10 @@
+<div class="room-notice">
+	<h2 class="title">
+		<div class="bar-title">房间公告</div>
+	</h2>
+	<ul class="room-notice-cont" id="J_room_notice">
+		{foreach $notice $val}
+		<li><a href="/v/$val['roomid']" title="{$val['salutatory']}" class="cliptext" target="_blank">{$val['salutatory']}</a></li>
+		{/foreach}
+	</ul>
+</div>

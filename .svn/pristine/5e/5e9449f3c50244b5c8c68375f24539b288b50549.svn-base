@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>KMS_user_list</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">权限组分类列表</div>
+  <div class="header-button right"><{if $link_array[106]['url']}><a class="add-button" href="{$link_array[106]['url']}">{$link_array[106]['child_name']}</a><{/if}></div>
+</div>
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">权限组分类列表</a></li>{/if}
+    {if $link_array[107]['url']}<li><a href="{$link_array[107]['url']}">权限组列表</a></li>{/if}
+</ul>
+<div class="page-tools main-width">
+<form action="" method="get" name="myform">
+	&nbsp;关键词：&nbsp;
+	<input type="text" name="cluster" id="cluster" value="{$Cluster}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;
+	&nbsp;状态：&nbsp;<select name="status" id="status" ><option value="0" {if $Status == 0}selected="selected"{/if}>请选择</option><option value="2" {if $Status == 2}selected="selected"{/if}>启用</option><option value="1" {if $Status == 1}selected="selected"{/if}>未启用</option></select> 			        
+	<input type="submit" value="搜索">
+	<input type="hidden" name="module" id="module" value="cluster_list">
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>编号</th>
+		<th>权限组分类名称</th>
+		<th>创建时间</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $list_array $arr}
+	<tr>
+		<td>{$arr['id']}</td>
+		<td>{$arr['cluster_name']}</td>
+		<td>{$arr['uptime']}</td>
+		<td>{if $arr['status'] == 1} 启用 {else} 未启用 {/if}</td>	
+		<td>
+			{if $link_array[107]['url']}<a href='{$link_array[107]['url']}&cid={$arr['id']}'>{$link_array[107]['child_name']}</a> &nbsp;{/if}
+			{if $link_array[108]['url']}<a href='{$link_array[108]['url']}&cid={$arr['id']}'>{$link_array[108]['child_name']}</a> &nbsp;{/if}
+		</td>
+	</tr>
+	{/foreach}             
+	</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

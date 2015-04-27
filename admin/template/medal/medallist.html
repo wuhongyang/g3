@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>勋章列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">勋章列表</div>
+  <div class="header-button right">{if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">添加勋章</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">分类列表</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}" class="active">勋章列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width"></div>
+
+<table class="table-list main-width" >
+	<tr>
+		<th>编号</th>
+		<th>勋章名称</th>
+		<th>勋章分类</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $lists $key $arr}
+	<tr>
+		<td height="25">{echo $key+1}</td>
+        <td height="25">{$arr['name']}</td>
+		<td height="25">{echo $medaltype[$arr['typeid']]}</td>
+		<td height="25">{echo $status[$arr['status']]}</td>
+	    <td height="25">
+            {if $link_array[104]['url']}<a href="{$link_array[104]['url']}&id={$arr['id']}">编辑</a>{/if}
+            {if $link_array[104]['url']}<a href="{$link_array[104]['url']}&del={$arr['id']}" onClick="if(!confirm('确认删除内容？')) return false;">删除</a>{/if}
+        </td>
+	</tr>
+	{/foreach}
+	
+</table>
+</body>
+</html>

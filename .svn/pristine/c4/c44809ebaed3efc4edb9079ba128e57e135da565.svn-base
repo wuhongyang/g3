@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="grouptopmenu.html"}
+        <div class="content">
+            <div class="centerdiv">
+                <h2 class="yellow16 mgtb15" style="font-size:18px; border-bottom:none;">解除签约</h2>
+                <div class="box1">
+                    <span class="yellow"><span class="tanhao"></span>提示：解除人员与房间的签约关系后，请重新签约人员以维持站正常运营！</span>
+                </div>
+                <div class="formlist">
+                <input type="hidden" name="id" id="id"  value="{$id}"/>
+                <input type="hidden" name="partner_uin" id="partner_uin" value="$signedInfo['uid']" />
+                    <ul>
+                        <li class="clearfix"><label class="mgL200">解除用户ID：</label><span>{$signedInfo['uid']}($signedInfo['userInfo']['nick'])</span></li>
+                        <li class="clearfix"><label class="mgL200">签约房间ID：</label><span>{$signedInfo['roomInfo']['id']}（{$signedInfo['roomInfo']['name']}）</span></li>
+                        <li class="clearfix"><label class="mgL200">所属站：</label><span>{$signedInfo['roomInfo']['group']}</span></li>
+                        <li class="clearfix"><label class="mgL200">签约类型：</label><span>{if $signedInfo['type']==9}室主{elseif $signedInfo['type']==15}艺人{/if}</span></li>
+                        <li class="clearfix"><label class="mgL200">签约时间：</label><span>{$signedInfo['uptime']}</span></li>
+                        {if $signedInfo['type']==9}
+                        {if $userGroupInfo['uin']==$signedInfo['uid']}
+                        <input type="hidden" name="new_partner_type" value="2" />
+                        <li class="clearfix" id="new_partner">
+                        	<label class="mgL200">新室主ID：</label><input type="text" name="new_partner_uin" id="new_partner_uin" size="10" class="fl"/>
+                        	<span class="errortip" style="display:none;"></span>
+                        </li>
+                        {else}
+                        <li class="clearfix">
+                            <label class="mgL200">新室主：</label>
+                            <input type="radio" name="new_partner_type" id="r1" value="1" checked="checked" class="fl" onclick="$('#new_partner_uin').attr('disabled','disabled');$('.errortip').hide();" />
+                            <span class="fl">我为临时室主&nbsp;&nbsp;</span>
+                            <input type="radio" name="new_partner_type" id="r2" value="2" class="fl" onclick="$('#new_partner_uin').removeAttr('disabled');$('.errortip').hide();" />
+                            <span class="fl">签约新室主</span>
+                        </li>
+                        <li class="clearfix" id="new_partner">
+                        	<label class="mgL200">新室主ID：</label><input type="text" name="new_partner_uin" id="new_partner_uin" size="10" class="fl"/>
+                            <span class="errortip" style="display:none;"></span>
+                        </li>
+                        {/if}
+                        {/if}
+                        <li class="clearfix">
+                        	<a href="javascript:checkInfo();" class="yellowbtn" style="margin-left:280px;"><span>确认提交</span></a>
+                            <a href="room_channel_user.php?module=signed_manage" class="bluebtn mgL20"><span>返回</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+{if $signedInfo['type']==9}
+{if $userGroupInfo['uin']!=$signedInfo['uid']}
+var new_partner_type=$("input[name='new_partner_type']:checked").val();
+if(new_partner_type=='1'){
+	$('#new_partner_uin').attr('disabled','disabled');
+}
+else if(new_partner_type=='2'){
+	$('#new_partner_uin').removeAttr('disabled');
+}
+{/if}
+{/if}
+function checkInfo(){
+	var new_partner_type=0;
+	var new_partner_uin=0;
+    if(document.getElementById('r1')){
+		new_partner_type=$("input[name='new_partner_type']:checked").val();
+	}
+	else{
+		new_partner_type=0;
+	}
+	if(new_partner_type=='2'){
+		if($("#new_partner_uin").val()==''){
+			alert('请填写新室主ID');
+			return;
+		}
+		if($("#new_partner_uin").val()==$("#partner_uin").val()){
+			alert('新室主ID不能和当前室主ID相同');
+			return;
+		}
+		new_partner_uin=$("#new_partner_uin").val();
+	}
+	else{
+		if(document.getElementById('new_partner_uin')&&new_partner_type==0){
+			if($("#new_partner_uin").val()==$("#partner_uin").val()){
+				alert('新室主ID不能和当前室主ID相同');
+				return;
+			}
+			new_partner_uin=$("#new_partner_uin").val();
+		}
+		else{
+			new_partner_uin=0;
+		}
+	}
+	$.ajax({
+		url:'/service/room_channel_user.php?module=termination_submit',
+		type:'POST',
+		async:false,
+		cache:false,
+		data:{'id':$("#id").val(),'new_partner_type':new_partner_type,'new_partner_uin':new_partner_uin},
+		success:function(data){
+			json=jQuery.parseJSON(data);
+			if(json.Flag==100){
+				window.location='room_channel_user.php?module=termination_success&id='+json.recordsId+'&new_partner_uin='+new_partner_uin;
+			}
+			else if(json.Flag==110){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else if(json.Flag==111){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else{
+				$(".errortip").html('<span class="error"></span>'+json.FlagString);
+				$(".errortip").show();
+			}
+		}
+		});
+}
+</script>
+</body>
+</html>

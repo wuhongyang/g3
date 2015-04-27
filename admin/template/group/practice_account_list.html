@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>体验账号配置</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">体验账号配置</div>
+  <div class="header-button right"><a href="group.php?module=GroupList" class="add-button">返回</a></div>
+  {if $link_array[114]['url']}<div class="header-button right"><a href="{$link_array[114]['url']}&group_id={$_GET['group_id']}" class="add-button">添加角色</a></div>{/if}
+</div>
+
+<div style="padding:20px;">
+	<p>站ID:{$groupid}</p>
+	<p>站名称：{$group_name}</p>
+</div>
+
+<table class="table-list main-width" id="table-list">
+    <tr>
+    <th width="20%">体验角色</th>
+    <th>对应账号</th>
+    <th width="20%">操作</th>
+    </tr>
+    {foreach $practice_account_list $one}
+    <tr>
+    <td>{$one['role_name']}</td>
+    <td>{$one['uin_str']}</td>
+    <td>
+    {if $link_array[114]['url']}<a href="{$link_array[114]['url']}&group_id={$_GET['group_id']}&id={$one['id']}">编辑</a>{/if}
+    {if $link_array[115]['url']}<a onclick="return confirm('确认要删除?')" href="{$link_array[115]['url']}&group_id={$_GET['group_id']}&id={$one['id']}">删除</a>{/if}
+    </td>
+    </tr>
+    {/foreach}
+</table>
+<div class="main-width">{$page}</div>
+
+</body>
+</html>

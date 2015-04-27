@@ -1,0 +1,19 @@
+{include file="../common/header_group_site.html"}
+<script>
+$(function(){
+	if($("#otherUser").length != 0){
+		$("#otherUser").trigger("click").trigger("click");
+	}
+})
+</script>
+<div class="navwrap">
+    <div class="container">
+        <span class="store">商城</span>
+        <ul class="nav nav-tabs">
+            <li {if !empty($recharge_style)}class="active"{/if}><a href="/shop/index.php?group_id={$GroupData['groupid']}">充值</a></li>
+            {foreach $GroupData['scheme_info'] $key $val}
+            <li {if $category_id==$key}class="active"{/if}><a href="shop.php?category_id={$key}">{$val['pack_name']}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

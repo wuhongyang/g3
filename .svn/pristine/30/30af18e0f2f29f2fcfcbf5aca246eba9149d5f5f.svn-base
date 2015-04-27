@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>业务配置-点歌设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script>
+$(function(){
+	var tax = $("#tax_percentage");
+	var warning = $("#warning");
+	var pick = $("#pick_price");
+	$(".number").keyup(function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	})
+	$("#act_percentage").blur(function(){
+		var val;
+		if($(this).val()){
+			val = 100 - parseInt($(this).val());
+		}else{
+			val = 100;
+		}
+		
+		if(val >= 0){
+			warning.html("");
+			tax.val(val);
+		}else{
+			warning.html("不能超过100%");
+			tax.val("");
+		}
+	})
+	$("#form").submit(function(){
+		$.post("?module=save_price", $(this).serialize(), function(data){
+			var data = $.parseJSON(data);
+			alert(data.FlagString);
+			if(data.Flag == 100){
+				location.reload();
+			}
+			return false;
+		});
+		return false;
+	})
+})
+</script>
+</head>
+<style type="text/css">
+td{
+	padding:5px;
+}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="form">
+    <input type="hidden" name="back_module" value="price">
+    <table>
+    	<tr>
+    		<td>点播歌曲价格：</td><td><input class="number" type="text" name="pick_price" value="{echo $data['pick_price']==''?100000:$data['pick_price']}" />&nbsp;&nbsp;金币</td>
+    	</tr>
+    	<tr>
+    		<td>主播收到百分比：</td><td><input id="act_percentage" class="number" type="text" name="act_percentage" value="{echo $data['act_percentage']==''?60:$data['act_percentage']}" />&nbsp;&nbsp;%&nbsp;&nbsp;<span id="warning" style="color:red"></span></td>
+    	</tr>
+    	<tr>
+    		<td>税收百分比：</td><td><input id="tax_percentage" type="text" name="tax_percentage" value="{echo $data['tax_percentage']==''?40:$data['tax_percentage']}" disabled="disabled" />&nbsp;&nbsp;%</td>
+    	</tr>
+    	<tr>
+    		<td>&nbsp;</td><td><input type="submit" class="bluebtn2" value="保存" /></td>
+    	</tr>
+    </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

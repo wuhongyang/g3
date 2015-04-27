@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>艺人税收兑换</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix relative">
+        <div class="fr">
+            <a class="bluebtn mgL10" href="manage_imformation.php?module=artist_tax_exchange_history"><span>查看兑换记录</span></a>
+        </div>
+    </div>
+    <div style="margin-top:20px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+            <tr>
+                <th>艺人ID</th>
+                <th>税收余额</th>
+                <th>可兑换人民币</th>
+                <th>操作</th>
+            </tr>
+            {foreach $list $val}
+            <tr>
+                <td>{$val['nick']}({$val['UinId']})</td>
+                <td>{$val['Weight']}</td>
+                <td>{echo floor($val['Weight']/10000);}</td>
+                <td><a href="manage_imformation.php?module=artist_tax_exchange_submit&uin={$val['UinId']}">兑换工资</a></td>
+            </tr>
+            {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>             
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

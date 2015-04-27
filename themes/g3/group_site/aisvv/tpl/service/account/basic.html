@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账号管理-基本信息</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>基本信息</h1>
+                <div class="clearfix">
+                    <div class="mgt10 fl clearfix">
+                        <div class="fl">
+                            <div class="headEdit">
+                                <img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$uin.'/160/160.jpg');}" width="160" height="160" />
+                                <div class="alpbg"><a href="?module=changeFace" style="color:#fff;">更改头像</a></div>
+                            </div>
+                            <div class="center mgt5"><a href="?module=modifyInfo" class="blue">修改基本资料</a></div>
+                        </div>
+                        <div class="fl mgL50">
+                            <p class="mgt10 yellow fs16">当前账号：{echo empty($user['Nick'])?$uin:$user['Nick']}</p>
+                            <p class="mgt10">用户码：{$uin}</p>
+                            <div class="flowhide">
+                                <div class="fL" style="width:200px;">
+                                    {if isset($vipName)}
+                                    <p class="mgt10 clearfix">
+                                        <span class="btn3 mgR20">{$vipName}</span>
+                                    </p>
+                                    {/if}
+                                   <p class="mgt10 clearfix">
+                                        {foreach $rolesIcon $val}
+                                        <img src="{$val}" />
+                                        {/foreach}
+                                    </p>
+                                </div>
+                                <div class="fL">
+                                   <p class="mgt10 clearfix">
+                                        <span class="mglr20">金币：{$kmoney}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--个人税收数据
+                {if !empty($channelInfo)}
+                <div class="mgt10">
+                	<p class="border2 grssimg relative">本月个人税收</p>
+                    <table width="630" border="0" cellspacing="0" cellpadding="0" class="tablecss2 auto mgt20">
+                        <tr>
+                            <th>渠道身份</th>
+                            <th>渠道</th>
+							<th>上级渠道角色</th>
+                            <th>税收</th>
+                        </tr>
+                        {foreach $channelInfo $one}
+							{if $one['currentMonthTax']['ChannelId'] > 0}
+                            <tr>
+                                <td>{$channelUser[$one['currentMonthTax']['ChannelType']]}</td>
+                                <td>{$one['currentMonthTax']['ChannelId']}（{$channel[$one['currentMonthTax']['ChannelType']]}）</td>
+								<td>{$one['currentMonthTax']['UpChannel']}（{$upChannel[$one['currentMonthTax']['ChannelType']]}）</td>
+                                <td>{echo intval($one['currentMonthTax']['Weight']);}</td>
+                            </tr>
+                            {/if}
+						{/foreach}
+                    </table>
+                </div>
+                {/if}-->
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+</body>
+</html>

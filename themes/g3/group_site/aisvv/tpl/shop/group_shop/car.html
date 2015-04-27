@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/reset.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/shop.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--左边侧边栏-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" /></a>
+            {else}
+                <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--右边主内容区-->
+        <div class="shopwrap">
+            {foreach $allGoods $goods}
+                <h2 class="nonebr">
+                    <div class="shopnav">{$goods['name']}</div>
+                </h2>
+                <ul class="items clearfix">
+                {foreach $goods['goods'] $key $val}
+                    {if $key<4||($key+1)%4==0}
+                        {if $key<4}
+                            {if ($key+1)%4==0}
+                            <li class="tpbr nobr">
+                            {else}
+                            <li class="tpbr">
+                            {/if}
+                        {else}
+                            <li class="nobr">
+                        {/if}
+                    {else}
+                        <li>
+                    {/if}
+                        <p><img src="{$val['commodityInfo']['image_md5']}" width="200" height="150" alt="{$val['commodity_name']}" title="{$val['commodity_name']}" /></p>
+                        <input type="hidden" name="swf_url" value="{$val['commodityInfo']['flash_md5']}" class="swf-url">
+                        <input type="hidden" name="goods_name" value="{$val['commodity_name']}" class="goods_name">
+                        <p><strong>{$val['commodity_name']}</strong></p>
+                        <p>价格：{$val['price']}{$unit}/{$val['duration']}天</p>
+                        <p>
+                            <button type="button" class="btn btn-warning" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$val['id']}&room_id={$room_id}';">立即购买</button>
+                            <a href="javascript:;" class="btn-link btnpreview">预览</a>
+                        </p>
+                        <p class="goods_tip"><strong>$val['commodityInfo']['tip']</strong></p>
+                    </li>
+                {/foreach}
+                </ul>
+            {/foreach}
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$('.btnpreview').click(function(){
+    var name = $(this).parents('li').find('.goods_name').val();
+    var swf_url = $(this).parents('li').find('.swf-url').val();
+    art.dialog({
+        title: '预览'+name,
+        content: '<object width="440" height="220" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="'+swf_url+'" name="movie"><param value="high" name="quality"><embed width="440" height="220" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="'+swf_url+'"></object>',
+        width: 440,
+        height: 220,
+        top: '50%',
+        lock: true,
+        resize: false
+    });
+});
+</script>
+</body>
+</html>

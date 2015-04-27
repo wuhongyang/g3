@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>房间公积金</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script>
+	$(function(){
+		var pre_page = $("#pre_page");
+		var next_page = $("#next_page");
+		var cur_page = $("#cur_page");
+		var page_li = $(".page_li");
+		
+		count = {$count};
+		current = 1;
+		
+		if(count <= 1){
+			$("#page_p").hide();
+		}
+		
+		pre_page.click(function(){
+			current -= 1;
+			cur_page.trigger("show_page");
+		})
+		next_page.click(function(){
+			current += 1;
+			cur_page.trigger("show_page");
+		})
+		cur_page.bind("show_page", function(){
+			cur_page.html(current);
+			if(current == 1){
+				pre_page.hide();
+			}else{
+				pre_page.show();
+			}
+			if(current == count){
+				next_page.hide();
+			}else{
+				next_page.show();
+			}
+			page_li.hide();
+			$(".page_li"+(current-1)).show();
+		}).trigger("show_page");
+	})
+</script>
+<style>
+.page_btn{
+	cursor:pointer;
+}
+</style>
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="funds/tool.html"}
+            <div class="rightdiv">
+                <h1>房间公积金概况</h1>
+                <ul class="formlist formlist4">
+                {php $i=0;}
+                {foreach $res['Data'] $one}
+					<li class="clearfix border2 page_li page_li{echo floor($i/$page_size)}">
+                    <p>房间：{$one['RoomName']}（{$one['ChannelUin']}）</p>
+					<p>房间角色：<font class="notice">{if $one['Ruleid'] == 31}室主{elseif $one['Ruleid'] == 32}管理员{/if}</font></p>
+					<p>房间公积金总金额(截止昨日):<font class="notice">{$one['YRoomTotal']}金币</font></p>
+					<p>今日公积金新增（明日可领取）：<font class="notice">{$one['RoomTotal']}金币</font></p>
+					<hr style="border:1px dotted #ccc;" />
+					<p>你本日可领取工资为：<font class="notice">{$one['GetWeight']}金币</font></p>
+					<p>昨日你在房间在线：<font class="notice">{$one['YWeight']}小时</font></p>
+					<p>今日你在房间在线：<font class="notice">{$one['Weight']}小时</font></p>
+                    {if $one['ExchangeAble'] == 0}
+                    <a href="?module=get_funds&room_id={$one['ChannelUin']}&type={$one['Ruleid']}&w={$one['GetWeight']}" class="greenbtn"><span>领取</span></a>
+                    {elseif $one['ExchangeAble'] == 1}
+                    <a href="#" class="graybtn"><span>无法领取</span></a>
+                    {else}
+                    <a href="#" class="graybtn"><span>已领取</span></a>
+                    {/if}
+                    </li>
+                {php $i++;}
+                {/foreach}        
+                </ul>
+            	<p id="page_p">一共{$count}页&nbsp;&nbsp;当前第<span id="cur_page">1</span>页
+            	&nbsp;&nbsp;<span class="page_btn" id="pre_page">上一页</span>
+            	&nbsp;&nbsp;<span  class="page_btn" id="next_page">下一页</span></p>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>

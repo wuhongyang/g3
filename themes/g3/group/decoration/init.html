@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>初始化</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+p span.notice{color:red;margin-left:10px;width:90px;display: inline-block;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <p>为了让您更简单的进行站页面装修，您的页面需要初始化！</p>
+    <p>{if $userGroupInfo['init'] < 1}<a href="javascript:init();" class="bluebtn"><span>初始化</span></a>{/if}</p>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var phpVar = {
+    url: '{$url}'
+}
+function init(){
+    $.ajax({
+        url: '?module=init',
+        type: 'POST',
+        data: {status:1},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '初始化成功',
+                    lock: true,
+                    icon: 'succeed',
+                    esc: false,
+                    cancel: false,
+                    ok: function(){
+                        location.href = phpVar.url;
+                    }
+                });
+            }else{
+                _show_msg(data.FlagString);
+            }
+        }
+    });
+}
+</script>

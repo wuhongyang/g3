@@ -1,0 +1,14 @@
+{foreach $recommendCat $key $val}
+{if $val['child']&&($val['type']==1||$val['type']==4)}
+ <dl>
+	<dt class="arrow arrow_up">{if $val['icon']!=''}<i class="menu_icon"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['icon'].'/22/22.jpg');}" width="14" height="14"></i>{/if}{$val['name']}</dt>
+	<ul>
+		{if !empty($val['child'])}
+		{foreach $val['child'] $val2}
+		<li><a href="javascript:void(0);" title="{$val2['name']}" onclick="get_recommend_sub({$val2['id']},1);">{$val2['name']}</a></li>
+		{/foreach}
+		{/if}		
+	</ul>
+</dl>	
+{/if}
+{/foreach}

@@ -1,0 +1,55 @@
+<div class="container goodnumber">
+    <form method="get">
+        <div class="clearfix">
+            <div class="input-append">
+                <input type="hidden" name="module" value="search_liang">
+                <input type="hidden" name="category_id" value="{$category_id}">
+                <input class="span2" id="appendedInputButton" type="text" name="name" placeholder="搜索靓号">
+                <button class="btn" type="submit"><i class="icon-search"></i></button>
+            </div>
+        </div>
+    </form>
+    <div style="margin:10px auto;">
+        {foreach $liangCategories $val}
+        <a href="shop.php?category_id={$category_id}&c_id={$val['cate_id']}" class="btn {if $c_id==$val['cate_id']}btn-danger{/if}">{$val['cate_name']}</a>
+        {/foreach}
+    </div>
+    <ul class="numlist thumbnails">
+        {foreach $commodities $val}
+        <li class="span2 {if in_array($val['name'], $saled)}sale{/if}" commodity_id="{$val['id']}">
+            <p class="text-warning">{$val['name']}</p>
+            <p>价格：{$val['price']}{$unit}</p>
+            <div class="layer"></div>
+        </li>
+        {/foreach}
+    </ul>
+    {include file="group_shop/page.html"}
+</div>
+
+<!--[if lte IE 6]>
+<link href="../../modules/dianpu/css/store_ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".numlist li").hover(
+        function(){
+            if($(this).hasClass('sale')){
+                return;
+            }
+            $(this).children(".layer").show();
+        },
+        function(){
+            $(this).children(".layer").hide();  
+        }
+    );
+
+    $('li.span2').click(function() {
+        if($(this).hasClass('sale')){
+            return;
+        }
+        var commodity_id = $(this).attr('commodity_id');
+        location.href='?module=info&category_id={$category_id}&commodity_id='+commodity_id+'&group_back_config=1&room_id={$room_id}';
+    });
+});
+</script>

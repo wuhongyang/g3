@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>游戏卡充值</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+#wanmei{display: none;}
+#zhengtu{display: none;}
+#junwang{display: none;}
+#wangyi{display: none;}
+</style>
+</head>
+
+<body>
+
+{include file="header.html"}
+{include file="paykmoney/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<script>
+$(function(){
+	$("#form").submit(function(){
+		if($("#ba").val() < $("#total_vdian").html()){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+</script>
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+    	{include file="group_info.html"}
+        
+        <form method="post" action="?module=payment_save" class="form-charge" id="form">
+            <input type="hidden" name="pay_type" value="gamecard">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+            <input type="hidden" name="roomid" value="{echo intval($roomid)}">
+
+        	{include file="user_info.html"}
+
+            <div class="rows">
+            	<label>充值卡类型：</label>
+                <select style="width:165px;" name="pay_id">
+                    <option value="11">盛大卡</option>
+                    <option value="12">完美卡</option>
+                    <option value="14">征途卡</option>
+                    <option value="15">骏网一卡通</option>
+                    <option value="16">网易卡</option>
+                </select>
+            </div>
+            <div class="rows" id="charge_card">
+            	<label>充值卡面额：</label>
+                <select style="width:165px;" name="pay_expense" id="snda">
+                    <option value="5">5元</option>
+                    <option value="10">10元</option>
+                    <option value="30">30元</option>
+                    <option value="35">35元</option>
+                    <option value="45">45元</option>
+                    <option value="50" selected>50元</option>
+                    <option value="100">100元</option>
+                    <option value="300">300元</option>
+                    <option value="500">500元</option>
+                    <option value="1000">1000元</option>
+                </select><select style="width:165px;" name="pay_expense" id="wanmei" disabled="disabled">
+                    <option value="15">15元</option>
+                    <option value="30">30元</option>
+                    <option value="50" selected>50元</option>
+                    <option value="100">100元</option>
+                </select><select style="width:165px;" name="pay_expense" id="zhengtu" disabled="disabled">
+                    <option value="10">10元</option>
+                    <option value="15">15元</option>
+                    <option value="20">20元</option>
+                    <option value="25">25元</option>
+                    <option value="30">30元</option>
+                    <option value="50" selected>50元</option>
+                    <option value="60">60元</option>
+                    <option value="100">100元</option>
+                    <option value="300">300元</option>
+                </select><select style="width:165px;" name="pay_expense" id="junwang" disabled="disabled">
+                    <option value="5">5元</option>
+                    <option value="6">6元</option>
+                    <option value="10">10元</option>
+                    <option value="15">15元</option>
+                    <option value="30">30元</option>
+                    <option value="50" selected>50元</option>
+                    <option value="100">100元</option>
+                </select><select style="width:165px;" name="pay_expense" id="wangyi" disabled="disabled">
+                    <option value="5">5元</option>
+                    <option value="10">10元</option>
+                    <option value="10">15元</option>
+                    <option value="20">20元</option>
+                    <option value="30">30元</option>
+                    <option value="50" selected>50元</option>
+                </select>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <span class="totalMoney">
+                	<font color="14A3CD">共可获得</font> <font color="#FF0000" id="total_vdian">40</font> <font color="14A3CD">万金币</font>
+                    <font color="#999">(兑换比率：1元=8000 {$GroupData['currency_unit']})</font>
+                </span>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <button type="button" class="btn" id="J_post">立即充值</button>
+            </div>
+        </form>
+    </div>    
+</div>
+
+{include file="foot.html"}
+
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/modules/store/js/charge.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.gamecard;
+}
+
+$('select[name="pay_id"]').change(function(){
+    var card_type = $(this).val();
+
+    var selects = $('#charge_card').find('select');
+    selects.hide();
+    selects.attr('disabled','disabled');
+    
+    if(card_type == 11){
+        $('#snda').show();
+        $('#snda').attr('disabled',false);
+    }else if(card_type == 12){
+        $('#wanmei').show();
+        $('#wanmei').attr('disabled',false);
+    }else if(card_type == 14){
+        $('#zhengtu').show();
+        $('#zhengtu').attr('disabled',false);
+    }else if(card_type == 15){
+        $('#junwang').show();
+        $('#junwang').attr('disabled',false);
+    }else if(card_type == 16){
+        $('#wangyi').show();
+        $('#wangyi').attr('disabled',false);
+    }
+
+});
+
+$('select[name="pay_expense"]').change(function(){
+    var money = $(this).val();
+    $('#total_vdian').html(money*getRebate()/10000);
+});
+</script>

@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{echo $activeInfo['title'].'-'.$groupInfo['name']}</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css">
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/css/layout.css');}" rel="stylesheet" type="text/css">
+</head>
+<body>
+{include file="header_group_site.html"}
+{include file="header.html"}
+
+<div class="container activity-center mgt20">
+    <div class="body clearfix">
+      <div class="activity-left pull-left">
+            <h3>{$activeInfo['title']}</h3>
+            <a href="active.html" class="aback">< 返回活动中心</a>
+            <div class="activity-banner clearfix">
+                <div class="banner-left pull-left">
+                    <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$activeInfo['image'].'/450/180.jpg');}" width="450" height="180">
+                </div>
+                <div class="banner-right pull-left">
+                    <h5>{$activeInfo['title']}</h5>
+                    <p><em class="white">活动房间：</em>{$activeInfo['roomInfo']['name']}{if $activeInfo['roomInfo']['name']!='全部房间'}（{$activeInfo['roomInfo']['id']}）{/if}</p>
+                    <p><em class="white">活动时间：</em>{echo date('Y.m.d',strtotime($activeInfo['start_time'])).'-'.date('Y.m.d',strtotime($activeInfo['end_time']));}</p>
+                    <p><em class="white">参与人数：</em><span id="player_num">{$activeInfo['player_num']}</span>人</p>
+                    <a class="btn btn-inverse" href="/v/{$activeInfo['roomInfo']['id']}" title="{$activeInfo['roomInfo']['name']}" target="_blank">进入房间</a>
+                    <span id="active_status"></span>
+                </div>
+            </div>
+            <div class="clearfix">
+                <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float:right">
+                    <span class="bds_more">分享到：</span>
+                    <a class="bds_qzone"></a>
+                    <a class="bds_tsina"></a>
+                    <a class="bds_tqq"></a>
+                    <a class="bds_renren"></a>
+                    <a class="bds_t163"></a>
+                </div>
+              <script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6626917" ></script>
+              <script type="text/javascript" id="bdshell_js"></script>
+              <script type="text/javascript">
+                document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+                </script>
+            </div>
+            <div class="activity-info">
+                <h4>活动说明：</h4>
+                {$activeInfo['content']}
+            </div>
+        </div>
+        <div class="activity-right pull-right">
+            <dl>
+                <dt><h3>活动参与人</h3></dt>
+                <dd class="imgwrap" id="play_list"></dd>
+            </dl>
+        </div>        
+    </div>
+</div>
+
+{include file="footer.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/js/bootstrap.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$.ajax({
+	url: 'active.html?module=info_json&gid={$groupId}&aid={$activeId}',
+	type: 'GET',
+	async: false,
+	cache: false,
+	data: {},
+	success: function(data){
+		var html = '';
+		var json = $.parseJSON(data);
+			  if(json.status=='2'){
+			  	html='<a class="btn btn-danger already" href="javascript:void(0);" title="活动即将开始">活动即将开始</a>';
+			  }
+			  else if(json.status=='3'){
+			  	html='<a class="btn btn-danger active-over" href="javascript:void(0);" title="活动已结束">活动已结束</a>';
+			  }
+			  else if(json.status=='4'){
+			  	html='<a class="btn btn-danger already" href="javascript:void(0);" title="已参与">已参与</a>';
+			  }
+			  else{
+			  	html='<a class="btn btn-danger" href="javascript:join_active();" title="我要参与">我要参与</a>';
+			  }
+			  $('#active_status').html(html);
+			  
+			  if(parseInt(json.player_num)>0){
+				  html = '<dd class="imgwrap">';
+				  for(var i in json.playList){
+					  html += '<a href="/service/home.php?user='+json.playList[i].uin+'" title="'+json.playList[i].nick+'" target="_blank"><img src="'+json.playList[i].avatar+'" width="30" height="30" title="'+json.playList[i].nick+'" alt="'+json.playList[i].nick+'"></a>';
+				  }
+				  html+='</dd><div class="text-right">共'+json.player_num+'人>></div>';
+				  $('#play_list').html(html);
+				  $('#player_num').html(json.player_num);
+			  }
+			  else{
+				   html = '<center>还没有人参与哦。</center>';
+			  	  $('#play_list').html(html);
+				  $('#player_num').html('0');
+			  }
+	}
+});
+function join_active(){
+	if(JsonUin<=0){
+		art.dialog({
+			content: '您还未登录',
+			ok: function(){window.location='/passport/?account&index&group_id={$groupId}&url={$back_url}';},
+			lock: true,
+			cancel: false,
+			esc: false,
+			icon: 'warning'
+		});
+		return;
+	}
+	$.ajax({
+		url: 'active.html?module=join&gid={$groupId}&aid={$activeId}',
+		type: 'GET',
+		async: false,
+		cache: false,
+		data: {},
+		success: function(data){
+			var html = '';
+			var json = $.parseJSON(data);
+			if(json.Flag=='100'){
+				art.dialog({
+					content: json.FlagString,
+					ok: function(){window.location.reload();},
+					lock: true,
+					cancel: false,
+					esc: false,
+					icon: 'succeed'
+				});
+			}
+			else if(json.Flag=='102'){
+				art.dialog({
+					content: '您还未登录',
+					ok: function(){window.location='/passport/?account&index&group_id={$groupId}&url={$back_url}';},
+					lock: true,
+					cancel: false,
+					esc: false,
+					icon: 'warning'
+				});
+			}
+			else{
+				art.dialog({
+					content: json.FlagString,
+					ok: function(){},
+					lock: true,
+					cancel: false,
+					esc: false,
+					icon: 'warning'
+				});
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

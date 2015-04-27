@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员申请列表-查看/审核会员申请</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">查看/审核会员申请：</h3>
+        <div class="fr"><a href="?module=vipinfo_list" class="bluebtn"><span>返回申请列表</span></a></div>
+    </div>
+    <form method="post" action="?module=vip_check" id="vip_form">
+    <div class="mgL20">
+        <ul class="formlist">
+            <li class="clearfix">
+                <label>申请账号：</label>
+                <a href="/service/home.php?user={$info['uin']}" target="_blank" class="ahover lineh26">{$info['uin']}</a>
+            </li>
+            <li class="clearfix">
+                <label>昵称：</label>
+                <a href="/service/home.php?user={$info['uin']}" target="_blank" class="ahover lineh26">{$info['nick']}</a>
+            </li>
+            <li class="clearfix">
+                <label>常驻城市：</label>
+                <select name="province" id="province">
+                    <option value="-1">请选择</option>
+                    {foreach $provinces $key $val}
+                    <option value="{$key}" {if $info['province']==$key}selected{/if}>{$val}</option>
+                    {/foreach}
+                </select>
+                <select name="city" id="city">
+                    <option value="-1">请选择</option>
+                </select>
+            </li>
+            <li class="clearfix">
+                <label>真实姓名：</label>
+                <input name="name" id="name" type="text" value="{$info['name']}">
+            </li>
+            <li class="clearfix">
+                <label>性别：</label>
+                <select name="sex" value="sex">
+                <option value="1" {if $info['sex']==1}selected{/if}>男</option>
+                <option value="2" {if $info['sex']==2}selected{/if}>女</option>
+                </select>
+            </li>
+            <li class="clearfix">
+                <label>年龄：</label>
+                <input name="age" id="age" type="text" value="{echo $info['age'] >0 ?  $info['age']: ''}" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+            </li>
+            <li class="clearfix">
+                <label>手机号码：</label>
+                <input name="phone" id="phone" type="text" value="{echo $info['phone'] >0 ?  $info['phone']: ''}" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+            </li>
+            <li class="clearfix">
+                <label>QQ：</label>
+                <input name="qq" id="qq" type="text" value="{echo $info['qq'] >0 ?  $info['qq']: ''}" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+            </li>
+            <li class="clearfix">
+                <label>审核状态：</label>
+                <select name="status" id="status">
+                <option value='0' {if $info['status']==0}selected{/if}>未审核</option>
+                <option value='1' {if $info['status']==1}selected{/if}>审核通过</option>
+                <option value='2' {if $info['status']==2}selected{/if}>审核返回</option>
+                </select>
+            </li>
+            <li class="clearfix">
+                <label>审核描述：</label>
+                <textarea cols="26" rows="2" name="check_desc" id="check_desc">{$info['check_desc']}</textarea>
+            </li>
+            <li class="clearfix" style="padding-left:150px;">
+                <input type="hidden" id="uin" name="uin" value="{$info['uin']}">
+                <input type="submit" class="bluebtn2"  value="确定"/>
+            </li>
+        </ul>
+    </div>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+window.onload = function(){
+	_display_cities({$info['province']},{$info['city']});//默认选中省编号
+}
+$(function(){
+    $('#province').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+	
+    $('#vip_form').submit(function(){
+        var age = $('#age').val();
+        var phone = $('#phone').val();
+        var status = $('#status').val();
+        var check_desc = $('#check_desc').val();
+		if(age>100){
+			alert('请输入正确的年龄');
+			return false;
+		}
+		if(phone>0 && !_is_phone(phone)){
+			alert('请输入正确的手机号码');
+			return false;
+		}
+		if(status == 2 && check_desc == ''){
+			alert('请输入审核描述');
+			return false;
+		}
+    });
+});
+</script>
+</body>
+</html>

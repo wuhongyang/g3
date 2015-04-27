@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{if $type == 1}站长{elseif $type==4}代理{else}艺人/室主{/if}申请</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/actapply.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style.css">
+<style type="text/css">
+select{background-color: #ffffff;border: 1px solid #cccccc;}
+.red{color:red;font-weight:bold;margin:0 5px;}
+</style>
+</head>
+<body>
+
+{include file="../common/header.html"}
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <!-- 标题 -->
+    <h1 id="a"><span class="red">{if $type == 1}站长{elseif $type==4}代理{else}艺人/室主{/if}</span>申请</h1> 
+    <!-- 申请步骤 -->
+    <div class="fengline1"></div>
+    <div class="htip">
+        {if $ipInfo}您目前登录IP为{$ip}，来自{$ipInfo['region']}·{$ipInfo['city']}。这是您的常驻城市吗？如不是请在下面进行挑选。{/if}
+    </div>
+    <!-- 申请步骤表单 -->
+    <form action="" method="post" class="applyform clearfix" id="form_apply">
+		<input type="hidden" name="cur_city_id" value="{$curCityId}">
+		<input type="hidden" name="ip_city" value="{echo $ipInfo['region'].$ipInfo['city']}">
+        <div class="formlist">
+            <label>申请账号：</label>
+            <span>{$nick}({$uin})</span>
+			<input type="hidden" name="uin" value="$uin">
+        </div>
+		<div class="formlist">
+			<label>申请角色：</label>
+			<span>
+			{if $type==1 || $type==4}
+				{$typename[$type]}
+				<input type="hidden" name="type" value="{$type}">
+			{else}
+				<input type="radio" name="type" value="3" {if $type==3}checked{/if}>室主 
+				<input type="radio" name="type" value="2" {if $type==2}checked{/if}>艺人
+			{/if}
+			</span>
+		</div>
+        <div class="formlist">
+            <label><span class="red">*</span>常驻城市：</label>
+            <!-- 仿选择框开始 -->
+			<select name="province" id="province">
+				<option value="-1">请选择</option>
+				{foreach $provinces $key $val}
+				<option value="{$key}" {if $provinceId==$key}selected{/if}>{$val}</option>
+				{/foreach}
+			</select>
+			<select name="city" id="city">
+				<option value="-1">请选择</option>
+			</select>
+            <!-- 仿选择框结束 -->           
+        </div>
+        <div class="formlist">
+            <label for="name"><span class="red">*</span>真实姓名：</label>
+            <input name="name" id="name" type="text" class="inputcs" value="{echo !empty($userinfo['name'])?$userinfo['name']:$_GET['name']}">
+			<span class="tip" id="J_name_tip"></span>
+            <span class="note">用于真实身份验证，便于后期的转账</span>
+        </div>
+        <div class="formlist" id="J_third_list">
+            <label for="telphone"><span class="red">*</span>手机号码：</label>
+            <input name="telphone" id="telphone" type="text" class="inputcs" style="width:135px;" value="{echo !empty($userinfo['phone'])?$userinfo['phone']:$_GET['telphone']}">
+            <span class="note">为了方便与您联系，请留下真实手机号码</span> 
+        </div>
+		<div class="formlist">
+			<label>QQ：</label>
+			<input name="qq" type="text" class="inputcs" value="{echo !empty($userinfo['qq'])?$userinfo['qq']:$_GET['qq']}">
+		</div>
+        <div class="formlist"></div>
+        <div class="formlist">
+			<input type="button" id="btn_apply" class="submitbtn" value="提交申请" style="margin-left:200px;"/>
+        </div>
+
+    </form>  
+</div>    
+
+</body>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/id_card_utf.js"></script>
+<script type="text/javascript">
+function getCurCityId(){
+	var curCityId = '{$curCityId}'
+	return parseInt(curCityId,10);
+}
+
+function getVerified(){
+	var isVerified = '{$userinfo["Phone"]}';
+	return Number(isVerified);
+}
+
+function getProvinceId(){
+	var provinceId = '{$provinceId}';
+	return parseInt(provinceId,10);
+}
+
+function getCityId(){
+	var cityId = '{$cityId}';
+	return parseInt(cityId,10);
+}
+</script>
+<script type="text/javascript">
+    var curCityId = getCurCityId();
+    $(function(){
+        //初始化城市
+        var province_id = getProvinceId();
+        //alert(province_id);
+        if(province_id > 0){
+            _display_cities(province_id,getCityId());
+        }
+        
+        $('#province').change(function(){
+            var province_id = $(this).val();
+            _display_cities(province_id);
+        });
+        
+        $('input[name="city"]').blur(function(){
+            var city_id = $(this).attr('region_id');
+            $('#J_region_note').remove();
+            if(curCityId != city_id){
+                var html = '<div class="box1" id="J_region_note"><span class="tanhao"></span>您选择的城市是浙江-杭州，与您目前IP据地不符</div>';
+                $('#J_third_list').append(html);
+            }
+        });
+        
+        $('input[name="name"]').blur(function(){
+            if(!_check_name()){
+                $('#J_name_tip').html('真实姓名不能为空');
+            }else if($('#name').val().length > 20){
+                $('#J_name_tip').html('长度不能大于20个字符');
+            }else{
+                $('#J_name_tip').html('');
+            }
+        });
+        
+        $('input[name="telphone"]').blur(function(){
+            if(!_check_telphone()){
+                $('#J_telphone_tip').html('请填写正确的手机号码').show();
+            }else{
+                $('#J_telphone_tip').html('').hide();
+            }
+        });
+        
+        $('#btn_apply').click(function(){
+            var ret = _check_param();
+            //1为验证通过
+            if(ret == 1){
+                $('#form_apply').submit();
+            }
+        })
+    });
+
+    function _check_name(){
+        var name = $('input[name="name"]').val();
+        if(name == ''){
+            return false;
+        }
+        return true;
+    }
+
+    function _check_telphone(){
+        var telphone = $('input[name="telphone"]').val();
+        if(!_is_phone(telphone)){
+            return false;
+        }
+        return true;
+    }
+
+    function _check_param(){
+        var city_id = $('#city').val();
+        city_id = parseInt(city_id,10);
+        if(isNaN(city_id) || city_id<0){
+            showMsg('请正确选择常驻城市');
+            return -1;
+        }
+        
+        if(!_check_name()){
+            showMsg('真实姓名不能为空');
+            return -1;
+        }
+
+        var name = $('#name').val();
+        if(name.length > 20){
+            showMsg('真实姓名不能超过20个字');
+            return -1;
+        }
+            
+        if(!_check_telphone()){
+            showMsg('请填写正确的手机号码');
+            return -1;
+        }
+        var qq = $('input[name="qq"]').val();
+        if(qq != '' && !_is_integer(qq)){
+            showMsg('qq号码必须为数字');
+            return -1;
+        }
+        return 1;
+    }
+
+    function showMsg(content){
+        if(typeof art == 'function' && typeof art.dialog == 'function'){
+            art.dialog({
+                content: cotent,
+                lock: true
+            });
+        }else{
+            alert(content);
+        }
+    }
+</script>
+</html>

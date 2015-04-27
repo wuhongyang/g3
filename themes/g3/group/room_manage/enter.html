@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.disable{background:#CCCCCC;}
+#member_value, #deny_value{display:none;}
+#members{width:222px;height:120px;overflow-y:scroll;padding:2px;border:solid 1px #CCC;float:left; margin-left:20px; position:relative;}
+#members li{line-height:20px;padding-left:5px;margin:0px;}
+.selected{background:#3399FF;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="room_manage/userroommenu.html"}
+
+    <form method="post" id="form">
+    <ul class="formlist formlist5">
+        <li class="clearfix">
+            <p class="st clearfix">
+                <input name="open_status" class="radios" type="radio" id="r_open" value=""><span class="txt4">打开</span>
+                <input name="open_status" class="radios" type="radio" id="r_close" value="4" {if $status == 4} checked="checked"{/if}><span class="txt4">关闭</span>
+            </p>
+            <p class="st clearfix">
+                <input type="radio" class="radios" name="status" id="r_all" value="1" {if $status == 1} checked="checked"{/if}><span class="txt4">容许任何人</span>
+                <input type="radio" class="radios" name="status" id="r_deny" value="3" {if $status == 3} checked="checked" class="radios"{/if}><span class="txt4">黑名单</span>
+                <input type="radio" class="radios" name="status" id="r_member" value="2" {if $status == 2} checked="checked" {/if}><span class="txt4">指定成员</span>
+            </p>
+            <p class="mgt20">
+                <ul class="disable" name="members" id="members"></ul>
+                <input type="hidden" name="member_value" id="member_value" value="{$member}">
+                <input type="hidden" name="deny_value" id="deny_value" value="{$deny}">
+                <p style="width:75px;float:left; padding-left:10px;">
+                <input type="button" value="添加" id="add_id" class="bluebtn2" /><br />
+                <input type="button" value="删除" id="del_id" class="graybtn2" />
+                </p>
+                <table style="text-align:center; display:none; float:left;" id="d_members">
+                    <tr>
+                        <td colspan="2" height="30" style="background:#E6EDF3; border:1px solid #D7D7D7;"><b>添加用户</b></td>
+                    </tr>
+                    <tr>
+                        <td height="30" style="border-left:1px solid #D7D7D7">&nbsp;&nbsp;用户id：</td>
+                        <td height="30" style="border-right:1px solid #D7D7D7"><input type="text" name="member_id" id="new_id" size="15" />&nbsp;&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" height="30" style="border:1px solid #D7D7D7; border-top:none;"><a href="javascript:void(0);" id="ok" class="greenbtn" style="margin-left:25px;"><span>确定</span></a><a href="javascript:void(0);" id="cancel" class="bluebtn" style="margin-left:5px;"><span>取消</span></a></td>
+                    </tr>
+                </table>
+            </p>
+        </li>
+        <li class="clearfix">
+            <p><input type="checkbox"  class="radios" id="allow_psw" {if $passwd != ""} checked="checked" {/if}><span>密码验证：</span><input type="password" name="passwd" id="passwd" value="{if $passwd}{$passwd}{/if}" /></p>
+        </li>
+        <li class="clearfix">
+            <p><input type="submit" value="保存" class="bluebtn2" /></p>
+        </li>
+    </ul>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$(function(){
+	var d_members    = $("#d_members");
+	var allow_psw 	 = $("#allow_psw");
+	var passwd	  	 = $("#passwd");
+	var member_value = $("#member_value");
+	var deny_value 	 = $("#deny_value");
+	var members		 = $("#members");
+	var li			 = $("#members li");
+	var r_deny 		 = $("#r_deny");
+	var r_member	 = $("#r_member");
+	var r_all        = $("#r_all");
+	var ok			 = $("#ok");
+	var cancel	     = $("#cancel");
+	var add_id		 = $("#add_id");
+	var del_id		 = $("#del_id");
+	var r_close 	 = $("#r_close");
+	var new_id		 = $("#new_id");
+	function allow_psw_f(){
+		if(allow_psw.prop("checked"))
+			passwd.prop("disabled",false).removeClass("disable");
+		else
+			passwd.prop("disabled",true).addClass("disable");
+	}
+	function add_ids(obj){
+		var member_ids = obj.val().split(",");
+		var html    = "";
+		for(var i=0;i<member_ids.length;i++){
+			html += "<li>"+member_ids[i]+"</li>";
+		}
+		members.html(html);
+		$("#members").find('li').click(function(){
+			$("#members li").removeClass("selected");
+			$(this).addClass("selected");
+		});
+	}
+	function dis(b){
+		r_deny.prop("disabled", b);
+		r_member.prop("disabled", b);
+		r_all.prop("disabled", b);
+	}
+	function dis2(b){
+		//add_id.prop("disabled", b);
+		//del_id.prop("disabled", b);
+	}
+	function predeal(){
+		var r_open = false;
+		allow_psw_f();
+		if(r_deny.prop("checked")){
+			r_deny.trigger("click");
+			r_open = true;
+		}else if(r_member.prop("checked")){
+			r_member.trigger("click");
+			r_open = true;
+		}else if(r_all.prop("checked")){
+			dis2(true);
+			r_open = true;
+		}else if(r_close.prop("checked")){
+			dis2(true);
+		}
+		$("#r_open").prop("checked", r_open);
+		$("#r_close").prop("checked", !r_open);
+		dis(!r_open);
+	}
+	r_close.click(function(){
+		dis(true);
+		dis2(true);
+		members.attr("t", "");
+		members.html("");
+	})
+	$("#r_open").click(function(){
+		r_all.prop("checked", true);
+		dis(false);
+	})
+	$("#add_id").click(function(){
+		if(r_deny.prop("checked") || r_member.prop("checked")){
+			d_members.show();
+		}
+		else{
+			alert("在此组无法添加成员");
+		}
+	})
+	$("#del_id").click(function(){
+		var new_ids    = new Array();
+		var selected   = $("li.selected");
+		var value 	   = selected.html();
+		var t          = members.attr("t");
+		if( t == "m"){
+			obj  = member_value;
+			obj2 = r_member;
+		}
+		else if( t == "d"){
+			obj  = deny_value;
+			obj2 = r_deny;
+		}
+		if(!value){
+			alert("没有选中删除成员");
+			return;
+		}
+		var member_ids = obj.val().split(",");
+		for(var i=0;i<member_ids.length;i++){
+			if(member_ids[i] != value){
+				var j = 0;
+				new_ids.push(member_ids[i]);	
+				j++;
+			}
+		}
+		obj.val(new_ids.join(","));
+		obj2.trigger("click");
+	})
+	ok.click(function(){
+		if(!(r_deny.prop("checked") || r_member.prop("checked") ) || $("#r_close").prop("checked") ){
+			alert("无法再改组添加成员");
+			d_members.hide();
+			new_id.val("");
+			return;
+		}	
+		var new_id_value = new_id.val();
+		if(!new_id_value){
+			alert("不能为空");
+			new_id.val("");
+			d_members.hide();
+			return;
+		}
+		var t  = members.attr("t");
+		if(new_id_value){
+			if( t == "m"){
+				obj  = member_value;
+				obj2 = r_member;
+			}
+			else if( t == "d"){
+				obj  = deny_value;
+				obj2 = r_deny;
+			}
+			if(obj.val())
+				var member_ids = obj.val().split(",");
+			else
+				var member_ids = new Array();
+			for(var i=0;i<member_ids.length;i++){
+				if(member_ids[i] == new_id_value){
+					alert("已存在该ID");
+					new_id.val("");
+					d_members.hide();
+					return;
+				}
+			}
+			member_ids.push(new_id_value);
+			new_id.val("");
+			obj.val(member_ids.join(","));
+			obj2.trigger("click");
+		}else{
+			alert("id不能为空");
+		}
+		d_members.hide();
+	})
+	cancel.click(function(){
+		d_members.hide();
+	})
+	allow_psw.click(function(){
+		allow_psw_f();
+	})
+	r_member.click(function(){
+		dis2(false);
+		members.attr("t", "m");
+		add_ids(member_value);
+		members.prop("disabled",false).removeClass("disable");
+	})
+	r_deny.click(function(){
+		dis2(false);
+		members.attr("t", "d");
+		add_ids(deny_value);
+		members.prop("disabled",false).removeClass("disable");
+	})
+	r_all.click(function(){
+		dis2(true);
+		members.attr("t", "");
+		members.html("");
+		members.prop("disabled",true).addClass('disable');
+	})
+	predeal();
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/number.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/kcost.js"></script>
+<title>用户账户划账</title>
+<script>
+function checkRate(num)   
+{   
+     var re = /^[1-9]+[0-9]*]*$/;
+     if (!re.test(num))   
+     {
+        return false;   
+     }else{
+	 	return true;
+	 }
+}  
+
+$(function(){
+	$("#form").submit(function(){
+		var value = $("#MoneyWeight").attr("value");
+		var inID = $("#inID").attr("value");
+		var outID = $("#outID").attr("value");
+		var type = $("#type").attr("value");
+		if(!outID){
+			alert("没有填写划出账户");
+			return false;
+		}
+		if(!inID){
+			alert("没有填写划入账户");
+			return false;
+		}
+		if(type == -1){
+			alert("没有选择币种");
+			return false;
+		}
+		if(!value || value <= 0){
+			alert("请填写正确的金额");
+			return false;
+		}
+		/*if(!(type == "m" && value >0 && value<=100000000 && !checkRate(value%100000)) && type != "w"){
+			alert("填写金额数不符合规范");
+			return false;
+		}
+		if(!(type == "w" && value>0 && value<=500000) && type != "m"){
+			alert("填写金额数不符合规范");
+			return false;
+		}*/
+		if($("#Desc").val() == ""){
+			alert("请填写备注");
+			return false;
+		}
+	})
+	/*$("#type").change(function(){
+		if($(this).val() == 'm'){
+			$("#waring").html("V豆一次性最大充值金额为1亿，必须为10万的整数倍;");
+		}else{
+			$("#waring").html("V宝一次性最大充值金额为50万，不能为小数；");
+		}
+	})*/
+	$("#outID").blur(function(){
+		if($(this).attr("value")>0){
+			$.get("kcost.php?m="+Math.random(),{'module':'getBalance', 'uin':$(this).attr("value")},function(data){
+				$("#last_balance").html(data);
+			})
+		}
+	})
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">用户账户划账</div>
+</div >
+{include "kcost/tab.html"}
+
+<form method="post" class="form" action="" id="form">
+    <p>
+        <label style="width:145px;">划出账户ID：</label>
+        <input type="text" name="outID" id="outID" size="32" value="" />
+        &nbsp;&nbsp;&nbsp;&nbsp;<span id="last_balance" style="color:green"></span>
+    </p>
+    <p>
+        <label style="width:145px;">划入账户ID：</label>
+        <input type="text" name="inID" id="inID" size="32" value="" />
+    </p>
+    <p>
+    	<label style="width:145px;">选择币种：</label>
+    	<select name="type" id="type">
+		<OPTION value="-1">请选择</OPTION>
+		<!--<OPTION value="w">现金币</OPTION>-->
+		<OPTION value="m">虚拟币</OPTION>	
+        </select>
+    </p>
+    <p>
+        <label style="width:145px;">交易金额：</label>
+        <input type="text" name="MoneyWeight" id="MoneyWeight" size="32" value="" />
+        &nbsp;&nbsp;&nbsp;&nbsp;<font id="waring" color='red'></font>
+        <p>
+			<label style="width:145px;">备注：</label>
+			<input type="text" name="Desc" size="32" value="" id="Desc" />
+		</p>
+		<p style="margin-left:155px;color:blue" name="string" id="string">零</p>
+    </p>
+    <p>
+    	<label></label>
+    	<input type="submit" class="submit" value="保存信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+
+</body>
+</html>

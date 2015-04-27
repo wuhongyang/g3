@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>手机帐号注册</title>
+<link href="<?php echo cdn_url(THEMES_URL.'passport/css/global-min.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo cdn_url(THEMES_URL.'passport/css/style-min.css');?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<?php include_once dirname(__FILE__).'/header.html'; ?>
+<div class="body box clean">
+	<div class="body-title"><span class="pwd-icon">手机帐号找回密码</span></div>
+	<div class="body-left">
+		<h1 class="reg-title">一、填写帐号信息</h1>
+		<dl class="input-list clean">
+
+		<form method="post" onsubmit="return reg.onsubmit(this)" id="gain_pwd">
+        	<div style="display:none;"><input type="hidden" name="username" id="username" value="<?php echo $userinfo['Phone']; ?>" /></div>
+			<label><dt>手机号码：<font color="red">*</font></dt><dd><input type="text" value="<?php echo $userinfo['Phone']; ?>" disabled="disabled" /><span></span></dd></label>
+			<label><dt>获取短信码：<font color="red">*</font></dt><dd><input type="button" onclick="reg.sendPwdCode(this)" value="获取短信验证码" /></dd></label>
+			<label><dt>输入短信码：<font color="red">*</font></dt><dd><input type="text" name="msgcode" onblur="reg.noempty(this)" /><span></span></dd></label>
+			<dt></dt><dd><input type="submit" value="下一步" class="next" /></dd>
+		</form>
+
+		</dl>
+	</div>
+</div>
+
+<script language="javascript" src="<?php echo cdn_url(THEMES_URL.'passport/js/global.js');?>"></script>
+<script language="javascript">reg.checkPhone(document.getElementById('username'));</script>
+</body>
+</html>

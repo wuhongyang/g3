@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账号管理-站会员查询</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<style>
+	a:hover{text-decoration:underline}
+</style>
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1 class="border2">站会员查询</h1>
+                <div>
+                  <p class="fs14 lineh30">站会员信息：</p>
+					{if !$levelinfo}
+						<p>您还不是站内会员。</p>
+					{else}
+                  	{foreach $levelinfo $one}
+                  		<p class="fs14 lineh30">站ID：<span class="gray">{$one['GroupId']}</span>
+                  		，我的会员等级：
+                  		<img src="{STATIC_API_PATH}/static/images/vip_level/{$one['Level']}.png" width="18" height="18">
+                  		<span class="gray">（离下一级还差{$one['Need']}积分）</span>
+                  		<a target="blank" href="/zhan/{$one['GroupId']}">进入站</a>
+                  		</p>
+                  	{/foreach}
+					{/if}
+                    <p class="fs14 gray lineh30"><a href="/help/82.html" target="blank">什么是站会员等级？</a></p>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>

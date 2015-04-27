@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>礼物分类管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">礼物分类列表</div>
+  <div class="header-button right">
+  {if $link_array[133]['url']}<a class="add-button" href="{$link_array[133]['url']}&tpl_id={$_GET['tpl_id']}">添加礼物分类</a>{/if}
+  </div>
+</div>
+
+<script>
+active_li = 5;
+</script>
+{include file="template/tpl_header.html"}
+
+<br/>
+&nbsp;&nbsp;
+<script>
+$(function(){
+    $("#type_search").click(function(){
+        if($("#type").val() == 0){
+            location.href = "props_manage.php?tpl_id={$_GET['tpl_id']}";
+        }else if($("#type").val() == 1){
+            location.href = "props_manage.php?module=props_list&is_tricky=1&tpl_id={$_GET['tpl_id']}";
+        }else if($("#type").val() == 2){
+            location.href = "props_manage.php?module=props_list&is_tricky=2&tpl_id={$_GET['tpl_id']}";
+        }
+        return false;
+    })   
+})
+</script>
+选择类型:
+<select name="type" id="type">
+<option value="0">礼物</option>
+<option value="1">整蛊</option>
+<option value="2">沙发</option>
+</select>
+<input type="submit" id="type_search" value="搜索" />
+
+<table class="table-list main-width" >
+	<tr>
+    <th width="20%">编号</th>
+    <th width="20%">礼物分类名称</th>
+    <th width="20%">礼物数量</th>
+    <th width="20%">是否启用</th>
+    <th>操作</th>
+  	</tr>
+  	{foreach $list $one}
+  	<tr>
+  	<td>{$one['cate_id']}</td>
+  	<td>{$one['cate_name']}</td>
+  	<td>{$one['count']}</td>
+  	<td>{if $one['status']}启用{else}不启用{/if}</td>
+  	<td>
+      <a href="props_manage.php?module=move_cate&cate_id={$one['cate_id']}&tpl_id={$_GET['tpl_id']}&direct=up">上移</a>&nbsp;&nbsp;
+      <a href="props_manage.php?module=move_cate&cate_id={$one['cate_id']}&tpl_id={$_GET['tpl_id']}&direct=down">下移</a>&nbsp;&nbsp;
+      <a href="{$link_array[112]['url']}&cate_id={$one['cate_id']}&tpl_id={$_GET['tpl_id']}">礼物列表</a>&nbsp;&nbsp;
+      <a href="{$link_array[133]['url']}&cate_id={$one['cate_id']}&tpl_id={$_GET['tpl_id']}">修改</a>
+    </td>
+  	</tr>
+  	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

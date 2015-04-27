@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账号管理-全部勋章</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            
+			<div class="rightdiv">
+				<h1>我的勋章</h1>
+				<div class="tabletab">
+					<ul>
+                    	<li><a href="?module=allmedal">全部勋章</a></li>
+                    	{foreach $medaltypes['Category'] $k $name}
+                        <li><a href="?module=mymedal&id={$k}" {if $_GET['id'] == $k}class="hover"{/if}>{$name}</a></li>
+                        {/foreach}
+					</ul>
+				</div>
+				<div class="tablewrap" style="padding:0;">
+					<div class="medal-wrap">
+						<div class="medal-left">
+							<ul>
+                            	{foreach $medaltypes['Result'] $k $val}
+								<li {if $_GET['tid'] == $val['id']}class="hover"{/if}><a href="?module=mymedal&id={$_GET['id']}&tid={$val['id']}">{$val['name']}</a></li>
+                                {/foreach}
+							</ul>
+						</div>
+						<!-- medal-left end--> 
+						<div class="medal-right">
+							<div class="medal-pro">
+								<div class="pro-head">
+                                	{foreach $mymedals['Result'] $k $val}
+									<div class="picwrap{echo $k+1}"><img src="{PIC_API_PATH}/p/{$val['icon']}/42/42.jpg" width="42" height="42"></div>
+                                    {/foreach}
+								</div>
+								<div class="pro-stepbar"></div>
+                                <div class="clearfix">
+                                    <div class="pull-left" style="width:33%">
+                                        <div class="progress progress-striped  progress-success" style="border-right:none;">
+                                            <div class="bar" style="width:{$userLevel['LevelRate'][0]}%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="pull-left" style="width:33%">
+                                        <div class="progress progress-striped  progress-success" style="border-right:none;">
+                                            <div class="bar" style="width:{$userLevel['LevelRate'][1]}%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="pull-left" style="width:33%">
+                                        <div class="progress progress-striped  progress-success">
+                                            <div class="bar" style="width:{$userLevel['LevelRate'][2]}%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+							</div>
+                            {foreach $mymedals['Result'] $k $item}
+							<div class="medal-info">
+								<h5>{$item['name']}</h5>
+								<p><strong>勋章效果：</strong>{$item['descr1']}</p>
+								<p><strong>获得条件：</strong>{$item['descr2']}</p>
+								<p><strong>达成度：</strong><span style="color:#16972b;">{if $userLevel['LevelRate'][$k] >= 100}已达成{else}已完成{$userLevel['LevelRate'][$k]}%{/if}</span></p>
+							</div>
+                            {/foreach}
+						</div>
+					</div>
+				</div>
+			</div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>
+<script  type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+
+

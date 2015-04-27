@@ -1,0 +1,41 @@
+<div class="middleright">
+        <!--中间部分开始-->
+        <div class="gamebanner"><img src="/pic/gameicon/banner_{$request['Gameid']}.jpg" /></div>
+        <div>
+            <!--互动游戏开始-->
+            <div class="game-navsite">
+                  <h2 class="title">
+                     <div class="bar-title">火热进行中...</div>
+                  </h2>
+                  <div class="game clearfix"> 
+				  {if !empty($roomsListbyRoom)}
+					  {foreach $roomsListbyRoom $rooms}
+                      <dl class="fl">
+                          <dt class="cover-game"> 
+                              <div class="jianpic"></div>
+							  <img src="{PIC_API_PATH}/roomid/{$rooms['id']}/240/180.jpg" width="240" height="180" alt="{$rooms['description']}">
+							  <span class="b">{$rooms['name']}<i>({$rooms['id']})</i> <em>{$rooms['curuser']}人</em></span>
+							  <div class="gamemask">
+								<a href="/v/{$rooms['id']}?Type=Game&GameName={$games[$request['Gameid']]['interact_name']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$rooms['id']}/240/180.jpg" width="240" height="180" alt="{$rooms['description']}"></a>
+								<!--<div>
+									<h5>{$rooms['name']}<span>({$rooms['id']})</span></h5>
+									<p>{$rooms['description']}</p>
+								</div>-->
+							  </div>
+                          </dt>
+                      </dl>
+					  {/foreach}
+				  {else}
+						<h2 class="ajax-search-notfound">找不到房间哦！</h2>
+				  {/if}
+					  
+                </div>
+              <div style="clear:both;"></div>
+              </div>    
+              <!--互动游戏结束-->
+    </div>
+    <!--中间部分结束-->
+</div>
+<!--middleright-->
+
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/rooms.js"></script>

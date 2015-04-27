@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <a class="bluebtn fr" href="signed_manage.php?module=signed_manage"><span>返回签约管理</span></a>
+    </div>    
+    <div class="centerdiv">
+        <ul class="formlist mgt30">
+            <li class="clearfix">
+                <label class="mgL150">签约绑定房间：</label>
+                <select name="room_id" id="room_id" onchange="surplusEntertainer(this);" class="mg5">
+                {foreach $userRooms['roomList'] $val}
+                    <option {if $_GET['room_id'] == $val['id']}selected="selected"{/if} value="{$val['id']}" surplus="{$val['surplus_entertainer']}">{$val['name']}</option>
+                {/foreach}
+                </select>
+            </li>
+            <li class="clearfix">
+                <label class="mgL150">剩余签约艺人数：</label>
+                <span id="entertainer_quota"></span>
+            </li>
+            <li class="clearfix">
+                <label class="mgL150">签约绑定类型：</label>
+                {foreach $roleList $val}
+                <input name="signed_type" type="radio" {if $_GET['role_id'] == $val['id']}checked="checked"{/if} value="{$val['role_show_2']}" roleId="{$val['id']}" onchange="$('.errortip').hide();" class="radios" onClick="salary({$val['id']});"><span>{$val['name']}</span><span class="mglr">&nbsp;</span>
+                {/foreach}
+            </li>
+            <li class="clearfix">
+                <label class="mgL150">签约人员ID：</label>
+                <input name="signed_uin" id="signed_uin" type="text" class="input">
+            </li>
+            <li class="clearfix" id="salary_box" style="display:none;">
+                <label class="mgL150">约定底薪：</label>
+                <input name="salary" id="salary" type="text" class="input">
+                <span class="errortip" style="display:none;"></span>
+            </li>
+            <li class="clearfix">
+            	<label class="mgL150">&nbsp;</label>
+                <a href="javascript:checkForm();" class="bluebtn"><span>确定签约</span></a>
+            </li>
+        </ul>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+$("input[type=reset]").trigger("click");
+var surplus_entertainer=0;
+$("#room_id").change();
+function salary(roleId){
+	if(roleId==10185){
+		$('#salary_box').hide();
+	}
+	else{
+		$('#salary_box').show();
+	}
+}
+function surplusEntertainer(obj){
+	var index=obj.selectedIndex;
+	var surplus=$(obj.options[index]).attr("surplus");
+	$("#entertainer_quota").html(surplus+'人');
+	surplus_entertainer=surplus;
+}
+function checkForm(){
+	var signed_type=$('input[name="signed_type"]:checked').val();
+	if(!signed_type){
+		alert('请选择签约绑定类型');
+		return;
+	}
+	var signed_uin=$("#signed_uin").val();
+	if(signed_uin==''){
+		alert('请填写签约人员ID');
+		return;
+	}
+	if(signed_type==2&&surplus_entertainer<=0){
+		alert('该房间签约艺人已满');
+		return;
+	}
+	var role_id=$('input[name="signed_type"]:checked').attr('roleId');
+	if(role_id==''){
+		alert('请选择签约绑定类型');
+		return;
+	}
+	var salary=$("#salary").val();
+	if(salary!=''){
+		if(!_is_integer(salary)){
+			alert('底薪只能是大于等于0的整数');
+			return;
+		}
+		salary = parseInt(salary, 10);
+		if(salary < 0){
+			alert('底薪只能是大于等于0的整数');
+			return;
+		}
+	}
+	$.ajax({
+		url:'/group/signed_manage.php?module=signed_submit',
+		type:'POST',
+		async:false,
+		cache:false,
+		data:{'room_id':$("#room_id").val(),'signed_type':signed_type,'signed_uin':signed_uin,'role_id':role_id,'salary':salary},
+		success:function(data){
+			json=jQuery.parseJSON(data);
+			if(json.Flag==100){
+				alert('绑定成功');
+				window.location='signed_manage.php?module=signed_manage';
+			}
+			else if(json.Flag==110){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else if(json.Flag==111){
+				alert(json.FlagString);
+				window.location.reload();
+			}
+			else{
+				$(".errortip").html('<span class="error"></span>'+json.FlagString);
+				$(".errortip").show();
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

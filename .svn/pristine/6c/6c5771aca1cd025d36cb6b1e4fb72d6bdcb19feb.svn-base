@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>渠道管理</title>
+<!--{include file="head.html"}-->
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">渠道管理</div>
+</div>
+<form name="myform" action="partner_channel.php?module=saveSalaryAndReward" method="post" class="form">
+    <input type="hidden" name="SAR[id]" value="<{$info['id']}>" />
+    <p>
+        <label>渠道名称：</label>
+        <strong>{$info['name']}</strong>
+    </p>
+    <p>
+        <label>渠道ID：</label>
+        <strong>{$info['uid']}</strong>
+    </p>
+    <p>
+        <label>有无底薪：</label>
+        <strong>{if $info['have_salary'] == 1}有{else}无{/if}</strong>
+    </p>
+    {if $info['have_salary'] == 1}
+    <p>
+        <label>底薪（RMB）：</label>
+        <input type="text" value="{$info['salary']}" name="SAR[salary]" />
+    </p>
+    {/if}
+    <p>
+        <label>有无挺进奖励：</label>
+        <strong>{if $info['have_push_money'] == 1}有{else}无{/if}</strong>
+    </p>
+    {if $info['have_push_money'] == 1}
+    <p>
+        <label>底薪（RMB）：</label>
+        <input type="text" value="{$info['push_money']}" name="SAR[push_money]" />
+    </p>
+    {/if}
+    {if $info['have_salary']==1 || $info['have_push_money']==1}
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+    {else}
+     <p style="margin-left:100px;"><font color="red">没有底薪和业务挺进奖励</font></p>
+    {/if}
+</form>
+</body>
+</html>

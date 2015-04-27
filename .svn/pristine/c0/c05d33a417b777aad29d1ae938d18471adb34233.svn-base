@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-更换{if $way==1}邮箱地址{else}手机号码{/if}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <div class="E4graybg fs14 bold">更换{if $way==1}邮箱地址{else}手机号码{/if}</div>
+                <div class="mgL20 mgt30">
+                    <p class="gray fs16">选择更换方式：</p>
+                    <div class="mgt50 mgL150">
+                        <div class="fl mgt30">
+                            <div class="mailbig"></div>
+                            <div class="mgt10">
+                                {if !empty($user['Email'])}
+                                <a href="{$email_url}"; class="yellowbtn"><span>邮箱修改</span></a>
+                                {else}
+                                <img src="{THEMES_URL}service/images/no_email.jpg">
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="linebg fl mgL100"></div>
+                        <div class="fl mgt30 mgL100">
+                            <div class="phonebig mgL20"></div>
+                            <div class="mg5">
+                                {if !empty($user['Phone'])}
+                                <a href="{$phone_url}" class="yellowbtn"><span>手机修改</span></a>
+                                {else}
+                                <img src="{THEMES_URL}service/images/no_phone.jpg">
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>

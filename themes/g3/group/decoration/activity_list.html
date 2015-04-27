@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">活动列表</h3>
+        <span class="fr"><a href="?module=activity_add" class="bluebtn"><span>发布新活动</span></a></span>
+    </div>
+    <form method="post" action="?module=activity_sort" id="J_form">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+          <tr>
+            <th>活动时间</th>
+            <th>活动标题</th>
+            <th style="width:120px;">活动房间</th>
+            <th>添加时间</th>
+            <th>操作</th>
+            <th>轮播图排序</th>
+          </tr>
+          {foreach $activityList $key $val}
+          <tr>
+            <td>{echo $val['start_time'].' -- '.$val['end_time']}</td>
+            <td style="width:120px;">{$val['title']}</td>
+            <td>{echo $val['range']>0 ? $val['range'] : '所有房间';}</td>
+            <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+            <td>
+                <a class="ahover" href="?module=activity_edit&id={$val['id']}">编辑</a>
+                <a class="ahover" href="/active_{$val['id']}.html" target="_blank">查看</a>
+                <a class="ahover" href="javascript:activity_del({$val['id']});" target="_blank">删除</a>
+                <a class="ahover" href="javascript:;" onclick="recommend($val['id'])">{if $val['recommend'] == 1}不推荐{else}推荐{/if}</a>
+            </td>
+            <td><input type="text" name="order_{$val['id']}" {if $val['recommend']!=1}disabled style="background-color:#eee;border:1px solid #aaa;"{else} value="{$val['order']}" {/if} size="6"></td>
+          </tr>
+          {/foreach}
+          <td colspan="6">
+            <div style="float:left">{$list['Page']}</div>
+            <div style="float:right;"><a style="cursor:pointer" class="bluebtn" id="sort"><span>保存排序</span></a></div>
+          </td>
+        </table>
+        <div style="float:right;margin-top:5px;">推荐之后能在活动页面轮播图出现，推荐后请调整顺序</div>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function recommend(id){
+    $.ajax({
+        url: '?module=activity_recommend',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            callback(data.Flag,data.FlagString);
+        }
+    });
+}
+
+function activity_del(id){
+    art.dialog({
+        content: '真的要删除该活动吗？',
+        ok: function(){
+            $.ajax({
+                url: '?module=activity_del',
+                type: 'POST',
+                data: {id:id},
+                dataType: 'JSON',
+                success: function(data){
+                    callback(data.Flag,data.FlagString);
+                }
+            });
+        },
+        cancel: true,
+        icon: 'warning',
+        lock: true
+    })
+}
+
+$(function(){
+    $('#sort').click(function(){
+        var url = $('#J_form').attr('action');
+        var data = $('#J_form').serialize();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            success: function(data){
+                callback(data.Flag,data.FlagString);
+            }
+        })
+    });
+});
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=activity_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+</script>

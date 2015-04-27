@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>表情分类添加/修改</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	var form = $("#form");
+	$("#submit").click(function(){
+		var form_data = form.serializeArray();
+		$.post("/admin/expression.php?module=cate_save", form_data, function(data){
+			var data = eval('('+data+')');
+			alert(data.FlagString)
+			if(data.Flag == 100){
+				location.href="{$link_array[101]['url']}";
+			}
+		})
+		return false;
+	})
+	getOptions("bigcase=1","bigcase","{$one['bigcase_id']}");
+	{if !empty($one['bigcase_id'])}
+	getOptions("case={$one['bigcase_id']}",'case',"{$one['case_id']}");
+	{/if}
+	{if !empty($one['case_id'])}
+	getOptions("parent={$one['case_id']}",'parent',"{$one['parent_id']}");
+	{/if}
+})
+</script>
+<style>
+	td{
+		padding:10px;
+	}
+</style>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">表情分类添加/修改</div>
+  <div class="header-button right">
+  {if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}">返回</a>{/if}
+  </div>
+</div>
+<br/>
+<form id="form">
+<table width="100%">
+	<tr>
+        <td width="20%" align="right">科目联动菜单：</td>
+        <td>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent"><option value="0">请选择</option></select>
+        </td>
+    </tr>
+	<tr>
+		<td width="20%" align="right">表情分类名称：</td><td><input type="text" name="cate_name" value="{$one['cate_name']}" /></td>
+	</tr>
+	<tr>
+		<td align="right">是否启用：</td><td><input type="radio" value="1" {if !isset($one['status']) or $one['status'] == 1}checked="checked"{/if} name="status" />启用&nbsp;&nbsp;<input type="radio" value="0" name="status" {if $one['status'] === '0'}checked="checked"{/if}/>不启用</td>
+	</tr>
+	<tr>
+		<td align="right">&nbsp;</td><td><button id="submit">保存信息</button></td>
+	</tr>
+	{if $one}
+		<input type="hidden" name="cate_id" value="{$one['cate_id']}" />
+	{/if}
+</table>
+</form>
+
+</body>
+</html>

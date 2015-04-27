@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>完成手机注册</title>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container login-hd">
+  <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <div class="register-bd pad100">
+        <h2 class="success">完成手机号注册</h2>
+        <div class="sucessbox">
+            <h5>恭喜注册成功！</h5>
+            <p>通行证账号：<?php echo $userInfo['username']; ?></p>
+            <p>账号ID：<?php echo $userInfo['uin']; ?> <!--<span class="mgleft50">系统ID不够炫，</span><a href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" target="_blank">选一个靓号</a>--></p>
+            <!--<p>账号昵称： <a href="/service/account.php?module=modifyInfo" class="mgleft50">修改昵称</a></p>-->
+        </div>
+        <div class="sucessbox">
+            <?php if($userInfo['group_id'] > 0): ?>
+                <button class="btn btn-large btn-success" type="button" onclick="location.href='/group/reg_information.php?group_id=<?php echo $userInfo['group_id']; ?>'">完善账号资料</button>
+            <?php endif; ?>
+            <button class="btn btn-large btn-success" type="button" onclick="location.href='/'">去首页逛逛</button>
+        </div>
+    </div>
+</div>
+<?php include "new-footer.html"; ?>
+</body>
+</html>

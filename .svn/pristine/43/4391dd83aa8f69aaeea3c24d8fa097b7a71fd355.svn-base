@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-绑定邮箱</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <h1>绑定邮箱</h1>
+                {if isset($user['Email']) && !empty($user['Email']) && empty($_GET['bindcode'])}
+                    <p class="p1">您已绑定安全邮箱！</p>
+                    <p class="p1">安全邮箱地址：{$user['Email']}</p>
+                    <p class="p1"><a href="?module=way&w=1" class="yellowbtn"><span>修改安全邮箱</span></a></p>
+                {else}
+                    <form method="post" id="J_form">
+                        {if empty($_GET['bindcode']) && empty($user['Email'])}
+                        <p class="p1">您还未绑定安全邮箱，绑定后可通过安全邮箱找回密码！</p>
+                        <p class="red p1">为了您的账号安全，请立即绑定安全邮箱！</p>
+                        {/if}
+                        <ul class="formlist">
+                            <li class="clearfix" style="margin-bottom:0;">
+                                <label>邮箱地址：</label>
+                                <input name="email" type="text" class="input" />
+                                <em class="notice" id="J_email_tip"></em>
+                            </li>
+                            <li class="clearfix">
+                                <label>&nbsp;</label>
+                                <em style="font-size:11px;color:#999;">请填写您常用的邮箱地址</em>
+                            </li>
+                            <li class="clearfix">
+                                <label>&nbsp;</label>
+                                <a style="cursor:pointer;" id="J_submit" class="yellowbtn"><span>提交</span></a>
+                            </li>
+                        </ul>
+                    </form>
+                {/if}
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript">
+var email_status = 0;
+$(function(){
+    $('input[name="email"]').focus(function(){
+        $('#J_email_tip').html('');
+    });
+    $('input[name="email"]').blur(function(){
+        var email = $(this).val();
+        if(email == ''){
+            $('#J_email_tip').html('请输入邮箱地址');
+        }else if(!_is_email(email)){
+            $('#J_email_tip').html('请输入正确的邮箱地址');
+        }else{
+            email_status = 1;
+        }
+    });
+
+    $('#J_submit').click(function(){
+        if(email_status != 1){
+            $('input[name="email"]').blur();
+            return false;
+        }
+        $('#J_form').submit();
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>金豆兑换</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+{include file="header.html"}
+
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+    	{include file="group_info.html"}
+        
+        <form method="post" action="?module=vdouexchange" class="form-charge" id="form" target="iframe">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+        	<div id="formMsg"><span></span></div>
+            <div class="rows">
+            	<label>金豆余额：</label>
+                <font color="#FF0000" id="vdou_balance">{$vdou}</font> <font color="14A3CD">金豆</font>
+            </div>
+            <div class="rows clean">
+            	<label>兑换金额：</label><input type="text" name="pay_expense" id="money" autocomplete="off" /> <font color="#999">只能输入整数</font>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <span class="totalMoney">
+                	<font color="14A3CD">共可获得</font> <font color="#FF0000" id="total_vdian">0</font> <font color="14A3CD" id="unit" weight="1">金币</font>
+                    <font color="#999">(兑换比率：1金豆=1 {$GroupData['currency_unit']})</font>
+                </span>
+            </div>
+            <div class="rows">
+            	<label>&nbsp;</label>
+                <button type="button" class="btn" id="exchange">立即兑换</button>
+            </div>
+        </form>
+    </div>    
+</div>
+<iframe name="iframe" style="display:none;"></iframe>
+
+{include file="foot.html"}
+
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/modules/store/js/charge.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.vdouexchange;
+}
+
+var groupId = '{$groupId}';
+
+$('#exchange').click(function(){
+    var money = $('#money').val();
+    var vdou = parseInt($('#vdou_balance').html(),10);
+    if(money == ''){
+        _show_msg('请输入要兑换的金额');
+        return false;
+    }
+    money = parseInt(money, 10);
+    if(money < 1){
+        _show_msg('兑换金额只能是大于0的整数');
+        return false;
+    }
+    if(!_is_integer(money)){
+        _show_msg('兑换金额只能为整数');
+        return false;
+    }
+    if(money > vdou){
+        _show_msg('兑换金额不能大于金豆余额');
+        return false;
+    }
+    $('#form').submit();
+});
+</script>

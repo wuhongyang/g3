@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>商品类别管理</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">商品类别列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加</a>{/if}</div>
+</div >
+<br/>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>名称</th>
+    <th>状态</th>
+    <th>添加时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $list $k $val}
+    <tr>
+    <td>{echo ($k+1)}</td>
+    <td>{$val['name']}</td>
+  	<td>{echo $val['status']==1 ? '启用' : '不启用'}</td>
+    <td>{echo date('Y-m-d H:i',$val['uptime'])}</td>
+  	<td>{if $link_array[102]['url']}<a href="{$link_array[102]['url']}&id={$val['id']}">修改</a>{/if}</td>
+  </tr>
+  {/foreach}
+  </table>
+
+</body>
+</html>

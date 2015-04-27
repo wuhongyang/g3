@@ -1,0 +1,6 @@
+<div class="tabletab">
+	<ul>
+		<li><a href="?module=vip_list" {if $serviceType=='vip' }class="hover"{/if}>会员管理</a></li>
+		<li><a href="?module=vipinfo_list" {if $serviceType=='vipinfo' }class="hover"{/if}>会员申请管理</a></li>
+	</ul>
+</div>

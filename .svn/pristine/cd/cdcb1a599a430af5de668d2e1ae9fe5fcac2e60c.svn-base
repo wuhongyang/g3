@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>KMS_user_list</title>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">艺人室主管理</div>
+  <div class="header-button right">
+	 {if $link_array[112]['url']}<a class="add-button" href="{$link_array[112]['url']}">添加代理</a>{/if}
+	 {if $link_array[106]['url']}<a class="add-button" href="{$link_array[106]['url']}" title="添加站长">添加站长</a>{/if}
+  </div>
+</div>
+<div class="page-tools main-width">
+<form action="" method="get" name="myform">&nbsp;
+用户ID：<input type="text" name="uin" value="{$_GET['uin']}" />
+        日期：<input type="text" name="start" value="{$_GET['start']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" />
+        至   <input type="text" name="end" value="{$_GET['end']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" />
+        状态：<select name="status">
+        		{foreach $apply_status $kk $arr}<option value="{$kk}" {if $_GET['status'] == $kk}selected{/if}>{$arr}</option>{/foreach}
+        	</select>
+        类型：<select name="type">
+                {foreach $role_type $kk $arr}<option value="{$kk}" {if $_GET['type'] == $kk}selected{/if}>{$arr}</option>{/foreach}
+        	</select>&nbsp;<input type="submit" value="搜索"><input type="hidden" name="module" id="module" value="list">
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>用户ID</th>
+		<th>姓名</th>
+		<th>申请类型</th>
+		<th>申请时间</th>
+		<th>常驻城市</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $joinList $arr}
+	<tr>
+		<td height="25">{$arr['uin']}</td>
+		<td height="25">{$arr['name']}</td>
+	    <td height="25">{$role_type[$arr['type']]}</td>
+		<td height="25">{echo date('Y-m-d H:i',$arr['apply_time'])}</td>
+		<td height="25">{$arr['city_name']}</td>
+	    <td height="25">{$apply_status[$arr['status']]}</td>
+	    <td height="25"><{if $link_array[102]['url']}><a href="{$link_array[102]['url']}&id={$arr['id']}">{$link_array[102]['child_name']}</a><{/if}></td>
+	</tr>
+	{/foreach}
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

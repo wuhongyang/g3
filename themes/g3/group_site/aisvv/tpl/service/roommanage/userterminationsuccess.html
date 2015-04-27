@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="centerdiv">
+                <h2 style="font-size:26px;color:#ce2c21;line-height:40px;">解约房间成功!</h2>
+                <p class="center fs14 mgt10">您已成功与房间"{$records['room_id']}({$records['room_name']}）"解除签约。</p>
+                 <p><a href="room_channel_user.php?module=user_signed_list" class="bluebtn mgt30" style="margin-left:300px;"><span>返回已签约房间</span></a></p>
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

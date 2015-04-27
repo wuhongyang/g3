@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站功能道具</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">分站功能道具列表</div>
+  <div class="header-button right">{if $link_array[116]['url']}<a class="add-button" href="{$link_array[116]['url']}?tpl_id={$_GET[tpl_id]}">添加分站功能道具</a>{/if}</div>
+</div>
+
+<script>
+active_li = 6;
+</script>
+{include file="template/tpl_header.html"}
+
+<div class="page-tools main-width">
+	<form action="" method="get" name="myform">
+        功能道具展现轨迹：<select name="props_size" style="width:60px;"><option value="0">&nbsp;&nbsp;无</option><option value="1" {if $_GET['props_size']=='1'}selected{/if}>&nbsp;&nbsp;小</option><option value="2" {if $_GET['props_size']=='2'}selected{/if}>&nbsp;&nbsp;大</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+         状态：<select name="props_status"><option value="-1">--请选择--</option><option value="1" {if $_GET['props_status']=='1'}selected{/if}>启用</option><option value="0" {if isset($_GET['props_status']) && $_GET['props_status']=='0'}selected{/if}>不启用</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="hidden" name="module" id="module" value="props_list">
+         <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}">
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>功能道具名称</th>
+    <th>扩展模块路径</th>
+    <th>一级科目</th>
+    <th>二级科目</th>
+    <th>三级科目</th>
+    <th>所属区域</th>
+    <th>功能道具描述</th>
+    <th>功能道具展现轨迹</th>
+    <th>功能道具图标</th>
+    <th>状态</th>
+    <th>时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $props_arr $arr}
+  <tr>
+    <td>{$arr['props_name']}</td>
+    <td>{$arr['cmd_path']}</td>
+    <td>{$arr['bigcase_name']}</td>
+    <td>{$arr['case_name']}</td> 
+    <td>{$arr['parent_name']}</td>
+    <td><{foreach $area_arr["province"] $province}><{if $province['province_id']==$arr['province_id']}>$province['province_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["city"][$arr['province_id']] $city}><{if $city['city_id']==$arr['city_id']}>$city['city_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["area"][$arr['city_id']] $area}><{if $area['area_id']==$arr['area_id']}>$area['area_name']<{/if}><{/foreach}></td>
+    <td>{$arr['props_desc']}</td>
+    <td><{if $arr['props_size']==2}>大<{else}>小<{/if}></td>
+    <td>{if $arr['pic_id'] > 0}<a href="{$arr['swf_img_path']}" title="点击查看道具图标" target="_blank">查看道具图标</a>{else}<span style="color:#bbb">查看道具图标</span>{/if}</td> 
+    <td><{if $arr['props_status']==1}>启用<{else}>不启用<{/if}></td>
+    <td>{echo date('Y-m-d H:i:s',$arr['uptime'])}</td>
+    <td>
+      {if $link_array[126]['url']}<a href="{$link_array[126]['url']}&id={$arr['id']}&type=up&tpl_id={$_GET[tpl_id]}" title="上移">上移</a>&nbsp;&nbsp;{/if}
+      {if $link_array[126]['url']}<a href="{$link_array[126]['url']}&id={$arr['id']}&type=down&tpl_id={$_GET[tpl_id]}" title="下移">下移</a>&nbsp;&nbsp;{/if}
+      {if $link_array[126]['url']}<a href="{$link_array[126]['url']}&id={$arr['id']}&type=top&tpl_id={$_GET[tpl_id]}" title="置顶替">置顶</a>&nbsp;&nbsp;{/if}
+      {if $link_array[119]['url']}<a href="{$link_array[119]['url']}?id={$arr['id']}&tpl_id={$_GET[tpl_id]}" title="修改">修改信息</a>&nbsp;&nbsp;{/if}
+	  {if $link_array[129]['url']}<a href="{$link_array[129]['url']}&cmd={$arr['cmd']}&tpl_id={$_GET[tpl_id]}">配置</a>&nbsp;&nbsp;{/if}
+      <!--
+      {if $link_array[123]['url']}<a href="javascript:void(0);" onClick="props_del('<{$arr[id]}>');" title="删除">删除</a>{/if}&nbsp;
+      -->
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+function props_del(id){
+	if(confirm("高危操作，确定要删除吗？")){
+		window.location.href = "{$link_array[123]['url']}&id="+id;
+	}
+}
+
+/*
+var open_citys = '<{$areaInfo}>';
+open_citys = eval('('+open_citys+')');
+var province_JSONDATA = open_citys.province;
+var city_JSONDATA = open_citys.city;
+var area_JSONDATA = open_citys.area;
+show_province("{$_GET['province']}");//显示联动数据
+show_city("{$_GET['province']}","{$_GET['city']}");
+show_area("{$_GET['city']}","{$_GET['area']}");
+*/
+</script>
+</body>
+</html>

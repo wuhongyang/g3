@@ -1,0 +1,217 @@
+<?php
+header("Content-type: text/html; charset=utf-8");
+require_once '../library/global.fun.php';
+
+$db=db::connect(config('database','default'));
+
+$error=array();
+
+//站长
+$sql="SELECT uid FROM ".DB_NAME_PARTNER.".channel_user WHERE type=8 AND flag=1 AND room_id>0 AND up_uid>0";
+$groupList=array(5510000,5120000,5711238,5712249,20228318,5711338,5710308,5510208,5910108,20227844,5121348,4111018,5711268,20226237,5511199,5120001,5711328,20139212,5710968);
+$groupListStr=implode(',',$groupList);
+foreach($groupList as $val){
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$val,
+			'Uin'=>$val,
+			'RoleId'=>10187,
+			'RoomId'=>0,
+			'NewGroup'=>true
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='站长更新过程中，uin为：'.$val.'的站长写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+echo '1/7，站长更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//室主
+$sql="SELECT uid,room_id,up_uid FROM ".DB_NAME_PARTNER.".channel_user WHERE type=9 AND flag=1 AND room_id>0 AND up_uid IN ($groupListStr)";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	$sql="SELECT groupid FROM ".DB_NAME_GROUP.".tbl_groups WHERE groupid=".$val['up_uid'];
+	$gid=$db->get_var($sql);
+	if(empty($gid)){
+		continue;
+	}
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$val['up_uid'],
+			'Uin'=>$val['uid'],
+			'RoleId'=>10185,
+			'RoomId'=>$val['room_id']
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='室主更新过程中，uin为：'.$val['uid'].'的室主写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+echo '2/7，室主更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//艺人
+$sql="SELECT uid,room_id,up_uid FROM ".DB_NAME_PARTNER.".channel_user WHERE type=15 AND flag=1 AND room_id>0 AND up_uid IN ($groupListStr)";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	$sql="SELECT groupid FROM ".DB_NAME_GROUP.".tbl_groups WHERE groupid=".$val['up_uid'];
+	$gid=$db->get_var($sql);
+	if(empty($gid)){
+		continue;
+	}
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$val['up_uid'],
+			'Uin'=>$val['uid'],
+			'RoleId'=>10186,
+			'RoomId'=>$val['room_id']
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='艺人更新过程中，uin为：'.$val['uid'].'的艺人写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+echo '3/7，艺人更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//代理
+$sql="SELECT * FROM ".DB_NAME_GROUP.".groups_proxy AND group_id IN ($groupListStr)";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$val['group_id'],
+			'Uin'=>$val['uin'],
+			'RoleId'=>10011,
+			'RoomId'=>$val['room_id']
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='代理更新过程中，uin为：'.$val['uin'].'的代理写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+echo '4/7，代理更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//会员
+$sql="SELECT uin,group_id FROM ".DB_NAME_GROUP.".tbl_vip WHERE status=1 AND group_id IN ($groupListStr)";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$val['group_id'],
+			'Uin'=>$val['uin'],
+			'RoleId'=>10126,
+			'RoomId'=>0
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='会员更新过程中，uin为：'.$val['uin'].'的会员写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+echo '5/7，会员更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//房间管理员
+$sql="SELECT id FROM ".DB_NAME_NEW_ROOMS.".rooms WHERE `group` IN ($groupListStr)";
+$roomList=$db->get_results($sql,'ASSOC');
+$roomIds=array();
+foreach($roomList as $val){
+	$roomIds[]=$val['id'];
+}
+$roomIds=implode(',',$roomIds);
+
+$sql="SELECT * FROM ".DB_NAME_NEW_ROOMS.".roommanager_tbl WHERE room_id IN ($roomIds)";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	if(empty($val['uin'])||empty($val['room_id'])){
+		continue;
+	}
+	$sql="SELECT `group` FROM ".DB_NAME_NEW_ROOMS.".rooms WHERE id=".$val['room_id'];
+	$gid=$db->get_var($sql);
+	if(empty($gid)){
+		continue;
+	}
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>$gid,
+			'Uin'=>$val['uin'],
+			'RoleId'=>10002,
+			'RoomId'=>$val['room_id']
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='房间管理员更新过程中，uin为：'.$val['uin'].'的房间管理员写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+unset($roomIds);
+unset($roomList);
+echo '6/7，房间管理员更新完毕。<br />';
+ob_flush();
+flush();
+sleep(1);
+
+//房间超管、巡管
+$sql="SELECT * FROM ".DB_NAME_NEW_ROOMS.".chatmanager_tbl WHERE flag=1";
+$list=$db->get_results($sql,'ASSOC');
+foreach($list as $val){
+	if(empty($val['uin'])){
+		continue;
+	}
+	if($val['level']==1){
+		$roleId=10128;
+	}
+	else{
+		$roleId=10131;
+	}
+	$roleData=array(
+		'extparam'=>array(
+			'Tag'=>'AddGroupRole',
+			'GroupId'=>1,
+			'Uin'=>$val['uin'],
+			'RoleId'=>$roleId,
+			'RoomId'=>0,
+			'NewGroup'=>true
+		)
+	);
+	$res=httpPOST(ROLE_API_PATH,$roleData);
+	if($res['Flag']!=100){
+		$error[]='房间超管、巡管更新过程中，uin为：'.$val['uin'].'的房间超管、巡管写入mongo失败，失败原因为：'.$res['Flag'].','.$res['FlagString'];
+	}
+}
+unset($list);
+
+echo '7/7，房间超管、巡管更新完毕。<br />';
+if(empty($error)){
+	echo '执行完毕，所有数据更新成功';
+}
+else{
+	echo '执行完毕，以下数据更新失败：';
+	foreach($error as $val){
+		echo '<br />'.$val;
+	}
+}
+exit;

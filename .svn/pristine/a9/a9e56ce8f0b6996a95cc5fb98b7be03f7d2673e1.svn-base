@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品类别管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<{include file="head.html"}>
+</head>
+
+<body>
+
+<div class="header clean">
+  <div class="header-title left">添加/修改商品类别</div>
+  <div class="header-button right">{if $link_array[140]['url']}<a href="{$link_array[140]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<form method="post" class="form" action="{if empty($info)}?module=add{else}?module=edit{/if}">
+	{if $info}
+		<input type="hidden" name="id" value="{$info['id']}">
+	{/if}
+    <p>
+        <label>名称：</label>
+        <input type="text" name="name" id="name" value="{$info['name']}" />
+    </p>
+    <p>
+        <label>是否为进场道具：</label>
+        <input type="radio" name="is_entry_props" value="1" {if $info['is_entry_props'] == 1} checked="checked" {/if}/> 是 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="is_entry_props" value="0" {if $info['is_entry_props'] == 0} checked="checked" {/if}/> 否
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="status" value="1" {if $info['status'] == 1} checked="checked" {/if}/> 是 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="status" value="0" {if $info['status'] == 0} checked="checked" {/if}/> 否
+    </p>
+    <p>
+        <label>是否站后台配置：</label>
+        <input type="radio" name="group_back_config" value="1" {if $info['group_back_config'] == 1} checked="checked" {/if}/> 开启 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="group_back_config" value="0" {if $info['group_back_config'] == 0} checked="checked" {/if}/> 关闭
+    </p>
+    <p>
+    	<label>&nbsp;</label>
+    	<input type="submit" class="submit" value="保存" />
+    </p>
+
+</form>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>uproomnotice</title>
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/resource/css/base-min.css');}" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/css/jquery.Jcrop.css');}" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" type="text/css" />
+</head>
+<body>
+<style type="text/css">
+body{font-size:12px;color:#666;}
+</style>
+<form id="uproomnotice" method="post" enctype="multipart/form-data">
+<div id="uploadImg">
+	<input type="file" id="file" size="5" name="cover" onChange="upload(this);">
+	<em>本地图片</em>
+</div>
+<input type="hidden" name="type" value="add" />
+<input type="hidden" id="pic" name="pic" />
+<input type="hidden" id="coords" name="tmp_pic_coords" />
+<p style="margin-top:10px;"><img src="{if empty($filename)}{THEMES_URL}group/images/uproomnotice.png{else}{$filename}{/if}" id="cover_view" /></p>
+<p style="margin:10px 0;"><label>图片链接：<input type="text" id="url" style="width:194px;" name="url" placeholder="http://" /></label></p>
+<p align="center">
+<a href="javascript:document.getElementById('uproomnotice').submit();" class="yellowbtn fs14 mglr20"><span>上&nbsp;&nbsp;传</span></a>
+<a href="javascript:cancelUpload();" class="graybtn fs14"><span>取&nbsp;&nbsp;消</span></a>
+</p>
+</form>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/js/jquery.Jcrop.js');}"></script>
+<script type="text/javascript">
+function cancelUpload(){
+	document.getElementById('cover_view').src = '{THEMES_URL}group/images/uproomnotice.png';
+	document.getElementById('pic').value = '';
+	document.getElementById('coords').value = '';
+	document.getElementById('url').value = '';
+	document.getElementById('uproomnotice').submit();
+}
+
+function upload(obj){
+	var picwrap = $("#formCplay",window.parent.document).find('div');
+	if(picwrap.length >= 5){
+		alert('最多上传5张');
+	}else{
+		
+		document.getElementById('uproomnotice').submit();
+	}
+}
+<!--{if !empty($filename)}-->
+/*参数对象*/
+var jcrop_api;
+var coverobj = document.getElementById('pic');
+var coordsobj = document.getElementById('coords');
+coverobj.value = '<!--{$filename}-->';
+coordsobj.value = '';
+
+/*初始化裁切工具*/
+window.onload = function(){
+	//$.Jcrop('#cover_view');
+	$('#cover_view').Jcrop(
+		{
+			setSelect:[0,0,260,286],
+			aspectRatio:260/286,
+			minSize:[260,286],
+			boxWidth:260,
+			boxHeight:286,
+			onSelect:setCoords
+		},
+
+		function(){
+		jcrop_api = this;
+	});
+}
+
+/*设置图像裁切坐标*/
+function setCoords(s){
+	coordsobj.value = '{"w":'+parseInt(s.w)+',"h":'+parseInt(s.h)+',"x":'+parseInt(s.x)+',"y":'+parseInt(s.y)+'}';
+	//alert(s.x+'|'+s.y+'|'+s.x2+'|'+s.y2);
+}
+<!--{/if}-->
+
+<!--{if !empty($save_result)}-->
+var save_result = eval('(<{$save_result}>)');
+var formCplay=parent.document.getElementById('formCplay');
+if(save_result.desc==''){
+	formCplay.innerHTML += '<div class="picwrap"><img src="'+save_result.img_name+'" width="80" height="88"><p><a href="javascript:;" onClick="del(\''+save_result.del_key+'\');">删除</a></p></div>';
+}
+else{
+	formCplay.innerHTML += '<div class="picwrap"><a target="_blank" href="'+save_result.desc+'"><img src="'+save_result.img_name+'" width="80" height="88"></a><p><a href="javascript:;" onClick="del(\''+save_result.del_key+'\');">删除</a></p></div>';
+}
+<!--{/if}-->
+</script>
+</body>
+</html>

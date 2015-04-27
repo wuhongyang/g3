@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/reset.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/shop.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix btbr">
+        <!--套餐列表-->
+        <div class="shopwrap">
+            <h2>
+                <div class="shopnav">{$categoryInfo['cate_name']}购买</div>
+            </h2>
+            <div class="flow clearfix">
+                <ul class="nav nav-pills">
+                    <li class="lis disable"><span class="num num-disable">1</span><span class="text">选择购买商品</span></li>
+                    <li class="jian yellow">&nbsp;</li>
+                    <li class="lis disable"><span class="num num-disable">2</span><span class="text">填写购买信息</span></li>
+                    <li class="jian yellow">&nbsp;</li>
+                    <li class="lis active"><span class="num num-active">3</span><span class="text">购买成功</span></li>
+                </ul>
+            </div>
+            <div class="successwrap">
+                <h1>购买成功</h1>
+                <div class="successbox">
+                    <h5>购买
+                    <span class="text-warning">
+                    {if $categoryInfo['cate_id']==4}
+                        靓号
+                    {else}	
+                        {if $goodsInfo['commodity_id']}
+                            {$goodsInfo['commodity_name']}
+                        {else}
+                            {$goodsInfo['package_name']}
+                        {/if}
+                    {/if}
+                    </span>
+                    成功</h5>
+                    <dl class="clearfix">
+                        <dt>接受用户：</dt>
+                        <dd><span class="text-warning">{$nick}({$info['Uin']})</span></dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>{if $categoryInfo['cate_id']==4}靓号ID{else}商品名称{/if}：</dt>
+                        <dd>
+                            <span class="text-warning">
+                            {if $categoryInfo['cate_id']==4}
+                                {$goodsInfo['name']}
+                            {else}	
+                                {if $goodsInfo['commodity_id']}
+                                    {$goodsInfo['commodity_name']}
+                                {else}
+                                    {$goodsInfo['package_name']}
+                                {/if}
+                            {/if}
+                            </span>
+                        </dd>
+                    </dl>
+                    {if $goodsInfo['duration']}
+                    <dl class="clearfix">
+                        <dt>时限：</dt>
+                        <dd>{$info['Duration']} 天</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>到期时间：</dt>
+                        <dd>{echo date('Y年m月d日',strtotime('+'.$info['Duration'].' day'));}</dd>
+                    </dl>
+                    {/if}
+                    {if $categoryInfo['cate_id'] != 4}
+                    <dl class="clearfix">
+                        <dt>商品数量：</dt>
+                        <dd>{$info['Num']}</dd>
+                    </dl>
+                    {/if}
+                    <dl class="clearfix">
+                        <dt>总金额：</dt>
+                        <dd>{$info['Money']} {$unit}</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dt>可用金币余额：</dt>
+                        <dd>{$money} {$unit}</dd>
+                    </dl>
+                </div>
+                <div class="btnwrap">
+                    <button class="btn btn-danger btn-lg" onclick="location.href='?category_id={$category_id}&room_id={$room_id}'">继续购物</button>
+                    {if $user['Uin'] != $info['Uin']}
+                    <a href="/service/account.php?module=vdianlist&group_id={$groupId}" class="btn btn-link">查看交易记录</a>
+                    {else}
+                    	 {if $categoryInfo['cate_id'] == 4}
+                    <a href="/service/account.php?module=special_num" class="btn btn-link">查看已购买商品</a>
+                    	{elseif $goodsInfo['commodity_id']}
+                    <a href="/service/account.php?module=commodity&category={$category_id}" class="btn btn-link">查看已购买商品</a>
+                    	{elseif $goodsInfo['package_name']}
+                    <a href="/service/account.php?module=vdianlist&group_id={$groupId}" class="btn btn-link">查看交易记录</a>
+                    	{/if}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

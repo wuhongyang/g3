@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+                {include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                    <div class="roomhd">释放封杀设置</div>
+                    <div class="tabletab">
+                        <ul>
+                            <li><a href="roommanage.php?module=release&type=none"{if $type=="none"||$type==""} class="hover"{/if}>释放踢出者</a></li>
+                        <li><a href="roommanage.php?module=release&type=ip"{if $type=="ip"} class="hover"{/if}>释放封杀IP</a></li>
+                        </ul>
+                    </div>
+                    <div class="tablewrap">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+                          <tr>
+                            <th>全选<input type="checkbox" id="select_all" class="checks"/></th>
+                            {if $type=="ip"}
+                            <th>ip</td>
+                            {/if}
+                            <th>被踢者ID</th>
+                            <th>被踢者昵称</th>
+                            <th>被踢时间</th>
+                            <th>操作人ID</th>
+                            <th>操作人昵称</th>
+                          </tr>
+                          <form method="post" id="form">
+                          {foreach $result['info'] $val}
+                          <tr>
+                            <td><input class="select_id" type="checkbox" name="release_ids[]" value="{$val['id']}" /></td>
+                            {if $type=="ip"}
+                            <td>{$val['kick_ip']}</td>
+                            {/if}
+                            <td>{$val['kick_id']}</td>
+                            <td>{$val['kick_nick']}</td>
+                            <td>{echo date("m-d,H:i",$val['kick_time'])}</td>
+                            <td>{$val['operator_id']}</td>
+                            <td>{$val['operator_nick']}</td>
+                          </tr>
+                          {/foreach}
+                          {if $type=="ip"}
+                          <tr>
+                            <td colspan="7"><div style="float:left;padding-left:5px;"><a href="javascript:void(0);" class="bluebtn" id="submit"><span>释放被封杀ip</span></a></div><div style="float:right;padding-right:20px;padding-top:5px;">{$result['page']}</div></td>
+                          </tr>
+                          {else}
+                          <tr>
+                            <td colspan="6"><div style="float:left;padding-left:5px;"><a href="javascript:void(0);" class="bluebtn" id="submit"><span>释放被踢出用户</span></a></div><div style="float:right;padding-right:20px;padding-top:5px;">{$result['page']}</div></td>
+                          </tr>
+                          {/if}
+                          </form>
+                        </table>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+	$(function(){
+		var all_ids = $(".select_id");
+		$("#select_all").click(function(){
+			var checked = $(this).attr("checked");
+			all_ids.each(function(){
+				$(this).attr("checked", checked);
+			})
+		})
+		$("#submit").click(function(){
+			var has_selected = false;
+			all_ids.each(function(){
+				if($(this).attr("checked") && !has_selected){
+					has_selected = true;
+				}
+			})
+			if(!has_selected){
+				alert("没有选择需要释放被踢出者");
+				return false;
+			}
+			$("#form").submit();
+		})
+	})
+</script>
+</body>
+</html>

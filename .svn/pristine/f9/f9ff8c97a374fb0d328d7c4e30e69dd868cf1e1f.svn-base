@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">加入我们列表</h3>
+        <a class="bluebtn fr" href="joinus.php?module=join_add"><span>添加</span></a>
+    </div>
+    <form method="post" action="?module=activity_sort" id="J_form">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+          <tr>
+            <th>招募角色</th>
+            <th>修改时间</th>
+            <th>操作</th>
+          </tr>
+          {foreach $joinList $key $val}
+          <tr>
+            <td>{$val['role']}</td>
+            <td>{echo $val['uptime']>0 ? date('Y-m-d H:i:s',$val['uptime']) : '未添加'}</td>
+            <td>
+                <a class="ahover" href="?module=join_edit&id={$val['id']}">编辑</a>
+                <a class="ahover" href="/zhan/{$groupId}/join.html?id={$val['id']}" target="_blank">查看</a>
+                <a class="ahover" style="cursor:pointer;" onclick="del('{$val[id]}')">删除</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function del(id){
+	$.ajax({
+        url: '?module=join_del',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            callback(data.Flag,data.FlagString);
+        }
+    })
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=join_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+</script>

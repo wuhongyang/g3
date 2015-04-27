@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱帐号找回密码</title>
+<link href="<?php echo THEMES_URL ?>passport/css/global-min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo THEMES_URL ?>passport/css/style-min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<?php include_once dirname(__FILE__).'/header.html'; ?>
+<div class="body box clean">
+	<div class="body-title"><span class="pwd-icon">邮箱帐号找回密码</span></div>
+	<div class="body-left">
+		<h1 class="reg-title">二、登录邮箱</h1>
+		<dl class="last-step">
+			<dt>
+				<h3>第一步：登录您的电子邮箱</h3>
+				<p>我们已向您的邮箱 <span style="font-weight:bold; color:#F60;"><?php echo $rst['Email']; ?></span> 发送了修改密码链接，请登录您的邮箱进行查收</p>
+				<h3 style="margin-top:20px;">第二步：点击邮件中的修改密码链接</h3>
+				<p>点击邮件中的链接进行修改密码!</p>
+			</dt>
+			<dd class="reg-hr"><input type="button" value="登录我的邮箱" onclick="reg.goLoginMail('<?php echo $rst['Email']; ?>')" class="denglu" /></dd>
+		</dl>
+
+	</div>
+</div>
+
+<script language="javascript" src="<?php echo THEMES_URL ?>passport/js/global.js"></script>
+</body>
+</html>

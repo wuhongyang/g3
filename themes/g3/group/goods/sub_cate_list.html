@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城管理-商城商品管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<style type="text/css">
+#sub_cate_edit .left_name {display:inline-block;width:68px;text-align:right;margin-right: 5px;}
+#sub_cate_edit p {line-height: 36px;height: 36px;}
+#sub_cate_edit p input.name {height: 24px;}
+#sub_cate_edit p .warning {margin-left: 5px;color:orange;}
+#sub_cate_edit p .radio {position: relative;top:5px;}
+</style>
+<script>
+$(function(){
+	$("#add_sub_cate").click(function(){
+		var dlg=art.dialog({
+			title:"添加分类",
+			content: $("#dialog_content").html(),
+			lock: true,
+			top: '20%',
+			button: [{
+	            name: '确定',
+	            callback: function () {
+	            	var name = $.trim($('input[name="name"]').val());
+	            	if(name.length <= 0 || name.length > 15){
+	            		alert("分类名称不能为空，且不能超过15个字");
+	            		return false;	
+	            	}else{
+	            		$.ajax({
+	            			url: '?module=sub_cate_add',
+	            			type: 'POST',
+	            			data: $('#sub_cate_edit').serialize(),
+	            			dataType: 'JSON',
+	            			success: function(json){
+	            				alert(json.FlagString);
+	            				if(json.Flag == 100){
+	            					location.reload();
+	            				}
+	            			}
+	            		})
+	            		return false;
+	            	}
+	            },
+	            focus: true
+	        },{
+				name: '返回',
+	            callback: function () {
+	                this.close();
+	            }
+			}]
+		});
+	});
+});
+function move_raise(sub_cate_id, cate_id){
+		move(sub_cate_id, cate_id, 'raise');
+}
+function move_down(sub_cate_id, cate_id){
+		move(sub_cate_id, cate_id, 'down');
+}
+function move(id, cate_id, option){
+	$.post("?module=sub_cate_move&r="+Math.random(), {"id":id,"cate_id":cate_id, "option":option}, function(data){
+		var json = $.parseJSON(data);
+		alert(json.FlagString);
+		if(json.Flag == 100){
+			location.reload();
+		}
+	});
+}
+
+function sub_cate_edit(id){
+	var content = $("#dialog_content").html();
+	var dlg=art.dialog({
+		title:"修改分类",
+		content: "加载中......",
+		lock: true,
+		esc: false,
+		close: function(){
+			$("#dialog_content").html(content);
+		},
+		button: [{
+            name: '确定',
+            callback: function () {
+            	var name = $.trim($('input[name="name"]').val());
+	            	if(name.length <= 0 || name.length > 15){
+	            		alert("分类名称不能为空，且不能超过15个字");
+	            		return false;	
+	            	}else{
+	            		$.ajax({
+	            			url: '?module=sub_cate_edit',
+	            			type: 'POST',
+	            			data: $('#sub_cate_edit').serialize(),
+	            			dataType: 'JSON',
+	            			success: function(json){
+	            				alert(json.FlagString);
+	            				if(json.Flag == 100){
+	            					location.reload();
+	            				}else{
+	            					$("#dialog_content").html(content);
+	            				}
+	            			}
+	            		});
+	            		return false;
+	            	}
+            },
+            focus: true
+        },{
+			name: '返回',
+            callback: function () {
+            	$("#dialog_content").html(content);
+                this.close();
+            }
+		}]
+	});
+
+	$.get("?module=sub_cate_info&r="+Math.random(), {"id":id}, function(data){
+		var json = $.parseJSON(data)
+		if(json.Flag == 100){
+			$("#dialog_content").html('');
+			dlg.content(content);
+			json = json.Info;
+			$('input[name="name"]').val(json.name);
+			if(json.status == 1){
+				$('#on_sale').attr('checked', true);
+				$('#off_sale').attr('checked', false);
+			}else{
+				$('#on_sale').attr('checked', false);
+				$('#off_sale').attr('checked', true);
+			}
+			$('#sub_cate_edit').append('<input type="hidden" name="id" value="' + json.id + '">');
+		}else{
+			dlg.content('获取分类信息失败');
+		}
+	});
+}
+</script>
+<style type="text/css">
+.dialog_table td{ padding:5px;}
+</style>
+</head>
+<body>
+<div id="dialog_content" style="display:none">
+	<form method="post" id="sub_cate_edit" action="?module=sub_cate_add">
+		<input type="hidden" name="category_id" value="{$cateInfo['id']}">
+		<p>
+			<span class="left_name">分类名称：</span>
+			<span>
+				<input type="text" name="name" class="name" size="30">
+				<strong class="warning">(15个字以内)</strong>
+			</span>	
+		</p>
+		<p>
+			<span class="left_name">状态：</span>
+			<span>
+				<input type="radio" name="status" value="1" id="on_sale" class="radio" checked>
+				<label for="on_sale" style="margin-right:20px;">在售</label>
+				<input type="radio" name="status" value="0" id="off_sale" class="radio">
+				<label for="on_sale">下架</label>
+			</span>	
+		</p>	
+	</form>
+</div>
+<div class="bodywrap">
+    {include file="header.html"}
+    <a class="bluebtn2" style="float:right" href="?module=cate">返回</a>
+    <button id="add_sub_cate" class="bluebtn2" style="float:right;margin-right:10px;">添加</button>
+    <p>{$cateInfo['cate_name']}-商品分类列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+	        <th width="20%">序号</th>
+	        <th width="20%">分类名称</th>
+	        <th width="15%">类别</th>
+	        <th width="20%">状态</th>
+	        <th>操作</th>
+        </tr>
+        {foreach $subCateList $k $one}
+        <tr>
+	        <td>{echo $k+1}</td>
+	        <td>{$one['name']}</td>
+	        <td>{$cateInfo['cate_name']}</td>
+	        <td>{if $one['status']==1}在售{elseif $one['state']==0}下架{/if}</td>
+	        <td>
+	        	<a class="move_up" href="javascript:move_raise({$one['id']},{$cateInfo['id']});">上移</a>
+	        	<a class="move_down" href="javascript:move_down({$one['id']},{$cateInfo['id']});">下移</a>
+	        	<a class="edit" href="javascript:sub_cate_edit({$one['id']});">编辑</a>
+	        	<a href="?module=goods_list&sub_cate_id={$one['id']}&cate_id={$cateInfo['cate_id']}&goods_cate_id={$cateInfo['id']}">查看</a>
+	        </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$res['Page']}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

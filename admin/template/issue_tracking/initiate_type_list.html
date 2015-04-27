@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>问题类型配置列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet"/>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">问题类型配置列表</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a href="?module=initiate_type_save" class="add-button">添加</a>{/if}</div>
+</div>
+<br/>
+<table class="table-list main-width" >
+	<tr>
+		<th>编号</th>
+		<th>问题类型</th>
+		<th>排序</th>
+        <th>状态</th>
+		<th>操作</th>
+	</tr>
+	{if $res['Data']}
+	{foreach $res['Data'] $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['name']}</td>
+		<td>{$one['order']}</td>
+		<td>{if $one['status'] == 1}启用{elseif $one['status'] == 2}不启用{/if}</td>
+		<td>
+			{if $link_array[101]['url']}<a href="{$link_array[101]['url']}&id={$one['id']}">修改</a>&nbsp;&nbsp;{/if}
+	        {if $link_array[103]['url']}<a href="javascript:;" class="del" url="{$link_array[103]['url']}&id={$one['id']}">删除</a>{/if}
+	    </td>
+	</tr>
+	{/foreach}
+	{else}
+	<tr><td colspan="5">暂无数据</td></tr>
+	{/if}
+</table>
+<div class="main-width">
+	<div class="pagenavi">{$res['Page']}</div>
+</div>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".del").click(function(){
+		var that = $(this);
+		if(confirm('确定要删除吗')){
+			location.href = that.attr('url');
+		}
+	});
+});
+</script>
+</body>
+</html>

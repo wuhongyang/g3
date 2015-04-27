@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——充值</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+{include file="index/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="content clearfix">
+        <!--左边侧边栏-->
+        {include file="index/left_menu.html"}
+        <!--右边主内容区-->
+        <div class="rightmain">
+            <div class="successwrap">
+                <h1>充值成功</h1>
+                <div class="successbox">
+                    <h5>您为账号<span class="text-warning">{echo intval($_GET['uin'])}</span>充值成功</h5>
+                    <dl class="clearfix">
+                        <dd class="mgl60">充值方式：<span class="text-warning">{$recharge_name}</span></dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dd class="mgl60">充值金额：<span class="text-warning">{$money}</span>元</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dd class="mgl60">获得：<span class="text-warning">{$vdian}万</span>{$GroupData['currency_unit']}</dd>
+                    </dl>
+                    <dl class="clearfix">
+                        <dd class="mgl60"><span class="fl">若金币未到账请联系客服：</span><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$GroupData['EXT']['qq']['value']}&site=qq&menu=yes"><img width="68" height="20" src="http://static.vvku.com/web/2/static/images/qqtalk.png"></img></a></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{THEMES_URL}group_site/{$themes}/src/shop/js/charge.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$(function(){
+	$("#form").submit(function(){
+		if(parseFloat($("#ba").val()) < parseFloat($("#total_vdian").html())){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.index;
+}
+</script>
+</body>
+</html>

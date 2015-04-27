@@ -1,0 +1,20 @@
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+    $($(".url_a")[active_li]).addClass("active");
+})
+</script>
+{php $id = $_GET['search']['tpl_id'] ? $_GET['search']['tpl_id'] : $_GET['tpl_id'];}
+<ul class="page-tab">
+	<li width="100px"><a class="url_a" href="role.php?module=cate_list&search[tpl_id]={$id}">角色体系</a></li>
+    <li width="100px"><a class="url_a" href="business_rule_define.php?module=list&search[tpl_id]={$id}">积分规则</a></li>
+    <li width="100px"><a class="url_a" href="business_param_config.php?module=list&search[tpl_id]={$id}">业务参数</a></li>
+    <li width="100px"><a class="url_a" href="commodity.php?module=list&tpl_id={$id}">商城配置</a></li>
+    <li width="100px"><a class="url_a" href="media_config.php?tpl_id={$id}">流媒体</a></li>
+    <li width="100px"><a class="url_a" href="props_manage.php?tpl_id={$id}">礼物配置</a></li>
+    <li width="100px"><a class="url_a" href="function_props.php?tpl_id={$id}">功能道具配置</a></li>
+    <li width="100px"><a class="url_a" href="game_props.php?tpl_id={$id}">游戏道具配置</a></li>
+    <li width="100px"><a class="url_a" href="tpl_config_cate.php?module=cate_list&type=1&tpl_id={$id}">表情配置</a></li>
+    <li width="100px"><a class="url_a" href="tpl_config_cate.php?module=cate_list&type=2&tpl_id={$id}">印章配置</a></li>
+    <!--<li width="100px"><a class="url_a" href="props_manage.php?module=props_list&is_tricky=1&tpl_id={$id}">整蛊道具配置</a></li>-->
+</ul>

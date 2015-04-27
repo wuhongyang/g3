@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script src="template/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">通行证管理</div>
+</div>
+
+<div class="page-tools main-width">
+	<form method="get" style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;">
+		当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+		用户ID：<input type="text" name="uin" size='18' value="{$_GET['uin']}" />
+		关键字：<input type = 'text' name = 'login' size = '18' value = "{$_GET['login']}"/>
+		<select name = 'platform'>
+			<option value = '-1'>请选择</option>
+			<option value = '2' {if $_GET['platform']== 2 }selected{/if}>用户名</option>
+			<option value = '1' {if $_GET['platform']== 1 }selected{/if}>绑定邮箱</option>
+			<option value = '3' {if $_GET['platform']== 3 }selected{/if}>绑定手机</option>
+			<option value = '4' {if $_GET['platform']== 4 }selected{/if}>QQ</option>
+		</select>
+		<select name = 'state'>
+			<option value = '-1'>状态</option>
+			<option value = '1' {if $_GET['state']== 1 }selected{/if}>正常</option>
+			<option value = '0' {if isset($_GET['state']) && $_GET['state']== 0 }selected{/if}>冻结</option>
+		</select>
+		<input type="hidden" name="data_group_id" value="{$__ADMIN_CURGROUP['groupid']}">
+		<input type="submit" value="搜索" />
+  	</form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>序号</th>
+    <th>uin</th>
+    <th>账号类型</th>
+    <th>账号</th>
+    <th>站id</th>
+    <th>注册时间</th>
+    <th>最后登录ip</th>
+	<th>最后登录时间</th>
+	<th>状态</th>
+	<th>操作</th>
+    </tr>
+	{foreach $lists $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['uin']}</td>
+		<td>{$one['platform_name']}</td>
+		<td>{$one['login']}</td>
+		<td>{$one['group_id']}</td>
+		<td>{$one['uptime_name']}</td>
+		<td>{$one['load_ip']}</td>
+		<td>{$one['load_time_name']}</td>
+		<td>{$one['state_name']}</td>
+		<td>
+		<a href="?module=passInfo&id={$one['id']}&data_group_id={$_GET['data_group_id']}">修改信息</a>
+		{if $link_array['103']['url']}<a href = "{$link_array['103']['url']}&id={$one['id']}&data_group_id={$_GET['data_group_id']}"> {$link_array['103']['child_name']}</a>{/if}
+	    {if $link_array['102']['url']}<a href = "{$link_array['102']['url']}&val={$one['state']}&id={$one['id']}&data_group_id={$_GET['data_group_id']}"> {$link_array['102']['child_name']}</a>{/if}
+	    </td>
+	</tr>
+	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>该直播房间异常</title>
+<style type="text/css">
+*{padding:0;margin:0;}
+body{font-size:14px;background:url({STATIC_API_PATH}/frontend/modules/rooms/img/room-exception-bg.jpg) repeat-x top;}
+.box{width:700px;height:800px;margin:0 auto;background:url({STATIC_API_PATH}/frontend/modules/rooms/img/room-exception-bg2.jpg) no-repeat top center;}
+.msg{width:196px;height:120px;padding-left:335px;padding-top:300px; line-height:30px;}
+.msg h3{font-size:16px;color:#555555;margin-bottom:8px;}
+.msg p{color:#707070;}
+</style>
+</head>
+
+<body>
+<div class="box">
+    <div class="msg">
+        <h3>温馨提示：</h3>
+        <p>该直播房间异常，请重新选择，如果您的浏览器没有自动跳转，请<a href="/">点击这里</a></p>
+    </div>
+</div>
+</body>
+<script type="text/javascript" language="javascript">
+function reloadyemian()
+{ 
+	window.location.href="/"; 
+} 
+window.setTimeout("reloadyemian();",3000); 
+</script> 
+</html>

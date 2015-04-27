@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-我的关注</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+.mgl30{margin-left: 30px;}
+.hide{display:none;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="J_form">
+        <ul class="formlist" id="ulist">
+            <li class="clearfix">
+                <label>关注用户：</label>
+                <div class="fl">
+                    <span><input type="radio" name="attention_user[is_open]" value="1" {if $info['attention_user']['is_open']==1}checked{/if}>开启</span>
+                    <span class="mgl30"><input type="radio" name="attention_user[is_open]" value="0" {if $info['attention_user']['is_open']==0}checked{/if}>关闭</span>
+                </div>
+            </li>
+            <li class="clearfix {if $info['attention_user']['is_open'] != 1}hide{/if}">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <span>显示名称：</span>
+                    <input type="text" name="attention_user[name]" value="{$info['attention_user']['name']}">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>收藏房间：</label>
+                <div class="fl">
+                    <span><input type="radio" name="collection_room[is_open]" value="1" {if $info['collection_room']['is_open']==1}checked{/if}>开启</span>
+                    <span class="mgl30"><input type="radio" name="collection_room[is_open]" value="0" {if $info['collection_room']['is_open']==0}checked{/if}>关闭</span>
+                </div>
+            </li>
+            <li class="clearfix {if $info['collection_room']['is_open'] != 1}hide{/if}" >
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <span>显示名称：</span>
+                    <input type="text" name="collection_room[name]" value="{$info['collection_room']['name']}">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>我的脚印：</label>
+                <div class="fl">
+                    <span><input type="radio" name="my_footprint[is_open]" value="1" {if $info['my_footprint']['is_open']==1}checked{/if}>开启</span>
+                    <span class="mgl30"><input type="radio" name="my_footprint[is_open]" value="0" {if $info['my_footprint']['is_open']==0}checked{/if}>关闭</span>
+                </div>
+            </li>
+            <li class="clearfix {if $info['my_footprint']['is_open'] != 1}hide{/if}">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <span>显示名称：</span>
+                    <input type="text" name="my_footprint[name]" value="{$info['my_footprint']['name']}">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <input type="button" class="bluebtn2" value="保存" onclick="save();" />
+                </div>
+            </li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('input[type="radio"]').click(function(){
+        var is_open = $(this).val();
+        if(is_open == 1){
+            $(this).parents('li').next('li').show();
+        }else{
+            $(this).parents('li').next('li').hide();
+        }
+    }) 
+});
+function save(){
+    var attention_open = $('input[name="attention_user[is_open]"]:checked').val();
+    if(attention_open == 1){
+        var attention_name = $('input[name="attention_user[name]"]').val();
+        if(!attention_name){
+            _show_msg('关注用户显示名称不能为空');
+            return;
+        }
+        if(attention_name.length > 6){
+            _show_msg('关注用户显示名称不能超过6个字');
+            return;
+        }
+    }
+    var collection_open = $('input[name="collection_room[is_open]"]:checked').val();
+    if(collection_open == 1){
+        var collection_name = $('input[name="collection_room[name]"]').val();
+        if(!collection_name){
+            _show_msg('收藏房间显示名称不能为空');
+            return;
+        }
+        if(collection_name.length > 6){
+            _show_msg('收藏房间显示名称不能超过6个字');
+            return;
+        }
+    }
+    var my_footprint_open = $('input[name="my_footprint[is_open]"]:checked').val();
+    if(my_footprint_open == 1){
+        var my_footprint_name = $('input[name="my_footprint[name]"]').val();
+        if(!my_footprint_name){
+            _show_msg('我的脚印显示名称不能为空');
+            return;
+        }
+        if(my_footprint_name.length > 6){
+            _show_msg('我的脚印显示名称不能超过6个字');
+            return;
+        }
+    }
+    $.ajax({
+        url: 'my_attention.php',
+        type: 'POST',
+        data: $('#J_form').serialize(),
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    ok: false,
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true,
+                    time: 3
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

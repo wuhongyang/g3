@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    <h1 class="yellow16">税收兑换查询</h1>
+    {include file="imformation/tax_header.html"}
+    <div class="tabletab">
+        <ul>
+        {if $taxDetail}
+            <li><a href="manage_imformation.php?module=tax_detail">税收流水查询</a></li>
+        {/if}
+        {if $taxExchange}
+            <li><a href="manage_imformation.php?module=tax_exchange" class="hover">税收兑换记录</a></li>
+        {/if}
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgtb15 clearfix">
+        <form method="get">
+            起止时间：<input name="start_date" type="text" value="{$start_time}" onfocus="WdatePicker()" >&nbsp;至&nbsp;<input name="end_date" type="text" value="{$end_time}" onfocus="WdatePicker()" >
+            <input type="hidden" name="module" value="tax_exchange" />
+            &nbsp;<input name="" type="submit" class="normalbtn" value="查询">
+        </form>
+        </div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss">
+          <tr>
+            <th>编号</th>
+            <th>渠道角色</th>
+            <th>用户ID</th>
+            <th>兑换类型</th>
+            <th>兑换金额</th>
+            <th>扣除税收</th>
+            <th>备注</th>
+            <th>时间</th>
+          </tr>
+          {foreach $list $one}
+          <tr>
+            <td>{$one['no']}</td>
+            <td>{$one['role']}</td>
+            <td>{$one['uin']}</td>
+            <td>{$one['type']}</td>
+            <td>{$one['toWeight']}</td>
+            <td>{$one['weight']}</td>
+            <td>{$one['desc']}</td>
+            <td>{$one['time']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

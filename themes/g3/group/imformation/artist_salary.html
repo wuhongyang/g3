@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <a class="bluebtn fr" href="?module=artist_doll"><span>返回</span></a>
+    </div>    
+    <div class="centerdiv">
+        <ul class="formlist mgt30">
+        <form action="?module=artist_salary" method="post" onSubmit="return checkForm(this);">
+        <input type="hidden" name="roomId" value="{$roomId}">
+        <input type="hidden" name="artistId" value="{$artistId}">
+            <li class="clearfix">
+                <label class="mgL150">当前用户：</label>
+                <span>{$artistNick}({$artistId})</span>
+            </li>
+            <li class="clearfix">
+                <label class="mgL150">当前底薪：</label>
+                <span>{$salary} 元</span>
+            </li>
+            <li class="clearfix">
+                <label class="mgL150">修改底薪：</label>
+                <input name="salary" id="salary" type="text" class="input">
+            </li>
+            <li class="clearfix">
+            	<label class="mgL150">&nbsp;</label>
+                <input type="submit" class="bluebtn2" value="保存">
+            </li>
+        </form>    
+        </ul>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function checkForm(form){
+	var salary = form.salary.value;
+	if(salary!=''){
+		if(!_is_integer(salary)){
+			alert('底薪只能是大于等于0的整数');
+			return false;
+		}
+		salary = parseInt(salary, 10);
+		if(salary < 0){
+			alert('底薪只能是大于等于0的整数');
+			return false;
+		}
+	}
+}
+</script>
+</body>
+</html>

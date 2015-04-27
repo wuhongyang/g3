@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>模板管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<div class="header clean">
+  <div class="header-title left">模板管理</div>
+  <div class="header-button right">
+  {if $link_array[102]}
+  <a class="add-button" href="template.php?module=tpl_add">添加模板</a>
+  {/if}
+  </div>
+</div>
+
+<br />
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+        <th>编号</th>
+        <th>模板名称</th>
+        <th>描述</th>
+        <th>是否启用</th>
+        <th>修改时间</th>
+        <th>操作</th>
+    </tr>
+    {foreach $res['Data'] $row}
+    <tr>
+        <td>{$row['id']}</td>
+        <td>{$row['name']}</td>
+        <td>{$row['desc']}</td>
+        <td>{if $row['status'] == 0}不启用{else}启用{/if}</td>
+        <td>{echo date("Y-m-d H:i:s", $row['uptime'])}</td>
+        <td>
+        {if $link_array[102]}
+        <a href="template.php?module=tpl_add&id={$row['id']}">修改</a>&nbsp;&nbsp;
+        {/if}
+        {if $link_array[101]}
+        <a href="role.php?module=cate_list&search[tpl_id]={$row['id']}">配置</a>
+        {/if}
+        </td>
+    </tr>
+    {/foreach}
+</table>
+
+<div class="main-width">{$res['Page']}</div>
+
+</body>
+</html>

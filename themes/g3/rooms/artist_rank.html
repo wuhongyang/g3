@@ -1,0 +1,243 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>排行榜</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/rank-min.css">
+</head>
+
+<body>
+<div class="container">
+<!--top-->
+<div class="hd">
+    <div class="topnav">
+        <div class="clearfix">
+            <div class="topnav-left fll" id="J_head">
+                欢迎来到VV酷社区！ 
+                {if $user_login['Flag']==100}
+                	<a class="yellow" href="/service/index.php">{$user_login['Nick']}</a> &nbsp; <!--中文全角空格两个--><a href="/service/loginout.php" class="gray">退出</a>
+                {else}
+                	<a href="/passport/?account&index&url={$_SERVER['REQUEST_URI']}">登录</a>
+					 | <a href="/passport/">注册</a>
+                {/if} | <a href="/rooms/shortcut.php" class="gray">+桌面图标</a>
+            </div>
+            <div class="topnav-right">
+                            <div id="site-nav">
+                                <ul class="quick-menu">
+                                    <li class="home"><a href="/">首页</a></li>
+                                    <li class="mytaobao">
+                                        <div class="menu">
+                                            <a class="menu-hd gray" href="/service/index.php">个人中心<b></b> </a>
+
+                                            <div class="menu-bd">
+                                                <div class="menu-bd-panel">
+                                                    <div>
+                                                        <a href="/service/weibo.php" rel="nofollow">微博首页</a><br>
+                                                        <a href="/service/usermanage.php" rel="nofollow">账户管理</a><br>
+                                                        <a href="/service/usersafe.php" rel="nofollow">安全中心</a><br>
+                                                        <a href="/service/personal.php" rel="nofollow">个人档</a><br>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="mytaobao">
+                                        <div class="menu">
+                                            <a class="menu-hd gray" href="/shop/index.php" style="width:36px;">商城<b></b></a>
+
+                                            <div class="menu-bd">
+                                                <div class="menu-bd-panel">
+                                                    <div>
+                                                        <a href="/shop/index.php">充值V宝</a><br>
+                                                        <a href="/shop/buyluckstar.php">获取V豆</a><br>
+                                                        <a href="/shop/buyvip.php">购买会员</a><br>
+                                                        <!--<a href="#">购买房间</a><br>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="rank"><a href="/top.html" class="gray">&nbsp;排行 </a></li>
+                                    <li class="favorite"><a href="/feedback.html" class="gray">反馈</a></li>
+                                    <li class="help"><a href="/help/index.html" class="gray">帮助</a></li>
+                                </ul>
+                            </div>
+                        </div>
+        </div>
+    </div>
+</div>
+<!--bd-->
+<div class="bd clearfix">
+
+<div class="sub-nav">
+    <a href="top.html" class="black">排行榜</a> &gt;&gt; {$site['city_name']} &gt;&gt; {$module_type['title']}
+</div>
+
+<div class="box-rank fll">
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用 户</li>
+            <li class="num fll">{$module_type['unitname']}</li>
+        </ul>
+        <ul class="{$module_type['class']}">
+			{if $top_10[0]['money']}
+			<li class="clearfix lione">
+				<span class="fll">
+					{if $top_10[0][online] > 0}
+					<span class="room-online" title="在线"></span>
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/$top_10[0]['roomid']" target="_blank">{php echo iconv_substr($info[$top_10[0]['uin']],0,8,'utf-8')}</a>
+					{else}
+					<span class="room-offline" title="离线"></span>
+					<a href="{echo $module_type['link'].$top_10[0]['uin']}" title="{$top_10[0]['uin']}" target="_blank">{php echo iconv_substr($info[$top_10[0]['uin']],0,8,'utf-8')}</a>
+					{/if}
+				</span>
+				<span class="dou red flr">{echo $top_10[0]['money'] / $module_type['rate']}</span>
+			</li>
+			{/if}
+			{if $top_10[1]['money']}
+            <li class="clearfix litwo">
+                <span class="fll">
+					{if $top_10[1][online] > 0}
+					<span class="room-online" title="在线"></span>
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/$top_10[1]['roomid']" target="_blank">{php echo iconv_substr($info[$top_10[1]['uin']],0,8,'utf-8')}</a>
+					{else}
+					<span class="room-offline" title="离线"></span>
+					<a href="{echo $module_type['link'].$top_10[1]['uin']}" title="{$top_10[1]['uin']}" target="_blank">{php echo iconv_substr($info[$top_10[1]['uin']],0,8,'utf-8')}</a>
+					{/if}
+				</span>
+                <span class="dou red flr">{echo $top_10[1]['money'] / $module_type['rate']}</span>
+            </li>
+			{/if}
+			{if $top_10[2]['money']}
+            <li class="clearfix lithree">
+                <span class="fll">
+					{if $top_10[2][online] > 0}
+					<span class="room-online" title="在线"></span>
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/$top_10[2]['roomid']" target="_blank">{php echo iconv_substr($info[$top_10[2]['uin']],0,8,'utf-8')}</a>
+					{else}
+					<span class="room-offline" title="离线"></span>
+					<a href="{echo $module_type['link'].$top_10[2]['uin']}" title="{$top_10[2]['uin']}" target="_blank">{php echo iconv_substr($info[$top_10[2]['uin']],0,8,'utf-8')}</a>
+					{/if}
+				</span>
+                <span class="dou red flr">{echo $top_10[2]['money'] / $module_type['rate']}</span>
+            </li>
+			{/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($top_10[0],$top_10[1],$top_10[2])}
+        </ul>
+        <ul class="top4-10">
+        	{foreach $top_10 $key $rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+					{if $rank[online] > 0}
+					<span class="room-online" title="在线"></span>
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/$rank['roomid']" target="_blank">{php echo iconv_substr($info[$rank['uin']],0,8,'utf-8')}</a>
+					{else}
+					<span class="room-offline" title="离线"></span>
+					<a href="{echo $module_type['link'].$rank['uin']}" title="{$rank['uin']}" target="_blank">{php echo iconv_substr($info[$rank['uin']],0,8,'utf-8')}</a>
+					{/if}
+				</span>
+                <span class="dou flr">{echo $rank['money'] / $module_type['rate']}</span>
+            </li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="dot leftdot"></div>
+        <div class="dot rightdot"></div>
+    <div class="topnum"><span></span><i>TOP1-10</i></div>
+</div>
+
+{foreach $top_ranks $topname $ranks}
+{if !empty($ranks)}
+<div class="box-rank fll">
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用 户</li>
+            <li class="num fll">{$module_type['unitname']}</li>
+        </ul>
+        <ul class="top4-10">
+        	{foreach $ranks $key $rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+					{if $rank[online] > 0}
+					<span class="room-online" title="在线"></span>
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/$rank['roomid']" target="_blank">{php echo iconv_substr($info[$rank['uin']],0,8,'utf-8')}</a>
+					{else}
+					<span class="room-offline" title="离线"></span>
+					<a href="{echo $module_type['link'].$rank['uin']}" title="{$rank['uin']}" target="_blank">{php echo iconv_substr($info[$rank['uin']],0,8,'utf-8')}</a>
+					{/if}
+				</span>
+                <span class="dou flr">{echo $rank['money'] / $module_type['rate']}</span>
+            </li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="dot leftdot"></div>
+        <div class="dot rightdot"></div>
+    <div class="topnum"><span></span><i>{$topname}</i></div>
+</div>
+{/if}
+{/foreach}
+
+</div>
+<script language="javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function (){
+        //判断是否为IE6
+        var menus = $('#site-nav').find('.menu');
+        //判断是否为IE6
+        if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) {
+            menus.each(function () {
+                $(this).mouseover(function () {
+                    $(this).find('.menu-hd').addClass('ie6hd topnav-cur');
+                    $(this).find('.menu-hd').find('b').addClass('ie6b');
+                    $(this).find('.menu-bd').show();
+                });
+                $(this).mouseout(function () {
+                    $(this).find('.menu-hd').removeClass('ie6hd topnav-cur');
+                    $(this).find('.menu-hd').find('b').removeClass('ie6b');
+    //                    $(this).find('.menu-hd').find('b').show();
+                    $(this).find('.menu-bd').hide();
+                });
+            });
+        }
+    });
+</script>
+<script language="javascript" src="{STATIC_API_PATH}/frontend/base/citys/city_select.js"></script>
+<script type="text/javascript">
+var citys = {$citys};
+var province_JSONDATA = citys.province;
+var city_JSONDATA = citys.city;
+var area_JSONDATA = citys.area;
+show_province();//显示联动数据
+
+function goToCitySite(){
+	var city = document.getElementById('area').value;
+	if(city < 0) city = document.getElementById('city').value;
+	if(city > -1) location.href="top/"+city+'.html';
+}
+
+$.ajax({
+	url: '/rooms/ajax_info.php',
+	type: 'POST',
+	data: {"Tag":"GetLoginUser"},
+	success: function(data){
+		json = jQuery.parseJSON(data);
+		if(json.Flag == 100){
+			//展示头部
+			var h_html = '欢迎来到VV酷社区！ <a class="yellow" href="/service/index.php" style="color: #F0B45E;">' + json.Nick + '</a>  ';
+			h_html += '<a href="/service/loginout.php?back=/" class="gray">退出</a> | <a href="/rooms/shortcut.php">+桌面图标</a>';
+			$('#J_head').html(h_html);
+		}
+	}
+});
+</script>
+</div>
+</body>
+</html>

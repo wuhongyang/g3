@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+p{line-height:40px;font-size:12px;}
+.logoimg{position:absolute;top:15px;left:80px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt20 clearfix">
+         <div class="fl mgL20" style="width:400px;">
+             <p>站点名称：{$userGroupInfo['name']}（{$userGroupInfo['groupid']}）</p>
+             <p>所属地域：{$userGroupInfo['province_name']} - {$userGroupInfo['city_name']}</p>
+             <p>下属房间：{$userGroupInfo['room_total']}个</p>
+             <p>站开设时间：{php echo date('Y-m-d H:i',$userGroupInfo['uptime']);}</p>
+         </div>
+         <div class="fl mgL20" style="width:400px;">
+            {if !empty($userGroupInfo['logo'])}
+			 <p style="height:110px;position:relative;overflow:hidden;">站点logo：<img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$userGroupInfo['logo'].'/100/30.jpg');}" alt="站点LOGO" title="站点LOGO" width="100" height="30" class="logoimg"></p>
+            {/if}
+      </div>
+    </div>
+    <div class="mgt20 clearfix" style="border-bottom:1px dashed #ddd;border-top:1px dashed #ddd;">
+         <div class="fl mgL20" style="width:400px;">
+             <p>税收账户余额：<span class="yellow">{$balance}</span></p>
+         </div>
+         <div class="fl mgL20" style="width:400px;display:none">
+             <p>本月税收账户累计：1012000</p>
+         </div>
+    </div>
+    <!--
+    <div class="clearfix" style="border-bottom:1px dashed #ddd;">
+         <div class="fl mgL20" style="width:400px;;">
+             <p>本月平台代充：<span class="yellow">{echo (int)$money} 金币</span></p>
+         </div>
+         <div class="fl mgL20" style="width:400px;">
+             <p>平台代充结算：<span class="yellow">{echo $money*0.7/10000}元</span></p>
+         </div>
+    </div>-->
+    <div class="clearfix">
+         <div class="fl mgL20" style="width:400px;">
+             <p>签约概况：签约室主（<span class="yellow">{echo (int)$userGroupInfo['room_manager_total']}个</span>）</p>
+             <p style="padding-left:60px;">签约代理（<span class="yellow">{echo (int)$userGroupInfo['agent_total']}个</span>）</p>
+         </div>
+         <div class="fl mgL20" style="width:400px;">
+             <p>签约艺人（<span class="yellow">{echo (int)$userGroupInfo['room_entertainer_total']}个</span>）</p>
+             <p><a href="signed_manage.php?module=signed_manage" class="yellow">查看签约详情></a></p>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

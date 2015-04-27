@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--顶部banner-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{PIC_API_PATH}/p/{$categoryInfo['img_path']}/0/0.jpg" width="960" height="230" /></a>
+            {else}
+                <img src="{PIC_API_PATH}/p/{$categoryInfo['img_path']}/0/0.jpg" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--套餐列表-->
+        <div class="shopwrap">
+            <h2 class="nonebr">
+                <div class="shopnav">{$categoryInfo['cate_name']}</div>
+            </h2>
+            <ul class="gnitems clearfix">
+            {foreach $goodsList $key $val}
+            {if $key<2||($key+1)%2==0}
+            	{if $key<2}
+                	{if ($key+1)%2==0}
+                    <li class="tpbr nobr">
+                    {else}
+                    <li class="tpbr">
+                    {/if}
+                {else}
+                	<li class="nobr">
+                {/if}
+            {else}
+            	<li>
+            {/if}
+                	<div class="item-left">
+                        <img src="{$val['commodityInfo']['image_md5']}" width="120" height="120" alt="{$val['commodity_name']}" title="{$val['commodity_name']}"/>
+                    </div>
+                    <div class="item-right">
+                        <h5>{$val['commodity_name']}{if $val['commodityInfo']['is_gift']==1} <img src="{THEMES_URL}group_site/{$themes}/src/shop/img/zhen.jpg" width="18" height="18" />{/if} {if $val['commodityInfo']['scope']==2}<img src="{THEMES_URL}group_site/{$themes}/src/shop/img/fan.jpg" width="18" height="18" />{/if}</h5>
+                        <p>{$val['desc']}</p>
+                        <p class="text-warning">{$val['price']}{$unit}/{$val['duration']}天</p>
+                        <p><button type="button" class="btn btn-warning" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$val['id']}&room_id={$room_id}';">立即购买</button></p>
+                    </div>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

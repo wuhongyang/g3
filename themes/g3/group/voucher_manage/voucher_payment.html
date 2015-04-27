@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="popbox" style="width:100%;border:0;">
+        <div class="popbd">
+            <form action="?module=payment_save" id="payment-form" method="post" target="_blank">
+                <input type="hidden" name="pay_expense" value="{$other['weight']}" />
+                <input type="hidden" name="module" value="payment_save" />
+                <div class="mgL100 mgt10">
+                    <h1 class="fs14 yellow lineh30">确认充值信息：</h1>
+                    <p class="mgL30">
+                        <label>充值账户ID：</label>
+                        <span>{$other['uin']}</span>
+                    </p>
+                    <p class="mgL30">
+                        <label>交易站ID：</label>
+                        <span>{$other['group_id']}</span>
+                    </p>
+                    <p class="mgL30">
+                        <label>充值金额：</label>
+                        <span>{$other['weight']}元</span>
+                    </p>
+                    <p class="mgL30">
+                        <label>可获得金币：</label>
+                        <span>{echo $other['weight']/3*100000}金币</span>
+                    </p>
+                    <h1 class="fs14 yellow lineh30">选择充值方式：</h1>
+                    <p class="mgL30 clearfix">
+                        <input name="pay_type" type="radio" id="chinabank" value="CHINABANK" class="fl mgt20"  checked="checked">
+                        <span class="wyzximg">网银在线</span>
+                    </p>
+                    <p class="mgL30 clearfix">
+                        <input name="pay_type" type="radio" id="tenpay" value="TENPAY" class="fl mgt20">
+                        <span class="cftimg">财付通</span>
+                    </p>
+                </div>
+                <div class="clearfix" style="padding-left:150px;"><input type="submit" value="确认充值" class="bluebtn2"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

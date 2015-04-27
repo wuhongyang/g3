@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>活动中心-{$groupInfo['name']}</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/featurecarousel/css/featureCarousel.css');}" charset="utf-8" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/css/layout.css');}" rel="stylesheet" type="text/css">
+<style type="text/css">
+.aback{
+	position:absolute;
+	top:10px;
+	right:10px;
+}
+.relative{
+	position:relative;
+}
+.thumbnails {
+	margin-left: -10px;
+}
+.thumbnail {
+	padding:0;
+	border:none;
+	-webkit-border-radius:0px;
+	-moz-border-radius:0px;
+	border-radius:0px;
+	-webkit-box-shadow:0 0px 0px rgba(0,0,0,0);
+}
+.thumbnail .name{
+	font-size:12px;
+	text-align:center;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	overflow:hidden;
+}
+</style>
+</head>
+<body>
+{include file="header_group_site.html"}
+{include file="header.html"}
+<div class="container relative">
+    <ul class="breadcrumb">
+        <li><a href="active_{$activeId}.html" class="main_text">活动详情</a> <span class="divider">/</span></li>
+        <li class="active">活动参与人</li>
+    </ul>
+    <a href="active.html" class="aback minor_text">返回活动中心</a>
+</div>
+<div class="container detail">
+    <ul class="thumbnails">
+    {foreach $playList['playList'] $val}
+        <li class="span1">
+            <div class="thumbnail">
+                <a href="/service/home.php?user={$val['uin']}" title="{$val['nick']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$val['uin'].'/70/70.jpg');}" width="60" height="60" title="{$val['nick']}" alt="{$val['nick']}"></a>
+                <p class="name"><a href="/service/home.php?user={$val['uin']}" title="{$val['nick']}" target="_blank" class="minor_text">{$val['nick']}</a></p>
+            </div>
+        </li>
+    {/foreach}
+    </ul>
+    {$playList['page']}
+</div>
+
+{include file="footer.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/featurecarousel/js/jquery.featureCarousel.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/js/bootstrap.min.js');}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#featureCarousel").featureCarousel();
+});
+</script>
+
+</body>
+</html>

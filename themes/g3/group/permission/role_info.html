@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.disable{background:#CCCCCC;}
+#member_value, #deny_value{display:none;}
+#members{width:222px;height:120px;overflow-y:scroll;padding:2px;border:solid 1px #CCC;float:left; margin-left:20px;}
+#members li{line-height:20px;padding-left:5px;margin:0px;cursor:pointer;}
+.selected{background:#3399FF;}
+.hover{cursor: default;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab" style="border:0;">
+      <a href="?module=roleList" class="bluebtn ar"><span>返回角色组列表</span></a>
+    </div>
+    <form action="?module={if $id>0}update{else}insert{/if}" method="post" id="form">
+        {if $id > 0}
+        <input type="hidden" name="id" value="{$roleInfo['id']}">
+        {/if}
+        <ul class="formlist">
+            <li class="clearfix">
+                <label>角色组名称：</label>
+                <input name="name" type="text" class="mgL20" value="{$roleInfo['name']}">
+            </li>
+            <li class="clearfix">
+                <label>角色组成员：</label>
+                <ul name="members" id="members">
+                    {foreach $uins $val}
+                    <input type="hidden" name="uins[]" id="uin_{$val['uin']}" value="{$val['uin']}">
+                    <li>{$val['uin']}</li>
+                    {/foreach}
+                </ul>
+                <div class="fl" style="width:60px;height:150px;margin-left:10px;">
+                    <a href="javascript:;" class="bluebtn2" id="add">添加</a>
+                    <a href="javascript:;" class="graybtn2 mgt10" id="del">删除</a>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>状态：</label>
+                <input name="status" {if $roleInfo['status']==1}checked{/if} type="radio" value="1" class="radios2 mgL20"><span>启用</span>
+                <input name="status" {if $roleInfo['status']=='0'}checked{/if} type="radio" value="0" class="radios2 mgL20"><span>不启用</span>
+            </li>
+            <li class="clearfix" style="margin-left:170px;"><a href="javascript:;" class="bluebtn" id="sbt"><span>保存信息</span></a></li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+    $(document).on('click', '#members li', function(){
+        $('#members').find('li').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    $('#add').click(function(){
+        var p = '<p id="uin-paragraph"><span>用户ID：</span><input type="text" name="uin"></p>'
+        art.dialog({
+            title: '添加角色组成员',
+            content: p,
+            lock: true,
+            width: 300,
+            ok: function(){
+                if($('#tip').length > 0){
+                    $('#tip').remove();
+                }
+                var tip = '';
+                //uin不能为空
+                var uin = $('input[name="uin"]').val();
+                if(uin == ''){
+                    tip='<p id="tip" style="background-color:#DD5C3F;margin-bottom:5px;padding-left:10px;">用户ID不能为空</p>';
+                    $('#uin-paragraph').before(tip);
+                    return false;
+                }
+                //uin必须为数字
+                if(!/^\d+$/.test(uin)){
+                    tip='<p id="tip" style="background-color:#DD5C3F;margin-bottom:5px;padding-left:10px;">用户ID必须为数字</p>';
+                    $('#uin-paragraph').before(tip);
+                    return false;
+                }
+
+                //在界面上是否存在相同的UIN
+                var liObj = $('#members').find('li');
+                var len = liObj.length;
+                for(var i=0; i<len; i++){
+                    if($(liObj[i]).html() == uin){
+                        tip='<p id="tip" style="background-color:#DD5C3F;margin-bottom:5px;padding-left:10px;">'+uin+'已经添加，不能重复添加</p>';
+                        $('#uin-paragraph').before(tip);
+                        return false;
+                    }
+                }
+
+                //检测UIN状态
+                var status = false;
+                $.ajax({
+                    url: '/group/role.php?module=verifyUin',
+                    type: 'GET',
+                    data: {uin:uin},
+                    async: false,
+                    dataType: 'JSON',
+                    success: function(data){
+                        if(data.Flag == 100){
+                            var li = '<li>' + uin + '</li>';
+                            var hidden = '<input type="hidden" name="uins[]" id="uin_'+uin+'" value="'+uin+'">';
+                            $('#members').append(hidden).append(li);
+                            status = true;
+                        }else{
+                            tip = '<p id="tip" style="background-color:#DD5C3F;margin-bottom:5px;padding-left:10px;">' + data.FlagString + '</p>';
+                            $('#uin-paragraph').before(tip);
+                        }
+                    }
+                });
+                return status;
+            }
+        });
+    });
+
+    $('#del').click(function(){
+        var li = $('#members').find('li.selected');
+        var uin = li.html();
+        if(uin == ''){
+            return false;
+        }
+        li.remove();
+        $('#uin_'+uin).remove();
+    });
+
+    $('#sbt').click(function(){
+        var name = $('input[name="name"]').val();
+        if(name == ''){
+            art.dialog({
+                content: '角色组名称不能为空',
+                lock: true,
+                ok: true,
+                time: 2
+            });
+            return false;
+        }
+        if(name.length > 12){
+            art.dialog({
+                content: '角色组名称不能大于12个字符',
+                lock: true,
+                ok: true,
+                time: 2
+            });
+            return false;
+        }
+        var url = $('#form').attr('action');
+        var data = $('#form').serialize();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            success: function(data){
+                if(data.Flag == 100){
+                    var desc = '添加角色组成功';
+                    if($('input[name="id"]').val() > 0){
+                        desc = '修改角色组成功';
+                    }
+                    art.dialog({
+                        content: desc,
+                        lock: true,
+                        ok: function(){
+                            location.href='?module=roleList';
+                        },
+                        cancel: false,
+                        esc: false,
+                        width:200
+                    });
+                }else{
+                    art.dialog({
+                        content: data.FlagString,
+                        lock: true,
+                        ok: true,
+                        time: 2
+                    });
+                }
+            }
+        });
+    });
+});
+</script>

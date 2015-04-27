@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/number.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/kcost.js"></script>
+<title>成本中心现金币充值</title>
+<script>
+function checkRate(num)   
+{   
+     var re = /^[1-9]+[0-9]*]*$/;
+     if (!re.test(num))   
+     {
+        return false;   
+     }else{
+	 	return true;
+	 }
+}  
+
+
+$(function(){
+	$("#child_sel").change(function(){
+		if($(this).val() == 101){
+			$("#waring").html("一次性最大充值金额为50万，不能为小数；");
+			$("#string").show();
+			$("#MoneyWeight").attr("rate", 1);
+			$("#string2").hide();
+			$("#MoneyWeight").trigger("keyup");
+		}else{
+			$("#waring").html("1V宝=10000V豆;");
+			//$("#string").hide();
+			$("#MoneyWeight").attr("rate", 10000);
+			$("#string2").show();
+			$("#MoneyWeight").trigger("keyup");
+		}
+	})
+	$("#MoneyWeight").keyup(function(){
+		$("#string2_content").html($(this).val()*10000);
+	})
+	$("#form").submit(function(){
+		var value = $("#MoneyWeight").attr("value");
+		var str = "未填写金额数或超出范围";		
+		if($("#Desc").val() == ""){
+			alert("请填写备注");
+			return false;
+		}
+		if(!value || value<0){
+			alert(str);
+			return false;
+		}
+		if($("#child_sel").val() == 101){
+			if(value > 500000){
+				alert(str);
+				return false;
+			}
+		}
+	})	
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">成本中心现金币充值</div>
+</div >
+{include "kcost/tab.html"}
+
+
+<form method="post" class="form" action="" id="form">
+    <p>
+        <label style="width:150px;">成本中心余额：</label>
+        虚拟币：{echo $balance['money']},&nbsp;&nbsp;现金币：{echo $balance['wealth']}
+    </p>
+	<p>
+		<label style="width:150px;">选择成本中心对应科目：</label>
+		<select name="child_id" id="child_sel">
+			<option value="101">成本中心-V宝净充值</option>
+			<option value="114">成本中心-V宝兑换V豆-V豆净充值</option>
+		</select>
+	</p>
+    <p>
+        <label id="charge_type" style="width:150px;">V宝充值金额：</label>
+        <input type="text" name="MoneyWeight" size="32" value="" id="MoneyWeight"  rate="1"/>
+        &nbsp;&nbsp;&nbsp;&nbsp;<font id="waring" color='red'>一次性最大充值金额为50万，不能为小数；</font>
+		<p style="margin-left:70px;color:blue;display:none;" name="string2" id="string2"><span style="color:black;">V豆充值金额：&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="string2_content"></span></p>
+		<p>
+			<label style="width:150px;">备注：</label>
+			<input type="text" name="Desc" size="32" value="" id="Desc" />
+		</p>
+		<p style="margin-left:160px;color:blue" name="string" id="string">零</p>
+
+    </p>
+    <p>
+    	<label></label>
+    	<input type="submit" class="submit" value="保存信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+</body>
+</html>

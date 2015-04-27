@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>流媒体设置</title>
+<style>
+#playVideo,#adminVideo,#p2pVideo{display:none;line-height:28px;}
+#playVideo label,#adminVideo label,#p2pVideo label{display:inline-block;width:100px;text-align:right;}
+#playVideo p,#adminVideo p,#p2pVideo p{display:inline-block;width:220px;}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">流媒体设置</div>
+</div>
+
+<script>
+active_li = 4;
+</script>
+{include file="template/tpl_header.html"}
+
+<form method="post">
+<div id="playVideo">
+	<div>
+        <p><label>视频编码：</label><select name="play_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['play_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频编码：</label><select name="play_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+    <div>
+        <p><label>视频尺寸：</label><select name="play_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['play_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频尺寸：</label><select name="play_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>视频帧率：</label><input type="text" name="play_media_conf[videofps]" size="4" value="{$edit['play_media_conf']['videofps']}" /> fps</p>
+        <p><label>高清视频帧率：</label><input type="text" name="play_media_conf[highquality_videofps]" size="4" value="{$edit['play_media_conf']['highquality_videofps']}" /> fps</p>
+    </div>
+	<div>
+        <p><label>视频码率：</label><input type="text" name="play_media_conf[videokbps]" size="4" value="{$edit['play_media_conf']['videokbps']}" /> kbps</p>
+        <p><label>高清视频码率：</label><input type="text" name="play_media_conf[highquality_videokbps]" size="4" value="{$edit['play_media_conf']['highquality_videokbps']}" /> kbps</p>
+    </div>
+	<div>
+        <p><label>音频编码：</label><select name="play_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['play_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清音频编码：</label><select name="play_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>音频采样率：</label><select name="play_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['play_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+        <p><label>高清音频采样率：</label><select name="play_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>音频码率：</label><input type="text" name="play_media_conf[audiokbps]" size="4" value="{$edit['play_media_conf']['audiokbps']}" /> kbps</p>
+        <p><label>高清音频码率：</label><input type="text" name="play_media_conf[highquality_audiokbps]" size="4" value="{$edit['play_media_conf']['highquality_audiokbps']}" /> kbps</p>
+    </div>
+	<div>
+        <p><label>播放缓冲时间：</label><input type="text" name="play_media_conf[buffertime]" size="4" value="{$edit['play_media_conf']['buffertime']}" /> ms</p>
+    </div>
+</div>
+
+<div id="adminVideo">
+	<div>
+        <p><label>视频编码：</label><select name="admin_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['admin_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频编码：</label><select name="admin_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+    <div>
+        <p><label>视频尺寸：</label><select name="admin_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['admin_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频尺寸：</label><select name="admin_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>视频帧率：</label><input type="text" name="admin_media_conf[videofps]" size="4" value="{$edit['admin_media_conf']['videofps']}" /> fps</p>
+        <p><label>高清视频帧率：</label><input type="text" name="admin_media_conf[highquality_videofps]" size="4" value="{$edit['admin_media_conf']['highquality_videofps']}" /> fps</p>
+    </div>
+	<div>
+        <p><label>视频码率：</label><input type="text" name="admin_media_conf[videokbps]" size="4" value="{$edit['admin_media_conf']['videokbps']}" /> kbps</p>
+        <p><label>高清视频码率：</label><input type="text" name="admin_media_conf[highquality_videokbps]" size="4" value="{$edit['admin_media_conf']['highquality_videokbps']}" /> kbps</p>
+    </div>
+    <div>
+        <p><label>音频编码：</label><select name="admin_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['admin_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清音频编码：</label><select name="admin_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>音频采样率：</label><select name="admin_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['admin_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+        <p><label>高清音频采样率：</label><select name="admin_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>音频码率：</label><input type="text" name="admin_media_conf[audiokbps]" size="4" value="{$edit['admin_media_conf']['audiokbps']}" /> kbps</p>
+        <p><label>高清音频码率：</label><input type="text" name="admin_media_conf[highquality_audiokbps]" size="4" value="{$edit['admin_media_conf']['highquality_audiokbps']}" /> kbps</p>
+    </div>
+	<div>
+        <p><label>播放缓冲时间：</label><input type="text" name="admin_media_conf[buffertime]" size="4" value="{$edit['admin_media_conf']['buffertime']}" /> ms</p>
+    </div>
+</div>
+
+<div id="p2pVideo">
+	<div>
+        <p><label>视频编码：</label><select name="p2p_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频编码：</label><select name="p2p_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+    <div>
+        <p><label>视频尺寸：</label><select name="p2p_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['p2p_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清视频尺寸：</label><select name="p2p_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>视频帧率：</label><input type="text" name="p2p_media_conf[videofps]" size="4" value="{$edit['p2p_media_conf']['videofps']}" /> fps</p>
+        <p><label>高清视频帧率：</label><input type="text" name="p2p_media_conf[highquality_videofps]" size="4" value="{$edit['p2p_media_conf']['highquality_videofps']}" /> fps</p>
+    </div>
+	<div>
+        <p><label>视频码率：</label><input type="text" name="p2p_media_conf[videokbps]" size="4" value="{$edit['p2p_media_conf']['videokbps']}" /> kbps</p>
+        <p><label>高清视频码率：</label><input type="text" name="p2p_media_conf[highquality_videokbps]" size="4" value="{$edit['p2p_media_conf']['highquality_videokbps']}" /> kbps</p>
+    </div>
+    <div>
+        <p><label>音频编码：</label><select name="p2p_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+        <p><label>高清音频编码：</label><select name="p2p_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+    </div>
+	<div>
+        <p><label>音频采样率：</label><select name="p2p_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['p2p_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+        <p><label>高清音频采样率：</label><select name="p2p_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+        <p></div>
+	<div>
+        <p><label>音频码率：</label><input type="text" name="p2p_media_conf[audiokbps]" size="4" value="{$edit['p2p_media_conf']['audiokbps']}" /> kbps</p>
+        <p><label>高清音频码率：</label><input type="text" name="p2p_media_conf[highquality_audiokbps]" size="4" value="{$edit['p2p_media_conf']['highquality_audiokbps']}" /> kbps</p>
+    </div>
+	<div>
+        <p><label>播放缓冲时间：</label><input type="text" name="p2p_media_conf[buffertime]" size="4" value="{$edit['p2p_media_conf']['buffertime']}" /> ms</p>
+    </div>
+</div>
+<br />
+<table id="table-list" class="table-list main-width">
+    <tr>
+        <th width="35%">配置类别</th>
+        <th width="35%">修改时间</th>
+        <th>操作</th>
+    </tr>
+    <tr>
+        <td id="adminTitle">管理麦流媒体配置</td>
+        <td>{if $edit['uptime']}{echo date("Y-m-d H:i:s", $edit['uptime'])}{else}未配置{/if}</td>
+        <td>
+        <button onclick="art.dialog({id:2,content:document.getElementById('adminVideo'),follow:this,title:document.getElementById('adminTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        </td>
+    </tr>
+    <tr>
+        <td id="p2pTitle">P2P流媒体配置</td>
+        <td>{if $edit['uptime']}{echo date("Y-m-d H:i:s", $edit['uptime'])}{else}未配置{/if}</td>
+        <td>
+        <button onclick="art.dialog({id:3,content:document.getElementById('p2pVideo'),follow:this,title:document.getElementById('p2pTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        </td>
+    </tr>
+    <tr>
+        <td id="playTitle">表演麦流媒体配置</td>
+        <td>{if $edit['uptime']}{echo date("Y-m-d H:i:s", $edit['uptime'])}{else}未配置{/if}</td>
+        <td>
+        <button onclick="art.dialog({id:1,content:document.getElementById('playVideo'),follow:this,title:document.getElementById('playTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        </td>
+    </tr>
+</table>
+<br />
+{if $link_array[106]}
+<p style="text-align: center;"><input type="submit" value="保存修改" /><span style="color: red;">修改后点击"保存"完成修改</span>&nbsp;&nbsp;</p>
+{/if}
+</form>
+
+</body>
+</html>

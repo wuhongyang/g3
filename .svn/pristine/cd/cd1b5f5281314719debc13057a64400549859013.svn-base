@@ -1,0 +1,82 @@
+<?php
+
+ignore_user_abort(true);
+set_time_limit(0);
+if(file_exists("./user.lock")){
+	exit("one program is running...");
+}
+//touch("./user.lock");
+
+require_once '../library/global.fun.php';
+$db = db::connect(config('database','default'));
+$arr = array(20188051, 20225806, 20121563, 20127427, 5711338, 20153640, 20145041, 20226437, 5711238, 20179828, 20139206, 20139204, 20139205, 20139252, 20139212, 20139198, 20224640, 20139194, 20123030, 20220763, 20228773, 20213466, 20120781, 10000);
+foreach($arr as $one){
+	$sql = "UPDATE `kexoo_im`.`sso_user_relate` SET group_id = 10000 WHERE uin = ".$one;
+	$db->query($sql);
+}
+
+$page_size = 500;
+$sql = "SELECT COUNT(*) FROM kexoo_im.sso_user_relate WHERE group_id != 'NULL' AND is_use = 1";
+$total = $db->get_var($sql);
+$times = ceil($total/$page_size);
+for($i=0;$i<$times;$i++){
+	$done_username = array();
+	$start = $page_size * $i;
+	$end = $page_size * ($i+1);
+	$sql = "SELECT `uid`,`uin`,`group_id` FROM kexoo_im.sso_user_relate WHERE group_id != 'NULL' AND is_use = 1 ORDER BY uid LIMIT ".$start.", ".$end;
+	$res = $db->get_results($sql, "ASSOC");
+// 	$old_uin = 0;
+	foreach($res as $one){
+		
+		$sql = "UPDATE `kexoo_im`.`basic_tbl` SET `group_id` = '".$one['group_id']."' WHERE `uin` = '".$one['uin']."';";
+		$db->query($sql);
+		
+// 		if($one['uin'] != $old_uin){
+// 			$old_uin = $one['uin'];
+			$sql = "SELECT * FROM kexoo_im.username WHERE uid = '".$one['uid']."'";
+			$uin_detail = $db->get_row($sql);
+			
+			$sql = "UPDATE `kexoo_im`.`basic_tbl` SET `passwd` = '".$uin_detail['pass']."' WHERE `uin` = '".$one['uin']."';";
+			$db->query($sql);
+// 		}
+// 		1邮箱2用户名3手机4qq
+		$sql_pre = "INSERT INTO `kexoo_im`.`new_username`
+		(`uin`, `platform`, `login`, `group_id`, `name`, `qq`, `idcard`, `uptime`, `load_ip`, `load_time`, `permanent_city`)
+		VALUES ('".$one['uin']."', ";
+		$sql_aft = ", '".$one['group_id']."', '".$uin_detail['name']."', '".$uin_detail['qq']."', '".$uin_detail['idcard']."', '".$uin_detail['uptime']."', '".$uin_detail['load_ip']."', '".$uin_detail['load_time']."', '".$uin_detail['permanent_city']."');";
+		
+		
+		if($uin_detail['openid']){
+			$sql = "SELECT COUNT(*) FROM `kexoo_im`.`new_username` where login = '".$uin_detail['openid']."' AND group_id = '".$one['group_id']."'";
+			$count = $db->get_var($sql);
+			if(!$count){
+				$sql = $sql_pre."'4', '".$uin_detail['openid']."'".$sql_aft;
+				$db->query($sql);
+			}
+		}else{
+			if($uin_detail['email']){
+				$sql = "SELECT COUNT(*) FROM `kexoo_im`.`new_username` where login = '".$uin_detail['email']."' AND group_id = '".$one['group_id']."'";
+				$count = $db->get_var($sql);
+				if(!$count){
+					$sql = $sql_pre."'1', '".$uin_detail['email']."'".$sql_aft;
+					$db->query($sql);
+				}
+			}
+			if($uin_detail['phone']){
+				$sql = "SELECT COUNT(*) FROM `kexoo_im`.`new_username` where login = '".$uin_detail['phone']."' AND group_id = '".$one['group_id']."'";
+				$count = $db->get_var($sql);
+				if(!$count){
+					$sql = $sql_pre."'3', '".$uin_detail['phone']."'".$sql_aft;
+					$db->query($sql);
+				}
+			}
+		}
+	}
+}
+
+echo "完成";
+
+//unlink("./user.lock");
+/*
+ * unlink("./user.php");
+*/

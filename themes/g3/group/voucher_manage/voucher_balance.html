@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab">
+        <ul>
+            <li><a href="?module=voucher_balance" class="hover">用户余额表</a></li>
+            <li><a href="?module=voucher_running">资金流水表</a></li>
+            <li><a href="?module=voucher_parent">金币净平衡表</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgb10">
+            <form action="?module=voucher_balance" id="payment-form" method="get">
+            <span>用户ID：</span>
+            <input name="Uin" id="Uin" value="{$_GET['Uin']}" type="text">
+            <span class="mgL20">状态：</span>
+            <select name="status" id="status">
+            {foreach $status_array $kk $val}
+                <option value={$kk} {if $_GET['status'] == $kk}selected{/if}>{$val}</option>
+            {/foreach}
+            </select>
+            <input name="" type="submit" value="查询" class="normalbtn">
+            <input name="module" type="hidden" value="voucher_balance" class="normalbtn">
+            <span>总余额：</span>
+            <span class="yellow st">{echo (int)$user_balance}</span>
+            </form>
+        </div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>编号</th>
+            <th>用户ID</th>
+            <th>余额</th>
+            <th>最后更新日期</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+          {foreach $lists $key $val}
+          <tr>
+            <td>{echo $key+1}</td>
+            <td>{$val['nick']}({$val['uin']})</td>
+            <td>{$val['last_balance']}</td>
+            <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+            <td>{$status_array[$val['balance_status']]}</td>
+            <td><a href="?module=voucher_running&Uin={$val['uin']}" class="ahover">流水表查询</a></td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">{$page}</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

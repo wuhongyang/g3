@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色分组添加</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+	td{
+	padding:5px;
+	}
+</style>
+</head>
+<body>
+
+<div class="header clean">
+  <div class="header-title left">角色分组添加</div>
+  <div class="header-button right">
+  </div>
+</div>
+
+<script>
+active_li = 0;
+</script>
+{include file="template/tpl_header.html"}
+
+<div style="width:600px;margin-top:20px;">
+	<form method="post">
+	<table width="100%">
+		<tr>
+			<td align="right">角色组名称：</td><td><input type="text" name="cate_name" value="{$row['cate_name']}"/></td>
+		</tr>
+		<tr>
+			<td align="right">描述：</td><td><textarea name="cate_desc">{$row['cate_desc']}</textarea></td>
+		</tr>
+		<tr>
+			<td align="right">是否开启：</td>
+			<td>
+			<input name="status" type="radio" value="1" {if !isset($row['status']) or $row['status'] == 1}checked="checked"{/if} />是&nbsp;&nbsp;
+			<input name="status" type="radio" value="0" {if isset($row['status']) and $row['status'] == 0}checked="checked"{/if}/>否
+			<input name="cate_id" type="hidden" value="{$cate_id}" />
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td><td><input type="submit" value="保存" /></td>
+		</tr>
+	</table>
+	</form>
+</div>
+</body>
+</html>

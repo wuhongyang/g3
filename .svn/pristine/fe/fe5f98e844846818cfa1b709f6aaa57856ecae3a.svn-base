@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/static/js/jquery.js');}"></script>
+<script>
+$(function(){
+	$(".delete").each(function(){
+		$(this).click(function(){
+			var id = $(this).parent().parent().find(".id").html();
+			$.post("/group/special_num.php?module=num_delete", {"id":id}, function(data){
+				var json = eval("("+data+")");	
+	    		alert(json.FlagString);
+	    		if(json.Flag == 100){
+	    			location.reload();
+	    		}
+			})
+			return false;
+		})
+	})
+})
+</script>
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+	{include file="header.html"}
+    <a href="/group/special_num.php?module=add_num&cate_id=$_GET['cate_id']" class="bluebtn2" style="float:right;margin-left:10px;">开设靓号</a>
+    <a href="/group/special_num.php?module=cate" class="bluebtn2" style="float:right">返回</a>
+    <p>{$cate_name}下属靓号</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="20%">编号</th><th width="20%">靓号</th><th width="20%">价格</th><th width="20%">添加日期</th><th>操作</th>
+        </tr>
+        {foreach $list $one}
+        <tr>
+            <td class="id">{$one['id']}</td>
+            <td>{$one['name']}</td>
+            <td>{$one['price']}</td>
+            <td>{eval echo date("Y-m-d", $one['uptime'])}</td>
+            <td>
+            <a class="delete" href="#">删除</a>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$page}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

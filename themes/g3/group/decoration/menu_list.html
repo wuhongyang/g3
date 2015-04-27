@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form p{margin-top: 10px;}
+.form #hide{display: none;}
+.form p span{margin-right:10px;}
+.form p .tp5{position: relative;top:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">一级菜单设置</h3>
+        <a href="javascript:;" class="bluebtn fr" id="J_add"><span>添加</span></a>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+      <tr>
+        <th>编号</th>
+        <th>一级菜单</th>
+        <th>菜单logo</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $menuList $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['name']}</td>
+        <td><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['icon'].'/24/24.jpg');}" width="24" height="24"></td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a href="javascript:up({$val['id']});">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($menuList)-1}
+                <a href="javascript:down({$val['id']});">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a href="javascript:editmenu({$val['id']});">编辑</a>
+            <a href="?module=sub_menu_list&super_id={$val['id']}">查看</a>
+            {if $val['status'] == 1}
+                <a href="javascript:setVisible({$val['id']});">不显示</a>
+            {else}
+                <a href="javascript:setVisible({$val['id']});">显示</a>
+            {/if}
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+String.prototype.trim = function(){
+    return this.replace(/(^\s*)|(\s*$)/g, ""); 
+}
+$(function(){
+    $('#J_add').click(function(){
+        var content = '<form action="?module=menu_add" method="post" id="add_menu_form" class="form" enctype="multipart/form-data" target="iframe">';
+        content += '<p><span>名称：</span><input type="text" name="name" size="30"></p>';
+        content += '<p><span>菜单图标：</span><span class="tp5"><input type="radio" name="icon" value="1" class="radio"><em><img src="/pic/group/menu_icon1.png"></em></span><span class="tp5"><input type="radio" name="icon" value="2" class="radio"><em><img src="/pic/group/menu_icon2.png"></em></span><span class="tp5"><input type="radio" name="icon" value="3" class="radio"><em><img src="/pic/group/menu_icon3.png"></em></span><span><input type="radio" name="icon" value="-1" class="radio tp5"><em>自定义</em></span></p>';
+        content += '<p id="hide"><span>上传图片：</span><input type="file" name="custom_icon"></p>';
+        content += '<iframe name="iframe" style="display:none;"></iframe>';
+        content += '</form>';
+        art.dialog({
+            title: '添加一级菜单',
+            content: content,
+            ok: function(){
+                var name = $('input[name="name"]').val();
+                name = name.trim();
+                if(name.length == 0){
+                    _show_msg('名称不能为空');
+                    return false;
+                }
+                if(name.length > 6){
+                    _show_msg('名称不能大于6个字符');
+                    return false;
+                }
+
+                $('#add_menu_form').submit();
+                return false;
+            },
+            cancel: function(){
+                location.href = '?module=menu_list';
+				return false;
+            },
+            lock: true
+        });
+    });
+
+    $(document).on('click', 'input[type="radio"][name="icon"]', function(){
+        var icon = $(this).val();
+        if(icon == -1){
+            $('#hide').show();
+        }else{
+            file = $('input[name="custom_icon"]')[0];
+            if(file.outerHTML){
+                file.outerHTML = file.outerHTML;
+            }else{
+                $('input[name="custom_icon"]').val('');
+            }
+            $('#hide').hide();
+        }
+    });
+});
+
+//上传图片成功后回调
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=menu_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+function setVisible(id){
+    $.ajax({
+        url: '?module=set_visible',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            var icon = 'succeed';
+            var ok = function(){
+                location.href = "?module=menu_list";
+            };
+            if(data.Flag != 100){
+                icon = 'warning';
+                ok = true;
+            }
+            art.dialog({
+                content: data.FlagString,
+                ok: ok,
+                cancel: false,
+                esc: false,
+                icon: icon
+            });
+        }
+    });
+}
+
+function up(id){
+    $.ajax({
+        url: '?module=menu_up',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '上移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=menu_list';
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+
+function down(id){
+    $.ajax({
+        url: '?module=menu_down',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '下移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=menu_list';
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+
+function editmenu(id){
+    $.ajax({
+        url: '?module=menu_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(data){
+            if(!data.id){
+                return ;
+            }
+            var content = '<form action="?module=menu_edit" method="post" id="edit_menu_form" class="form" enctype="multipart/form-data" target="iframe1">';
+            content += '<p><span>名称：</span><input type="text" name="name" size="30" value="'+data.name+'"></p>';
+            content += '<p><span>当前图标：</span><img src="{php echo cdn_url(PIC_API_PATH."/p/'+data.icon+'/24/24.jpg");}" width="24" height="24"></p>';
+            content += '<p><span>菜单图标：</span><span class="tp5"><input type="radio" name="icon" value="1" class="radio"><em><img src="/pic/group/menu_icon1.png"></em></span><span class="tp5"><input type="radio" name="icon" value="2" class="radio"><em><img src="/pic/group/menu_icon2.png"></em></span><span class="tp5"><input type="radio" name="icon" value="3" class="radio"><em><img src="/pic/group/menu_icon3.png"></em></span><span><input type="radio" name="icon" value="-1" class="radio tp5"><em>自定义</em></span></p>';
+            content += '<p id="hide"><span>上传图片：</span><input type="file" name="custom_icon"></p>';
+            content += '<iframe name="iframe1" style="display:none;"></iframe>';
+            content += '<input type="hidden" name="id" value="'+data.id+'">';
+            content += '<input type="hidden" name="current_icon" value="'+data.icon+'">';
+            content += '</form>';
+
+            art.dialog({
+                title: '编辑一级菜单',
+                content: content,
+                ok: function(){
+                    var name = $('input[name="name"]').val();
+                    name = name.trim();
+                    if(name.length == 0){
+                        _show_msg('名称不能为空');
+                        return false;
+                    }
+                    if(name.length > 6){
+                        _show_msg('名称不能大于6个字符');
+                        return false;
+                    }
+
+                    $('#edit_menu_form').submit();
+                    return false;
+                },
+                cancel: function(){
+                    location.href = '?module=menu_list';
+					return false;
+                },
+                lock: true
+            });
+        }
+    });
+}
+
+</script>

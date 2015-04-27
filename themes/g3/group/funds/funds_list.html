@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>房内公积金</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <a href="?module=exchange_details" class="bluebtn fr"><span>查看领取记录</span></a>
+    <form method="get">
+    	<input type="hidden" name="module" value="funds_list" />
+    	房间id:<input type="text" name="room_id" value="{$_GET['room_id']}" />
+    	<input type="submit" class="normalbtn" value="查询" />
+    </form>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="50%">房间ID</th>
+        <th width="50%">房间公积金余额</th>
+        </tr>
+        {foreach $res['Data'] $room_id $balance}
+        <tr>
+        <td>{$room_id}</td>
+        <td>{$balance}</td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$res['Page']}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

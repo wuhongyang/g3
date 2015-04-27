@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.dated td{background:#FCC;}
+</style>
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="grouptopmenu.html"}
+        <div class="content">
+			<div class="tabletab">
+                <ul>
+                    <li><a href="room_channel_user.php?module=signed_manage"{if $module=='signed_manage'} class="hover"{/if}>已签约人员</a></li>
+                    <li><a href="room_channel_user.php?module=termination_list"{if $module=='termination_list'} class="hover"{/if}>已解约人员</a></li>
+                    <li><a href="room_channel_user.php?module=guardian"{if $module=='guardian'} class="hover"{/if}>签约艺人守护列表</a></li>
+                </ul>
+                    <a href="javascript:;" class="bluebtn ar" onClick="addGuardian();" style="right:0;top:20px;"><span>添加签约艺人守护</span></a>
+            </div>
+            <div class="tablewrap">
+            	<form method="post">
+                <p class="red">* 每个签约艺人同一时间段最多只能添加一个守护人</p>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" id="guardian" class="tablecss auto mgtb15">
+                  <tr>
+                    <th>编号</th>
+                    <th>守护人ID</th>
+                    <th>签约艺人ID</th>
+                    <th>守护时间</th>
+                    <th>操作</th>
+                  </tr>
+                  
+                  {foreach $guardian $key $val}
+                  <tr {if $val['dated']}class="dated"{/if}>
+                    <td>{echo $key+1}</td>
+                    <td><input type="text" name="guardian[Uin][]" value="{$val['Uin']}" /></td>
+                    <td>
+                    	<select name="guardian[Art][]"><option value="0">请选择</option>
+                    		{foreach $signedList $signed}
+                            <option value="{$signed['uid']}" {if $signed['uid'] == $val['Art']}selected{/if}>{$signed['name']}({$signed['uid']})</option>
+                    		{/foreach}
+                        </select>
+                    </td>
+                    <td><input type="text" name="guardian[Start][]" onclick="WdatePicker()" value="{echo $val['Start']}" /> - <input type="text" onclick="WdatePicker()" name="guardian[End][]" value="{echo $val['End']}" /></td>
+                    <td><a href="room_channel_user.php?module=guardian&del={$key}" onClick="if(!confirm('确定删除？')) return false;" class="ahover">删除</a></td>
+                  </tr>
+                  {/foreach}
+                </table>
+                <div align="center"><input type="submit" class="normalbtn" value="保存" /></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--添加签约守护者-->
+<table style="display:none;">
+<tr>
+<td></td>
+<td id="uin"><input type="text" name="guardian[Uin][]" value="" /></td>
+<td id="art">
+    <select name="guardian[Art][]"><option value="0">请选择</option>
+        {foreach $signedList $signed}
+        <option value="{$signed['uid']}" {if $signed['uid'] == $val['Art']}selected{/if}>{$signed['name']}({$signed['uid']})</option>
+        {/foreach}
+    </select>
+</td>
+<td id="date"><input type="text" name="guardian[Start][]" onclick="WdatePicker()" value="" /> - <input type="text" name="guardian[End][]" onclick="WdatePicker()" value="" /></td>
+<td id="del"><a href="javascript:;" onclick="delGuardian(this)" class="ahover">删除</a></td>
+</tr>
+</table>
+
+{include file="foot.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+function addGuardian(){
+	var id = document.getElementById('guardian');
+	var newtr = id.insertRow(-1);
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	var td4   = document.createElement("td");
+	var td5   = document.createElement("td");
+	td1.innerHTML = '';
+	td2.innerHTML = document.getElementById('uin').innerHTML;
+	td3.innerHTML = document.getElementById('art').innerHTML;
+	td4.innerHTML = document.getElementById('date').innerHTML;
+	td5.innerHTML = document.getElementById('del').innerHTML;
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+	newtr.appendChild(td4);
+	newtr.appendChild(td5);
+}
+function delGuardian(obj){
+	obj.parentNode.parentNode.parentNode.removeChild(obj.parentNode.parentNode);
+}
+</script>
+</body>
+</html>

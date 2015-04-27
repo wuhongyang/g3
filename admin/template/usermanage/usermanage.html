@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>用户信息管理</title>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+window.onload = function(){
+	show_province("{$mypost['province']}");//默认选中省编号
+	show_city("{$mypost['province']}","{$mypost['city']}");//省编号，默认选中市编号
+	show_area("{$mypost['city']}","{$mypost['area']}");//市编号,默认选中区/县编号
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">用户信息管理</div>
+</div>
+
+<div class="page-tools main-width">
+ <div style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;">
+	当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+	<form method="get" onsubmit="return check();">
+        <input type="hidden" name="data_group_id" value="{$_GET['data_group_id']}" />
+		<input type = 'hidden' name = 'module' value = 'usermanage'>
+		关键字: <input type = 'text' name = 'gjz' value = "{$mypost['gjz']}" id="keyword"> 
+		<select name = 'vtype' id="vtype">
+			<option value = '0'>请选择</option>
+			<option value = '1' {if $mypost['vtype'] == '1'}selected{/if}>用户ID</option>
+			<option value = '2' {if $mypost['vtype'] == '2'}selected{/if}>昵称</option>
+		</select>
+		<select name = 'gender'>
+			<option value = '0' >性别</option>
+			<option value = '1' {if $mypost['gender'] == '1'}selected{/if}>男</option>
+			<option value = '2' {if $mypost['gender'] == '2'}selected{/if}>女</option>
+		</select>&nbsp;&nbsp;&nbsp;
+		所在地: 
+			<select name="province" id="province" onChange="show_city(this.value);"><option value="0">请选择</option></select>
+			<select name="city" id="city" onChange="show_area(this.value);"><option value="0">请选择</option></select>
+			<select name="area" id="area"><option value="0">请选择</option></select>
+		生日: <input class="Wdate" name="time_start" type="text" onClick="WdatePicker()" value="{$mypost['time_start']}"> 至 <input class="Wdate" name="time_end" type="text" onClick="WdatePicker()" value="{$mypost['time_end']}">
+		<br><br>
+		好友数: <input type='text' name='friend' size='5' value="{$mypost['friend']}">
+		社区等级: <input type='text' name='level' size='5' value="{$mypost['level']}">
+		绑定状态:<select name="binded">
+			<option value="0" {if $_GET['binded']==0}selected{/if}>请选择</option>
+			<option value="1" {if $_GET['binded']==1}selected{/if}>已绑定</option>
+			<option value="2" {if $_GET['binded']==2}selected{/if}>未绑定</option>
+		</select>
+		会员级别:<select name="vip">
+			<option value="-1">请选择</option>
+			<option value="0" {if $_GET['vip']==0 && isset($_GET['vip'])}selected{/if}>普通用户</option>
+			<option value="1" {if $_GET['vip']==1}selected{/if}>普通会员</option>
+			<option value="2" {if $_GET['vip']==2}selected{/if}>高级会员</option>
+		</select>
+		<input type="hidden" name="data_group_id" value="{$__ADMIN_CURGROUP['groupid']}">
+		<input type="submit" value="查询" >
+	</form>
+ </div>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>编号</th>
+		<th>用户ID</th>
+		<th>昵称</th>
+		<th>性别</th>
+		<th>生日</th>
+		<th>所在地</th>
+		<th>兴趣爱好</th>
+		<th>好友数</th>
+		<th>社区等级</th>
+		<th>真实姓名</th>
+		<th>身份证号码</th>
+		<th>会员级别</th>
+		<th>是否绑定</th>
+		<th>操作</th>
+	</tr>
+	{foreach $lists $key $list}
+	<tr>
+			<td>{echo $key+1}</td>
+	    	<td>{$list['uin']}</td>
+	    	<td>{$list['nick']}</td>
+	    	<td>{$list['gender']}</td>
+	    	<td>{$list['birthday']}</td>
+			<td>{$list['cityname']}</td>
+			<td>{$list['hobby_sum']}</td>
+			<td>0</td>
+	    	<td>0</td>
+	    	<td>{$list['name']}</td>
+	    	<td>{$list['idcard']}</td>
+	    	<td>{$list['vipname']}</td>
+			<td>{$list['binded']}</td>
+			<td><!--<a href = "">好友详情</a> <a href = "">等级详情</a>-->
+			{if {$link_array['102']['url']}}
+			<a href="{$link_array['102']['url']}&uin={$list['uin']}&data_group_id={$_GET['data_group_id']}">查看详情</a>
+			{/if}
+			</td>
+	 </tr>
+	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+function check(){
+	var keyword = document.getElementById('keyword').value;
+	var vtype = document.getElementById('vtype').value;
+	if(keyword && vtype==0){
+		alert('请选择查询类型');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

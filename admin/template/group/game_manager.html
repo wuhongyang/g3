@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>游戏管理</title>
+<style type="text/css">
+.underline{border-bottom:1px solid #666;margin-bottom: 5px;}
+.h22{height: 22px;}
+table tbody tr{height:24px;}
+.span{position: relative;top:-15px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">站内排行添加/修改</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form method="post" class="form">
+    <input type="hidden" name="group_id" value="{$group_id}">
+	<p>
+    	<label>站ID：</label>
+        {$groupInfo['groupid']}
+    </p>
+    <p>
+        <label>站名称：</label>
+        {$groupInfo['name']}
+    </p>
+    <p>
+        <label><strong>游戏列表</strong></label>
+    </p>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-left:70px;">
+        <tr class="underline">
+            <td width="10%">游戏名称</td>
+            <td width="15%">游戏链接</td>
+            <td>游戏图标</td>
+        </tr>
+        {foreach $games $key $val}
+        <tr>
+            <td><input type="text" class="h22" name="row[{$key}][name]" value="{$val['name']}"></td>
+            <td><input type="text" class="h22" name="row[{$key}][url]" size="35" value="{$val['url']}"></td>
+            <td>
+                <iframe src="?module=upload_gameicon&key={$key}" frameborder="0" scrolling="no" height="40" width="40%"></iframe>
+                <span id="show_icon{$key}" class="span">
+                    {if !empty($val['md5'])}
+                    <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['md5'].'/0/0.jpg')}">
+                    <a style="cursor:pointer;" class="del_pic">删除</a>
+                    <input type="hidden" name="row[{$key}][md5]" value="{$val['md5']}">
+                    {/if}
+                </span>
+            </td>
+        </tr>
+        {/foreach}
+        <tr id="new">
+            <td colspan="3">
+                <a href="javascript:add_new();">+新增一栏</a>
+            </td>
+        </tr>
+    </table>
+    <p><label></label><input type="submit" value=" 提 交 " /></p>
+</form>
+
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+function add_new(){
+    var key = $('table').find('tr').length - 1;
+    var html = '<tr>';
+    html += '<td><input type="text" class="h22" name="row[' + key + '][name]"></td>';
+    html += '<td><input type="text" class="h22" name="row[' + key + '][url]" size="35"></td>';
+    html += '<td><iframe src="?module=upload_gameicon&key='+key+'" frameborder="0" scrolling="no" height="40" width="40%"></iframe>';
+    html += '<span id="show_icon'+key+'" class="span"></span></td>';
+    html += '</tr>';
+    $('#new').before(html);
+}
+
+$(function(){
+    $('.del_pic').live('click', function(){
+        $(this).parents('span').html('');
+    })
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <h1>人民币账户</h1>
+				<p class="fs14 border3 relative">
+                    当前您的人民币账户余额：<span class="yellow fs16 bold">{$balance}</span>元
+                    <a href="manage_imformation.php?module=RMB_pick_up" class="yellowbtn arT5"><span>账户提现</span></a>
+                </p>
+                <div class="mgtb15">
+					<form method="get">
+                	起止时间：<input name="start_date" type="text" value="{$start_time}" onfocus="WdatePicker()" style="width:80px;">&nbsp;至&nbsp;<input name="end_date" type="text" value="{$end_time}" onfocus="WdatePicker()" style="width:80px;">
+					<input type="hidden" name="module" value="RMB_details" />
+                    &nbsp;<input name="" type="submit" class="normalbtn" value="查询">
+					</form>
+                </div>
+                <table width="780" border="0" cellspacing="0" cellpadding="0" class="tablecss">
+                  <tr>
+                    <th>流水号</th>
+                    <th>用户ID</th>
+                    <th>流向</th>
+                    <th>发生金额</th>
+					<th>余额</th>
+                    <th>备注</th>
+                    <th>时间</th>
+                  </tr>
+				  {foreach $lists $key $val}
+                  <tr>
+                    <td>{$val['_id']['$id']}</td>
+                    <td>{$val['Uin']}</td>
+                    <td>{$dactype[$val['Type']]}</td>
+                    <td>{echo abs($val['Weight'])}</td>
+                    <td>{echo abs($val['Balance'])}</td>
+                    <td>{echo sprintf($detailtype[$val['ChildType']],$val['TargetUin'])}</td>
+                    <td>{echo date('Y-m-d H:i:s',$val['Uptime'])}</td>
+                  </tr>
+				  {/foreach}
+                </table>
+                <div class="page" id="lopage">
+                    {$page}
+                </div>                
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

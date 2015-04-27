@@ -1,0 +1,7 @@
+<p class="listhead">
+    <span>当前充值方式：<span class="text-warning">{$recharge_style[$type]}</span></span>
+    <span>充值站点：<a href="/" target="_blank" title="{echo $groupName.'('.$groupId.')'}"><span class="text-warning">{echo $groupName.'('.$groupId.')'}</span></a></span>
+    {if $roomid>0}
+    <span class="mgl30">来源房间：<a href="/v/{$roomid}" target="_blank" title="{echo $roomName.'('.$roomid.')'}"><span class="text-warning">{echo $roomName.'('.$roomid.')'}</span></a></span>
+    {/if}
+</p>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form action="decoration.php?module=group_update_submit" onsubmit="return checkForm(this);" method="post">
+    <ul class="formlist">
+       <li class="clearfix">
+           <label>站ID：</label>
+           <span>{$userGroupInfo['groupid']}</span>
+       </li>
+       <li class="clearfix">
+            <label>站名称：</label>
+            <input name="name" id="name" value="{$userGroupInfo['name']}" type="text" style="width:400px;">
+            <span class="gray">* 站名称不能大于10个字</span>
+       </li>
+       <li class="clearfix">
+           <label>站公告：</label>
+           <textarea name="notice" id="notice" style="width:400px;height:80px;">{$userGroupInfo['notice']}</textarea>
+           <span class="gray">* 站公告不能大于40字</span>
+       </li>
+       <li class="clearfix">
+          <label>站LOGO：</label>
+          <iframe src="?module=upload_logo" frameborder="0" scrolling="no" height="70" width="75%" style="display:inline-block;"></iframe>
+          <input type="hidden" name="logo" id="logo" value="{$userGroupInfo['logo']}">
+       </li>
+       <li class="clearfix">
+          <label>LOGO预览：</label>
+          <span id="logo-img" style="display:inline-block;width:100px;height:30px;border:solid 1px #EEE;overflow:hidden;padding:2px;">
+          {if !empty($userGroupInfo['logo'])}
+          <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$userGroupInfo['logo'].'/100/30.jpg');}" width="100" height="30">
+          {/if}
+          </span>
+       </li>
+       <li class="mgt20 clearfix"><input type="submit" value="保存" class="bluebtn2" style="margin-left:150px;"></li>
+    </ul> 
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+function checkForm(form){
+	if(form.name.value.length>10){
+		alert('站名称长度不能超过10个汉字');
+		return false;
+	}
+	if(form.name.value==''){
+		alert('站名称不能为空');
+		return false;
+	}
+
+  if($('#notice').val().length > 40){
+    alert('站公告不能多于40字');
+    return false;
+  }
+	return true;
+}
+</script>
+</body>
+</html>

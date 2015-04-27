@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>交易记录-V宝交易记录</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>V宝交易记录</h1>
+                <div class="clearfix">
+                    <div class="mgt30 border2 clearfix">
+                        <div class="mgL30 fl">V宝余额：<span class="fs16 yellow"> {echo intval($kwealth);} </span>V宝</div>
+                        <!-- <div class="fr mgb10">
+                            <a href="/shop/index.php" class="czbtn mgR10 fl">充值</a>
+                        </div> -->
+                    </div>
+                    <form method="get" id="J_form">
+                        <input type="hidden" name='module' value='vbaoRecord'>
+                        <input type="hidden" name="uin" value="{$uin}">
+                        <div class="boxdate flowhide">
+                            <span class="mgL20">筛选</span>
+                            <span class="mglr20">|</span> 
+                            <span>资金流向：</span>
+                            <input name="case" type="radio" value="all" checked class="radios">
+                            <span>全部</span>
+                            <input name="case" type="radio" value="deposit" {if $_GET['case'] == 'deposit'}checked{/if}  class="radios">
+                            <span>存入</span>
+                            <input name="case" type="radio" value="pay" {if $_GET['case'] == 'pay'}checked{/if}  class="radios">
+                            <span>支出</span>
+                            <span class="mgL20">起止时间：</span>
+                            <input name="startDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$_GET['startDate']}">
+                            <span class="pre"> - </span> 
+                            <input name="endDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$_GET['endDate']}">
+                            <input name="" type="submit" class="normalbtn" value="筛选">
+                        </div>
+                    </form>
+                    <table width="785" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+                      <tr>
+                        <th>流水号</th>
+                        <th>交易时间</th>
+                        <th>资金流向</th>
+                        <th>内容</th>
+                        <th>金额（V宝）</th>
+                        <th>余额（V宝）</th>
+                        <th>状态</th>
+                      </tr>
+                      {foreach $vb_info['lists'] $val}
+                      <tr>
+                        <td>{$val['id']}</td>
+                        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+                        <td>{if $val['trade_type'] ==1}支出{else}存入{/if}</td>
+                        <td>{$val['trade_desc']}</td>
+                        <td>{$val['trade_money']}</td>
+                        <td>{$val['last_balance']}</td>
+                        <td>交易成功</td>
+                      </tr>
+                      {/foreach}
+                    </table>
+                    {$page}
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/date/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+</body>
+</html>

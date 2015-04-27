@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{if $type==1}表情{elseif $type==2}印章{/if}管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+table{margin:10px;}
+td{padding:5px;}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script>
+$(function(){
+    var add_dlg = $("#add_dlg");
+    var add_select = $("#add_select");
+    var save_tr = $("#save_tr");
+    $("#add").click(function(){
+        art.dialog({
+            content:add_dlg[0],
+            title:"添加",
+            ok: function () {
+            	var cate_id = add_select.val();
+                
+                if(cate_id == 0){
+                    return false;
+                }
+                var exist = false;
+                $(".id_input").each(function(){
+                    if(cate_id == $(this).val()){
+                        exist = true;
+                    }
+                })
+                if(exist){
+                    alert("存在相同分类");
+                    return false;
+                }
+                
+                var cate_name = add_select.find("option:selected").html();
+                var html = "<tr class='cate_tr'><td>"+cate_name+"</td>"+
+                            "<td><input class='id_input' type='hidden' name='cate_id[]' value='"+cate_id+"' />"+
+                            "<a class='remove_cate' href='#'>删除</a></td></tr>";
+                save_tr.before(html);
+                return true;
+            },
+        });
+        return false;
+    });
+    $(".remove_cate").live("click", function(){
+        $(this).parent().parent().remove();
+    })
+})
+</script>
+<style>
+#add_dlg{
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<div class="header clean">
+  <div class="header-title left">{if $type==1}表情{elseif $type==2}印章{/if}管理</div>
+  <div class="header-button right">
+    <a class="add-button" id="add">添加{if $type==1}表情{elseif $type==2}印章{/if}</a>
+  </div>
+</div>
+
+<script>
+{if $type==1}
+active_li = 8;
+{elseif $type==2}
+active_li = 9;
+{/if}
+</script>
+{include file="template/tpl_header.html"}
+
+<div id="add_dlg">
+选择{if $type==1}表情{elseif $type==2}印章{/if}分类：
+    <select id="add_select">
+        <option value="0">请选择</option>
+        {foreach $res['Data']['all_cate'] $one}
+        <option value="{$one['cate_id']}">{$one['cate_name']}</option>
+        {/foreach}
+    </select>
+</div>
+<br />
+
+<form method="post" action="?module=cate_list&tpl_id={$_GET['tpl_id']}&type={$_GET['type']}">
+<table class="table-list main-width">
+	<tr>
+        <th>{if $type==1}表情{elseif $type==2}印章{/if}分类名称</th><th width="10%">操作</th>
+    </tr>
+    {foreach $res['Data']['select_cate'] $one}
+    <tr>
+        <td>{$one['cate_name']}</td><td><input class='id_input' type='hidden' name='cate_id[]' value="{$one['cate_id']}" /><a class='remove_cate' href='#'>删除</a></td>
+    </tr>
+    {/foreach}
+    <tr id="save_tr">
+        <td colspan="2" style="text-align: center;">
+        <input type="hidden" value="{$res['Data']['id']}" name="id" />
+        {if ($link_array[104] && $type==1) || ($link_array[108] && $type==2)}
+        <input type="submit" value="保存" />
+        {/if}
+        <span style="color: red;">修改后点击"保存"完成修改</span>
+        </td>
+    </tr>
+</table>
+</form>
+
+<div class="main-width">{$page}</div>
+
+</body>
+</html>

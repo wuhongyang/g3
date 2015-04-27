@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script>
+$(function(){
+	$("#add_cate").click(function(){
+		$("#cate_name").val("")
+		$("#words").val("")
+		dlg=art.dialog({
+			title:"添加靓号分类",
+			content: $("#dialog_content")[0],
+			lock: true,
+			button: [{
+	            name: '确定',
+	            callback: function () {
+	            	$.post("/group/special_num.php?module=cate_add", {"cate_name":$("#cate_name").val(),"words":$("#words").val(),"shop_status":$('input[name="shop_status"]:checked').val()}, function(data){
+	            		var json = eval("("+data+")");	
+	            		alert(json.FlagString);
+	            		if(json.Flag == 100){
+	            			dlg.close();
+	            			location.reload();
+	            		}
+	            	})
+	            	return false;
+	            },
+	            focus: true
+	        },{
+				name: '返回',
+	            callback: function () {
+	                this.close();
+	            }
+			}]
+		});
+	})
+	$(".edit").each(function(){
+		$(this).click(function(){
+			$("#cate_name").val($(this).parent().parent().find(".cate_name").html());
+			$("input[name=shop_status][value="+$(this).parent().parent().find(".cate_status").html()+"]").attr("checked",true);
+			$("#words").val($(this).parent().parent().find(".words").html());
+			cate_id = $(this).parent().parent().find(".cate_id").html();
+			dlg=art.dialog({
+				title:"修改靓号分类",
+				content: $("#dialog_content")[0],
+				lock: true,
+				button: [{
+		            name: '确定',
+		            callback: function () {
+		            	$.post("/group/special_num.php?module=cate_update", {"cate_id":cate_id, "cate_name":$("#cate_name").val(),"shop_status":$('input[name="shop_status"]:checked').val(),"words":$("#words").val()}, function(data){
+		            		var json = eval("("+data+")");	
+		            		alert(json.FlagString);
+		            		if(json.Flag == 100){
+		            			dlg.close();
+		            			location.reload();
+		            		}
+		            	})
+		            	return false;
+		            },
+		            focus: true
+		        },{
+					name: '返回',
+		            callback: function () {
+		                this.close();
+		            }
+				}]
+			});
+			return false;
+		})
+	})
+	$("#add_img").click(function(){
+		dlg=art.dialog({
+			title:"商城宣城图片",
+			content: $("#img_content")[0],
+			lock: true,
+			button: [{
+	            name: '确定',
+	            callback: function () {
+	            	$("#form2").submit();
+	            	return false;
+	            },
+	            focus: true
+	        },{
+				name: '返回',
+	            callback: function () {
+	                this.close();
+	            }
+			}]
+		});
+		return false;
+	})
+	$(".move_up").each(function(){
+		$(this).click(function(){
+			move($(this).parent().parent().find(".cate_id").html(), "raise");
+			return false;
+		})
+	})
+	$(".move_down").each(function(){
+		$(this).click(function(){
+			move($(this).parent().parent().find(".cate_id").html(), "down");
+			return false;
+		})
+	})
+	$(".delete").each(function(){
+		$(this).click(function(){
+			if(!confirm("删除分类将删除分类下的所有靓号,是否删除?")){
+				return false;
+			}
+			cate_id = $(this).parent().parent().find(".cate_id").html();
+			$.post("/group/special_num.php?module=cate_delete", {"cate_id":cate_id}, function(data){
+				var json = eval("("+data+")");
+				alert(json.FlagString);
+				if(json.Flag == 100){
+					location.reload();
+				}
+			})
+			return false;
+		})
+	})
+})
+function move(cate_id, option){
+	$.post("/group/special_num.php?module=cate_move", {"cate_id":cate_id, "option":option}, function(data){
+		var json = eval("("+data+")");
+		alert(json.FlagString);
+		if(json.Flag == 100){
+			location.reload();
+		}
+	})
+}
+</script>
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+td{
+	padding:5px;
+}
+</style>
+</head>
+<body>
+<div id="img_content" style="display:none">
+	<form method="post" enctype="multipart/form-data" id="form2" action="?module=add_img">
+	<table>
+		<tr>
+			<td>页面banner图：</td><td><input type="file" name="img" /></td>
+		</tr>
+		{if $img_data['img_path']}
+		<tr>
+			<td>&nbsp;</td>
+			<td>
+			<img style="width:200px;height:150px;" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$img_data['img_path'].'/0/0.jpg');}" />
+			&nbsp;&nbsp;<input type="checkbox" name="del_img" />删除<span style="color:red">（替换原图时无需勾选删除）</span>
+			</td>
+		</tr>
+		{/if}
+		<tr>
+			<td>图片链接：</td>
+			<td>
+			<input type="text" name="src" value="{$img_data['src']}" />
+			<span style="color:red">(非本站的链接请以http://开头)</span>
+			</td>
+		</tr>
+	</table>
+	</form>
+</div>
+<div id="dialog_content" style="display:none">
+		<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;分类:&nbsp;&nbsp;<input id="cate_name" name="cate_name" type="text"></p>
+		<p>角标文字:&nbsp;&nbsp;<input id="words" name="words" type="text"></p>
+		<p>商城显示:&nbsp;&nbsp;<span class="tp5"><input type="radio" class="radios" name="shop_status" value="1" checked id="shop_status_1"><label for="custom">是</label></span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tp5"><input type="radio" name="shop_status" value="0" id="shop_status_1" class="radios"><label for="custom">否</label></span>
+</div>
+<div class="bodywrap">
+    {include file="header.html"}
+    <button id="add_cate" class="bluebtn2" style="float:right;margin-left:15px;">添加</button>
+    <a href="?module=gift" class="bluebtn fr" id="J_add" style="margin-left:15px;"><span>赠送靓号</span></a>
+    <a href="?module=num_record" class="bluebtn fr" id="J_add" style="margin-left:15px;"><span>靓号销售记录</span></a>
+    <a href="#" class="bluebtn fr" id="add_img"><span>添加商城宣传图片</span></a>
+    <p>靓号分类列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="10%">序号</th><th width="15%">分类名称</th><th width="15%">角标文字</th><th width="10%">下属靓号数</th><th width="10%">商城是否显示</th><th width="20%">添加日期</th><th>操作</th>
+        </tr>
+        {foreach $list $one}
+        <tr>
+        	<td class="cate_id" style="display:none">{$one['cate_id']}</td>
+        	<td class="cate_status" style="display:none">{$one['status']}</td>
+            <td >{$one['order']}</td>
+            <td class="cate_name">{$one['cate_name']}</td>
+            <td class="words">{$one['words']}</td>
+            <td>{$one['num_count']}</td>
+            <td>{echo $one['status'] == 1 ? "是":"否"}</td>
+            <td>{eval echo date("Y-m-d", $one['add_date'])}</td>
+            <td>
+            <a class="move_up" href="#">上移</a>&nbsp;
+            <a class="move_down" href="#">下移</a>&nbsp;
+            <a class="edit" href="#">编辑</a>&nbsp;
+            <a href="/group/special_num.php?module=num_list&cate_id={$one['cate_id']}">查看</a>&nbsp;
+            <a class="delete" href="#">删除</a>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$page}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-绑定手机</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <h1>{if $_GET['w']==1}更换邮箱{else}更换手机{/if}</h1>
+                <form method="post" id="J_form">
+                    <ul class="formlist">
+                        <li class="clearfix">
+                            <label>手机号码：</label>
+                            <input type="text" class="input" value="$phone" readonly />
+                            <em class="notice" id="J_phone_tip"></em>
+                            <input type="hidden" name="phone" value="{$user['Phone']}">
+                        </li>
+                        <li class="clearfix">
+                            <label>获取验证码：</label>
+                            <a href="javascript:void(0);" class="bluebtn" id="J_get_code"><span>免费获取验证码</span></a>
+                        </li>
+                        <li class="clearfix">
+                            <label>输入验证码：</label>
+                            <input name="msgcode" type="text"  class="input"/>
+                            <em class="notice" id="J_code_tip"></em>
+                        </li>
+                        <li class="clearfix">
+                            <label>&nbsp;</label>
+                            <a style="cursor:pointer;" id="J_submit" class="yellowbtn"><span>绑定手机</span></a>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+(function(){
+    var code_status = 0;  //是否填了验证码
+    var time = 60; //验证码发送时间间隔
+    $(function(){
+
+        //发送验证码
+        $('#J_get_code').bind('click',sendCode);
+
+        $('input[name="msgcode"]').focus(function(){
+            $('#J_code_tip').html('');
+        });
+
+        $('input[name="msgcode"]').blur(function(){
+            if($(this).val() == ''){
+                $('#J_code_tip').html('请输入验证码');
+            }else{
+                code_status = 1;
+            }
+        });
+
+        $('#J_submit').click(function(){
+            if(code_status != 1){
+                $('input[name="msgcode"]').blur();
+                return false;
+            }
+            $('#J_form').submit();
+        });
+    });
+
+    function sendCode(){
+        $('#J_get_code').unbind('click');
+        $('#J_get_code').find('span').html('验证码已发送...');
+        var phone = $('input[name="phone"]').val();
+        getCode({phone:phone,module:'手机验证',scallback:_get_code_success,fcallback:_get_code_fail});
+    }
+    function _get_code_success(json){
+        var hidden = '<input type="hidden" name="uniqueId" value="'+json.UniqueId+'">';
+        $('#J_form').append(hidden);
+        var time_interval = setInterval(function(){
+            time--;
+            if(time <= 0){
+                clearInterval(time_interval);
+                time = 60;
+                $('#J_get_code').find('span').html('免费获取验证码');
+                $('#J_get_code').bind('click',sendCode);
+            }
+        },1000);
+    }
+
+    function _get_code_fail(json){
+        _show_msg(json.FlagString);
+        $('#J_get_code').find('span').html('免费获取验证码');
+        $('#J_get_code').bind('click',sendCode);
+    }
+})();
+</script>
+</body>
+</html>

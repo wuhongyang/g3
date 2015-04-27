@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——充值</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+{include file="index/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="content clearfix">
+        <!--左边侧边栏-->
+        {include file="index/left_menu.html"}
+        <!--右边主内容区-->
+        <div class="rightmain">
+            {include file="index/type.html"}
+            <form method="post" action="?module=payment_save" class="form-horizontal mgt20" id="form">
+            <input type="hidden" name="pay_type" value="ALIPAY">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+            <input type="hidden" name="roomid" value="{echo intval($roomid)}">
+            {include file="index/recharge_account.html"}
+            <div class="control-group">
+                <label class="control-label">充值金额：</label>
+                <div class="controls">
+                    <div class="relative">
+                        <input type="text" name="pay_expense" id="money" value="100" class="inputcs"> 元
+                        <div id="otherSumBox">
+                            <a href="#" class="other-sum" title="其他金额"><b class="icon-arrow-down"></b></a>
+                            <ul class="other-sum-list">
+                                <li><a href="javascript:;">10</a></li>
+                                <li><a href="javascript:;">100</a></li>
+                                <li><a href="javascript:;">1000</a></li>
+                                <li><a href="javascript:;">10000</a></li>
+                                <li><a href="javascript:;">100000</a></li>
+                            </ul>
+                        </div>                   
+                    </div>              
+                    <p class="mgt10"><span class="text-info">共可获得<span class="text-warning" id="total_vdian">100</span>万金币</span><span class="text-muted">(兑换比率：1元=1万 {$GroupData['currency_unit']})</span></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-danger btn-lg" id="J_recharge">立即充值</button>
+                </div>
+            </div>
+            </form>            
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{THEMES_URL}group_site/{$themes}/src/shop/js/charge.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$(function(){
+	$("#form").submit(function(){
+		if($("#ba").val() < $("#total_vdian").html()){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.index;
+}
+</script>
+</body>
+</html>

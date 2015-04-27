@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgtb15 clearfix relative">
+        <span class="i-icon"></span>
+        <span class="fs14 fl lineh26">金币账户余额：</span>
+        <span class="yellow fs16 fl">{echo $voucher} 金币</span>
+    </div>
+    <div class="tabletab">
+        <ul>
+            <!--<li><a href="?module=voucher_recharge">金币账户充值</a></li>-->
+            <li><a href="?module=voucher_to_vip" class="hover">给用户充值</a></li>
+            <li><a href="?module=voucher_deduct">给用户扣钱</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgL20">
+            <form action="?module=vip_recharge" id="vip-form" method="post">
+            <ul class="formlist">
+                <li class="clearfix">
+                    <label>用户ID：</label>
+                    <input name="targetuin" type="text" id='targetuin'  onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))"><span id="J_checkuser"></span>
+                </li>
+                <li class="clearfix">
+                    <label>用户昵称：</label>
+                    <span id="J_nick"></span>
+                </li>
+                <li class="clearfix">
+                    <label>输入充值金额：</label>
+                    <input name="Weight" type="text" id="Weight"  onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+                    <span>金币</span>
+                </li>
+                <li class="clearfix">
+                    <label>站预存账户余额：</label>
+                    <span class="yellow">{echo $voucher}</span>
+                    <span>金币</span>
+                </li>
+                <li class="clearfix">
+                    <label>&nbsp;</label>
+                    <input type="submit" value="立即充值" class="bluebtn2" id='to_vip'>
+                </li>
+            </ul>
+            </form>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$(function(){
+    var targetuin = $('#targetuin'),
+		check_friend = $('#J_checkuser'),
+		to_vip=$('#to_vip'),
+		Weight=$('#Weight');
+
+	targetuin.blur(checkTargetuin);
+	Weight.blur(checkTargetuin);
+	
+    function checkTargetuin() {
+        var uid = targetuin.val();
+        if (uid == "") {
+			$('#J_nick').html('');
+            return false;
+        }
+        $.ajax({
+            type:'GET',
+            url:'',
+            dataType:'text',
+            async:true,
+            data:{
+                'module':'getUserInfo',
+                'uin':uid
+            },
+            success:function (data) {
+                handleData(data, uid);
+            }
+        });
+    }
+	//处理ajax返回数据
+    function handleData(data, friend_id) {
+        var uid = data.split('|')[0];
+        var unick = data.split('|')[1];
+        if (uid == friend_id) {
+            check_friend.removeClass('red').html('');
+			$('#J_nick').html(unick);
+            $("#vip-form").append('<input type="hidden" name="other_nick" id="other_nick" value="' + unick + '" />');
+            handleData.flag = true;
+            return true;
+        } else {
+            check_friend.addClass('red').html('该用户不是本站会员');
+			$('#J_nick').html('');
+            targetuin.focus();
+            handleData.flag = false;
+        }
+    }
+    to_vip.click(function(e){
+    	var uid = targetuin.val(),vip_weight=Weight.val();
+    	//$(":input").attr("disabled", true);
+    	if(isNaN(uid) || uid < 1 || isNaN(vip_weight) || vip_weight <1 || !handleData.flag){
+    		return false;
+    	}else{
+    	//	$(":input").removeAttr('disabled');
+    		$("#vip-form").submit();
+    	}
+    	return false;
+    });
+});
+</script>
+</body>
+</html>

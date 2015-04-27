@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>up</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/resource/css/base-min.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css">
+<style type="text/css">
+body {line-height:28px;}
+</style>
+<script type="text/javascript">
+var pobj = parent.document.getElementById('upfile-list');
+var upfile_rst = eval('(<{$rst}>)');
+
+function read(obj){
+	if(pobj.childNodes.length >= 5){
+		alert('最多上传5张');
+		return obj.value = '';
+	}
+	value = obj.value;
+	if(value.length > 16){
+		value = '...'+value.substr(value.length-16,value.length);
+	}
+	document.getElementById('readfile').value=value
+}
+
+window.onload = function(){
+	if(upfile_rst == ''){
+		return;
+	}else if(upfile_rst.Flag != 100){
+		alert('上传失败');
+	}else if(upfile_rst.Flag == 100){
+		var uplist = parent.document.getElementById('upfile-list');
+		uplist.innerHTML += '<li><input type="hidden" name="img[]" value="'+upfile_rst.File+'" />'+
+		'<span><a href="'+upfile_rst.File+'" target="_blank">'+upfile_rst.FileName+'</a></span>'+
+		'<a href="javascript:;" onclick="if(confirm(\'确定删除？\')) removefile(this)">×删除</a></li>';
+	}
+}
+</script>
+</head>
+
+<body>
+<form method="post" enctype="multipart/form-data">
+  <p>上传图片（如有截图，请上传，作为我们参考的重要依据）</p>
+  <input type="text" id="readfile" readonly name="filename" />
+  <span class="fl up-input">
+  <input type="file" size="1" name="upfile" onChange="read(this)" />
+  <label>浏览</label>
+  </span>
+  <input type="submit" class="upfile-button" value="上传" />
+  （注：图片大小在2MB以内，最多上传5张）
+</form>
+</body>
+</html>

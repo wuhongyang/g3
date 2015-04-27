@@ -1,0 +1,101 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>充值——代理调剂账户</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/actapply.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/resource/css/base.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/public.css">
+</head>
+<body>
+{include file="../common/header.html"}
+<div class="search-wrap">
+  <div id="top" class="hd-sub clearfix">
+      <div class="logo fl">
+          <a class="fl logo-pic" href="/">VV酷视频聊天</a>
+                  <div class="dhz"></div>
+              </div>
+      <div class="search fr">
+          <form onSubmit="return search();" action="javascript:void(0);">
+              <input type="hidden" id="search_type" value="1" name="search_type">
+              <input type="text" id="keyword" name="keyword" class="search-text">
+              <input type="submit" id="J_search" value="搜索" class="search-submit">
+          </form>
+          <ul id="J_search_type" class="search-type">
+              <li>搜房间</li>
+              <li style="display: none;" class="li2">搜艺人</li>
+          </ul>
+          <div class="search-type-bg"></div>
+      </div>
+  </div>
+</div>
+
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <div class="box770">																																											
+            <h1>充值——代理调剂账户</h1>
+            <div class="dotted770"></div>
+            <ul class="recharge-notice">
+                <li><span class="orange">●</span>&nbsp;需向代理调剂账户充值<span class="orangenum">{LOWEST_WEIGHT}</span>元，才能成为代理。</li>
+                <li><span class="orange">●</span>&nbsp;代理可以在"个人中心 &gt; 渠道管理 &gt; 渠道商城用<span class="orange">代理人民币账户</span>为用户购买渠道商品套餐。</li>
+            </ul>
+
+            <div class="recharge-list clearfix">
+                <div class="txt">确认充值信息：</div>
+                <ul class="detail">
+                    <li><span class="gray">账号：</span>{$login_user['Uin']}（{echo empty($login_user['Nick'])?$login_user['Uin']:$login_user['Nick']}）</li>
+                    <li><span class="gray">类型：</span>代理调剂账户</li>
+                    <li><span class="gray">充值金额：</span><span class="red">{LOWEST_WEIGHT}</span></li>
+                    <li><span class="gray">实际付款</span><span class="red">：{LOWEST_WEIGHT}</span></li>
+                </ul>
+             </div>
+             <form method="post" name="payment_form" id="payment_form" action="/shop/index.php?module=payment_save">
+             <input type="hidden" name="type" value="agency" />
+             <input type="hidden" name="pay_expense" value="{LOWEST_WEIGHT}" />
+             <div class="recharge-list clearfix">
+                 <div class="txt">选择充值方式：</div>
+                 <ul class="pay-type detail" style="margin-left:0;">
+                    <li onClick="switch_paytype()"><input type="radio" value="TENPAY" id="tenpay" name="pay_type"> <label class="tenpay" for="tenpay">财付通</label></li>
+                    <li onClick="switch_paytype()"><input type="radio" value="CHINABANK" id="chinabank" name="pay_type" checked="checked"> <label class="chinabank" for="chinabank">网银在线</label></li>
+                    <li onClick="switch_paytype()"><input type="radio" value="remit" id="remit" name="pay_type"> <label for="remit" class="font18 weightnormal">线下汇款充值</label></li>
+                 </ul>
+            </div>
+            <div class="dotted770"></div>
+            <div class="dotted770"></div>
+            <div class="clearfix" style="margin:20px 60px;">
+                  
+                  <input type="submit" class="flr btn btn-ok" value="确认充值" id="qrcz">
+                  
+                  <dl class="contactSale" id="contactSale" style="display:none;">
+                      <dt>请联系销售代表</dt>
+                      <dd><a href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" target="_balnk"><span class="img"></span>销售代表</a></dd>
+                  </dl>
+
+            </div>
+            </form>
+       </div>
+</div>
+<script type="text/javascript">
+function switch_paytype(){
+	var paytype = document.payment_form.pay_type;
+	var kefu = document.getElementById('contactSale');
+	var qrcz = document.getElementById('qrcz');
+	kefu.style.display = 'none';
+	qrcz.style.display = 'block';
+	for(var i=0;i<paytype.length;i++){
+		if(paytype[i].checked){
+			if(paytype[i].value == 'remit'){
+				kefu.style.display = 'block';
+				qrcz.style.display = 'none';
+				break;
+			}
+		}
+	}
+}
+</script>
+{include file="./footer.html"}
+</body>
+</html>
+

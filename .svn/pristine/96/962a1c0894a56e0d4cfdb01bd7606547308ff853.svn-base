@@ -1,0 +1,10 @@
+<dl class="body-side-list">
+    <dt><i class="pull-left home-icon home-history"></i><h3 class="main_text">我的脚印</h3></dt>
+    <dd id="J_foot_block"></dd>
+    <dd class="caicai" style="margin-left:5px;">
+        <ul style="color:#999;font-size:12px;padding-left:20px;">
+       	 	<li>您还未有房间访问记录，</li>
+        	<li>快去踩踩吧！</li>
+    	</ul>
+    </dd>
+</dl>

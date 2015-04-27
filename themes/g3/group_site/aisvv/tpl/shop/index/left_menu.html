@@ -1,0 +1,29 @@
+<div class="leftside">
+    <div class="sidemenu">
+        <h5><i class="icons cz-icon"></i><span>充值</span></h5>
+        <ul>
+            {if $GroupData['EXT']['chinabank_id']['value']}
+            <li><a href="/shop/index.php?roomid={$roomid}" {if $type=='index'}class="hover"{/if}>网银</a></li>
+            {/if}
+            {if $GroupData['EXT']['tenpay_id']['value']}
+            <li><a href="/shop/index.php?type=tenpay&roomid={$roomid}" {if $type=='tenpay'}class="hover"{/if}>财付通</a></li>
+            {/if}
+            {if $GroupData['EXT']['baofoo_id']['value']}
+            <li><a href="/shop/index.php?type=mobilecard&roomid={$roomid}" {if $type=='mobilecard'}class="hover"{/if}>手机充值卡</a></li>
+            <li><a href="/shop/index.php?type=gamecard&roomid={$roomid}" {if $type=='gamecard'}class="hover"{/if}>游戏卡</a></li>
+            {/if}
+			{if $GroupData['EXT']['alipay_id']['value']}
+            <li><a href="/shop/index.php?type=alipay&roomid={$roomid}" {if $type=='alipay'}class="hover"{/if}>支付宝</a></li>
+            {/if}
+        </ul>
+    </div>
+    <div class="declare">
+        <h5><i class="icons sm-icon"></i><span>郑重声明</span></h5>
+        <ul>
+            <li>金币是站内使用的虚拟币，仅限于站内房间内获取礼物道具，或在某些游戏场次做为记分单位，以增加游戏乐趣。</li>
+            <li>金币不能兑换为现钞，也不能公开拍卖。</li>
+            <li>站内严禁用户、代理私下买卖金币的行为，一经发现给予永久冻结账号的处罚。</li>
+            <li>对用户或代理私下买卖金币所造成的损失，站内不承担责任。</li>
+        </ul>
+    </div>
+</div>

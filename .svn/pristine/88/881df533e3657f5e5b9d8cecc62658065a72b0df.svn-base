@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>关于vv酷-vv酷网上互动娱乐商圈</title>
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/header.css">
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/neiye.css" />
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+<body>
+<!--header-->
+{include file="head.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="bd clearfix">
+        <div class="about-bd">
+            <div class="about-left">
+                <ul>
+                    <li class="active"><a href="/about.html">关于VV酷</a></li>
+                    <li><a href="/employ.html">高薪诚聘</a></li>
+                    <li><a href="/agreement.html">用户协议</a></li>
+                    <li><a href="/contactus.html">联系我们</a></li>
+                    <li><a href="/custom.html">客服中心</a></li>
+                </ul>
+            </div>
+            <div class="about-right">
+                <!--关于VV酷-->
+                <div class="wraps">
+                    <div class="title">
+                        <h5>关于VV酷</h5>
+                    </div>
+                    <div class="content">
+                        <p>VV酷互动娱乐商圈（www.vvku.com）是杭州雅顾科技投入巨资精心研发的网上娱乐平台，VV酷以WEB2.0核心理念为基础，互联网与移动互联网的娱乐应用平台，集演绎、交友、游戏等音视频互动娱乐于一身，且提供就业/创业的平台。VV酷正立志于成为国内第一个网上的娱乐商城，将会建立酒吧一条街，成为一个提供欢笑与娱乐的场所。 更是一个帮助创业者实现梦想的平台，现正在诚邀您的入加盟！</p>
+						<p>杭州雅顾科技于2012年由多位互联网资深投资人注资成立。 公司的创始成员有着多个成功的互联网项目开发运营经验，及国际投行、VC项目的成功操作背景。团队有着多年互联网互动娱乐开发及运营经验，对于互联网互动娱乐的未来发展有着深刻的思考和长期的积累。我们一直在致力于构建互动娱乐平台，帮助合作伙伴开立网上娱乐门店，改变人们的娱乐生活。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+    <!--bd-->
+</div>
+<!--bodywrap-->
+<div class="dashedline" style="height:3px;"></div>
+<!--footer-->
+{include file="footer.html"}
+<!--footer-->
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<{include file="head.html"}>
+<title>房间管理列表</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">房间管理列表</div>
+  <div class="header-button right">
+	 {if $link_array[112]['url']}<a class="add-button" href="{$link_array[112]['url']}">添加代理</a>{/if}
+	 {if $link_array[106]['url']}<a class="add-button" href="?module=showzzinfo" title="添加地域负责人">添加地域负责人</a>{/if}
+  </div>
+</div>
+
+<ul class="page-tab">
+  {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">合作商列表</a></li>{/if}
+	{if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}" class="active">渠道列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+	当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+    <form method="get" class="search-form">
+        <select name="option" id="option">
+            <option value="uid" {if $_GET['option']=='uid'}selected{/if}>渠道角色ID</option>
+            <option value="name" {if $_GET['option']=='name'}selected{/if}>渠道名称</option>
+            <option value="room_id" {if $_GET['option']=='room_id'}selected{/if}>房间号</option>
+        </select>
+        <input type="text" name="keyword" id="keyword" value="{$_GET['keyword']}" style="width:100px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        {if $module != 'showChannel'}
+        合作商：<select name="partner">
+                    <option value="-1">--请选择--</option>
+                    {foreach $partners $p}
+                    <option value="{$p['id']}" {if $_GET['partner']==$p['id']}selected{/if}>{$p['name']}</option>
+                    {/foreach}
+               </select>&nbsp;&nbsp;
+        {/if}&nbsp;&nbsp;&nbsp;&nbsp;
+
+        渠道类型：
+        <select name="type">
+            <option value="-1">---请选择---</option>
+            {foreach $channelCategory $k $v}
+            <option value="{$k}" {if $k==$_GET['type']}selected{/if}>{$v}</option>
+            {/foreach}
+        </select>
+        &nbsp;&nbsp;
+
+      状态：<select name="status">
+            <option value="-1">请选择</option>
+            {foreach $status $k $v}
+            <option value="{$k}" {if isset($_GET['status']) && $_GET['status']==$k}selected{/if}>{$v}</option>
+            {/foreach}
+         </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" value="channelList">
+        {if $module == 'showChannel'}
+        <input type="hidden" name="partner_id" value="{$channelList[0]['partner_id']}" />
+        {/if}
+        <input type="submit" value=" 搜索 " />
+    </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>选择</th>
+    <th>编号</th>
+    <th>渠道角色ID</th>
+    <th>创建时间</th>
+    <th>渠道类型</th>
+    <th>站ID(上级渠道ID)</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $channelList $arr}
+  <tr>
+    <td><input type="checkbox" name="id[]" value="{$arr['id']}" {if $arr['type']!=9}disabled{/if} /></td>
+    <td>{$arr['id']}</td>
+    <td>{$arr['uid']}</td>
+    <td>{echo date('Y-m-d',$arr['uptime'])}</td>
+    <td>{$channelCategory[$arr['type']]}</td>
+    <td>{$arr['up_uid']}</td>
+    <td>{$status[$arr['flag']]}</td>
+    <td>
+        {if $link_array[111]['url']}<a href="{$link_array[111]['url']}&id={$arr['id']}" title="修改">修改信息</a>&nbsp;&nbsp;&nbsp;&nbsp;{/if}
+        <!--{if $link_array[109]['url']}<a href="{$link_array[109]['url']}&id={$arr['id']}" title="设置工资与奖励">设置工资与奖励</a>{/if}&nbsp;-->
+    </td>
+  </tr>
+  {/foreach}
+  {if $link_array[115]['url']}
+  <tr>
+    <td><input type="checkbox" onclick='check_all("id",this)'/></td>
+    <td colspan="9" align="left"><input type="button" onClick="childSync()" value="批量同步" /></td>
+  </tr>
+  {/if}
+</table>
+
+<div class="main-width">{$page}</div>
+<script language="javascript">
+function childSync(id){
+	var ids = '';
+	if(typeof(id) =='number'){
+		ids = 'id[]='+id;
+	}else{
+		var idobj = document.getElementsByName('id[]');
+		var idlen = idobj.length;
+		for(i=0;i<idlen;i++){
+			if(idobj[i].disabled == false){
+				if(i==0){
+					ids += 'id[]='+idobj[i].value;
+				}else{
+					ids += '&id[]='+idobj[i].value;
+				}
+			}
+			
+		}
+	}
+	new Ajax().ajaxRequest('','?module=channelSync',ids,'post',true,
+		function callBack(result){
+			var rst = eval('('+result.responseText+')');
+			var rstlen = rst.length;
+			var error = '';
+			for(i=0;i<rstlen;i++){
+				if(rst[i].Flag != 100){
+					error += rst[i].id+'  ';
+				}
+			}
+			if(error.length > 0){
+				alert('ID为：'+error+'的配置项同步失败，请重新再试');
+			}else{
+				alert('同步成功');
+			}
+			window.location.reload();
+		}
+	);
+}
+</script>
+
+</body>
+</html>

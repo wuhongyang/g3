@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>一级划分列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">一级划分列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加一级划分</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	<li><a href="?module=level_one_list" class="active">一级划分列表</a></li>
+	<li><a href="?module=level_two_list">二级划分列表</a></li>
+</ul>
+<br/>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>问题一级划分</th>
+    <th>排序</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {if $res['Data']}
+  {foreach $res['Data'] $one}
+  <tr>
+    <td>{$one['id']}</td>
+    <td>{$one['name']}</td>
+    <td>{$one['order']}</td>
+    <td>{if $one['status']==1}使用{elseif $one['status']==2}不使用{/if}</td>
+    <td>
+        <a href="?module=level_two_list&p_id={$one['id']}">查看</a>&nbsp;&nbsp;
+        <a href="?module=level_one_save&id={$one['id']}">修改</a>&nbsp;&nbsp;
+         <a href="javascript:;" class="del" url="?module=level_one_del&id={$one['id']}">删除</a>&nbsp;&nbsp;
+    </td>
+  </tr>
+  {/foreach}
+  {else}
+  <tr><td colspan="5">暂无数据</td></tr>
+  {/if}
+</table>
+<div class="main-width">{$page}</div>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".del").click(function(){
+		var that = $(this);
+		if(confirm('该分类下的二级划分也将会删除，确定要删除吗')){
+			location.href = that.attr('url');
+		}
+	});
+});
+</script>
+</body>
+</html>

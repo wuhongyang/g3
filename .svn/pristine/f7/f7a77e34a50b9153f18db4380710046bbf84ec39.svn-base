@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">角色管理</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">定义新角色</a>{/if}</div>
+</div>
+
+<script>
+active_li = 0;
+</script>
+{include file="template/tpl_header.html"}
+
+<form class="form">
+  <p>
+    <label>角色名称：</label>
+    <span>{$roleName}</span>
+  </p>
+  <p>
+    <label>业务规则科目：</label>
+    <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');clears('child');"><option value="0">请选择</option></select> &nbsp;
+    <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');clears('child');"><option value="0">请选择</option></select> &nbsp;
+    <select name="parent_id" id="parent" onChange="getOptions('child='+this.value,'child');"><option value="0">请选择</option></select> &nbsp;
+    <select name="child_id" id="child"><option value="0">请选择</option></select>
+  </p>
+  <p>
+    <label>&nbsp;</label>
+    <input type="button" value="添  加" onclick="add2list()" style="width:80px;height:30px;">
+  </p>
+</form>
+
+<form method="post">
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>一级科目</th>
+    <th>二级科目</th>
+    <th>三级科目</th>
+    <th>业务科目</th>
+    <th>操作</th>
+  </tr>
+  {foreach $permissionList $key $val}
+  <tr>
+    <td>{echo $key+1}</td>
+    <td>{echo $val['bigcase_name']}</td>
+    <td>{echo $val['case_name']}</td>
+    <td>{echo $val['parent_name']}</td>
+    <td>{echo $val['child_name']}</td>
+    <td>
+      <a style="cursor:pointer;" class="del_rule">删除</a>
+      <input type="hidden" name="rules[]" value='{echo json_encode($val)}'>
+    </td>
+  </tr>
+  {/foreach}
+</table>
+<input type="hidden" name="role_id" value="{$role_id}" />
+<center style="margin-top:20px;"><input type="submit" value="提交信息" style="width:80px;height:30px;" /></center>
+</form>
+</body>
+<script type="text/javascript" src="template/js/ajax.fun.js"></script>
+<script type="text/javascript" src="template/js/global.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+getOptions("bigcase=1","bigcase","");
+
+function add2list(){
+  var bigcase_id = $('#bigcase').val();
+  var bigcase_name = $('#bigcase').find('option:selected').text();
+  var case_id = $('#case').val();
+  var case_name = $('#case').find('option:selected').text();
+  var parent_id = $('#parent').val();
+  var parent_name = $('#parent').find('option:selected').text();
+  var child_id = $('#child').val();
+  var child_name = $('#child').find('option:selected').text();
+  if(bigcase_id<1 || case_id<1 || parent_id<1 || child_id<1){
+    alert('请选择业务科目');
+    return false;
+  }
+
+  var rules = '{"bigcase_id":"'+bigcase_id+'","case_id":"'+case_id+'","parent_id":"'+parent_id+'","child_id":"'+child_id+'"}';
+
+  var num = $('#table-list').find('tr').length;
+  var html = '<tr>';
+  html += '<td>' + num + '</td>';
+  html += '<td>' + bigcase_name + '</td>';
+  html += '<td>' + case_name + '</td>';
+  html += '<td>' + parent_name + '</td>';
+  html += '<td>' + child_name + '</td>';
+  html += '<td><a style="cursor:pointer;" class="del_rule">删除</a><input type="hidden" name="rules[]" value=\'' + rules + '\'></td>';
+  html += '</tr>';
+
+  $('#table-list').append(html);
+}
+
+$(function(){
+  //删除
+  $(".del_rule").live('click', function(){
+    $(this).parents('tr').remove();
+  });
+});
+</script>
+</html>

@@ -1,0 +1,19 @@
+.sit-form-search .radio{
+    padding-left:0;
+}
+.sit-form-search .radio input{
+	width:15px;
+	height:15px;
+	float:left;
+	margin-top:3px;
+}
+.sit-form-search select{
+	width:50px;
+}
+.sit-form-search .textcs{
+	width:50px;
+}
+.sit-form-search .btn{
+	width:50px;
+}
+.checkbox-ie{margin-top:-3px;}

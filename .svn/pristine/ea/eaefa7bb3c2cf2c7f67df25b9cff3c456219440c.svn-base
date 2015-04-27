@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab">
+        <ul>
+            <li><a href="?module=artist_doll&type=1"{if $type==1} class="hover"{/if}>日汇总</a></li>
+            <li><a href="?module=artist_doll&type=2"{if $type==2} class="hover"{/if}>周汇总</a></li>
+            <li><a href="?module=artist_doll&type=3"{if $type==3} class="hover"{/if}>月汇总</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgb10">
+            <form method="get">
+            <input type="hidden" name="module" value="artist_doll">
+            <input type="hidden" name="type" value="{$type}">
+            <span>房间ID：</span>
+            <input name="roomId" id="roomId" value="{$_GET['roomId']}" type="text">
+            <span>艺人ID：</span>
+            <input name="artistId" id="artistId" value="{$_GET['artistId']}" type="text">
+            {if $type==1}
+            选择时间：<input name="time" type="text" style="width:80px;" onfocus="WdatePicker();" value="{echo isset($_GET['time'])?$_GET['time']:date('Y-m-d')}">
+            {/if}
+            <input name="" type="submit" class="normalbtn" value="查询">
+            </form>
+        </div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>艺人ID</th>
+            <th>所属房间</th>
+            <th>约定底薪</th>
+            <th>娃娃</th>
+            <th>皇后</th>
+            <th>娃娃总数</th>
+            <th>总价值</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+          {foreach $list $key $val}
+          <tr>
+            <td>{$val['UinId']}($val['Nick'])</td>
+            <td>{$val['ChannelUin']}</td>
+            <td>{php echo round($val['Salary'])}</td>
+            <td>{php echo round($val['Doll'],0)}</td>
+            <td>{php echo round($val['Empress'],0)}</td>
+            <td>{php echo round($val['Doll']+$val['Empress']*5);}</td>
+            <td>{php echo round($val['Salary']+($val['Doll']+$val['Empress']*5)*13);}</td>
+            <td>{$val['Uptime']}</td>
+            <td>{if $val['IsSigned']}<a href="?module=artist_salary&artistId={$val['UinId']}&roomId={$val['ChannelUin']}" class="ahover">修改底薪</a>{/if}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">{$page}</div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

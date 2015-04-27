@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户反馈列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">用户反馈列表</div>
+</div>
+<div class="page-tools main-width">
+<form method="get">
+	<input type="hidden" name="module" value="{$_GET['module']}" />
+    <input type="hidden" name="page" value="{$_GET['page']}" />
+    状态：
+    <select name="status">
+    	<option value="-1">请选择</option>
+        <option value="0" {if isset($_GET['status']) && $_GET['status']==0}selected{/if}>未处理</option>
+        <option value="1" {if $_GET['status']==1}selected{/if}>已处理</option>
+    </select> &nbsp; &nbsp;
+
+    时间：
+    <input type="text" name="start" value="{$_GET['start']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" /> 至
+    <input type="text" name="end" value="{$_GET['end']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" />
+    <input type="submit" value="查询" />
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>用户ID</th>
+		<th>联系QQ</th>
+		<th>联系手机</th>
+		<th>时间</th>
+		<th>状态</th>
+		<th>处理人</th>
+		<th>操作</th>
+	</tr>
+	{foreach $lists $arr}
+	<tr>
+		<td height="25">{$arr['uin']}</td>
+		<td height="25">{$arr['qq']}</td>
+		<td height="25">{$arr['phone']}</td>
+		<td height="25">{echo date('Y-m-d H:i',$arr['uptime'])}</td>
+		<td height="25">{$status[$arr['status']]}</td>
+	    <td height="25">{$arr['dispose']}</td>
+	    <td height="25">
+        	<{if $link_array[102]['url']}><a href="{$link_array[102]['url']}&id={$arr['_id']}">查看</a><{/if}>
+            <{if $link_array[103]['url']}><a href="{$link_array[103]['url']}&id={$arr['_id']}">处理</a><{/if}>
+        </td>
+	</tr>
+	{/foreach}
+</table>
+<div class="main-width">
+	<div class="pagenavi"><a href="?<{$prev}>">上一页</a> <a href="?<{$next}>">下一页</a></div>
+</div>
+</body>
+</html>

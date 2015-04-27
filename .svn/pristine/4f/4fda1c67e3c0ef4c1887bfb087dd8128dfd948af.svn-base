@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>上传头像</title>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/topnav-min.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');} " rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body class="bdnew">
+{include file="../common/header_group_site.html"}
+<div class="container bd bd-radius">
+	<div class="upload-head-hd">
+    	<span>上传头像</span>
+        <a href="?module=skip&step=2" class="tiaoguo">跳过&gt;&gt;</a>
+    </div>
+    <div class="upload-head-bd">
+        <div class="upload-head-main2">
+            <img src="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/img/236176.jpg" width="236" height="176">
+        </div>
+        <div class="btnwrap">
+            <button class="btn btn-large btn-primary" type="button" onclick="location.href='?module=upload_face'">上传头像</button>
+        </div>
+        <div class="wxxts">
+            <h5>温馨小贴士</h5>
+            <ul>
+                <li>据本网统计，90%的会员在搜索时会优无搜索有头像照的会员。</li>
+                <li>清晰生动的照片能为您吸引更多的目光，让更多的会员关注您。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

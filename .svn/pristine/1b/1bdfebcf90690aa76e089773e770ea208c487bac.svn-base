@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>二级科目列表</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">常规四级科目配置</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加常规四级科目</a>{/if}</div>
+</div>
+
+<div class="page-tools main-width">
+    <form method="get">
+    <input type="hidden" name="module" value="{$_GET['module']}" />
+    科目名称：<input type="text" name="child_name" value="{$_GET['child_name']}" /> &nbsp;
+    状态：<select name="child_status">
+        <option value="-1">请选择</option>
+        <option value="1" {if $_GET['status']==1}selected{/if}>启用</option>
+        <option value="0" {if isset($_GET['child_status']) && $_GET['child_status']==0}selected{/if}>不启用</option>
+    </select> &nbsp;
+    <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+  <tr>
+  	<th>选择</th>
+    <th>业务科目ID</th>
+    <th>业务科目名称</th>
+    <th>描述</th>
+    <th>是否绑定资金操作</th>
+    <th>资金类型</th>
+    <th>借贷</th>
+    <th>是否净收支</th>
+    <th>资金交易属性</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $lists $list}
+  <tr>
+  	<td>{if $list['bind_fund']==1}<input type="checkbox" value="{$list['child_id']}" name="id[]">{else}<input type="checkbox" disabled value="{$list['child_id']}" name="id[]">{/if}</td>
+    <td>{$list['child_id']}</td>
+    <td>{$list['child_name']}</td>
+    <td>{$list['child_desc']}</td>
+    <td>{if $list['bind_fund']==1}绑定{else}无{/if}</td>
+    <td>{if $list['fund_type']==1}现金币{elseif $list['fund_type']==2}虚拟币{elseif $list['fund_type']==3}V点{elseif $list['fund_type']==4}用户礼金{elseif $list['fund_type']==5}室主礼金{else}无{/if}</td>
+    <td>{if $list['trade_type']==1}存入{elseif $list['trade_type']==2}支出{else}无{/if}</td>
+    <td>{if $list['is_income_pay']==3}平台净收支{elseif $list['is_income_pay']==4} 账户净收支 {elseif $list['is_income_pay']==5}账户内收支 {elseif $list['is_income_pay']==6}调账收支 {else}无{/if}</td>
+    <td>{if $list['trade_property']==1}用户交易{elseif $list['trade_property']==2}科目交易{elseif $list['trade_property']==3}业务交易{elseif $list['trade_property']==4}税金交易{else}无{/if}</td>
+    <td>{if $list['child_status']==1}启用{else}不启用{/if}</td>
+    <td>
+        {if $link_array[103]['url']}<a href="{$link_array[103]['url']}&id={$list['id']}">修改</a>{/if}
+        {if $list['bind_fund']==1}
+        	{if $link_array[104]['url']}<a href="javascript:void(0);" onclick="sync({$list['child_id']})">同步</a>{/if}
+        {else}
+        	<span title="非资金业务无需同步">同步</span>
+        {/if}
+    </td>
+  </tr>
+  {/foreach}
+  <tr>
+    <td><input type="checkbox" onclick="check_all('id',this)"></td>
+    <td align="left" colspan="10"><input type="button" value="批量同步" onclick="sync()"></td>
+  </tr>
+</table>
+
+<div class="main-width">{$page}</div>
+
+<script type="text/javascript">
+function sync(id){
+	var ids = '';
+	if(typeof(id) =='number'){
+		ids = 'id[]='+id;
+	}else{
+		var idobj = document.getElementsByName('id[]');
+		var idlen = idobj.length;
+		for(i=0;i<idlen;i++){
+			if(idobj[i].disabled == false){
+				if(i==0){
+					ids += 'id[]='+idobj[i].value;
+				}else{
+					ids += '&id[]='+idobj[i].value;
+				}
+			}
+			
+		}
+	}
+	new Ajax().ajaxRequest('','?module=sync',ids,'post',true,
+		function callBack(result){
+			var rst = eval('('+result.responseText+')');
+			var rstlen = rst.length;
+			var error = '';
+			for(i=0;i<rstlen;i++){
+				if(rst[i].Flag != 100){
+					error += rst[i].id+'  ';
+				}
+			}
+			if(error.length > 0){
+				alert('ID为：'+error+'的配置项同步失败，请重新再试');
+			}else{
+				alert('同步成功');
+			}
+			window.location.reload();
+		}
+	);
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>工单统计</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+#type_div{
+	margin-top:10px;
+}
+#type_div a{
+	border:1px solid #ccc;
+	padding:5px;
+	border-radius:10px;
+}
+#type_div a:hover{
+	background:#ccc;
+}
+.active{
+	background:#ccc;
+}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.level_id').bind("change", function(){
+	}).live("change", function(){
+		var obj = $(this);
+		$('input[name=level_id]').val(obj.val());
+		$.ajax({
+			type:'POST',
+			async:false,
+			url:'?module=get_after_level&p_id='+$(this).val(),
+			dataType: 'JSON',
+			contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+			success:function(data){
+				obj.nextAll(".level_id").remove();
+				$('#level_content').append(data.Data);
+			}
+		});
+	}).live("click", function(){
+		if($.data(this, 'events') == null || $.data(this, 'events').change == undefined){
+			$(this).bind('change', function(){
+			});
+		}
+	});
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">工单统计</div>
+</div>
+
+<div class="page-tools main-width">
+<form method="get" action="">
+	<input type="hidden" name="module" value="collection"/>
+	<span>区/站：</span>
+	<select name="area_name">
+		<option value="">--请选择--</option>
+		{foreach $area_arr $one}
+		<option value="{$one}" {if $one == $_GET['area_name']}selected{/if}>{$one}</option>
+		{/foreach}
+	</select>&nbsp;&nbsp;&nbsp;
+    <span>问题划分：</span>
+    <span id="level_content">
+    {if $level_content}
+    {$level_content}
+    {else}
+    <input type="hidden" name="level_id"/>
+    <select class="level_id">
+   		<option value="">--请选择--</option>
+    	{foreach $level_one_list $one}
+    	<option value="{$one['id']}">{$one['name']}</option>
+    	{/foreach}
+    </select>
+    </span>
+    {/if}
+    &nbsp;&nbsp;&nbsp;
+    <span>提交时间：</span>
+    <input name="bg_date" value="{$_GET['bg_date']}" type="text" onfocus="WdatePicker({dateFmt:'yyyy-M-d'})">&nbsp;至
+   	<input name="ed_date" value="{$_GET['ed_date']}" type="text" onfocus="WdatePicker({dateFmt:'yyyy-M-d'})">&nbsp;&nbsp;&nbsp;
+    <input type="submit" value="查询">
+<div id="type_div">
+	<a href="?module=collection&type=day" {if $_GET['type'] == 'day' or !isset($_GET['type'])}class="active"{/if}>日汇总</a>
+	<a href="?module=collection&type=week" {if $_GET['type'] == 'week'}class="active"{/if}>周汇总</a>
+	<a href="?module=collection&type=month" {if $_GET['type'] == 'month'}class="active"{/if}>月汇总</a>
+	<a href="?module=collection&type=year" {if $_GET['type'] == 'year'}class="active"{/if}>年汇总</a>
+	<a href="?module=collection&type=all" {if $_GET['type'] == 'all'}class="active"{/if}>总汇总</a>
+</div>
+</form>
+</div>
+<br/>  
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-list main-width">
+    <tr>
+        <th  style="background:#ECEBF0">日期</th>
+        <th  style="background:#ECEBF0">区名</th>
+       {foreach $level_arr $level}
+    	<th  style="background:#ECEBF0">{$level}</th>
+    	{/foreach}
+    </tr>
+    {if $list}
+    {foreach $list $one}
+    <tr>
+    	<td>{$one['date']}</td>
+    	<td>{$one['area_name']}</td>
+    	{foreach $level_arr $level}
+    	<td>{$one[$level]}</td>
+    	{/foreach}
+    </tr>
+    {/foreach}
+    </table>
+    {else}
+    <tr><td colspan="5">暂无记录</td></tr>
+    </table>
+    {/if}
+</body>
+</html>

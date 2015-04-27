@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色排序设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+label.for_radio{position: relative;top:-5px;}
+.mgl30{margin-left: 30px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgL50 mgt20 clearfix fs14">
+        <form method="post" id="form">
+        <input type="hidden" name="hv" value="1">
+        
+        <p class="fs12 st">用户列表角色排序方式：</p>
+        
+        <div class="mgt10 fs12 st clearfix mgl30">
+            <div class="fl">
+                <input type="radio" name="role_order_type" value="1" id="role_order_type_1" {if $role_order_type==1}checked{/if}>
+                <label for="role_order_type_1" class="for_radio">按权重最大角色排序</label>
+            </div>
+        </div>
+        <div class="mgt10 fs12 st clearfix mgl30">
+            <div class="fl">
+                <input type="radio" name="role_order_type" value="2" id="role_order_type_2" {if $role_order_type==2}checked{/if}>
+                <label for="role_order_type_2" class="for_radio">按角色权重累加排序</label>
+            </div>
+        </div>
+        <div class="mgt10 fs12 st clearfix mgl30">
+            <div class="fl">
+                <input type="radio" name="role_order_type" value="3" id="role_order_type_3" {if $role_order_type==3}checked{/if}>
+                <label for="role_order_type_3" class="for_radio">按角色权限攻值累加排序</label>
+            </div>
+        </div>
+        <div class="mgL100 mgt20"><input name="" type="button" class="bluebtn2" onclick="post()" value="保存"></div>
+        </form>
+    </div>
+</div>
+{include file="foot.html"}
+
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function post(){
+    var role_order_type = $('input[name="role_order_type"]:checked').val();
+    $.ajax({
+        url: '/group/config.php?module=role_order_config',
+        type: 'POST',
+        data: {role_order_type:role_order_type},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    lock: true,
+                    cancel: false,
+                    esc: false,
+                    time: 2,
+                    icon: 'succeed'
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

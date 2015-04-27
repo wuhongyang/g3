@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新闻公告-vv酷网上互动娱乐商圈</title>
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="{STATIC_API_PATH}/frontend/modules/rooms/css/help.css" />
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+
+<body style="background:#FFF;">
+
+{include file="head.html"}
+
+<div class="bodywrap">
+    <div class="news clearfix">
+        <div class="news-title">您所在的位置是：<a href="#">首页</a> &gt; <a href="#">新闻公告</a></div>
+        <div class="news-bd">
+            <div class="news-left">
+                <div class="newslist-tabs">
+                    <ul>
+                        <li><a href="?type=4" {if $_GET['type']==4}class="active"{/if}>公告</a></li>
+                        <li><a href="?type=3" {if $_GET['type']==3}class="active"{/if}>新闻</a></li>
+                        <li><a href="?type=5" {if $_GET['type']==5}class="active"{/if}>活动</a></li>
+                    </ul>
+                </div>
+                <div class="newlist-wrap">
+                    <div class="newlist-cont">
+                        <ul>
+                            {foreach $lists $row}
+                            <li>
+                                <span class="newdate">{echo date('Y年m月d日',$row['update_time'])}</span>
+                                <span class="newtit">
+                                    <a href="/notice/{$row['id']}.html" target="_blank">{$row['title']}
+                                    {if $row['top']}<img src="{STATIC_API_PATH}/static/images/top.gif" width="22" height="9"  border="0" style="margin-right:5px; margin-left:5px;"/>{/if}
+                                    {if $row['new']}<img src="{STATIC_API_PATH}/static/images/new.gif" width="21" height="16" border="0" />{/if}
+                                    </a>
+                                </span>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    {$page}
+                </div>
+            </div>
+            <div class="news-right">
+                <div class="news-img">
+                    <a href="/rooms/recruit.php" target="_blank"><img src="{STATIC_API_PATH}/static/images/pic_04.jpg" width="240" height="300" border="0" /></a>
+                </div>
+                <div class="news-img">
+                    <a href="/agent.html" target="_blank"><img src="{STATIC_API_PATH}/static/images/pic_05.jpg" width="240" height="300" border="0" /></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="foot.html"}
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$viewdata['title']} - VV酷帮助中心</title>
+<link rel="stylesheet" type="text/css" href="{STATIC_API_PATH}/frontend/modules/rooms/css/help.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css" />
+<style type="text/css">
+.to_top{width:45px;height:44px;right:450px;position:fixed;bottom:200px;_position:absolute;_top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-80))}
+</style>
+</head>
+
+<body>
+<div style="background:#FFF;padding-bottom:5px;">
+{include file="header.html"}
+</div>
+
+<div class="main_apply">
+    <div class="help_top"></div>
+	<div class="help_mid">
+		<div class="help_title01">
+			 <h1><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/help_05.jpg" width="81" height="66">{$viewdata['title']}<img src="{STATIC_API_PATH}/frontend/modules/rooms/img/help_06.jpg" width="81" height="66"></h1>
+			<div class="fengline1"></div>
+		</div>
+		
+		<div class="help_list">
+		 	{$viewdata['content']}
+		</div>
+		
+	</div>
+	<div class="help_foot"></div>
+</div>
+
+<a href="#" class="to_top" title="返回顶部"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/go_top.jpg" width="45" height="44" border="0" /></a>
+
+{include file="footer.html"}
+</body>
+</html>

@@ -1,0 +1,100 @@
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule ^index.php$ http://%{HTTP_HOST} [R=301,L]
+
+ErrorDocument 404 /error-404.php
+
+#RewriteCond %{SCRIPT_FILENAME} !-f
+#RewriteCond %{SCRIPT_FILENAME} !-d
+#RewriteRule %{HTTP_HOST} rooms/index.php?city=0
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule notice/(\d*).html  rooms/help.php?module=notice&view=$1
+RewriteRule notice/page/(\d*).html  rooms/help.php?module=notice&page=$1
+RewriteRule notice/index.html  rooms/help.php?module=notice [L,QSA]
+RewriteRule help/(\d*).html  rooms/help.php?module=help&view=$1
+RewriteRule help/index.html  rooms/help.php
+RewriteRule (v|g)/([0-9]+)$ rooms/ktv_flash.php?type=$1&roomid=$2
+#RewriteRule allcity.html  rooms/allcity.php
+#RewriteRule rank.html  rooms/rank.php
+#RewriteRule top/(\w*).html  rooms/top.php?city=$1
+#RewriteRule top.html  rooms/top.php
+#RewriteRule feedback.html  rooms/feedback.php
+#RewriteRule rank/(\w*)/(\w*)/(\w*)/(\w*).html  rooms/rank.php?module=$1&type=$2&date=$3&region_id=$4
+
+RewriteRule link.html  rooms/friend_link.php
+RewriteRule agent.html  rooms/agency.php?module=agent
+RewriteRule custom.html  rooms/aboutus.php?module=custom
+RewriteRule link.html  rooms/aboutus.php?module=link
+RewriteRule sitemap.html  rooms/aboutus.php?module=sitemap
+RewriteRule contactus.html  rooms/aboutus.php?module=contactus
+RewriteRule games.html  rooms/games.php
+RewriteRule employ.html  rooms/aboutus.php?module=employ
+RewriteRule agreement.html  rooms/aboutus.php?module=agreement
+RewriteRule about.html  rooms/aboutus.php?module=about
+
+
+RewriteCond %{HTTP_HOST} ^[0-9]+\.vvku\.com$
+RewriteRule ^/?$ /%{HTTP_HOST}
+RewriteRule ^/([0-9]+)\.vvku\.com$ /group_site/index.php?GroupId=$1 [L]
+
+
+RewriteCond %{HTTP_HOST} ^([0-9]+)\.(optest|cptest|web|qatest|test|www)\.vvku\.com$
+RewriteRule ^/?$ /%{HTTP_HOST}
+RewriteRule ^/([0-9]+)\.(optest|cptest|web|qatest|test|www)\.vvku\.com$ /group_site/index.php?GroupId=$1 [L,QSA]
+
+RewriteCond %{SCRIPT_FILENAME} !-f
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteRule active_players_([0-9]+)\.html$ group_site/active.php?module=players&aid=$1 [L,QSA]
+RewriteRule active_([0-9]+)\.html$ group_site/active.php?module=info&aid=$1 [L,QSA]
+RewriteRule search\.php$ group_site/search.php [L,QSA]
+RewriteRule join\.html$ group_site/join.php [L,QSA]
+RewriteRule join_([0-9]+)\.html$ group_site/join.php?id=$1 [L,QSA]
+RewriteRule top\.html$ group_site/top.php [L,QSA]
+RewriteRule active\.html$ group_site/active.php [L,QSA]
+RewriteRule ^(help|about_us|notice)\.html$ group_site/notice.php?type=$1 [L,QSA]
+RewriteRule ^(help|about_us|notice)_([0-9]+)\.html$ group_site/notice.php?type=$1&id=$2 [L,QSA]
+RewriteRule index\.html$ group_site/index.php [L,QSA]
+
+RewriteCond %{HTTP_HOST} ^([0-9]+)\.(optest|cptest|web|qatest|test|www)\.vvku\.com$
+RewriteRule ^([\w]+).php$ group_site/$1.php [L,QSA]
+RewriteRule ^self\/([\w]+)\.php$ group_site/self/init.php?self_module=$1 [L,QSA]
+
+RewriteCond %{HTTP_HOST} ^([\w]+)\.([\w]+)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !([\w]+)\.vvku\.com$
+RewriteRule ^/?$ /%{HTTP_HOST}
+RewriteRule ^/([\w]+)\.([\w]+)\.(com|cn)$ /group_site/index.php [L,QSA]
+
+RewriteCond %{HTTP_HOST} ^([\w]+)\.([\w]+)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !([\w]+)\.vvku\.com$
+RewriteRule ^([\w]+).php$ group_site/$1.php [L,QSA]
+RewriteRule ^self\/([\w]+)\.php$ group_site/self/init.php?self_module=$1 [L,QSA]
+
+RewriteCond %{HTTP_HOST} ^([0-9]+)\.(optest|cptest|web|qatest|test|www)\.vvku\.com$
+RewriteRule (vclient)$ group_site/index.php?client=$1 [L,QSA]
+
+RewriteCond %{HTTP_HOST} www\.(.*)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !www\.vvku\.com$
+RewriteRule ^/?$ /%{HTTP_HOST}
+RewriteRule ^/www\.(.*)\.(com|cn)/?$ /group_site/index.php?domain=$1 [L]
+
+RewriteCond %{HTTP_HOST} www\.(.*)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !www\.vvku\.com$
+RewriteRule ^([\w]+).php$ group_site/$1.php [L,QSA]
+RewriteRule ^self\/([\w]+)\.php$ group_site/self/init.php?self_module=$1 [L,QSA]
+
+RewriteCond %{HTTP_HOST} www\.(.*)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !www\.vvku\.com$
+RewriteRule index\.html$ group_site/index.php [L,QSA]
+
+RewriteCond %{HTTP_HOST} www\.(.*)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !www\.vvku\.com$
+RewriteRule (vclient)$ group_site/index.php?client=$1 [L,QSA]
+
+RewriteCond %{HTTP_HOST} ^([\w]+)\.([\w]+)\.(com|cn)$
+RewriteCond %{HTTP_HOST} !([\w]+)\.vvku\.com$
+RewriteRule ^([\w]+).php$ group_site/$1.php [L,QSA]
+RewriteRule ^self\/([\w]+)\.php$ group_site/self/init.php?self_module=$1 [L,QSA]
+
+</IfModule>

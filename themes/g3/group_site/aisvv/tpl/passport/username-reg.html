@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户名-会员注册</title>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');?>" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form-horizontal .control-label {
+	width:100px;
+}
+.form-horizontal .controls {
+	margin-left: 120px;
+}
+</style>
+</head>
+<body>
+<div class="container login-hd">
+    <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <?php include THEMES_ROOT.'/left.html';?>
+    <div class="bd-main pull-left">
+        <div class="tab-content">
+            <form id="regForm" action="/passport/?user_name&amp;register" method="post" class="reg-email-form form-horizontal">
+            <h3>使用用户名注册，方便易记</h3>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">用户名</label>
+                <div class="controls">
+                    <input type="text" name="username" placeholder="注册后不可更改，2-15个字" class="input-xlarge" autocomplete="off">
+                    <span style="color:#b94a48;"></span>
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">密码</label>
+                <div class="controls">
+                    <input type="password" name="password" placeholder="6-20字符（区分大小写）" id="password" class="input-xlarge">
+                    <span style="color:#b94a48;"></span>
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">重复密码</label>
+                <div class="controls">
+                    <input type="password" name="repassword" placeholder="再次输入密码" class="input-xlarge">
+                    <span style="color:#b94a48;"></span>
+                </div>
+            </div>
+            <div class="control-group"> 
+            <!-- Appended input-->
+                <label class="control-label">验证码</label>
+                <div class="controls">
+                    <div class="input-append">
+                        <input style="width:190px;" name="checkcode" placeholder="验证码" type="text">
+                        <img src="checkcode.php" width="78" height="28" class="yzmcs" onclick="this.src='checkcode.php?'+Math.random()" title="看不清? 请点击"/>
+                    </div>
+                    <span style="color:#b94a48;"></span>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="clearfix"><input type="checkbox" name="read" value="1" checked class="pull-left" style="margin-right:10px;"> 我已经阅读并同意<a href="#">《用户协议》</a><span style="color:#b94a48;"></span></label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="button" class="btn btn-success btn-large" onclick="checkParam();">立即注册</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <?php include THEMES_ROOT.'/login.html';?>
+</div>
+<?php include "new-footer.html"; ?>
+
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/js/bootstrap.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/validate/bootstrap-validation.js');?>"></script>
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/passport/username.js');?>"></script>
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/resource/js/placeHolder.js');?>"></script>
+<script type="text/jscript">
+var isPass = {
+    username:false,
+    password:false,
+    repassword: false,
+    checkcode: false,
+	read: true
+};
+$(function(){
+    var usernameObj = $('input[name="username"]');
+    usernameObj.focus(function(event) {
+       $(this).siblings('span').html('');
+    });
+    usernameObj.blur(function(){
+        var username = $(this).val();
+        var pattern = / /;
+        var _this = $(this);
+        if(username.length<2||username.length>15){
+            $(this).siblings('span').html('用户名为2-15个字');
+            return;
+        }
+		if(pattern.test(username)){
+			$(this).siblings('span').html('用户名中不能存在空格');
+            return;
+		}
+        var pattern = /^\d+$/;
+        if(pattern.test(username)){
+            $(this).siblings('span').html('用户名不能为纯数字');
+            return;
+        }
+        isPass.username = true;
+
+        $.ajax({
+            url: '/passport/?user_name&username_exist',
+            type: 'GET',
+            data: {username:username,timestamp:new Date().getTime()},
+            success: function(data){
+                if(data == 1){
+                    isPass.username = false;
+                    _this.siblings('span').html('用户已存在 <a href="/passport/?account&login">立即登录</a>');
+                }
+            }
+        });
+    });
+
+    var passwordObj = $('input[name="password"]');
+    passwordObj.focus(function(event) {
+       $(this).siblings('span').html('');
+    });
+    passwordObj.blur(function(){
+        var password = $(this).val();
+        var len = password.length;
+        if(len < 6 || len > 20){
+            $(this).siblings('span').html('请输入6-20字符');
+            return;
+        }
+        isPass.password = true;
+    });
+
+    var repasswordObj = $('input[name="repassword"]');
+    repasswordObj.focus(function(event) {
+       $(this).siblings('span').html('');
+    });
+    repasswordObj.blur(function(){
+        var repassword = $(this).val();
+        var password = passwordObj.val();
+        if(repassword != password){
+            $(this).siblings('span').html('两次输入密码不一致');
+            return;
+        }
+        isPass.repassword = true;
+    });
+
+    var checkcodeObj = $('input[name="checkcode"]');
+    checkcodeObj.focus(function(event) {
+        $(this).parents('.input-append').siblings('span').html('');
+    });
+    checkcodeObj.blur(function(event) {
+        var checkcode = $(this).val();
+        checkcode = checkcode.replace(/^\s+|\s+$/,'');
+        if(!checkcode){
+            $(this).parents('.input-append').siblings('span').html('请输入验证码');
+            return;
+        }
+        isPass.checkcode = true;
+    });
+	
+	var readObj = $('input[name="read"]');
+    readObj.click(function(event) {
+        if(!$(this).attr("checked")){
+		  	$(this).siblings('span').html('请勾选同意用户协议');
+			isPass.read = false;
+		}
+		else{
+			$(this).siblings('span').html('');
+			isPass.read = true;
+		}
+    });
+});
+
+function checkParam(){
+    for(var i in isPass){
+        if(!isPass[i]){
+            $('input[name="' + i + '"]').blur();
+            return false;
+        }
+    }
+	
+    $('#regForm').submit();
+}
+var oForm1 = document.getElementById('regForm');
+var oForm1Inputs = oForm1.getElementsByTagName('input');
+for(var i=0;i<oForm1Inputs.length;i++){
+	placeHolder(oForm1Inputs[i],true);
+}
+</script>
+
+<!--[if lte IE 6]>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/bootstrap-ie6.css');?>" type="text/css">
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/ie.css');?>" rel="stylesheet" type="text/css">
+<script src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/js/bootstrap-ie.js');?>" type="text/javascript"></script>
+<![endif]-->
+
+<!--[if lte IE 7]>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/bootstrap-ie6.css');?>" rel="stylesheet" type="text/css">
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/ie.css');?>" rel="stylesheet" type="text/css">
+<script src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/js/bootstrap-ie.js');?>" type="text/javascript"></script>
+<![endif]-->
+
+</body>
+</html>

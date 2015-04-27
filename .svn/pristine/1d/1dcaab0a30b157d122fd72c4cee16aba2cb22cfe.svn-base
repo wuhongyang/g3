@@ -1,0 +1,10 @@
+<div id="topmenu">
+    <ul>
+        <li><a href="group.php?module=group_info"{if $serviceType=='group_manage'} class="hover"{/if}>站信息</a></li>
+        <li><a href="group.php?module=room_list"{if $serviceType=='room_manage'} class="hover"{/if}>房间管理</a></li>
+        <li><a href="room_channel_user.php?module=signed_manage"{if $serviceType=='room_channel_user'} class="hover"{/if}>签约管理</a></li>
+        <li><a href="vip.php?module=signed_manage"{if $serviceType=='vip'} class="hover"{/if}>会员管理</a></li>
+        <li><a href="voucher.php?module=voucher_account"{if $serviceType=='voucher'} class="hover"{/if}>V点管理</a></li>
+        <li><a href="manage_imformation.php?module=tax_detail"{if $serviceType=='manage_imformation' && ($_GET['module']=='tax_detail' || $_GET['module']=='tax_exchange' || $_GET['module']=='tax_signatory')} class="hover"{/if}>站税收</a></li>
+    </ul>
+</div>

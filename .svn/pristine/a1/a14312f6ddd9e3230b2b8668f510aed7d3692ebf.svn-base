@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城管理-商城商品管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style>
+.goods_p{
+	margin-bottom:5px;
+}
+.del_goods{
+	cursor:pointer;
+}
+</style>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+$(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+	    editor = K.create('textarea[name="content"]', {
+	        allowFileManager : true
+	    });
+	});
+	
+	var goods = $.parseJSON('{$goods_json}');
+	
+	$("#add_goods").click(function(){
+		html = goods_html();
+		$("#goods").append(html);
+		return false;
+	})
+	
+	$("#scope").change(function(){
+		html = goods_html();
+		$("#goods").html(html);
+	})
+	
+	$(".cate_id").live("change", function(){
+		var scope_val = $("#scope").val();
+		var html = "<select name='commodity_id[]' class='commodity_id'>";
+		html += "<option value='-1'>请选择</option>";
+		for(var one in goods[scope_val][$(this).val()]){
+			if(one != "name"){
+				html += "<option value='"+goods[scope_val][$(this).val()][one]['id']+"'>"+goods[scope_val][$(this).val()][one]['name']+"</option>";
+			}
+		}
+		html += "</select>";
+		$(this).parent().find(".goods_num").html("");
+		$(this).next().replaceWith(html);
+	})
+	
+	$(".commodity_id").live("change", function(e, value){
+		if(!value){
+			value = "";
+		}
+		var scope_val = $("#scope").val();
+		var cate_id = $(this).parent().find(".cate_id").val();
+		var one,html;
+		for(k in goods[scope_val][cate_id]){
+			if(goods[scope_val][cate_id][k]["id"] == $(this).val()){
+				one = goods[scope_val][cate_id][k];
+				break;
+			}
+		}
+		if(one){
+			if(one.type == 1){
+				html = "天数:<input class='value number' type='text' name='value[]' per_price='"+one.price/one.expire+"' value='"+value+"' />";
+			}else if(one.type == 2){
+				html = "数量:<input class='value number' type='text' name='value[]' per_price='"+one.price+"' value='"+value+"' />";
+			}
+		}
+		$(this).parent().find(".goods_num").html(html);
+	})
+		
+	$(".del_goods").live("click", function(){
+		if($(".goods_p").length > 1){
+			$(this).parent().remove();
+			$("#price").trigger("focus");
+		}else{
+			alert("必须保留一个商品");
+		}
+	})
+	
+	$("#scope").trigger("change");
+	
+	$("#price").focus(function(){
+		var price = 0;
+		$(".value").each(function(){
+			if($(this).val()){
+				price += $(this).val()*Math.ceil($(this).attr("per_price"));
+			}
+		})
+		$("#consult").html(price);
+	})
+	
+	$(".value").live("focusout", function(){
+		$("#price").trigger("focus");
+	})
+	
+	$(".number").live("keyup", function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	})
+	
+	function goods_html(){
+		var html = "<p class='goods_p'><select name='cate_id[]' class='cate_id'>";
+		var first_cate_id = 0;
+		var scope_val = $("#scope").val();
+		for(var cate_id in goods[scope_val]){
+			if(!first_cate_id){
+				first_cate_id = cate_id;
+			}
+			html += "<option value='"+cate_id+"'>"+goods[scope_val][cate_id]['name']+"</option>";
+		}
+		html += "</select>";
+		
+		
+		html += "&nbsp;&nbsp;<select name='commodity_id[]' class='commodity_id'>";
+		html += "<option value='-1'>请选择</option>";
+		for(var one in goods[scope_val][first_cate_id]){
+			if(one != "name"){
+				html += "<option value='"+goods[scope_val][first_cate_id][one]['id']+"'>"+goods[scope_val][first_cate_id][one]['name']+"</option>";
+			}
+		}
+		html += "</select>&nbsp;&nbsp;<span class='goods_num'></span>&nbsp;&nbsp;<span class='del_goods'>删除</span></p>";
+		return html;
+	}
+	
+	var edit = $.parseJSON('{$edit_json}');
+	var len = edit.length;
+	if(len > 0){
+		for(var i=0;i<len-1;i++){
+			$("#add_goods").trigger("click");
+		}
+		for(var i=0;i<len;i++){
+			$($(".cate_id")[i]).val(edit[i].cate_id).trigger("change");
+			$($(".commodity_id")[i]).val(edit[i].commodity_id).trigger("change", [edit[i].value]);
+		}
+		$("#price").trigger("focus");
+	}
+	
+	$("#form").submit(function(){
+		if($("#price").val().length > 15){
+			alert("价格不能大于15位数字");
+			return false;
+		}
+		{if !$data['package_img']}
+		if(!$("#img").val()){
+			alert("需要上传图片");
+			return false;
+		}
+		{/if}
+		var selected = true;
+		$("select[name='commodity_id[]']").each(function(){
+			if($(this).val() == -1){
+				selected = false;
+			}
+		})
+		if(!selected){
+			alert("选择商品中有多余选择，请删除");
+			return false;
+		}
+	})
+})
+</script>
+<style type="text/css">
+td{ padding:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <p style="text-align:right"><a class="bluebtn2" href="?module=goods_list&cate_id={$_GET['cate_id']}&sub_cate_id={$_GET['sub_cate_id']}&goods_cate_id={$_GET['goods_cate_id']}">返回</a></p>
+    <form method="post" id="form" enctype="multipart/form-data">
+    <table width="100%">
+    <input type="hidden" value="{$data['id']}" name="id" />
+		<tr>
+			<td width=100>套餐名称：</td>
+			<td>
+				<input type="text" name="package_name" value="{$data['package_name']}" />
+				<span style="color:red">（用于商城显示 2-20个字）</span>
+			</td>
+		</tr>
+		<tr>
+			<td>套餐描述：</td>
+			<td>
+				<textarea name="content" id="content" cols="120" rows="20">{$data['desc']}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>作用域：</td>
+			<td>
+				<select id="scope" name="scope">
+					<option value="2" {if $data['scope']==2}selected="selected"{/if}>房间</option>
+					<option value="1" {if $data['scope']==1}selected="selected"{/if}>站</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top">选择商品：</td>
+			<td>
+				<div id="goods"></div>
+				<br/>
+				<button href="#" id="add_goods" class="bluebtn2" >添加</button>
+			</td>
+		</tr>
+		<tr>
+			<td>商品价格：</td>
+			<td>
+				<input type="text" name="price" id="price" class="number" value="{$data['price']}" />
+				<span style="color:red">(参考价格：<span id="consult">0</span>，不得低于该价格)</span>
+			</td>
+		</tr>
+		<tr>
+			<td>商品原价：</td>
+			<td>
+				<input type="text" name="original_price" class="number" value="{$data['original_price']}" />
+				<span style="color:red">原价用作商品展示</span>
+			</td>
+		</tr>
+		<tr>
+			<td style="vertical-align:top">商品图片：</td>
+			<td>
+				<input type="file" name="img" class="number" id="img" />
+				<br/>
+				{if $data['package_img']}
+				<img style="width:200px;height:150px;" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$data['package_img'].'/0/0.jpg');}" />
+				{else}
+				暂无图片
+				{/if}
+			</td>
+		</tr>
+		<tr>
+			<td>状态：</td>
+			<td>
+				<input type="radio" value="1" name="state" {if $data['state'] == 1 || !isset($data['state'])}checked="checked"{/if} />在售
+				<input type="radio" value="0" name="state" {if $data['state'] == 0 && isset($data['state'])}checked="checked"{/if} />下架
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>
+				<input type="submit" class="bluebtn2" value="保存" />
+			</td>
+		</tr>
+    </table>
+    </form>
+    <div style="text-align:center;margin-top:5px;">
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

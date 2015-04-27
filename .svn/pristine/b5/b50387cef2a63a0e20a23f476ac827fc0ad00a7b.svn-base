@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的道具-进场道具</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>进场道具</h1>
+                <div class="clearfix">
+                    <div class="daojuList mgt20">
+                        <ul>
+							{if !$props}
+							<li style="color:#888">您目前还没有购买进场道具！</li>
+							{/if}
+                            {foreach $props $val}
+                            <li>
+                                <div class="imgwrap">
+                                    <img src="{PIC_API_PATH}/{$val['info']['pic_url']}" width="150" height="120">
+                                    <p><span class="fL">{$val['info']['name']}</span><span class="fR">{$val['status_desc']}</span></p>
+                                    <p class="ybg">距离到期剩余：{$val['days']}天</p>
+                                </div>
+                                <div class="mg5">
+                                    <input name="set_default" type="radio" class="fl mgL5 radios" id="radio{$key}" value="{$val['parent_id']}" mode="{$val['default']}" {if $val['default'] == 1}checked{/if}> 
+                                    <label for="radio{$key}" class="fl lineh26">设置为默认进场道具</label> 
+                                </div>
+                            </li>
+                            {/foreach}                            
+                        </ul>
+                    </div>                    
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>
+</body>
+</html>

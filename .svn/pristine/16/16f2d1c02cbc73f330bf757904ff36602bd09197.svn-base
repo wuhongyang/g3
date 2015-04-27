@@ -1,0 +1,5 @@
+<ul>
+<li><a href="?module=passport">开设通行证</a></li>
+<li><a href="?module=recharge">用户充值</a></li>
+<li><a href="?module=role">管理角色赋予</a></li>
+</ul>

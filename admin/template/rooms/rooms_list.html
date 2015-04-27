@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>娱乐房间系统</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">房间管理列表</div>
+  <!--<div class="header-button right">{if $link_array[104]['url']}<a class="add-button" href="{$link_array[104]['url']}">手工开娱乐房间</a>{/if}</div>-->
+</div>
+
+<div class="page-tools main-width">
+  <div style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;">
+	 当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+	 <form action="" method="get" name="myform">
+        <select name="option" id="option">
+            <option value="id" {if $_GET['option']=='id'}selected{/if}>房间ID</option>
+            <option value="name" {if $_GET['option']=='name'}selected{/if}>房间名</option>
+            <option value="description" {if $_GET['option']=='description'}selected{/if}>房间描述</option>
+            <option value="ownuin" {if $_GET['option']=='ownuin'}selected{/if}>室主ID</option>
+        </select>
+        <input type="text" name="keyword" id="keyword" value="{$_GET['keyword']}" style="width:100px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        规模：<select name="maxuser" id="maxuser">
+                <option value="0">---请选择---</option>
+                <{foreach $maxuser_arr $k $v}>
+                <option value="<{$k}>" {if $_GET['maxuser']==$k}selected{/if}><{$v}></option>
+                <{/foreach}>
+             </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        房间版本号：<select name="room_version">
+	   		<option value="-1">---请选择---</option>
+	   	    <option value="1"{if $_GET['room_version']=='1'}selected{/if}>是</option>
+		   </select>
+        <input type="hidden" name="group" value="{$__ADMIN_CURGROUP['groupid']}">
+        <input type="hidden" name="module" id="module" value="roomList">
+        <input type="submit" value="搜索" />
+    </form>
+  </div>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>房间ID</th>
+    <th>房间名称</th>
+    <th>室主ID</th>
+    <th>所属站ID</th>
+    <th>规模</th>
+    <th>开设时间时间</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $roomList $arr}
+  <tr>
+    <td>{$arr['id']}</td>
+    <td>{$arr['name']}</td>
+    <td>{$arr['ownuin']}</td>
+    <td>{$arr['group']}</td>
+    <td>{$arr['maxuser']}人</td>
+    <td>{$arr['date']}</td>
+    <td>$status_array[$arr['status']]</td>
+    <td>
+    	{if $link_array[102]['url']}<a href="{$link_array[102]['url']}&id=<{$arr['id']}>&group={$arr['group']}" title="冻结/解冻">冻结/解冻</a>&nbsp;&nbsp;&nbsp;&nbsp;{/if}
+        {if $link_array[103]['url']}<a href="{$link_array[103]['url']}?id=<{$arr['id']}>&group={$arr['group']}" title="修改">修改信息</a>{/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

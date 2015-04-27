@@ -1,0 +1,400 @@
+/*reset*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{
+	margin:0;
+	padding:0;
+}
+table{
+	border-collapse:collapse;
+	border-spacing:0;
+}
+fieldset,img{
+	border:none;
+}
+ol,ul{
+	list-style:none;
+}
+h1,h2,h3,h4,h5,h6{
+	font-size:100%; 
+	font-weight: normal;
+}
+input, textarea, select{
+	*font-size:100%;
+}
+body {
+    font-family: "宋体", arial, helvetica;
+    font-size: 14px;
+}
+input, label {
+    vertical-align: middle;
+}
+a {
+    text-decoration: none;
+	outline:none;
+}
+a img {
+    display: block;
+    border: none;
+}
+ul, li {
+    list-style: none;
+}
+.bold {
+    font-weight: 700;
+}
+.error {
+    padding-left: 10px;
+    color: #ff0404;
+}
+.mt30 {
+    margin-top: 30px;
+}
+.mt10{
+    margin-top: 10px;
+}
+.mtr10{
+    margin: 10px 10px 0 0;
+}
+.none {
+    display: none;
+}
+.vh{
+    visibility: hidden;
+}
+.fz14{
+    font-size: 14px;
+}
+.fz12{
+    font-size: 12px;
+}
+.songti{
+	font-family:"宋体";
+}
+/*浮动*/
+.clearfix {
+    zoom: 1;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    height: 0;
+    visibility: hidden;
+}
+.fll {
+    float: left;
+}
+.flr {
+    float: right;
+}
+/*颜色*/
+.yellow {
+    color: #fac319 !important;
+}
+.red {
+    color: #ff0404;
+}
+.gray {
+    color: #979797;
+}
+.gray2{
+    color: #757373;
+}
+.gray3{
+    color: #9b9b9b;
+}
+.gray4{
+    color: #585858;
+}
+.green {
+    color: #188e31;
+}
+.blue {
+    color: #0378fc;
+}
+.blue2{
+    color: #0589f9;
+}
+/*底部导航*/
+.ft {
+    width: 960px;
+    margin: 0 auto;
+    font-size: 12px;
+    margin-top: 20px;
+    text-align: center;
+    padding: 10px;
+    line-height: 30px;
+    color: #828282;
+}
+.ft a {
+    color: #828282;
+    text-decoration: none;
+}
+/*主体公共部分样式*/
+.bd{
+    width: 960px;
+    margin: 0 auto;
+}
+/*按钮样式*/
+.btn {
+    display: inline-block;
+    border: none;
+    width: 105px;
+    height: 40px;
+    background: url("../images/cs-btns.png") 0 0 no-repeat;
+    cursor: pointer;
+	font-size:0;
+	line-height:0;
+}
+/*立即充值*/
+.btn-ljcz{
+    background-position: -105px -201px;
+}
+.btn-ljcz:hover{
+    background-position: 0 -201px;
+}
+/*确认充值*/
+.btn-ok {
+    background-position: -105px 0;
+}
+.btn-ok:hover {
+    background-position: 0 0;
+}
+/*确认购买*/
+.btn-ok-buy{
+    background-position: -105px -280px;
+}
+.btn-ok-buy:hover{
+    background-position: 0px -280px;
+}
+/*确认划转*/
+.btn-ok-hz{
+    background-position: -110px -322px;
+}
+.btn-ok-hz:hover{
+    background-position: 0px -322px;
+}
+/*去购物*/
+.btn-shopping{
+    width: 88px;
+    background-position: -88px -241px;
+}
+.btn-shopping:hover{
+    background-position: 0 -241px;
+}
+/*继续购物*/
+.btn-goon{
+    background-position: -105px -40px;
+}
+.btn-goon:hover{
+    background-position: 0 -40px;
+}
+/*返回渠道商城*/
+.btn-fhqdsc{
+	width:140px;
+    background-position: -142px -366px;
+}
+.btn-fhqdsc:hover{
+	width:140px;
+    background-position: 0 -366px;
+}
+/*进入渠道商城*/
+.btn-jrqdsc{
+	width:140px;
+    background-position: -142px -409px;
+}
+.btn-jrqdsc:hover{
+	width:140px;
+    background-position: 0 -409px;
+}
+/*购买*/
+.btn-buy{
+    width: 66px;
+    background-position: -66px -161px;
+}
+.btn-buy:hover{
+    background-position: 0px -161px;
+}
+/*下一步*/
+.btn-next{
+    width: 90px;
+    height: 41px;
+    background-position: -90px -80px;
+}
+.btn-next:hover{
+    background-position: 0 -80px;
+}
+/*上一步*/
+.btn-prev{
+    font-size: 14px;
+    font-family: "microsoft yahei", "微软雅黑", "宋体";
+    color: #333;
+    margin-left: 10px;
+	line-height:40px;
+    vertical-align: middle;
+}
+.btn-prev:hover{
+    text-decoration: underline;
+}
+/*银行列表样式*/
+.banklist {
+    margin: 22px 0 0 20px;
+    /*width: 700px;*/
+}
+.banklist li {
+    float: left;
+    height: 52px;
+    line-height: 52px;
+    margin: 0 16px 16px 0;
+    vertical-align: middle;
+}
+.banklist li label {
+    display: inline-block;
+    width: 130px;
+    height: 52px;
+    margin-left: 10px;
+    *margin-left: 5px;
+    background: #ffffff  url("../images/cs-banks.png") 0 0 no-repeat;
+    cursor: pointer;
+    text-indent: -9999px;
+}
+.banklist li label.bank-zs {
+    background-position: 0 -52px;
+}
+.banklist li label.bank-js {
+    background-position: 0 -104px;
+}
+.banklist li label.bank-jt {
+    background-position: 0 -156px;
+}
+.banklist li label.bank-ny {
+    background-position: 0 -208px;
+}
+.banklist li label.bank-zg {
+    background-position: 0 -260px;
+}
+.banklist li label.bank-hx {
+    background-position: 0 -312px;
+}
+.banklist li label.bank-xy {
+    background-position: 0 -364px;
+}
+.banklist li label.bank-pd {
+    background-position: 0 -416px;
+}
+.banklist li label.bank-ms {
+    background-position: 0 -468px;
+}
+.banklist li label.bank-gf {
+    background-position: 0 -520px;
+}
+.banklist li label.bank-sz {
+    background-position: 0 -572px;
+}
+
+.banklist li label.bank-zx {
+    background-position: 0 -624px;
+}
+
+.banklist li label.bank-gd {
+    background-position: 0 -676px;
+}
+
+.banklist li label.bank-yz {
+    background-position: 0 -728px;
+}
+
+.banklist li label.bank-yl {
+    background-position: 0 -780px;
+}
+/*充值/购买成功提示信息*/
+.tipbox {
+    width: 460px;
+    margin: 42px  auto 0 auto;
+}
+.tipbox .tip-title,.tipbox .tip-title2,.tipbox .tip-title3{
+    text-align: center;
+    text-indent: -9999px;
+    width: 130px;
+    margin: 0 auto;
+    height: 24px;
+    background: url("../images/cs.png") 0 -81px no-repeat;
+}
+.tipbox .tip-title2{
+    background-position: -130px -81px;
+}
+.tipbox .tip-title3{
+	background: url("../images/fail.png") 0 0 no-repeat;
+}
+.tipbox .tip-cont {
+    height: 322px;
+    margin-top: 20px;
+    background: #e8f3fd;
+    padding: 0 42px;
+}
+.tipbox .tip-cont .tip-cont-item1 {
+    text-align: center;
+    padding: 28px 0 20px 0;
+    border-bottom: 1px dashed #9ea6ad;
+}
+.tipbox .tip-cont .tip-cont-item2 {
+    font-size: 12px;
+    margin-left: 82px;
+    line-height: 30px;
+}
+.tipbox .tip-cont .tip-cont-item3 {
+    margin-top: 10px;
+    margin-left: 82px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 12px;
+}
+.tipbox .tip-cont .tip-cont-item3 a {
+    text-decoration: underline;
+    color: #1AA1F7;
+    vertical-align: middle;
+}
+/*充值方式*/
+.pay-type {
+    margin-left: 100px;
+}
+.pay-type li {
+    height: 60px;
+    line-height: 60px;
+    vertical-align: middle;
+}
+.pay-type .chinabank,
+.pay-type .tenpay {
+	display: inline-block;
+    height: 32px;
+    background: url("../images/cs.png") -100px -229px no-repeat;
+    font-size: 0;
+    line-height: 0;
+    overflow: hidden;
+    cursor: pointer;
+}
+.pay-type .chinabank {
+    width: 106px;
+    background-position: -100px -229px;
+}
+.pay-type .tenpay {
+    width: 100px;
+    background-position: 0px -229px;
+}
+/*验证好友后的提示信息*/
+ .friend-right {
+    background: url("../images/right.gif") 4px center no-repeat;
+    padding: 5px 20px;
+}
+.friend-wrong {
+    background: url("../images/wrong.gif") 4px center no-repeat;
+    padding: 10px 0 10px 22px;
+}
+.bottom-line{
+	border-bottom:3px solid #0589f9;
+	text-align:center;
+	width:80px;
+	font-size:18px;
+	font-family:"微软雅黑";
+	padding-top:5px;
+	height:23px;
+}

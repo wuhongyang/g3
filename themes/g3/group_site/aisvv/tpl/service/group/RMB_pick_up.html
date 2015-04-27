@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <h1>账户提现</h1>
+                <p class="fs14">当前您的人民币账户余额：<span class="yellow fs16 bold">{$balance}</span>元</p>
+                <p class="fs12 red lineh30">提现说明：每月7号前申请的金额会在当月发入，7号后申请的将在次月进行发放。打款时间为每月10号（节假日顺延）。</p>
+                <table width="600" border="0" cellspacing="0" cellpadding="0" class="tablecss" style="margin:0 auto;">
+                  <tr>
+                    <td>姓名：{$channelinfo['name']}</td>
+                    <td>身份证：{$idcard}</td>
+                  </tr>
+                  <tr>
+                    <td>银行名称：{$channelinfo['bankName']}</td>
+                    <td>银行卡号：{$bankid}</td>
+                  </tr>
+                  <tr>
+                    <td>可提现金额：<span class="red">{$balance}</span>元</td>
+                    <td>冻结金额：<span class="red">{echo sprintf("%.2f", $freeze)}</span>元</td>
+                  </tr>
+                </table>
+                <div class="mgtb15 border2 padtb5">
+					<form method="post">
+                	提现金额：<input id="rmb" name="rmb" type="text">
+                    <input name="" type="submit" class="normalbtn2" value="提现">
+                    {if $balance<100}<span class="red">您账户余额不足100，不能提现。</span>{/if}
+					</form>
+                </div>
+                <div class="mgtb15">
+					<form method="get">
+                	<span class="fs14">提现记录：</span>
+                    &nbsp;起止时间：<input name="start_date" type="text" style="width:80px;" value="{$start_time}" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:80px;"> 至 <input name="end_date" type="text" style="width:80px;" value="{$end_time}" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width:80px;">
+					<input type="hidden" name="module" value="RMB_pick_up" />
+                    <input name="" type="submit" class="normalbtn" value="查询">
+					</form>
+                </div>
+                <table width="780" border="0" cellspacing="0" cellpadding="0" class="tablecss">
+                  <tr>
+                    <th>申请单号</th>
+                    <th>提现金额</th>
+                    <th>状态描述</th>
+                    <th>时间</th>
+                  </tr>
+                {foreach $details $list}
+				<tr>
+				<td>{$list['_id']['$id']}</td>
+				<td>{$list['Weight']}</td>
+				<td>{$states[$list['State']]}</td>
+				<td>{echo date('Y-m-d H:i:s',$list['Uptime'])}</td>
+				</tr>
+				{/foreach}
+                </table>
+                <div class="page" id="lopage">
+                    {$page}
+                </div>                
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script>
+$(function(){
+	$("#rmb").keyup(function(){
+		var value = Math.abs(parseInt($(this).val()));
+		if(value){
+			$(this).val(value);
+		}else{
+			$(this).val("");
+		}
+	})
+})
+</script>
+</body>
+</html>

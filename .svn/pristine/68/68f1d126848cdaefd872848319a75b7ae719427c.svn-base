@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>申请3</title>
+<link rel="stylesheet" href="css/actapply.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/topnav.css">
+<link rel="stylesheet" href="css/footer.css">
+</head>
+<body>
+
+<div class="hd">
+    <div class="topnav clearfix">
+        <div id="J_head" class="topnav-left fll">
+            欢迎来到VV酷社区！
+                        <a href="http://www.vvku.com/passport/?account&amp;index&amp;url=/">登录</a>
+            | <a href="/passport/">注册</a>
+             | <a href="/shortcut.php">+桌面图标</a>
+        </div>
+        <div class="topnav-right">
+            <div id="site-nav">
+                <ul class="quick-menu">
+                    <li class="home"><a href="/">首页</a></li>
+                    <li class="mytaobao">
+                        <div class="menu">
+                            <a href="/service/mycenter.php" class="menu-hd gray">个人中心<b></b> </a>
+
+                            <div class="menu-bd">
+                                <div class="menu-bd-panel">
+                                    <div>
+                                        <a rel="nofollow" href="/service/weibo.php">微博首页</a><br>
+                                        <a rel="nofollow" href="/service/usermanage.php">账户管理</a><br>
+                                        <a rel="nofollow" href="/service/usersafe.php">安全中心</a><br>
+                                        <a rel="nofollow" href="/service/personal.php">个人档</a><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mytaobao">
+                        <div class="menu">
+                            <a style="width:36px;" href="/shop/index.php" class="menu-hd gray">商城<b></b></a>
+                            <div class="menu-bd">
+                                <div class="menu-bd-panel">
+                                    <div>
+                                        <a href="/shop/index.php">充值V宝</a><br>
+                                        <a href="/shop/buyluckstar.php">获取V豆</a><br>
+                                        <a href="/shop/buyvip.php">购买会员</a><br>
+                                        <!--<a href="#">购买房间</a><br>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="rank"><a class="gray" href="/rooms/top.html">&nbsp;排行 </a></li>
+                    <li class="favorite"><a class="gray" href="/rooms/feedback.php">反馈</a></li>
+                    <li class="help"><a class="gray" href="/rooms/help.php?view=1">帮助</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="search-wrap">
+  <div id="top" class="hd-sub clearfix">
+      <div class="logo fl">
+          <a class="fl logo-pic" href="/">VV酷视频聊天</a>
+                  <div class="dhz"></div>
+              </div>
+      <div class="search fr">
+          <form onsubmit="return search();" action="javascript:void(0);">
+              <input type="hidden" id="search_type" value="1" name="search_type">
+              <input type="text" id="keyword" name="keyword" class="search-text">
+              <input type="submit" id="J_search" value="搜索" class="search-submit">
+          </form>
+          <ul id="J_search_type" class="search-type">
+              <li>搜房间</li>
+              <li style="display: none;" class="li2">搜艺人</li>
+          </ul>
+          <div class="search-type-bg"></div>
+      </div>
+  </div>
+</div>
+
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <!-- 标题 -->
+    <h1><span class="red">站长</span>申请</h1> 
+    <!-- 申请步骤 -->
+    <div class="fengline1"></div>
+    <div class="htip">
+        您目前登录IP为192.168.255.255，来自浙江·杭州。这是您的常住城市吗？如不是请在下面进行挑选。
+    </div>
+    <!-- 申请步骤表单 -->
+    <form action="" class="applyform clearfix">
+        <div class="formlist">
+            <label for="cardnum">申请账号：</label>
+            <span class="text">wateramy(20127427)</span>
+        </div>
+        <div class="formlist">
+            <label><span class="red">*</span>居住城市：</label>
+            <!-- 仿选择框开始 -->
+            <div class="selectcs2">         
+                <ul>
+                  <li><input type="text" class="text bank"  name="bank" onClick="beginSelect(this);" /></li>
+                  <li class="select" id="select1">
+                        <p>浙江</p>
+                        <p>浙江</p>
+                        <p>浙江</p>
+                        <p>浙江</p>
+                  </li>
+                </ul>
+            </div> 
+            <div class="selectcs2">         
+                <ul>
+                  <li><input type="text" class="text bank"  name="bank" onClick="beginSelect(this);" /></li>
+                  <li class="select" id="select2">
+                        <p>杭州</p>
+                        <p>杭州</p>
+                        <p>杭州</p>
+                        <p>杭州</p>
+                  </li>
+                </ul>
+            </div> 
+            <!-- 仿选择框结束 -->           
+        </div>
+        <div class="formlist">
+            <label for="address"><span class="red">*</span>真实姓名：</label>
+            <input name="" id="address" type="text" class="inputcs">
+            <span class="note">用于真实身份验证，便于后期的转账</span>
+        </div>
+        <div class="formlist">
+            <label for="address"><span class="red">*</span>身份证：</label>
+            <input name="" id="address" type="text" class="inputcs">
+            <span class="note">请输入您的15位或18位身份证号码，用于真实身份的核实</span>
+        </div>
+        <div class="formlist">
+            <label for="address"><span class="red">*</span>手机号码：</label>
+            <input name="" id="address" type="text" class="inputcs" style="width:135px;">
+            <span class="sjyz-btn">获取手机验证</span>
+            <span class="note">为了方便与您联系，我们需要对您的手机号码进行验证<br />如已经绑定过手机，则无需重复验证</span>
+            <div class="box1"><span class="tanhao"></span>您选择的城市是浙江-杭州，与您目前IP据地不符</div>
+        </div>
+        <div class="formlist">
+			<input type="submit" class="submitbtn" value="提交申请" style="margin-left:200px;"/>
+        </div>
+        <!-- 分割虚线 -->
+        <div class="formlist">
+            <div class="linebox"></div>
+        </div>
+    </form>  
+    <div class="btip">
+    	如有任何问题请随时咨询VV酷客服。
+        <a target="_blank" href=http://wpa.qq.com/msgrd?v=3&amp;uin=4006772115&amp;site=qq&amp;menu=yes><img border="0" src="http://wpa.qq.com/pa?p=1:4006772115:7" /></a>
+    </div>
+</div>    
+
+
+<div class="ft">
+    <div class="footer-main main-width">
+        <p><a href="#">联系方式</a> | <a href="#">关于我们</a> | <a href="#">用户协议</a> | <a href="#">招聘精英</a> | <a href="#">客服中心</a>
+        </p>
+        <p>Copyright &copy; 2006-2012 vvku.com All Rights Reserved 浙ICP备07500424号</p>
+    </div>
+</div>  
+</body>
+<script type="text/javascript">
+function beginSelect(elem){
+	if(elem.className == "btn"){
+		elem.className = "btn btnhover"
+		elem.onmouseup = function(){
+			this.className = "btn"
+		}
+	}
+	var ul = elem.parentNode.parentNode;
+	var li = ul.getElementsByTagName("li");
+	var selectArea = li[li.length-1];
+	if(selectArea.style.display == "block"){
+		selectArea.style.display = "none";
+	}
+	else{
+		selectArea.style.display = "block";
+		mouseoverBg(selectArea);
+	}
+}
+function mouseoverBg(elem1){
+	var input = elem1.parentNode.getElementsByTagName("input")[0];
+	var p = elem1.getElementsByTagName("p");
+	var pLength = p.length;
+	for(var i = 0; i < pLength; i++){
+		p[i].onmouseover = showBg;
+		p[i].onmouseout = showBg;
+		p[i].onclick = postText;
+	}
+	function showBg(){
+		this.className == "hover"?this.className = " ":this.className = "hover";
+	}
+	function postText(){
+		var selected = this.innerHTML;
+		input.setAttribute("value",selected);
+		elem1.style.display = "none";
+	}
+}
+</script>
+</html>

@@ -1,0 +1,6 @@
+<?php
+$a = exec("svn log svn://svn.kkyoo.com/htdocs/G3_WEB/trunk_web/zzc/awk.txt |grep r |awk '{print $1}'",$out,$status);  
+print_r($a);  
+print_r($out);  
+print_r($status); 
+?>

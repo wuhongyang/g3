@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file="head.html"}
+<title>查看原图</title>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">查看原图</div>
+	<div class="header-button right">
+		{if $link_array[104]['url']}<a class="add-button" href="{$link_array[104]['url']}">返回</a>{/if}
+	</div>
+</div>
+
+<div class="body">
+	<div>
+		<img src = "{php echo cdn_url(PIC_API_PATH.'/p/'.$img_path.'/100/50.jpg')}">
+	</div>
+</div>
+</body>
+</html>
+

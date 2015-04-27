@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<style type="text/css">
+.uibox{width:780px;}
+.uibox form ul li{float:left;margin-right:20px;margin-bottom:20px;}
+.uibox form ul li div{text-align:center;}
+.ui{cursor: pointer;margin-right: 20px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="room_manage/userroommenu.html"}				
+	<div class="uibox" style="width:100%;">	
+		<form method="post" id="the_form">
+		<div style="margin:0 auto;width:300px;">
+			<div class="clearfix" style="margin:20px 0;">      
+				<label>&nbsp;</label>
+				<span class="ui"><input type="radio" name="ui" value="1" {if $tempui==1}checked{/if}  style="position:relative;top:3px;margin-right:5px;">新界面</span>
+				<span class="ui"><input type="radio" name="ui" value="2" {if $roomui==1}checked{/if}  style="position:relative;top:3px;margin-right:5px;">老界面</span><br>
+			</div>   
+			<div id="old-ui" {if $tempui ==1}style='display:none;'{/if}>
+				<label>房间界面：</label>
+				<select name="room_ui" id="room_ui">
+				{foreach $roomsUi $one}
+				<option value='{$one['id']}' img="{php echo cdn_url(PIC_API_PATH.'/p/'.$one['img_path'].'/132/86.jpg');}" {if $one['id'] == $curui}selected{/if} >{$one['name']}</option>
+				{/foreach}
+				</select>
+				<br/>
+				<label>&nbsp;</label>
+				<img id="ui_img" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$roomsUi[$curui]['img_path'].'/132/86.jpg');}" />
+			</div>
+			<div id="new-ui"{if $roomui ==1}style='display:none;'{/if}>
+				<label>模板界面：</label>
+				<select name="template_ui" id="template_ui">
+					<option value="-1">请选择</option>
+					{foreach $templates_ui $val}
+					<option value="{$val}" {if $val == $curui}selected{/if}>{$val}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div style="margin:20px 0">
+				<a onclick="checkParam();" class="bluebtn"><span>保存方案</span></a>
+				<!--<a href="room_manage.php?module=room_list" class="bluebtn mgL10"><span>返回房间列表</span></a>-->
+			</div>
+		</div>
+		</form>
+    </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    $("#room_ui").change(function(){
+        $("#ui_img").attr("src", $(this).find("option:selected").attr("img"));
+    });
+	
+    $('.ui').click(function() {
+        var oUi = $(this).children('input');
+        var vUi = oUi.val();
+        var oldUi = $('#old-ui');
+        var newUi = $('#new-ui');
+
+        oUi.attr('checked', true);
+        
+        if(vUi == 1){
+            oldUi.hide();
+            oldUi.find('select').attr('disabled', true);
+            newUi.show();
+            newUi.find('select').attr('disabled', false);
+        }else{
+            newUi.hide();
+            newUi.find('select').attr('disabled', true);
+            oldUi.show();
+            oldUi.find('select').attr('disabled', false);
+        }
+    });
+});
+
+function checkParam(){
+    var oTemplateUi = $('select[name="template_ui"]');
+    var oVersionUi = $('select[name="room_ui"]');
+    if(oTemplateUi.length > 0 || oVersionUi.length > 0){
+        var uTemplateUi = oTemplateUi.val();
+        var uVersionUi = oVersionUi.val();
+        if((uTemplateUi=='' || uTemplateUi == "-1") && (uVersionUi=='' || uVersionUi == "-1")){
+            alert('请选择模板界面');
+            return false;
+        }
+		the_form.submit();
+    }
+	return true;
+}
+</script>
+</body>
+</html>

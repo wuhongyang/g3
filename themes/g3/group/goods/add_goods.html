@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城管理-商城商品管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+$(function(){
+	var editor;
+	KindEditor.ready(function(K) {
+	    editor = K.create('textarea[name="content"]', {
+	        allowFileManager : true
+	    });
+	});
+	
+	var goods_json = $.parseJSON('{$goods_json}');
+	var gift_goods_json = $.parseJSON('{$gift_goods_json}');
+	var scope_td = $("#scope");
+	var role_td = $("#role");
+	var consult = $("#consult");
+	var duration = $("#duration");
+	var gift = $(".gift");
+	var gift_cate_id = $("#gift_cate_id");
+	var gift_goods_id = $("#gift_goods_id");
+	var gift_detail = $.parseJSON('{$data["gift_detail"]}');
+	var scope = 0;
+	
+	$("input[name='is_gift']").click(function(){
+		if($(this).val() == 1){
+			$("#gift_goods").show();
+		}else{
+			$("#gift_goods").hide();
+		}
+	});
+	
+	$("#commodity_id").change(function(){
+		scope = goods_json[$(this).val()].scope;
+		scope_td.html(goods_json[$(this).val()].scope_name);
+		role_td.html(goods_json[$(this).val()].role_name);
+		consult.html(goods_json[$(this).val()].consult);
+		if(goods_json[$(this).val()].type == 1){
+			duration.show();
+		}else{
+			duration.hide();
+		}
+		if(goods_json[$(this).val()].is_gift == 1){
+			gift.show();
+			$("input[name='is_gift']:checked").trigger("click");
+		}else{
+			gift.hide();
+			$("input[name='is_gift']:checked").trigger("click");
+		}
+		gift_cate_id.html("<option value='-1'>请选择</option>");
+		gift_goods_id.html("<option value='-1'>请选择</option>");
+		for(cate_id in gift_goods_json[scope]){
+			var html = "<option value='"+cate_id+"'>"+gift_goods_json[scope][cate_id].cate_name+"</option>";
+			gift_cate_id.append(html);
+		}
+	}).trigger("change");
+	
+	gift_cate_id.change(function(){
+		gift_goods_id.html("<option value='-1'>请选择</option>");
+		if($(this).val() != -1){
+			for(i in gift_goods_json[scope][$(this).val()]){
+				if(i != "cate_name"){
+					var html = "<option value='"+gift_goods_json[scope][$(this).val()][i].goods_id+"' >"+gift_goods_json[scope][$(this).val()][i].commodity_name+"</option>";
+					gift_goods_id.append(html);
+				}
+			}
+		}
+	})
+	
+	if(gift_detail){
+		gift_cate_id.val(gift_detail.gift_cate_id);
+		gift_cate_id.trigger("change");
+		gift_goods_id.val(gift_detail.gift_goods_id);
+	}else{
+		gift_cate_id.trigger("change");
+	}
+	
+	$(".number").each(function(){
+		$(this).keyup(function(){
+			var val = parseInt($(this).val());
+			if(val){
+				$(this).val(val);	
+			}else{
+				$(this).val("");
+			}
+		})
+	})
+	
+	$("#form").submit(function(){
+		if($("input[name='is_gift']:checked").val() != 0 && $("#gift_goods_id").val() == -1){
+			alert("请选择一个礼物商品");
+			return false;
+		}
+		if($("#price").val().length > 15){
+			alert("价格不能大于15位数字");
+			return false;
+		}
+	});
+})
+</script>
+<style type="text/css">
+td{ padding:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <p style="text-align:right"><a class="bluebtn2" href="?module=goods_list&cate_id={$_GET['cate_id']}&sub_cate_id={$_GET['sub_cate_id']}&goods_cate_id={$_GET['goods_cate_id']}">返回</a></p>
+    <form method="post" id="form">
+    <table width="100%">
+    	<input type="hidden" value="{$data['id']}" name="id" />
+    	{if $data['id'] > 0}
+    	<tr>
+    		<td width=100>分类：</td>
+    		<td>
+    			<select name="sub_cate_id">
+    				{foreach $subCateList $subCate}
+    				<option value="{$subCate['id']}" {if $_GET['sub_cate_id']==$subCate['id']}selected{/if}>{$subCate['name']}</option>
+    				{/foreach}
+    			</select>
+    		</td>
+    	</tr>
+    	{else}
+    		<input type="hidden" name="sub_cate_id" value="{$_GET['sub_cate_id']}">
+    	{/if}
+		<tr>
+			<td width=100>选择商品：</td>
+			<td>
+				<select name="commodity_id" id="commodity_id" {if $data['commodity_id']}disabled="disabled"{/if}>
+					{foreach $res['GoodsName'] $one}
+					<option value="{$one['id']}" {if $data['commodity_id'] == $one['id']}selected="selected"{/if}>{$one['name']}</option>
+					{/foreach}
+				</select>
+				{if $data['commodity_id']}<input type="hidden" name="commodity_id" value="{$data['commodity_id']}" />{/if}
+			</td>
+		</tr>
+		<tr>
+			<td>商品名称：</td>
+			<td>
+				<input type="text" name="commodity_name" value="{$data['commodity_name']}" />
+				<span style="color:red">（用于商城显示 2-20个字）</span>
+			</td>
+		</tr>
+		<tr>
+			<td>商品描述：</td>
+			<td>
+				<textarea name="content" id="content" cols="120" rows="20">{$data['desc']}</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td>商品适用范围：</td>
+			<td id="scope">
+				
+			</td>
+		</tr>
+		<tr class="gift">
+			<td>是否赠送商品：</td>
+			<td>
+				<input type="radio" name="is_gift" value="1" {if $data['is_gift'] == 1}checked="checked"{/if} />是&nbsp;&nbsp;
+				<input type="radio" name="is_gift" value="0" {if $data['is_gift'] != 1}checked="checked"{/if} />否
+			</td>
+		</tr>
+		<tr class="gift" id="gift_goods">
+			<td>选择商品：</td>
+			<td>
+				<select name="gift_cate_id" id="gift_cate_id">
+				<option value='-1'>请选择</option>
+				</select>
+				<select name="gift_goods_id" id="gift_goods_id">
+				<option value='-1'>请选择</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>角色赋予：</td>
+			<td id="role">
+				
+			</td>
+		</tr>
+		<tr id="duration">
+			<td>使用时长：</td>
+			<td>
+				<input type="text" name="duration" class="number" value="{$data['duration']}" />
+				<span style="color:red">天</span>
+			</td>
+		</tr>
+		<tr>
+			<td>价格：</td>
+			<td>
+				<input type="text" name="price" id="price"  class="number" value="{$data['price']}" />
+				<span style="color:red">(参考价格：<span id="consult"></span>，不得低于该价格)</span>
+			</td>
+		</tr>
+		<tr>
+			<td>状态：</td>
+			<td>
+				<input type="radio" value="1" name="state" {if $data['state'] == 1 || !isset($data['state'])}checked="checked"{/if} />在售
+				<input type="radio" value="0" name="state" {if $data['state'] == 0 && isset($data['state'])}checked="checked"{/if} />下架
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>
+				<input type="submit" class="bluebtn2" value="保存" />
+			</td>
+		</tr>
+    </table>
+    </form>
+    <div style="text-align:center;margin-top:5px;">
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

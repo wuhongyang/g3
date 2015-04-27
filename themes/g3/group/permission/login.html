@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站管理_登录</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.head-wrap{background:#41659F;height:46px;color:#FFF;line-height:46px;padding:0 20px;}
+.head-wrap,.head-wrap a{color:#FFF;}
+.head-wrap .head-logo a{color:#FFF;font-size:18px;}
+.foot{width:98%;}
+</style>
+</head>
+<body>
+
+<div class="head-wrap">
+    <div class="head-logo fl"><a href="/group/">站管理后台</a></div>
+</div>
+
+
+    <div class="htlogin">
+        <h2 class="htlogin-hd">
+            <span class="htlogin-icon"></span>
+            <span class="mgL10">用户登录</span>
+        </h2>
+        <a href="javascript:;" onclick="openlogin();" class="qicon" style="position:relative; top:-40px; left:450px;"><img src="{STATIC_API_PATH}/static/images/qq_login_2.png" width="103" height="24" title="用QQ帐号登录" alt="QQ登录" /></a>
+        <form method="post">
+        <div class="htlogin-bd">
+            <ul>
+                <li>
+                    <label>账号：</label>
+                    <input name="username" type="text" class="input" placeholder="手机号/邮箱/用户名">
+                </li>
+                <li>
+                    <label>密码：</label>
+                    <input name="password" type="password" class="input" placeholder="输入您的密码">
+                </li>
+                <li class="mgL50">
+                    <input name="remember" type="checkbox" value="1" class="checks fl">
+                    <span class="fl" style="margin-left:5px;">下次自动登录（公用电脑此项慎选）</span>
+                    <a href="/passport/?account&forgot" class="ahover mgL20">忘记密码？</a>
+                </li>
+                <li class="mgL50">
+                    <input type="submit" value="登录" class="htlogin-btn">
+                </li>
+            </ul>
+        </div>
+        </form>
+    </div>
+<script type="text/javascript">
+function openlogin(){
+    var childWindow;
+    childWindow = window.open("/group/index.php?login=qq","OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+</script>
+{include file="foot.html"}
+</body>
+</html>

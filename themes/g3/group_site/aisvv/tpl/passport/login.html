@@ -1,0 +1,13 @@
+<div class="bd-side pull-right">
+    <h3 class="bd-side-title">使用第三方帐号登录</h3>
+    <div align="center"><a href="javascript:;" onclick="openlogin('qq');"><img src="http://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_3.png" title="用QQ帐号登录" alt="QQ登录" /></a></div>
+
+    <h3 class="bd-side-title">已有帐号？</h3>
+    <div align="center"><a href="/passport/?account&login" class="btn">登 录</a></div>
+</div>
+<script type="text/javascript">
+function openlogin(type){
+    var childWindow;
+    childWindow = window.open("http://<?php echo CALLBACK?>/passport/openlogin/"+type+"/login.php?back=<?php echo $_SERVER['HTTP_HOST'] ?>&redirect=/","OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+</script>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>交易记录-金豆交易记录</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>金豆交易记录</h1>
+                <div class="clearfix">
+                    <div class="mgt30 border2 clearfix">
+                        <div class="mgL30 fl">金豆余额：<span class="fs16 yellow"> {echo intval($kmoney);} </span>金豆</div>
+                        <!-- <div class="fr mgb10">
+                            <a href="/shop/buyluckstar.php" class="storebtn fl">商城</a>
+                        </div> -->
+                    </div>
+                    <form method="get" id="J_form">
+                        <input type="hidden" name='module' value='vdouRecord'>
+                        <input type="hidden" name="uin" value="{$uin}">
+                        <div class="boxdate flowhide">
+                            <span class="mgL20">筛选</span>
+                            <span class="mglr20">|</span>
+                            <span>资金流向：</span>
+                            <input name="case" type="radio" value="all" checked class="radios">
+                            <span>全部</span>
+                            <input name="case" type="radio" value="deposit" {if $_GET['case'] == 'deposit'}checked{/if} class="radios">
+                            <span>存入</span>
+                            <input name="case" type="radio" value="pay" {if $_GET['case'] == 'pay'}checked{/if} class="radios">
+                            <span>支出</span>
+                            <span class="mgL20">起止时间：</span>
+                            <input name="startDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$_GET['startDate']}"> 
+                            <span class="pre"> - </span>
+                            <input name="endDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$_GET['endDate']}">
+                            <input name="" type="submit" class="normalbtn" value="筛选">
+                        </div>
+                    </form>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+                        <tr>
+                            <th>流水号</th>
+                            <th width="140">交易时间</th>
+                            <th width="60">资金流向</th>
+                            <th width="60">消费平台</th>
+                            <th>内容</th>
+                            <th width="100">金额（金豆）</th>
+                            <th width="100">余额（金豆）</th>
+                            <th width="90">状态</th>
+                        </tr>
+                        {foreach $vd_info['lists'] $val}
+                        <tr>
+                        <td class="shijian">{$val['id']}</td>
+                        <td class="shijian pre">{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+                        <td class="shijian">{if $val['trade_type'] ==1}支出{else}存入{/if}</td>
+                        <td class ='shijian'>WEB</td>
+                        <td class="shijian" style="width:330px;" >{$val['trade_desc']}</td>
+                        <td class="six">{$val['trade_money']}</td>
+                        <td class="two">{$val['last_balance']}</td>
+                        <td class="chenggong pre">交易成功</td>
+                        </tr>
+                        {/foreach}
+                    </table>
+                    {$page}
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{THEMES_URL}service/js/date/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>
+</body>
+</html>

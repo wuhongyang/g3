@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发起工单</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+.formlist li input[type="text"]{
+	height:26px;
+	line-height:26px;
+	padding-left:5px;
+	border:1px solid #d7d7d7;
+	border-radius:3px;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	width:300px;
+}
+.formlist li textarea{
+	height:100px;
+	width:300px;
+}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="form" enctype="multipart/form-data">
+    <ul class="formlist formlist5">
+        <li class="clearfix">
+            <label>问题类型：</label>
+            {$html_arr['type']}
+        </li>
+        <li class="clearfix">
+            <label>问题标题：</label>
+            {$html_arr['title']}
+        </li>
+        <li class="clearfix">
+            <label>问题描述：</label>
+            {$html_arr['desc']}
+        </li>
+        <li class="clearfix">
+            <label>问题图片：</label>
+            <label>{$html_arr['img']}</label>
+        </li>
+        <li class="clearfix">
+        	<label>&nbsp;</label>
+        	<div class="fl">
+        		<input type="submit" class="bluebtn2" value="保存"/>
+        	</div>
+        </li>
+    </ul>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

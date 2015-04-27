@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发布系统消息（仅供微端使用）</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style>
+td{
+	padding:5px;
+}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post">
+    <table>
+    <tr>
+    	<td>标题：</td><td><input type="text" name="title" />
+	<span style="color:red">(20个字之内)</span>
+		</td>
+    </tr>
+    <tr>
+    	<td>消息内容：</td><td><textarea name="content" style="width:300px;height:100px;"></textarea>
+    	<span style="color:red">(100个字之内)</span>
+    	</td>
+    </tr>
+    <tr>
+    	<td></td><td><input type="submit" class="normalbtn" value="发布"></td>
+    </tr>
+    </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理(没用的)</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">分站游戏列表</div>
+  <div class="header-button right">
+  {if $link_array[109]['url']}<a class="add-button" href="{$link_array[109]['url']}&cmd={$cmd}">添加授权房间</a>{/if}
+  {if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}">返回</a>{/if}
+  </div>
+</div>
+
+<ul class="page-tab">
+    {if $link_array[106]['url']}<li><a href="{$link_array[106]['url']}&cmd=$cmd">游戏配置</a></li>{/if}
+    {if $link_array[107]['url']}<li><a href="{$link_array[107]['url']}&cmd={$cmd}">游戏系数</a></li>{/if}
+    {if $link_array[108]['url']}<li><a class="active" href="{$link_array[108]['url']}&cmd={$cmd}">房间授权列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+	<form action="" method="get" name="myform">
+        关键词：<input type="text" name="wd" id="wd" value="{$_GET['wd']}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" id="module" value="room_auth_list">
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+  <tr>
+    <th>房间ID</th>
+    <th>室主系数</th>
+    <th>使用状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $authRooms $arr}
+  <tr>
+  	<td>{$arr['roomid']}</td>
+    <td>{$arr['rate']}</td>
+    <td>{if $arr['flag']==1}使用{else}不使用{/if}</td>
+    <td>
+        {if $link_array[110]['url']}<a href="{$link_array[110]['url']}&cmd={$arr['cmd']}&room_id={$arr['roomid']}" title="修改">修改信息</a>&nbsp;&nbsp;{/if}
+        {if $link_array[111]['url']}<a href="javascript:void(0);" onClick="interact_del('{$arr[cmd]}','{$arr[roomid]}');" title="删除">删除</a>{/if}&nbsp;
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+
+<script type="text/javascript">
+function interact_del(cmd,room_id){
+	if(confirm('高危操作，确定要删除吗？')){
+		location.href="{$link_array[111]['url']}&cmd="+cmd+'&room_id='+room_id;
+	}
+}
+</script>
+</body>
+</html>

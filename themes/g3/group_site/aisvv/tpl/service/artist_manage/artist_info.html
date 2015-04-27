@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="artist_manage/tool.html"}
+            <div class="rightdiv">			
+                <div class="box5 mgt20"><p class="center fs14">你好，您的资料已审核通过。</p></div>
+				<form method="post" action="?module=artist_info">
+                <table width="500" border="0" cellspacing="0" cellpadding="0" class="auto mgt20">
+                  <tr>
+                    <td align="right" width="200" height="35"><span class="mgR10">签约房间：</span></td>
+                    <td>
+						{foreach $userChannel['ArtistRoom'] $key $value}
+							$value['name'] ($value['id'])
+						{/foreach}
+					</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">用户ID：</label></td>
+                    <td>{$user['Uid']}</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10"><strong class="red"> * </strong>真实姓名：</label></td>
+                    <td><input name="name" type="text" value="{$data['info']['name']}"><span id="tip1" class="red mgL10"></span></td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">性别：</label></td>
+                    <td>
+                        <select name="gender">
+							<option value="-1">--请选择--</option>
+							<option value="1" {if $data['info']['gender']==1}selected{/if}>男</option>
+                            <option value="2" {if $data['info']['gender']==2}selected{/if}>女</option>
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10"><strong class="red"> * </strong>身份证号：</label></td>
+                    <td><input name="idcard" type="text" value="{$data['info']['idcard']}"><span id="tip2" class="red mgL10"></span></td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">手机号码：</label></td>
+                    <td><input name="phone" type="text" value="{$data['info']['phone']}"></td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">QQ号：</label></td>
+                    <td><input name="qq" type="text" value="{$data['info']['qq']}"></td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">提现账户姓名：</label></td>
+                    <td>{$data['info']['name']}</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">开户银行：</label></td>
+                    <td>
+                        <select name="bank_name">
+							<option value="-1">--请选择--</option>
+							{foreach $data['banks'] $key $bank}
+							<option value="{$key}" {if $data['info']['bank_name']==$key} selected {/if}>{$bank}</option>
+							{/foreach}
+                        </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">开户银行名称：</label></td>
+                    <td>
+						<textarea rows="5" cols="30" class="pd5" name="bank_address">{$data['info']['bank_address']}</textarea>
+					</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="35"><label class="mgR10">银行卡号：</label></td>
+                    <td><input name="bank_id" type="text" value="{$data['info']['bank_id']}"></td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td height="50"><input type="submit" class="yellowbtn2" style="width:80px;" value="确认修改" onclick="return checkvalid();"></td>
+                  </tr>
+                </table>
+				</form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/date/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+<script type="text/javascript">
+function checkvalid(){
+	var n = document.getElementsByName("name")[0];
+	var i = document.getElementsByName("idcard")[0];
+    var tip1=document.getElementById("tip1");
+	var tip2=document.getElementById("tip2");
+	
+	if(n.value==""){
+		tip1.innerHTML="请输入真实姓名！";
+		n.focus();
+		return false;
+	}
+	else{
+		tip1.innerHTML="";
+	}
+	if(i.value==""){
+		tip2.innerHTML="请输入身份证号！";
+		i.focus();
+		return false;
+	}
+	else{
+		tip2.innerHTML="";
+	}	
+	return true;
+}
+</script></body>
+</html>

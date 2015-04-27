@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>站管理后台</title>
+<style type="text/css">
+/*reset*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;} 
+html,body{font:13px HelveticaNeue, Helvetica, Arial, "微软雅黑";color:#333;height:100%;background:#FFF;}
+table{border-collapse:collapse;border-spacing:0;}
+fieldset,img{border:0;} 
+ol,ul{list-style:none;} 
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+input, textarea, select{*font-size:100%;}
+a{color:#0370DA;text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/*Global*/
+.left{float:left;}
+.right{float:right;}
+.clean:before, .clean:after{content:"";display:table;}
+.clean:after{clear:both;}
+.clean{zoom:1;}
+
+/*框架布局*/
+html,body{overflow:hidden;}
+.head-wrap{background:#41659F;height:46px;color:#FFF;line-height:46px;padding:0 20px;}
+.head-wrap,.head-wrap a{color:#FFF;}
+.side-wrap{border-right:solid 1px #CCC;width:200px;height:auto;position:absolute;left:0;top:46px;bottom:0;*height:expression(document.body.offsetHeight - 46 + 'px');}
+.body-wrap{position:absolute;top:46px;right:0px;bottom:0;left:202px;z-index:4;*height:expression(document.body.offsetHeight - 50 + 'px');*width:expression(document.body.offsetWidth - 202 + 'px');z-index:99;}
+
+/*头部*/
+.head-wrap .head-logo a{color:#FFF;font-size:18px;}
+
+/*测边栏菜单*/
+.side-wrap .sidebar-scroll{overflow:auto;height:100%;z-index:50;}
+.side-wrap .sidebar-scroll h3{padding:5px 20px;margin-top:10px;border-bottom:solid 1px #EEE;}
+.side-wrap .sidebar-scroll ul li{position:relative;overflow:hidden;background:#FFF;}
+.side-wrap .sidebar-scroll ul li a{display:block;height:30px;line-height:30px;color:#333;padding-left:20px;font-size:14px;border-bottom:solid 1px #EEE;overflow:hidden;}
+.side-wrap .sidebar-scroll ul li a:hover,
+.side-wrap .sidebar-scroll ul li .active{background:#41659F;color:#FFF;font-weight:bold;text-decoration:none;}
+.side-wrap .sidebar-scroll ul li .menu-arrow{border-style:solid;border-width:5px;border-color:#FFF transparent transparent transparent;margin-top:12px;_margin-top:5px;_border-width:4px;_border-color:#FFF #41659F #41659F #41659F;display:inline-block;width:0;height:0;line-height:0;font-size:0;float:right;position:absolute;right:20px;}
+.side-wrap .sidebar-scroll ul li a .menu-arrow,
+.side-wrap .sidebar-scroll ul li ul li a .menu-arrow{border-style:solid;border-width:5px;border-color:#666 transparent transparent transparent;margin-top:12px;_margin-top:5px;_border-width:4px;_border-color:#666 #FFF #FFF #FFF;display:inline-block;width:0;height:0;line-height:0;font-size:0;float:right;position:absolute;right:20px;}
+.side-wrap .sidebar-scroll ul li a:hover .menu-arrow,
+.side-wrap .sidebar-scroll ul li .active .menu-arrow{border-color:#FFF transparent transparent transparent;_border-color:#FFF #41659F #41659F #41659F;}
+.side-wrap .sidebar-scroll ul li ul li a{background:#EAE9EE;height:26px;line-height:26px;padding-left:36px;font-size:12px;font-weight:normal;border-top:solid 1px #FFF;border-bottom:solid 1px #CCC;overflow:hidden;}
+.side-wrap .sidebar-scroll ul li ul{display:none;}
+.side-wrap .sidebar-scroll ul li ul li a:hover{background:#F6F6F6;color:#333;font-weight:normal;}
+.side-wrap .sidebar-scroll ul li ul li .active{background:#FFF;color:#333;font-weight:normal;}
+#loading{position:absolute;padding:4px 10px;background:#FFE7B8;border:solid 1px #D6B26B;border-radius:2px;font-weight:bold;color:#333;left:45%;top:12px;display:none;z-index:200;}
+.feedback{position:absolute;top:36%;right:16px;z-index:999;}
+.feedback a{background:#41659F url(http://static.vvku.com/web/1/frontend/modules/dianpu/img/icon-feedback.gif) no-repeat center 10px;color:#FFF;display:block;width:22px;text-align:center;font-size:12px;padding:30px 0 10px 0;}
+</style>
+</head>
+
+<body>
+<div id="loading">加载中...</div>
+<div class="feedback"><a href="/feedback.html" target="_blank">反馈建议</a></div>
+
+<div class="head-wrap">
+    <div class="head-logo left"><a href="#">站管理后台</a></div>
+</div>
+
+<div class="side-wrap">
+	<div class="sidebar-scroll">
+        <h3>站点管理</h3>
+        <ul id="J_sideMenu">
+            <li>
+                <a href="javascript:;">站点信息<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/group.php?module=group_info">基本信息</a></li>
+                    <li><a href="#/group/manage_imformation.php?module=manage_imformation">经营概况</a></li>
+                    <li><a href="#/group/manage_imformation.php?module=send_message">发布信息</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">主页装修<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/decoration.php">基本资料</a></li>
+                    <li><a href="#/group/decoration.php?module=style">站点风格</a></li>
+                    <li><a href="#/group/decoration.php?module=roomnotice">主页轮播图</a></li>
+                    <li><a href="#/group/recommend.php?module=recommend_cat_list">推荐位设置</a></li>
+                    <li><a href="#/group/navigate.php?module=navigate_list">导航模块设置</a></li>
+                    <li><a href="#/group/menu.php">左侧菜单管理</a></li>
+                    <li><a href="#/group/image.php">图片模块设置</a></li>
+                    <li><a href="#/group/search_config.php">搜索功能设置</a></li>
+                    <li><a href="#/group/message.php">滚动消息模块设置</a></li>
+                    <li><a href="#/group/mic_setting.php">上麦用户推荐设置</a></li>
+                    <li><a href="#/group/room_sort.php">房间分类管理</a></li>
+                    <li><a href="#/group/rank.php">排行榜管理</a></li>
+                    <li><a href="#/group/activity.php">活动设置</a></li>
+                    <li><a href="#/group/joinus.php">加入我们</a></li>
+                    <li><a href="#/group/online_count.php">在线人数统计</a></li>
+                    <li><a href="#/group/my_attention.php">我的关注</a></li>
+                    <li><a href="#/group/notice.php">公告和帮助</a></li>
+                    <li><a href="#/group/link.php">友情链接</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">房间管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/room_manage.php?module=room_list">房间列表</a></li>
+                    <li><a href="#/group/room_manage.php?module=open_room">开设新房间</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">签约管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/signed_manage.php?module=signed_manage">已签约人员</a></li>
+                    <li><a href="#/group/signed_manage.php?module=termination_list">已解约人员</a></li>
+                    <li><a href="#/group/group.php?module=group_proxy">赋予角色</a></li>
+                    <li><a href="#/group/signed_manage.php?module=signed_list">签约人员账户</a></li>
+                    <li><a href="#/group/signed_manage.php?module=apply_list">室主/艺人申请资料</a></li>
+                </ul>
+            </li>
+           <li>
+                <a href="javascript:;">会员管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/vip.php?module=vip_list">站内会员列表</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">资金管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/voucher.php?module=voucher_to_vip">资金充值</a></li>
+                    <li><a href="#/group/voucher.php?module=voucher_balance">资金明细管理</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">税收管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/manage_imformation.php?module=tax_detail">税收流水查询</a></li>
+                    <!--<li><a href="#/group/manage_imformation.php?module=artist_tax_detail">艺人税收流水查询</a></li>-->
+                    <!--<li><a href="#/group/manage_imformation.php?module=artist_tax_exchange">艺人税收兑换</a></li>-->
+                    <li><a href="#/group/manage_imformation.php?module=artist_doll">艺人娃娃兑换</a></li>
+                    <li><a href="#/group/funds.php?module=funds_list">房内公积金</a></li>
+                    <li><a href="#/group/manage_imformation.php?module=integral_search">积分查询</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">权限管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/role.php">角色组列表</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">业务配置<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/voucher.php?module=voucher_config">业务资金库配置</a></li>
+                    <li><a href="#/group/group.php?module=group_config">人气票设置</a></li>
+                    <li><a href="#/group/group.php?module=game_robot">游戏机器人设置</a></li>
+                    <li><a href="#/group/config.php?module=role_order_config">角色排序设置</a></li>
+                    <li><a href="#/group/broadcast.php?module=price">广播价格设置</a></li>
+					<li><a href="#/group/broadcast.php?module=signet_times">印章时效设置</a></li>
+                    <li><a href="#/group/broadcast.php?module=runway_price">跑道礼物价格设置</a></li>
+                    <li><a href="#/group/songs.php?module=price">点歌设置</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;">商品管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/special_num.php?module=cate">靓号管理</a></li>
+                    <li><a href="#/group/recharge_order.php?module=list">商城充值订单管理</a></li>
+                    <li><a href="#/group/goods.php?module=cate">商城商品管理</a></li>
+                </ul>
+            </li>
+             <li>
+                <a href="javascript:;">工单管理<i class="menu-arrow"></i></a>
+                <ul>
+                    <li><a href="#/group/issue_tracking.php?module=add">发起工单</a></li>
+                    <li><a href="#/group/issue_tracking.php?module=list">工单列表</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="body-wrap" style="overflow:auto;height:100%;">
+<iframe name="_mgrmain" id="J_mgrmain" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" src="/group/group.php?module=group_info"  onload="this.height=100"></iframe>
+</div>
+
+
+</body>
+</html>
+<script type="text/javascript" src="http://static.vvku.com/web/1/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+
+	$('#J_sideMenu > li > a').on('click',function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		if($(this).hasClass('active')) return;
+		$('#J_sideMenu > li > ul').slideUp();
+		$('#J_sideMenu > li > .active').removeClass('active');
+		$(this).parent().find('ul').slideToggle();
+		$(this).toggleClass('active');
+	});
+
+	$('#J_sideMenu ul li a').click(function(){
+		if($(this).hasClass('active')){
+            $('#J_mgrmain').attr('src',getHash());
+        }
+	});
+
+	function getHash(){
+		var source = document.URL; 
+		return source.split("#")[1]; 
+	}
+
+	function onHashChange(callback){
+		var prevHash = getHash();
+		if(prevHash) callback(prevHash);
+		window.setInterval(function(){
+			if(getHash() != prevHash){
+				prevHash = getHash();
+				callback(prevHash);
+			}
+		},100);
+	}
+
+	function iframeOnload(callback){
+		var iframe = document.getElementById("J_mgrmain");  
+		if (iframe.attachEvent) {  
+			iframe.attachEvent("onload", function() {  
+				callback();
+			});  
+		} else {  
+			iframe.onload = function() {  
+				callback();
+			};  
+		}
+	}
+
+	onHashChange(function(hash){
+		$('[name=_mgrmain]').attr('src',hash);
+		var that = $('#J_sideMenu > li > ul > li > a[href="#'+hash+'"]');
+		$('#J_sideMenu li a').removeClass('active');
+		that.parent().parent().parent().find('a:first').addClass('active');
+		that.parent().parent().show();
+		that.addClass('active');
+		$('#loading').show();
+		iframeOnload(function(){
+			$('#loading').hide();
+		});
+	});
+});
+</script>
+<script type="text/javascript">
+
+function reinitIframe(){
+
+var iframe = document.getElementById("J_mgrmain");
+
+try{
+
+var bHeight = iframe.contentWindow.document.body.scrollHeight;
+
+var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+
+var height = Math.max(bHeight, dHeight);
+
+iframe.height =  height;
+
+}catch (ex){}
+
+}
+
+window.setInterval("reinitIframe()", 200);
+
+</script>

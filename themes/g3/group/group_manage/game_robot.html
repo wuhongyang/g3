@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <table class="tablecss" border="1" width="100%">
+        <tr><th>游戏名称</th><th>状态</th><th>操作</th></tr>
+        {foreach $interact['list'] $list}
+        <tr>
+            <td>{$list['interact_name']}</td>
+            <td>{$status[$list['group_robot']]}</td>
+            <td>
+                <form method="post">
+                <input type="hidden" name="interact" value="{$list['id']}">
+                <input type="hidden" name="robot" value="{echo (int)!$list['group_robot']}">
+                <button type="submit" class="bluebtn2">{$button[$list['group_robot']]}</button>
+                </form>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript">
+$(function(){
+	var start_time = $("#start_time");
+	var end_time = $("#end_time");
+	var weight = $("#weight");
+	var turn = $("#turn")
+	turn.click(function(){
+		if($(this).attr("checked")){
+			start_time.attr("disabled", false);
+			end_time.attr("disabled", false);
+			weight.attr("disabled", false);
+		}else{
+			start_time.val("");
+			end_time.val("");
+			weight.val("");
+			start_time.attr("disabled", true);
+			end_time.attr("disabled", true);
+			weight.attr("disabled", true);
+		}
+	})
+	if(!turn.attr("checked")){
+		start_time.val("");
+		end_time.val("");
+		weight.val("");
+		start_time.attr("disabled", true);
+		end_time.attr("disabled", true);
+		weight.attr("disabled", true);
+	}
+	weight.keyup(function(){
+		var value = Math.abs(parseInt($(this).val()));
+		if(value){
+			$(this).val(value);
+		}else{
+			$(this).val("");
+		}
+	})
+	$("#form").submit(function(){
+		var start = start_time.val();
+		var end = end_time.val();
+		if($("#turn").attr("checked")){
+			if(!start || !end){
+				alert('人气票奖励时间段不能为空')
+				return false;
+			}
+			if(!weight.val()){
+				alert('金额不能为空')
+				return false;
+			}
+			var sv = start.split(":");
+			var ev = end.split(":");
+			var svi = parseInt(sv[0]+sv[1]);
+			var evi = parseInt(ev[0]+ev[1]);
+			if(svi > evi){
+				alert('开始时间不能大于结束时间');
+				return false;
+			}
+		}
+	})
+})
+</script>
+</body>
+</html>

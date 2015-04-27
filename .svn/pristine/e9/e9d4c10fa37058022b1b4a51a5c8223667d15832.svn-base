@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<META HTTP-EQUIV="pragma" CONTENT="no-cache"> 
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate"> 
+<META HTTP-EQUIV="expires" CONTENT="Wed, 26 Feb 1997 08:21:57 GMT"> 
+<META HTTP-EQUIV="expires" CONTENT="0"> 
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jqueryui/themes/base/jquery.ui.all.css');}">
+<style type="text/css">
+p{line-height:38px;}
+.table-list{text-align:center;border:solid 1px #CCC;font-size:12px;}
+.table-list tr th{background:#E0ECFF;padding:5px;border:solid 1px #CCC;text-align:center;}
+.table-list tr td{padding:5px;border:solid 1px #CCC;}
+.table-list tr:hover{background:#E0ECFF;}
+.main-width{width:98%; margin:0 auto;}
+.bluebtn2{padding:2px 10px;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="room_manage/userroommenu.html"}
+    <p style="margin-top:10px;">
+    	<label>排行规则：</label>
+        <select id="Ruleid">
+        	<option value="-1">请选择</option>
+        	{foreach $ruleList $val}
+        	<option value="{$val['id']}" desc="{$val['desc']}" sort="{$val['sort_type']}">{$val['name']}</option>
+        	{/foreach}
+        </select>
+    </p>
+    <p>
+        <label>规则说明：</label>
+        <span id="desc"></span>
+    </p>
+     <p>
+        <label>排行名称：</label>
+        <input type="text" id="name"/>
+    </p>
+    <p>
+        <label>显示个数：</label>
+        <input type="text" id="Rows" value="10" />
+    </p>
+    <p>
+        <label>排名类型：</label>
+        <span id="sort"></span>
+    </p>
+     <p>
+        <label>&nbsp;</label>
+        <input type="button" value="添加 " onclick="add();" class="bluebtn2"/>
+    </p>
+    <form method="post" id="ranks">
+    <input type="hidden" name="submited" value="1" />
+   	<table class="table-list main-width" id="table-list1">
+    	<tr>
+    		<th>排行规则</th><th>规则说明</th><th>排行名称</th><th>显示个数</th><th>排名类型</th><th>操作</th>
+    	</tr>
+    	{foreach $rank $key $val}
+    	<tr>
+    		<td><input type="hidden" name="Ruleid[]" value="{$val['Ruleid']}"/>$val['rule_name']</td>
+    		<td>$val['desc']</td>
+    		<td><input type="text" name="name[]" value="{$val['name']}"/></td>
+    		<td><input type="text" name="Rows[]" value="{$val['Rows']}"/></td>
+    		<td>
+    		{if $val['sort'] == 1}用户排行
+    		{elseif $val['sort'] == 2}房间排行
+    		{elseif $val['sort'] == 3}礼物排行
+    		{else}暂无
+    		{/if}
+        	</td>
+    		<td><a href="javascript:void(0);" onclick="up(this)">上移</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="down(this)">下移</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="del(this)">删除</a></td>
+    	</tr>
+    	{/foreach}
+    </table>
+    <input type="submit" value="保存" onclick="$('#ranks').submit()" class="bluebtn2"/>
+	</form>
+</div>
+{include file="foot.html"}
+<script src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jqueryui/ui/jquery-ui.custom.js');}"></script>
+<script>
+$(function(){
+	$('#Ruleid').live("change", function(){
+		var desc = $("#Ruleid").find("option:selected").attr("desc");
+		$(this).parents("p").next("p").find("#desc").html(desc);
+		var sort = $('#Ruleid').find("option:selected").attr("sort");
+		if(sort == 1){
+			$(this).parents("p").nextAll("p").find("#sort").html("用户排行");
+		}else if(sort == 2){
+			$(this).parents("p").nextAll("p").find("#sort").html("房间排行");
+		}else if(sort == 3){
+			$(this).parents("p").nextAll("p").find("#sort").html("礼物排行");
+		}else{
+			$(this).parents("p").nextAll("p").find("#sort").html("暂无");
+		}
+	})
+	
+	$("#name").change(function() { 
+	     var str=this.value; 
+	     //while (str.replace(/[^\x00-\xFF]/g,"aa").length>12) {
+	     while (str.length>6) {
+	   		alert("不能超过6个字符");
+	        str=str.substr(0,6);
+	        this.value=str;
+	        $(this).focus();
+	        return false;
+	     } 
+	 });
+	
+	$('input[name^=name]').live("change", function(){
+		var str = $(this).val(); 
+	     //while (str.replace(/[^\x00-\xFF]/g,"aa").length>12) {
+	     while (str.length>6) {
+	   		alert("不能超过6个字符");
+	        str=str.substr(0,6);
+	        $(this).val(str);
+	        $(this).focus();
+	        return false;
+	     } 
+	})
+	
+})
+
+function add(){
+	if($('#Ruleid').val() < 0){
+		alert("请选择排行规则！");
+		return false;
+	}
+	if($.trim($('#name').val()) == ""){
+		alert("排行名称不能为空！");
+		$('#name').focus();
+		return false;
+	}
+	if(!/^(\d+)$/.test($('#Rows').val())){
+		alert("显示个数不能为空！");
+		$('#Rows').focus();
+		return false;
+	}
+	var flag = 0;
+	$('#table-list1').find('input:hidden[name^=Ruleid]').each(function(){
+		if($(this).val() == $('#Ruleid').val()){
+			alert("该排行规则已存在！");
+			flag = 1;
+		}
+	});
+	if(flag == 1) return false;
+
+	var id = document.getElementById('table-list1');
+	var newtr = id.insertRow(-1);
+	var rowIndex = newtr.rowIndex;
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	var td4   = document.createElement("td");
+	var td5   = document.createElement("td");
+	var td6   = document.createElement("td");
+	td1.innerHTML = '<input type="hidden" name="Ruleid[]" value="'+$('#Ruleid').val()+'"/>'+$('#Ruleid').find("option:selected").html();
+	td2.innerHTML = $('#desc').html();
+	td3.innerHTML = '<input type="text" name="name[]" value="'+$('#name').val()+'"/>';
+	td4.innerHTML = '<input type="text" name="Rows[]" value="'+$('#Rows').val()+'"/>'
+	td5.innerHTML = $('#sort').html();
+	td6.innerHTML = '<a href="javascript:void(0);" onclick="up(this)">上移</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="down(this)">下移</a>&nbsp;&nbsp;<a href="javascript:void(0);" onclick="del(this)">删除</a>';
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+	newtr.appendChild(td4);
+	newtr.appendChild(td5);
+	newtr.appendChild(td6);
+	$('#Ruleid').val("");
+	$('#desc').html("");
+	$('#name').val("");
+	$('#Rows').val(10);
+}
+
+function del(obj){
+	obj = obj.parentNode.parentNode;
+	obj.parentNode.removeChild(obj);
+}
+
+function up(obj){
+	if($(obj).parents("tr").index() > 1){
+		var html = $(obj).parents("tr").next("tr").html();
+		if(typeof(html) == "undefined"){
+			$(obj).parents("tr").after($(obj).parents("tr").prev("tr"));
+		}else{
+			$(obj).parents("tr").next("tr").before($(obj).parents("tr").prev("tr"));
+		}
+	}
+	return false;
+}
+
+function down(obj){
+	var html = $(obj).parents("tr").next("tr").html();
+	if(typeof(html) != "undefined"){
+		$(obj).parents("tr").next("tr").after($(obj).parents("tr"));
+	}
+}
+</script>
+</body>
+</html>

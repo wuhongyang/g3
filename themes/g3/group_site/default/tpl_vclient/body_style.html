@@ -1,0 +1,132 @@
+<style>
+/*背景图片*/
+{if $styleInfo['bg_status']}
+body{background-image:url("{PIC_API_PATH}/groupbg/{$groupId}/0/0.jpg");{if $styleInfo['bg_tile']==2}background-repeat:no-repeat;{/if} background-attachment:scroll;background-position:{if $styleInfo['bg_align']==1}left{elseif $styleInfo['bg_align']==2}center{elseif $styleInfo['bg_align']==3}right{else}center{/if} 0;}
+{/if}
+
+/*主文字*/
+.main_text{color:{$styleInfo['main_text']};}
+
+/*次文字*/
+.minor_text{color:{$styleInfo['minor_text']};}
+
+/*边框*/
+.header-nav{background:{$styleInfo['content_bg']};width:100%;border-bottom:solid 1px {$styleInfo['border']};}
+.body-side .search .keyword{border:solid 1px {$styleInfo['border']};}
+.body-main-right .user .userface{border:solid 1px {$styleInfo['border']};}
+.body-main-right .notice{border:dashed 1px {$styleInfo['main_text']};}
+.body{border-bottom:solid 1px {$styleInfo['border']};}
+
+/*底框文字*/
+.bottom_text{background-color:{$styleInfo['main_text']};color:{$styleInfo['bottom_text']};}
+
+/*页面背景*/
+body{background-color:{$styleInfo['page_bg']};}
+
+/*内容背景*/
+.body{background-color:{$styleInfo['content_bg']};}
+
+/*首页搜索*/
+.body-side .body-side-list dt h3{color:{$styleInfo['main_text']};}
+.sit-form-search{color:{$styleInfo['main_text']};}
+.sit-form-search .btn-danger{color:{$styleInfo['bottom_text']};background:{$styleInfo['main_text']};}
+
+/*房间,艺人,通用*/
+.body-main-rooms .room .mask{background:{$styleInfo['content_bg']};border:solid 1px {$styleInfo['border']};}
+.body-main-rooms .room .mask p.num{color:{$styleInfo['minor_text']};}
+.body-main-rooms .nav-tabs{border-color:{$styleInfo['border']};}
+.body-main-right-ranks dd .nav-pills{border-bottom:solid 1px {$styleInfo['border']};}
+.body-main-rooms .nav-tabs li{background:none;}
+.body-main-rooms .nav-tabs li a{color:{$styleInfo['minor_text']};background:{$styleInfo['content_bg']};border:1px solid {$styleInfo['content_bg']};border-bottom:1px solid {$styleInfo['border']};}
+.body-main-rooms .nav-tabs .active a{background:{$styleInfo['content_bg']};border:solid 1px {$styleInfo['border']};border-bottom-color:{$styleInfo['content_bg']};color:{$styleInfo['main_text']};}
+.body-main-rooms .nav-tabs li a:hover{border:solid 1px {$styleInfo['content_bg']};border-bottom-color:{$styleInfo['border']};background:none;}
+.body-main-rooms .nav-tabs .active a:hover{background:{$styleInfo['content_bg']};border:solid 1px {$styleInfo['border']};border-bottom-color:{$styleInfo['content_bg']};color:{$styleInfo['main_text']};}
+.body-main-rooms .room .name{color:{$styleInfo['main_text']};}
+
+.body-main-rooms .actor{color:{$styleInfo['main_text']};}
+.muted{color:{$styleInfo['minor_text']};}
+.body-main-rooms .actor a{color:{$styleInfo['main_text']};}
+
+.body-main .body-main-rooms .story-list li a{color:{$styleInfo['minor_text']};}
+.body-main-rooms .room  p.normal{color:{$styleInfo['main_text']};}
+.body-main-rooms .room  p.normal2{color:{$styleInfo['minor_text']};}
+.body-main-rooms .room .mask p.normal{color:{$styleInfo['main_text']};}
+
+/*滚动消息*/
+#rollText{color:{$styleInfo['minor_text']};}
+
+/*分页*/
+.pagenavi{color:{$styleInfo['main_text']};}
+.pagenavi .curr{background:{$styleInfo['main_text']};color:{$styleInfo['bottom_text']};}
+.pagenavi a{color:{$styleInfo['main_text']};}
+
+/*排行榜*/
+.body-main-right-ranks dd .nav-pills .active a{background:{$styleInfo['content_bg']};border:solid 1px {$styleInfo['border']};border-bottom:none;color:{$styleInfo['main_text']};}
+.body-main-right-ranks dd .nav-pills .active a:hover{background:{$styleInfo['content_bg']};}
+.body-main-right-ranks dd .nav-pills li a{color:{$styleInfo['minor_text']};background:{$styleInfo['content_bg']};border-bottom:1px solid {$styleInfo['border']};}
+.body-main-right-ranks .tab-content table td a{color:{$styleInfo['minor_text']};}
+
+/*页脚*/
+.footer{background:{$styleInfo['content_bg']};color:{$styleInfo['minor_text']};}
+.footer a{color:{$styleInfo['minor_text']};}
+
+/*排行榜页面*/
+.rank-list{background:{$styleInfo['content_bg']};}
+.rank-list .rank-item .rank-header h3{color:{$styleInfo['main_text']};}
+.rank-list .rank-item .rank-header .nav-pills .active{background:{$styleInfo['content_bg']};}
+.rank-list .rank-item .rank-header .nav-pills .active a{color:{$styleInfo['minor_text']};}
+.rank-list .rank-item .rank-header .nav-pills li a{color:{$styleInfo['minor_text']};background:{$styleInfo['content_bg']};}
+.rank-list .rank-item .rank-header .nav-pills li a:hover{background:{$styleInfo['content_bg']};}
+.rank-list .rank-item .tab-content table a{color:{$styleInfo['minor_text']};}
+.rank-list .rank-item .tab-content table td{color:{$styleInfo['minor_text']};}
+
+/*活动中心页面*/
+.thumbnail{border-color:{$styleInfo['border']};}
+.hot-activity h1{border-color:{$styleInfo['border']};color:{$styleInfo['main_text']};}
+.hot-activity .thumbnail .caption .name{color:{$styleInfo['main_text']};}
+.hot-activity .thumbnail .caption .canjia .active-over{text-shadow:none;color:#3f3f3f;background:#e0e0e0;}
+.hot-activity .thumbnail .caption .canjia .canyu{text-shadow:none;color:{$styleInfo['bottom_text']};background:{$styleInfo['main_text']};}
+.hot-activity .thumbnail .caption .canjia .already{text-shadow:none;color:{$styleInfo['main_text']};background:{$styleInfo['content_bg']};border-color:{$styleInfo['main_text']};}
+.canyu{text-shadow:none;color:{$styleInfo['bottom_text']};background:{$styleInfo['main_text']};}
+.canyu:hover, .canyu:focus{color:{$styleInfo['bottom_text']};background:{$styleInfo['main_text']};}
+.already{text-shadow:none;color:{$styleInfo['main_text']};background:{$styleInfo['content_bg']};border-color:{$styleInfo['main_text'];};}
+.already:hover,.already:focus{color:{$styleInfo['main_text']};background:{$styleInfo['content_bg']};}
+{if $moduleAction=='active'||$moduleAction=='search'}.pagenavi{text-align:center; height:30px;}{/if}
+
+/*活动详情页*/
+.activity-center .activity-left h3{color:{$styleInfo['main_text']};}
+.activity-center .activity-left .aback{color:{$styleInfo['minor_text']};}
+.activity-center .activity-left{border-color:{$styleInfo['border']};}
+.activity-left .activity-info{border-color:{$styleInfo['border']};}
+.activity-right dt h3{color:{$styleInfo['main_text']};}
+
+/*加入我们页面*/
+.join-side .join-list li div{background:{$styleInfo['main_text']};}
+.join-side .join-list li div a{color:{$styleInfo['bottom_text']};}
+.join-side .join-list li div a:hover,.join-side .join-list .active div a{color:{$styleInfo['main_text']};background:{$styleInfo['bottom_text']};}
+
+/*搜索页*/
+.container{ background-color:{$styleInfo['content_bg']}}
+.form-search .input-append .search-query{border-color:{$styleInfo['main_text']}}
+.form-search .input-append .btn{background-color:{$styleInfo['main_text']};border-color:{$styleInfo['main_text']};color:{$styleInfo['bottom_text']};}
+.form-search .search-way{border-color:{$styleInfo['border']};color:{$styleInfo['main_text']};}
+.rank-member .thumbnail .caption .intro{color:{$styleInfo['minor_text']};}
+.rank-member ul li .thumbnail{border-color:{$styleInfo['border']};}
+
+/*经验条*/
+.progress .bar{background-color:{$styleInfo['main_text']};background-image: linear-gradient(to bottom, {$styleInfo['main_text']}, {$styleInfo['main_text']});}
+
+/*房间收藏*/
+.body-main-rooms .room .mask p a.cancel{ color:{$styleInfo['main_text']};}
+.body-main-rooms .room .mask p a.zhan{background:{$styleInfo['main_text']};color:{$styleInfo['bottom_text']};}
+
+/*在线人数*/
+.body-side .online-box{ border-color:{$styleInfo['main_text']};}
+.body-side .online-box .online-num{ color:{$styleInfo['main_text']};}
+</style>
+<!--[if lte IE 7]>
+<style>
+.body-side .search .btn{ padding-top:7px;}
+.body-side .search .btn .icon-search{ margin-top:-1px;}
+</style>
+<![endif]-->

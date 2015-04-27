@@ -1,0 +1,88 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*logo导航样式*/
+.logo {
+    height: 98px;
+    background:url("../images/logobg.jpg") center top no-repeat #0589F9;
+}
+.logo .tab {
+    width: 960px;
+    height: 98px;
+    margin: 0 auto;
+    padding-top: 1px;
+    *padding-top: 0;
+    position: relative;
+}
+.logo .tab  .logo-pic{
+    position: absolute;
+    top: 27px;
+    left:-1px;
+    width: 238px;
+    height: 64px;
+}
+.logo .tab  .logo-pic a{
+    display: block;
+    width: 238px;
+    height: 64px;
+    text-indent: -9999px;
+    background: url("../images/logo.png") no-repeat;
+    _background: none;
+    _filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src = 'http://164service.kkyoo.com/themes/g3//service/images/new/logo.png', sizingMethod = 'crop');
+    _position: relative;
+    _cursor: pointer;
+}
+.logo .tablist {
+    margin-left: 350px;
+    margin-top: 60px;
+    *margin-top: 61px;
+    _margin-top: 62px;
+    bottom: 0;
+}
+.logo .tablist li {
+    width: 84px;
+    height: 37px;
+    float: left;
+    margin-right: 20px;
+}
+.logo .tablist li a {
+    display: block;
+    width: 84px;
+    height: 37px;
+    line-height: 36px;
+    color: #fff;
+    font-family: "微软雅黑";
+    font-size: 16px;
+    text-align: center;
+}
+.logo .tablist li a:hover {
+    background: url("../images/tabbg.jpg") center bottom no-repeat;
+}
+.logo .tablist li .tab1{
+    text-indent: -9999px;
+    background: url("../images/cs.png") 0 -105px no-repeat;
+}
+.logo .tablist li .tab1:hover{
+    background: url("../images/cs.png") 0 -105px no-repeat;
+}
+.logo .tablist li .tab2{
+    text-indent: -9999px;
+    background: url("../images/cs.png") -84px -105px no-repeat;
+}
+.logo .tablist li .tab2:hover{
+    background: url("../images/cs.png") -84px -105px no-repeat;
+}
+.logo .tablist li .tab3{
+    text-indent: -9999px;
+    background: url("../images/cs.png") -168px -105px no-repeat;
+}
+.logo .tablist li .tab3:hover{
+    background: url("../images/cs.png") -168px -105px no-repeat;
+}
+.logo .tablist li .tab4{
+    text-indent: -9999px;
+    background: url("../images/cs.png") -252px -105px no-repeat;
+}
+.logo .tablist li .tab4:hover{
+    background: url("../images/cs.png") -252px -105px no-repeat;
+}

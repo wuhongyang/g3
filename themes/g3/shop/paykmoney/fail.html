@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>充值失败</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+{include file="header.html"}
+
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+		<div class="charge-info-box">
+        	<h3 class="fail">充值失败</h3>
+            <div class="charge-info">
+            	<p style="padding:0 20px" class="title">您的帐号/您为帐号 <font color="#FF0000">{echo intval($_GET['uin'])}</font> 充值失败！</p>
+                <p style="padding:0 20px">充值方式：<font color="#FF0000">{$recharge_name}</font></p>
+                <p style="padding:0 20px">充值金额：<font color="#FF0000">{$money}</font>元</p>
+                <p style="padding:0 20px">订单号：{$_GET['trade_id']}</p>
+                <p style="color:red;padding:0 20px">请立即联系官方客服进行处理：<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$GroupData['EXT']['qq']['value']}&site=qq&menu=yes"><img width="68" height="20" src="http://static.vvku.com/web/2/static/images/qqtalk.png"></img></a></p>
+            </div>
+        </div>
+    </div>    
+</div>
+
+{include file="foot.html"}
+
+</body>
+</html>

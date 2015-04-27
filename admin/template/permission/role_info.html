@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>角色管理</title>
+<style type="text/css">
+.form h2{margin: 0 0 20px 20px;border-bottom: 2px solid #000;width: 900px;}
+.form h2.mgt50{margin-top: 50px;}
+.form p iframe{position: relative;top:25px;}
+.form p span.show_img{margin-left: 20px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改角色</div>
+    <div class="header-button right">{if $link_array[138]['url']}<a href="{$link_array[138]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<script>
+active_li = 0;
+</script>
+{include file="template/tpl_header.html"}
+
+<form name="myform" action="?module={if $info}update{else}add{/if}&tpl_id={$_GET['tpl_id']}" method="post" class="form" id="form">
+    {if $info}<input type="hidden" name="id" value="<{$info['id']}>" />{/if}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+           角色组:&nbsp;&nbsp;
+           <select name="cate_id">
+           <option value='-1'>请选择</option>
+           {foreach $list $one}
+           <option {if $info['cate_id']==$one['cate_id'] || $_GET['cate_id'] == $one['cate_id']}selected="selected"{/if} value='{$one['cate_id']}' >{$one['cate_name']}</option>
+           {/foreach}
+           </select>
+    <h2>添加/修改角色</h2>
+    <p>
+        <label>角色名称：</label>
+        <input type="text" name="name" value="{$info['name']}" id="name" size="36" />
+    </p>
+    <p>
+        <label>角色描述：</label>
+        <textarea rows="4" cols="33" name="desc">{$info['desc']}</textarea>
+    </p>
+    <p>
+        <label>攻值：</label>
+        <input type="text" name="attack" value="{$info['attack']}">
+    </p>
+    <p>
+        <label>防值：</label>
+        <input type="text" name="defense" value="{$info['defense']}">
+    </p>
+    <p>
+        <label>角色类型：</label>
+        <select name="rule">
+            <option value="-1">--请选择--</option>
+            {foreach $rule_config $key $val}
+            <option value="{$key}" {if $info['rule']==$key}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p {if $info['rule'] != 1}style="display:none;"{/if} id="rule_show">
+        <label>身份获取方式：</label>
+        <select name="rule_show[]" id="rule_show_1">
+            <option value="-1">--请选择--</option>
+            {foreach $rule_show_config $key $val}
+            <option value="{$key}" {if $info['role_show_1']==$key}selected{/if}>{$val['name']}</option>
+            {/foreach}
+        </select>&nbsp;&nbsp;
+        <select name="rule_show[]" id="rule_show_2">
+            <option value="-1">--请选择--</option>
+            {if $info['role_show_1'] > 0}
+                {foreach $rule_show_config[$info['role_show_1']]['sub'] $key $val}
+                <option value="{$key}" {if $info['role_show_2']==$key}selected{/if}>{$val}</option>
+                {/foreach}
+            {/if}
+        </select>
+    </p>
+    <p>
+        <label>角色作用域：</label>
+        <select name="scope">
+            <option value="-1">--请选择--</option>
+            {foreach $scope $key $val}
+            <option value="{$key}" {if $info['scope']==$key}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+        <label>角色图标排序：</label>
+		<input type="text" name="order" value="{$info['order']}" />
+    </p>
+    <p>
+        <label>角色昵称颜色：</label>
+        R： <input type="text" name="color[]" value="{$colors[0]}" size="4" />
+        G： <input type="text" name="color[]" value="{$colors[1]}" size="4" />
+        B： <input type="text" name="color[]" value="{$colors[2]}" size="4" />
+    </p>
+    <p>
+        <label>角色排序权重：</label>
+        <input type="text" name="order_weight" value="{$info['order_weight']}" />
+    </p>
+    <p>
+        <label>聊天文字颜色：</label>
+        R： <input type="text" name="font_color[]" value="{$font_color[0]}" size="4" />
+        G： <input type="text" name="font_color[]" value="{$font_color[1]}" size="4" />
+        B： <input type="text" name="font_color[]" value="{$font_color[2]}" size="4" />
+    </p>
+    <p>
+        <label>是否时效：</label>
+        <input type="radio" name="has_expire" value="1" id="expire" {if $info['has_expire']==1}checked{/if}><label for="expire" style="padding:0 46px 0 5px; width:auto;">是</label>
+        <input type="radio" name="has_expire" value="0" id="no_epxire" {if $info['has_expire']!=1}checked{/if}><label for="no_epxire" style="padding-left:5px; width:auto;">否</label>
+        
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="status" value="0" id="no" {if $info['status']!=1}checked{/if}><label for="no" style="padding:0 20px 0 5px; width:auto;">不启用</label>
+        <input type="radio" name="status" value="1" id="yes" {if $info['status']==1}checked{/if}><label for="yes" style="padding-left:5px; width:auto;">启用</label>
+    </p>
+    <p>
+        <label>管理员类别：</label>
+        <input type="radio" name="admin_type" value="0" id="admin_type_0" {if $info['admin_type']==0}checked{/if}>
+        <label for="admin_type_0" style="padding:0 20px 0 5px; width:auto;">非管理员</label>
+        <input type="radio" name="admin_type" value="1" id="admin_type_1" {if $info['admin_type']==1}checked{/if}>
+        <label for="admin_type_1" style="padding:0 20px 0 5px; width:auto;">普通管理员</label>
+        <input type="radio" name="admin_type" value="2" id="admin_type_2" {if $info['admin_type']==2}checked{/if}>
+        <label for="admin_type_2" style="padding:0 20px 0 5px; width:auto;">超级管理员</label>
+        <input type="radio" name="admin_type" value="3" id="admin_type_3" {if $info['admin_type']==3}checked{/if}>
+        <label for="admin_type_3" style="padding:0 20px 0 5px; width:auto;">超超级管理员</label>
+    </p>
+    <h2 class="mgt50">角色图标设置</h2>
+    <p>
+        <label>图标显示区域：</label>
+        <input type="checkbox" name="icon_area[]" value="1" id="icon_area_1" {if in_array(1,(array)$icon_area)}checked{/if}>
+        <label for="icon_area_1" style="padding:0 20px 0 5px; width:auto;">聊天区</label>
+        <input type="checkbox" name="icon_area[]" value="2" id="icon_area_2" {if in_array(2,(array)$icon_area)}checked{/if}>
+        <label for="icon_area_2" style="padding:0 20px 0 5px; width:auto;">用户列表-左</label>
+        <input type="checkbox" name="icon_area[]" value="4" id="icon_area_4" {if in_array(4,(array)$icon_area)}checked{/if}>
+        <label for="icon_area_2" style="padding:0 20px 0 5px; width:auto;">用户列表-右</label>
+        <input type="checkbox" name="icon_area[]" value="5" id="icon_area_5" {if in_array(5,(array)$icon_area)}checked{/if}>
+        <label for="icon_area_2" style="padding:0 20px 0 5px; width:auto;">用户列表-昵称前</label>
+        <input type="checkbox" name="icon_area[]" value="3" id="icon_area_3" {if in_array(3,(array)$icon_area)}checked{/if}>
+        <label for="icon_area_3" style="padding:0 20px 0 5px; width:auto;">用户信息卡</label>
+    </p>
+    <p>
+        <label>角色大图标：</label>
+        <iframe src="?module=up_role_icon&type=big" frameborder="0" height="50" scrolling="no"></iframe>
+        <span id="show_img_big" class="show_img">
+            {if $info['role_big_icon']}
+            <object width="20" height="20" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+            <param value="{php echo cdn_url(PIC_API_PATH.'/p/'.$info['role_big_icon'].'/0/0.jpg')}" name="movie">
+            <param value="high" name="quality">
+            <embed width="20" height="20" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$info['role_big_icon'].'/0/0.jpg')}">
+            </object>
+            <a style="cursor:pointer;" class="del_pic">删除</a>
+            <input type="hidden" name="img_big" value="{$info['role_big_icon']}">
+            {/if}
+        </span>
+    </p>
+    <p>
+        <label>角色小图标：</label>
+        <iframe src="?module=up_role_icon&type=small" frameborder="0" height="50" scrolling="no"></iframe>
+        <span id="show_img_small" class="show_img">
+            {if $info['role_small_icon']}
+            <object width="20" height="20" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+            <param value="{php echo cdn_url(PIC_API_PATH.'/p/'.$info['role_small_icon'].'/0/0.jpg')}" name="movie">
+            <param value="high" name="quality">
+            <embed width="20" height="20" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$info['role_small_icon'].'/0/0.jpg')}">
+            </object>
+            <a style="cursor:pointer;" class="del_pic">删除</a>
+            <input type="hidden" name="img_small" value="{$info['role_small_icon']}">
+            {/if}
+        </span>
+    </p>
+    <p style="margin-top:30px;">
+        <label>&nbsp;</label>
+        <input type="button" class="submit" id="sbt" value="保存信息" style="width:80px;height:28px;" />
+    </p>
+</form>
+</center>
+</body>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<script type="text/javascript">
+var rule_show = $.parseJSON('{$rule_show_config_json}');
+$(function(){
+    $('select[name="rule"]').change(function(){
+        var rule = $(this).val();
+        if(rule == 1){
+            $('#rule_show').show();
+        }else{
+            $('#rule_show').hide();
+        }
+    });
+
+    $('#rule_show_1').change(function(){
+        var rule_show_id = $(this).val();
+        var obj = $('#rule_show_2');
+        var len = obj.find('option').length;
+        obj.find('option').each(function(i) {
+            if(i > 0){
+                $(this).remove();
+            }
+        });
+        if(rule_show_id == -1){
+            return ;
+        }
+        var json = rule_show[rule_show_id].sub;
+        for(var i in json){
+            obj.append('<option value="' + i + '">' + json[i] + '</option>');
+        }
+    });
+
+    $('.del_pic').live('click', function(){
+        $(this).siblings().remove();
+        $(this).remove();
+    });
+
+    $('#sbt').click(function(){
+        var name = $('input[name="name"]').val();
+        name = name.trim();
+        if(name.isEmpty()){
+            alert('角色名称不能为空');
+            return false;
+        }
+        var desc = $('textarea[name="desc"]').val();
+        desc = desc.trim();
+        if(desc.isEmpty()){
+            alert('角色描述不能为空');
+            return false;
+        }
+        var attack = $('input[name="attack"]').val();
+        if(attack.isEmpty()){
+            alert('攻值不能为空');
+            return false;
+        }
+        if(!attack.isNumber()){
+            alert('攻值必须为数字');
+            return false;
+        }
+        var defense = $('input[name="defense"]').val();
+        if(defense.isEmpty()){
+            alert('防值不能为空');
+            return false;
+        }
+        if(!defense.isNumber()){
+            alert('防值必须为数字');
+            return false;
+        }
+        var rule = $('select[name="rule"]').find('option:selected').val();
+        if(rule < 1){
+            alert('请选择规则定义');
+            return false;
+        }
+        var scope = $('select[name="scope"]').find('option:selected').val();
+        if(scope < 1){
+            alert('请选择角色作用域');
+            return false;
+        }
+        var order = $('input[name="order"]').val();
+        if(order.isEmpty()){
+            alert('角色排序不能为空');
+            return false;
+        }
+        if(!order.isNumber()){
+            alert('角色排序必须为数字');
+            return false;
+        }
+        var big_img = $('#show_img_big').find('object').length;
+        if(big_img < 1){
+            alert('请先上传角色大图标');
+            return false;
+        }
+        var small_img = $('#show_img_small').find('object').length;
+        if(small_img < 1){
+            alert('请先上传角色小图标');
+            return false;
+        }
+        $('#form').submit();
+    });
+});
+</script>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>更新中</title>
+<script type="text/javascript">
+window.onload = function flushClientCache(){
+	 var iframes = document.getElementsByTagName('iframe');
+	 for(i in iframes){
+		 if( ! iframes[i].src) continue;
+		iframes[i].contentWindow.location.reload(true);
+		if(i == iframes.length-1){
+			if(iframes[i].attachEvent){
+				iframes[i].attachEvent("onload", function(i){
+					location.href="<?php echo $back ?>";
+				});
+			 }else{
+				iframes[i].onload = function(){
+					location.href="<?php echo $back ?>";
+				};
+			}
+		}
+	 }
+}
+</script>
+</head>
+
+<body>
+请稍等...
+<?php foreach($urls as $key=>$val): ?>
+<iframe src="<?php echo PIC_API_PATH.$val ?>" width="0" height="0" frameborder="0" scrolling="no"></iframe>
+<?php endforeach ?>
+</body>
+</html>

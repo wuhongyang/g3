@@ -1,0 +1,32 @@
+{include file="header_group_site.html"}
+<div class="container">
+	{if $styleInfo['banner_status']}
+    <div class="top-bg"><img src="{PIC_API_PATH}/groupbanner/{$groupId}/960/0.jpg" width="960" /></div>
+    {/if}
+
+    <div class="header-nav clearfix">
+    	<div class="header-logo pull-left">
+        	{if $groupInfo['logo']==''}<div style="width:100px;">&nbsp;</div>{else}<a href="index.html"><img src="{echo PIC_API_PATH.'/p/'.$groupInfo['logo'].'/100/30.jpg';}" title="{$groupInfo['name']}" alt="{$groupInfo['name']}" width="100" height="30" /></a>{/if}
+        </div>
+        <ul class="header-nav-list pull-left">
+            {foreach $navigateList $val}
+            {if $val['module_name']=='首页'}
+            <li><a href="index.html"{if $moduleAction=='index'} class="bottom_text"{else} class="minor_text"{/if}>{$val['name']}</a></li>
+            {elseif $val['module_name']=='排行榜'}
+            <li><a href="top.html"{if $moduleAction=='top'} class="bottom_text"{else} class="minor_text"{/if}>{$val['name']}</a></li>
+            {elseif $val['module_name']=='活动中心'}
+            <li><a href="active.html"{if $moduleAction=='active'} class="bottom_text"{else} class="minor_text"{/if}>{$val['name']}</a></li>
+            {elseif $val['module_name']=='会员搜索'}
+            <li><a href="search.php?module=s"{if $moduleAction=='search'} class="bottom_text"{else} class="minor_text"{/if}>{$val['name']}</a></li>
+            {elseif $val['module_name']=='加入我们'}
+            <li><a href="join.html"{if $moduleAction=='join'} class="bottom_text"{else} class="minor_text"{/if}>{$val['name']}</a></li>
+            {elseif $val['module_name']=='商城'}
+            <li><a href="/shop/index.php" class="minor_text">{$val['name']}</a></li>         
+            {/if}
+            {/foreach}
+        </ul>
+        <div class="shortcut pull-right">
+            <a href="/rooms/join.php?module=info&type=2" class="minor_text">室主/艺人申请</a>
+        </div>
+    </div>
+</div>

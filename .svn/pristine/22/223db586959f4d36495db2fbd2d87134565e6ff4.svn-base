@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱帐号找回密码</title>
+<link href="<?php echo THEMES_URL ?>passport/css/global-min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo THEMES_URL ?>passport/css/style-min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<?php include_once dirname(__FILE__).'/header.html'; ?>
+<div class="body box clean">
+	<div class="body-title"><span>四、重置密码</span></div>
+	<div class="body-left">
+
+		<dl class="last-step">
+			<dd>
+				<h1><font color="#FF7A00">新登录密码设置成功!</font></h1>
+				<p>为了您的帐号安全，请保管好您的登录密码</p>
+			</dd>
+			<dd class="reg-hr"><a href="http://<?php echo $_SERVER['HTTP_HOST'] ?>" class="gorooms-button">进入大厅首页，选择直播房间</a></dd>
+			<dd><a href="?account" class="submit3" style="color:#601005;margin-top:20px;">登录通行证</a></dd>
+		</dl>
+		
+	</div>
+</div>
+</body>
+</html>

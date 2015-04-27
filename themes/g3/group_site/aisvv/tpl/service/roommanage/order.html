@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.disable{background:#CCCCCC;}
+#member_value, #deny_value{display:none;}
+#members{width:222px;height:120px;overflow-y:scroll;padding:2px;border:solid 1px #CCC;float:left; margin-left:20px; position:relative;}
+#members li{line-height:20px;padding-left:5px;margin:0px;}
+.selected{background:#3399FF;}
+</style>
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+                {include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                    <div class="roomhd">排麦规则设置</div>
+                    <form method="post" id="form">
+                    <input type="hidden" name="member" value="{$member}" id="member_value" />
+                    <ul class="formlist formlist5">
+                        <li class="clearfix">
+                            <p class="st clearfix">
+                                <input type="radio" value="1" id="r_all" name="mike_power" {if $mike_power==1} checked="checked" {/if} class="radios"><span class="txt4">所有用户可排麦</span>
+                                <input type="radio" value="2" id="r_art" name="mike_power" {if $mike_power==2} checked="checked" {/if} class="radios"><span class="txt4">社区艺人可排麦</span>
+                                <input type="radio" value="3" id="r_members" name="mike_power" {if $mike_power==3} checked="checked" {/if} class="radios"><span class="txt4">指定成员可排麦</span>
+                            </p>
+                            <p>
+                                <ul class="disable" name="members" id="members"></ul>
+                                <p style="width:75px;float:left; padding-left:10px;">
+                                <input type="button" value="添加" id="add_id" class="greenbtn2" /><br />
+                                <input type="button" value="删除" id="del_id" class="bluebtn2" />
+                                </p>
+                                <table style="text-align:center; display:none; float:left;" id="d_members">
+                                    <tr>
+                                        <td colspan="2" height="30" style="background:#E6EDF3; border:1px solid #D7D7D7;"><b>添加用户</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td height="30" style="border-left:1px solid #D7D7D7">&nbsp;&nbsp;用户id：</td>
+                                        <td height="30" style="border-right:1px solid #D7D7D7"><input type="text" name="member_id" id="new_id" size="15" />&nbsp;&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" height="30" style="border:1px solid #D7D7D7; border-top:none;"><a href="javascript:void(0);" id="ok" class="greenbtn" style="margin-left:25px;"><span>确定</span></a><a href="javascript:void(0);" id="cancel" class="bluebtn" style="margin-left:5px;"><span>取消</span></a></td>
+                                    </tr>
+                                </table>
+                            </p>
+                        </li>
+                        <li class="clearfix">
+                            <p><span>上麦时间：</span><input type="text" name="main_video_time" size="10" id="main_video_time" value="{$main_video_time}" /><span>分钟（范围5-500分钟）</span></p>
+                        </li>
+                        <li class="clearfix">
+                            <p><input type="submit" id="submit" value="保存" class="yellowbtn2" /></p>
+                        </li>
+                    </ul>
+                    </form>
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$(function(){
+	var r_members 	 	= $("#r_members");
+	var r_all			= $("#r_all");
+	var r_art			= $("#r_art");
+	var member_value	= $("#member_value");
+	var add_id		 	= $("#add_id");
+	var del_id			= $("#del_id");
+	var d_members		= $("#d_members");
+	var ok				= $("#ok");
+	var cancel			= $("#cancel");
+	var member_value 	= $("#member_value");
+	var members		 	= $("#members");
+	var li			 	= $("#members li");
+	var new_id		 	= $("#new_id");
+	var main_video_time = $("#main_video_time");
+	
+	function predeal(){
+		if(r_members.attr("checked"))
+			r_members.trigger("click");
+		else
+			dis(true);
+	}
+	function dis(b){
+		//add_id.attr("disabled", b);
+		//del_id.attr("disabled", b);
+	}
+	
+	r_all.click(function(){
+		dis(true);
+		members.html("");
+		members.attr("disabled",true).addClass("disable");
+	})
+	r_art.click(function(){
+		dis(true);
+		members.html("");
+		members.attr("disabled",true).addClass("disable");
+	})
+	r_members.click(function(){
+		dis(false);
+		var member_ids = member_value.attr("value").split(",");
+		var html    = "";
+		for(var i=0;i<member_ids.length;i++){
+			html += "<li>"+member_ids[i]+"</li>";
+		}
+		members.html(html);
+		members.attr("disabled",false).removeClass("disable");
+	})
+	add_id.click(function(){
+		if(r_members.attr("checked"))
+			d_members.show();
+		else
+			alert("在此组无法添加成员")
+	})
+	ok.click(function(){
+		if(!r_members.attr("checked")){
+			alert("无法再改组添加成员");
+			d_members.hide();
+			new_id.attr("value","");
+			return;
+		}
+		var new_id_value = new_id.attr("value");
+		if(!new_id_value){
+			alert("不能为空");
+			new_id.attr("value","");
+			d_members.hide();
+			return;
+		}
+		if(member_value.attr("value"))
+			var member_ids = member_value.attr("value").split(",");
+		else
+			var member_ids = new Array();
+		for(var i=0;i<member_ids.length;i++){
+			if(member_ids[i] == new_id_value){
+				alert("已存在该ID");
+				new_id.attr("value","");
+				d_members.hide();
+				return;
+			}
+		}
+		member_ids.push(new_id_value);
+		new_id.attr("value","");
+		member_value.attr("value", member_ids.join(","));
+		r_members.trigger("click");
+		d_members.hide();
+	})
+	del_id.click(function(){
+		var new_ids    = new Array();
+		var selected   = $("li.selected");
+		var value 	   = selected.html();
+		if(!value){
+			alert("没有选中删除成员");
+			return;
+		}
+		var member_ids = member_value.attr("value").split(",");
+		for(var i=0;i<member_ids.length;i++){
+			if(member_ids[i] != value){
+				var j = 0;
+				new_ids.push(member_ids[i]);	
+				j++;
+			}
+		}
+		member_value.attr("value", new_ids.join(","));
+		r_members.trigger("click");
+	})
+	cancel.click(function(){
+		d_members.hide();
+	})
+	li.live("click", function(){
+		$("#members li").removeClass("selected");
+		$(this).addClass("selected");
+	})
+	$("#submit").click(function(){
+		var v_value = main_video_time.attr("value");
+		var pattern=/^\d+$/;
+		if(!pattern.test(v_value)){
+			alert("上麦时间为5-500");
+			return false;
+		}
+		if(v_value < 5 || v_value > 500){
+			alert("上麦时间为5-500");
+			return false;
+		}else{
+			return true;
+		}
+		//$("#form").submit();
+		//return false;
+	})
+	
+	predeal();
+})
+</script>
+</body>
+</html>

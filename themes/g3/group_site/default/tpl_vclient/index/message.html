@@ -1,0 +1,16 @@
+{if $messageList['messageList']}
+<dl class="body-main-right-ranks">
+    <dt><h3 class="main_text">$messageList['title']</h3></dt>
+    <dd>
+        <div class="scrolltext-wrap">
+        <div id="rollText">
+            <ul class="scrolltext-list">
+            {foreach $messageList['messageList'] $val}
+                <li>{$val['content']}</li>
+            {/foreach}
+            </ul>
+        </div>
+        </div>
+    </dd>
+</dl>
+{/if}

@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>kms_usercreate</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加/修改一级划分</div>
+  <div class="header-button right"><a href="?module=level_one_list" class="add-button">返回</a></div>
+</div>
+<form method="post" class="form" action="?module=level_one_save" onsubmit="return check();">
+<p>
+	<label>问题一级划分名称：</label>
+	<input type="text" name="name" id="name" value="{$info['name']}" maxlength="20" style="width:150"/> &nbsp;<font color="red">*&nbsp;&nbsp;</font>
+</p>
+<p>
+	<label>问题一级划分描述：</label>
+	<textarea name="desc" id="desc">{$info['desc']}</textarea>
+</p>
+<p>
+	<label>排序：</label>
+	<input type="text" name="order" id="order" value="{$info['order']}" maxlength="20" style="width:150"/>
+</p>
+<p>
+	<label>是否启用：</label>
+	<input name="status" id="status" value="1" {if $info['status'] == 1 || !$info['status']} checked="checked" {/if} type="radio"/>启用&nbsp;
+	<input name="status" id="status" value="2" {if $info['status'] == 2} checked="checked" {/if} type="radio"/>不启用&nbsp;
+</p>
+<p>
+	<label></label>
+	<input type="hidden" name="id" value="{$info['id']}"/>
+	<input type="submit" value=" 开 始 创 建 >>> " style="width:140;height:32"/>&nbsp;
+</p>
+</form>
+<script>
+function check(){
+	return true;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>up</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.up-input input{position:absolute;cursor:pointer;display:inline-block;width:60px;height:26px;opacity:0;filter:alpha(opacity=0);z-index:100;}
+#readfile{float:left;font-size:16px;width:400px;margin-right:5px;}
+</style>
+</head>
+
+<body>
+<form method="post" enctype="multipart/form-data" id="upload_form">
+  <div class="clearfix">
+      <input type="text" id="readfile" readonly name="filename" />
+      <span class="gray">* 推荐尺寸 100 * 30</span>
+  </div>
+  <div class="clearfix" style="margin-top:20px;">
+      <span class="fl up-input">
+      <input type="file" size="1" name="fileField" onChange="read(this)" />
+      <label class="graybtn2" style="margin-right:20px;">浏览</label>
+      </span>
+      <input type="submit" class="graybtn2" value="上传" />
+  </div>
+</form>
+
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript">
+function read(obj){
+	value = obj.value;
+	if(value.length > 60){
+		value = '...'+value.substr(value.length-60,value.length);
+	}
+	document.getElementById('readfile').value=value
+}
+
+var upfileInfo = '{$rst}';
+if(upfileInfo){
+    upfileInfo = $.parseJSON(upfileInfo);
+    if(upfileInfo.Flag == 100){
+    	var hidden = $('#logo',window.parent.document);
+    	hidden.val(upfileInfo.File);
+
+    	var img = '<img src="{php echo cdn_url(PIC_API_PATH."/p/'+upfileInfo.File+'/100/30.jpg");}" width="100" height="30">'
+    	var logoObj = $('#logo-img',window.parent.document);
+    	var imgObj = logoObj.find('img');
+    	if(imgObj.length > 0){
+    		imgObj.remove();
+    	}
+    	logoObj.append(img);
+    }
+}
+</script>
+</body>
+</html>

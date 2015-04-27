@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>二级科目列表</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">二级科目列表</div>
+  <div class="header-button right">{if $link_array[108]['url']}<a href="{$link_array[108]['url']}&bigcase_id={$_GET['bigcase_id']}" class="add-button">添加二级科目</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">一级科目列表</a></li>{/if}
+    {if $link_array[107]['url']}<li><a href="{$link_array[107]['url']}" class="active">二级科目列表</a></li>{/if}
+	{if $link_array[112]['url']}<li><a href="{$link_array[112]['url']}">三级科目列表</a></li>{/if}
+	{if $link_array[117]['url']}<li><a href="{$link_array[117]['url']}">四级科目列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+    <form method="get">
+    <input type="hidden" name="module" value="{$_GET['module']}" />
+    一级科目：
+    <select name="bigcase_id" id="bigcase">
+        <option value="0">请选择一级科目</option>
+    </select> &nbsp;
+    状态：<select name="status">
+        <option value="0">请选择</option>
+        <option value="2" {if $_GET['status']==2}selected{/if}>使用</option>
+        <option value="1" {if $_GET['status']==1}selected{/if}>不使用</option>
+    </select> &nbsp;
+     关键字：<input type="text" name="wd" value="{$_GET['wd']}" />
+    <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+  <tr>
+    <th>二级业务科目类别ID</th>
+    <th>二级业务科目类别</th>
+    <th>隶属一级科目类别</th>
+    <th>三级业务科目数量</th>
+    <th>业务科目数量</th>
+    <th>描述</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $lists $list}
+  <tr>
+    <td>{$list['case_id']}</td>
+    <td>{$list['case_name']}</td>
+    <td>{$list['bigcase_name']}</td>
+    <td>{$list['parent_count']}</td>
+    <td>{$list['child_count']}</td>
+    <td>{$list['case_desc']}</td>
+    <td>{if $list['case_status']==1}使用{else}不使用{/if}</td>
+    <td>
+        {if $link_array[112]['url']}<a href="{$link_array[112]['url']}&bigcase_id={$list['bigcase_id']}&case_id={$list['case_id']}">查看</a>{/if}
+        {if $link_array[109]['url']}<a href="{$link_array[109]['url']}&edit={$list['case_id']}">修改</a>{/if}
+        {if $link_array[123]['url']}
+        <a href="{$link_array[123]['url']}&action=caseUp&up={$list['case_id']}&bigcase_id=$_GET['bigcase_id']">上移</a>
+        <a href="{$link_array[123]['url']}&action=caseDown&down={$list['case_id']}&bigcase_id=$_GET['bigcase_id']">下移</a>
+        {/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+
+<script type="text/javascript">
+getOptions("bigcase=1","bigcase","{$_GET['bigcase_id']}");
+</script>
+</body>
+</html>

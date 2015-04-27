@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+			<div class="rightdiv" style="overflow:hidden;">
+                <h1>代理划账</h1>
+                <p class="mgtb15 mglr20 fs14 relative" style="height:25px">       
+                    账户余额：<span class="yellow">{$vmoney}</span> <a class="normalbtn" style="padding:5px;" href="proxy_remit_account.php?module=recharge">给用户充值</a>
+                </p>
+				<div class="taocan-content">
+                    <div class="explain">
+                         <p>发生金额：<span class="yellow">{$total}</span></p>
+                    </div>
+                    <div class="mgt10">
+                    <form method="get" id="form">
+                    	<span>充值用户ID：</span>
+                        <input type="text" name="TargetUin" style="width:60px;" value="{$_GET['TargetUin']}">
+                        <span>时间段：</span>
+                        <input type="text" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'})" name="StartDate" value="{$StartDate}">
+                        <span>至</span>
+                        <input type="text" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:00'})" name="EndDate" value="{$EndDate}">
+                        <input name="" type="button" class="normalbtn" onclick="$('#form').submit();" value="查询"/>
+                    </form>
+                    </div>
+                    <table width="780" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgtb15">
+                      <tr>
+                        <th>编号</th>
+                        <th>充值用户</th>
+                        <th>充值金额</th>
+                        <th>时间</th>
+                      </tr>
+                      {foreach $list['list'] $key $val}
+                      <tr>
+                        <td>{php echo $key+1;}</td>
+                        <td>{$val['nick']}（{$val['target_uin']}）</td>
+                        <td>{$val['vmoney']}</td>
+                        <td>{echo date('Y.m.d H:i',$val['uptime'])}</td>
+                      </tr>
+                      {/foreach}
+                      <tr>
+                        <td colspan="6">{$list['page']}</td>
+                      </tr>
+                    </table>
+            	</div>                
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

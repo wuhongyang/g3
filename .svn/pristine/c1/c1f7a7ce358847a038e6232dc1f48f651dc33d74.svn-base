@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file="head.html"}
+<title>通行证密码重置</title>
+<style>
+td{padding:5px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">通行证密码重置</div>
+	<div class="header-button right">
+		<a class="add-button" href="passport.php">返回</a>
+	</div>
+</div>
+
+<div class="body">
+    <form method="post" style="padding:20px;">
+    <table>
+    	<tr>
+    		<td>UIN：</td><td>{$one['uin']}</td>
+    	</tr>
+    	<tr>
+    		<td>新 密 码 ：</td><td><input type="password" name="pass"  size="32" /></td>
+    	</tr>
+    	<tr>
+    		<td>重 新 输 入 一 次 ：</td><td><input type="password" name="repass" size="32" /></td>
+    	</tr>
+		<tr>
+			<td></td><td><input type="submit" value="更新配置"> &nbsp; <input type="reset" value="重置"></td>
+		</tr>
+    </table>
+    <input type = 'hidden' name = 'uin' value = "{$one['uin']}">
+	</form>
+</div>
+
+</body>
+</html>

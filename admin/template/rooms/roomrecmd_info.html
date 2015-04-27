@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>业务规则定义</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">热荐房间</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="?module=admin_recmd&group={$groupId}" method="post"  class="form" id="form">
+    <input type="hidden" name="roomid" value="<{$roomid}>" /><input type="hidden" name="recstatus" id="recstatus" />
+	<p>
+    	<label>节目单 :</label>
+    </p>
+    <p>
+		<label>时间：</label>
+		<input type="text" name="info[s_time]" id="s_time" value="00:00:00" style="width:60" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" /> —
+		<input type="text" name="info[e_time]" id="e_time" value="23:59:59" style="width:60" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" />
+		<label>艺人：</label><input type="text" name="info[actorid]" value="{$info['actorid']}" id="actorid" size="20" /><span style="color:red">*请输入该时间段表演艺人的ID</span>
+    	<label><input type="button" value="添  加" id="add-btn" style="width:50px;" /></label>
+	</p>
+    <div style="margin-top:10px;"></div>
+	<table class="table-list" id="table-list" style="line-height:26px; width:75%; margin-left:24px;">
+        <tr>
+			<th>开始时间</th>
+			<th>结束时间</th>
+            <th>艺人ID</th>
+            <th>操作</th>
+        </tr>
+    </table>
+    <div style="margin-top:10px;"></div>
+    <p>
+        <label>活动介绍：</label>
+        <textarea rows="10" cols="50" name="info[desc]" id="desc">{$desc}</textarea><span style="color:red">*不超过50字</span>
+    </p>
+   <div style="margin:50px 0 0 300px;"><input type="button" class="submit" id="truesubmit" value="保存为热荐房间" /><input id="falsesubmit" type="button" class="submit" value="取消热荐" /></div>
+</form>
+</center>
+<script>
+$(function(){
+	$("#add-btn").click(function(){
+		//检测参数
+		var actorid = $("#actorid").val();
+		var s_time = $("#s_time").val();
+		var e_time = $("#e_time").val();
+		if(isNaN(actorid) || actorid<0 || actorid==''){
+			alert('请正确填写艺人id');
+			return false;
+		}
+		if(s_time=='' || e_time==''){
+			alert('请选择时间段');
+			return false;
+		}
+
+		var r = {"actorid":actorid,"s_time":s_time,"e_time":e_time};
+		toShow(r);
+	});
+	{if $data}
+		{foreach $data $key $val}
+			var rule = '{$val}';
+			rule = str2obj(rule);toShow(rule);
+		{/foreach}
+	{/if}
+	
+});
+
+//展示到页面并把其写入hidden
+function toShow(r){
+	if(r.s_time == undefined){
+		r.s_time = '';
+	}
+	if(r.e_time == undefined){
+		r.e_time = '';
+	}
+	var rule = '{"actorid":"'+r.actorid+'","s_time":"'+r.s_time+'","e_time":"'+r.e_time+'"}';
+	var del = $('<input type="button" value="删  除" style="width:60px;">');
+	var content = $('<tr><td>'+r.s_time+'</td><td>'+r.e_time+'</td><td>'+r.actorid+'</td><td></td></tr>');
+	var hidden = $('<input type="hidden" name="rule[]" value=\''+rule+'\'>');
+	$("#table-list").append(content);
+	$("#table-list").find("tr:last").find("td:last").append(del);
+	$("#form").append(hidden);
+	del.click(function(){
+		content.remove();
+		del.remove();
+		hidden.remove();
+	});
+}
+
+//把json字串转成json对象
+function str2obj(str){
+	var obj;
+	try{
+		obj = eval('('+ str +')');
+	}catch(e){
+		obj = {};
+	}
+	return obj;
+}
+
+$('#truesubmit').click(function() {
+  var name = $("#desc").val();
+	name = name.replace(/^\s+|\s+$/g,'');
+	if(name == ''){
+		alert("请填写活动介绍");
+		return false;
+	}else if(name.length > 50){
+		alert("活动介绍须少于50个字符");
+		return false;
+	}
+	$('#recstatus').val("1");
+	$('#form').submit();
+});
+
+$('#falsesubmit').click(function() {
+	$('#recstatus').val("0");
+	$('#form').submit();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>渠道管理</title>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改渠道</div>
+    <div class="header-button right">{if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form action="{if $info['id']}?module=channelUpdate{else}?module=channelAdd{/if}" method="post" class="form">
+    {if $info['id']}<input type="hidden" name="id" value="<{$info['id']}>" />{/if}
+    <input type="hidden" name="info[partner_id]" value="{$info['partner_id']}" />
+    <p>
+        <label>所属合作商：</label>
+        <strong>{$info['partner_name']}</strong>
+    </p>
+    <p>
+        <label>合作商ID：</label>
+        <strong>{$info['partner_id']}</strong>
+    </p>
+    <p>
+        <label>渠道商类型：</label>
+        <span>{$cates[$info['type']]}</span>
+    </p>
+    <p id="J_p_c_a">
+    	<label>所属地域：</label>
+        <span>
+            {if $info['type'] == 8}
+    		<select id="province" name="other[province]"><option value="-1">请选择</option></select>&nbsp;&nbsp;
+            <select id="city" name="other[city]"><option value="-1">城市</option></select>
+            <select id="area" name="other[area]"><option value="-1">区/县</option></select>
+            {else}
+            {echo $pName.$cName.$aName}
+            <input type="hidden" name="other[province]" value="{$provinceId}">
+            <input type="hidden" name="other[city]" value="{$cityId}">
+            <input type="hidden" name="other[area]" value="{$areaId}">
+            {/if}
+        </span>
+    </p>
+    <p id="J_region">
+        <label>地域ID：</label>
+        <span>{$info['region_id']}</span>
+    </p>
+    <p>
+        <label>地域负责人ID：</label>
+        {if $info["type"] == 7}
+        <input type="text" name="info[uid]" value="{$info['uid']}" id="J_uid">
+        {else}
+        <span id="J_station_head_span">{$info['uid']}</span>
+        {/if}
+    </p>
+    {if $info["type"] != 7}
+    <p>
+        <label>用户ID：</label>
+        <span>{$info['uid']}</span>
+    </p>
+    {/if}
+     <p>
+        <label>银行账户：</label>
+        <span id="J_bank_name">{$banks[$bankInfo['bank_name']]}</span>
+        <span style="margin-left:40px;"></span>
+        <span id="J_bank_id">{$bankInfo['bank_id']}</span>
+    </p>
+    <p>
+        <label>开户银行名称：</label>
+        <span id="J_bank_address">{$bankInfo['bank_address']}</span>
+    </p>
+    {if $info['type']==9 || $info['type']==15}
+    <p>
+        <label>站ID：</label>
+        <span>{$info['up_uid']}</span>
+    </p>
+    {/if}
+    <p {if $info['type']!=9 && $info['type']!=15}style="display:none;"{/if} id="J_roomid">
+        <label>签约房间ID：</label>
+        <input type="text" name="info[roomid]" value="{$info['room_id']}" size="32"> 
+    </p>    
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="info[status]" value="0" id="no" {if $info['flag']!=1}checked{/if}><label for="no" style="padding:0 20px 0 5px; width:auto;">不启用</label>
+        <input type="radio" name="info[status]" value="1" id="yes" {if $info['flag']==1}checked{/if}><label for="yes" style="padding-left:5px; width:auto;">启用</label>
+    </p> 
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+</center>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/partner.js"></script>
+<script type="text/javascript">
+var province_JSONDATA = eval('({$province_JSONDATA})');
+var city_JSONDATA =  eval('({$city_JSONDATA})');
+var area_JSONDATA = eval('({$area_JSONDATA})');
+var type = '{$info["type"]}';
+var r_id = '{$info["region_id"]}';
+$(function(){
+    //初始化开通城市
+    if(type == 8){
+        show_province("{$otherinfo['province']}");
+        show_city("{$otherinfo['province']}","{$otherinfo['city']}","{$otherinfo['area']}");
+    }
+	if(type != 7){
+        //初始化站长ID
+        _ajax_get_station_head(r_id);
+    } 
+
+    $('#type').change(function(){
+        var type = $(this).val();
+        //签约房间ID
+        if(type==9 || type==15){
+            $('#J_roomid').show();
+        }else{
+             $('#J_roomid').hide();
+        }
+        //专属服务人员
+        if(type == 8){
+            var html = '<select id="province" name="other[province]"><option value="-1">请选择</option></select>&nbsp;&nbsp;<select id="city" name="other[city]"><option value="-1">城市</option></select><select id="area" name="other[area]"><option value="-1">区/县</option></select>';
+            $('#J_p_c_a').find('span').html(html);
+            show_province();
+        }else{
+            $('#J_p_c_a').find('span').html('<span>{echo $pName.$cName.$aName}</span>');
+        }
+    });
+
+    $('#J_uid').blur(function(){
+        var uin = $(this).val();
+        if(!/^\d+$/.test(uin)){
+            return false;
+        }
+        $.ajax({
+            url: '?module=getUserBankInfo',
+            type: 'GET',
+            data: {uin:uin,timestamp:new Date().getTime()},
+            success: function(data){
+                $('#J_bank_name').html('');
+                $('#J_bank_id').html('');
+                $('#J_bank_address').html('');
+                var json = $.parseJSON(data);
+                json = $.parseJSON(json[0]);
+                if(json.Flag != 100){
+                    return ;
+                }
+                var bank_name = json.BankInfo.bank_name;
+                $('#J_bank_name').html(json.Bank[bank_name]);
+                $('#J_bank_id').html(json.BankInfo.bank_id);
+                $('#J_bank_address').html(json.BankInfo.bank_address);
+            }
+        })
+    });
+});
+</script>
+</body>
+</html>

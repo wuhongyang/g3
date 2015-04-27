@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+p span.notice{color:red;margin-left:10px;width:90px;display: inline-block;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt20 clearfix">
+        <h3 class="fl">精彩房间推荐</h3>
+        <div class="fr">
+        	<span class="gray" style="display:inline-block;margin-right:20px;">*最多添加6个房间</span>
+            <span style="display:inline-block;"><a class="bluebtn" id="J_room_add"><span>添加</span></a></span>
+        </div>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="room_table">
+      <tr>
+        <th>编号</th>
+        <th>房间号</th>
+        <th>房间名称</th>
+        <th>添加时间</th>
+        <th>房间状态</th>
+        <th>操作</th>
+      </tr>
+      {foreach $roomRecommend $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['code']}</td>
+        <td>{$rooms[$val['code']]['name']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>{echo $rooms[$val['code']]['status']>0 ? '启用' : '冻结'}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:roomRecommendUp({$val['id']});">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($roomRecommend)-1}
+                <a class="ahover" href="javascript:roomRecommendDown({$val['id']});">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:delRoomRecommend({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="mgt20 clearfix">
+        <h3 class="fl">热门艺人推荐</h3>
+        <div class="fr">
+        	<span class="gray" style="display:inline-block;margin-right:20px;">*最多添加6个艺人</span>
+            <span style="display:inline-block;"><a class="bluebtn" id="J_artist_add"><span>添加</span></a></span>
+        </div>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="artist_table">
+      <tr>
+        <th>编号</th>
+        <th>艺人ID</th>
+        <th>艺人昵称</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $artistRecommend $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['code']}</td>
+        <td>{$val['nick']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:artistRecommendUp({$val['id']});">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($artistRecommend)-1}
+                <a class="ahover" href="javascript:artistRecommendDown({$val['id']});">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:delArtistRecommend({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+
+$(function(){
+    $('#J_room_add').click(function(){
+        var nums = $('#room_table').find('tr').length;
+        if(nums >= 7){
+            _show_msg('最多添加6个房间');
+            return false;
+        }
+        var content = '<p><span>房间：</span><select name="roomid"><option value="-1">请选择</option>';
+        {foreach $rooms_JSON $key $val}
+            content += '<option value="{$key}">{echo addslashes($val["name"])}</option>'
+        {/foreach}
+        content += '</select><span class="notice" id="J_room_notice"></span></p>';
+        art.dialog({
+            title: '添加房间推荐位',
+            content: content,
+            width: 320,
+            height: 80,
+            ok: function(){
+                var roomid = $('select[name="roomid"]').val();
+                if(roomid == -1){
+                    $('#J_room_notice').html('*请先选择房间');
+                    return false;
+                }
+                $.ajax({
+                    url: '?module=room_recommend_add',
+                    type: 'POST',
+                    data: {roomid:roomid},
+                    dataType: 'JSON',
+                    success: function(data){
+                        if(data.Flag == 100){
+                            art.dialog({
+                                content: '添加房间推荐位成功',
+                                ok: function(){
+                                    location.href = '?module=recommend_list';
+                                },
+                                cancel: false,
+                                esc: false,
+                                icon: 'succeed',
+                                lock: true
+                            });
+                        }else{
+                            art.dialog({
+                                content: data.FlagString,
+                                ok: true,
+                                cancel: false,
+                                icon: 'error',
+                                lock: true
+                            });
+                        }
+                    }
+                }); 
+            },
+            cancel: true,
+            lock: true
+        })
+    });
+
+    
+    $('#J_artist_add').click(function(){
+        var nums = $('#artist_table').find('tr').length;
+        if(nums >= 7){
+            _show_msg('最多添加6个艺人');
+            return false;
+        }
+        var content = '<p><span>艺人：</span><select name="uin"><option value="-1">请选择</option>';
+        {foreach $artists $key $val}
+            content += '<option value="{$key}">{echo addslashes($val)}</option>'
+        {/foreach}
+        content += '</select><span class="notice" id="J_artist_notice"></span></p>';
+        art.dialog({
+            title: '添加艺人推荐位',
+            content: content,
+            width: 320,
+            height: 80,
+            ok: function(){
+                var uin = $('select[name="uin"]').val();
+                if(uin == -1){
+                    $('#J_artist_notice').html('*请先选择艺人');
+                    return false;
+                }
+                $.ajax({
+                    url: '?module=artist_recommend_add',
+                    type: 'POST',
+                    data: {uin:uin},
+                    dataType: 'JSON',
+                    success: function(data){
+                        if(data.Flag == 100){
+                            art.dialog({
+                                content: '添加艺人推荐位成功',
+                                ok: function(){
+                                    location.href = '?module=recommend_list';
+                                },
+                                cancel: false,
+                                esc: false,
+                                icon: 'succeed',
+                                lock: true
+                            });
+                        }else{
+                            art.dialog({
+                                content: data.FlagString,
+                                ok: true,
+                                cancel: false,
+                                icon: 'error',
+                                lock: true
+                            });
+                        }
+                    }
+                }); 
+            },
+            cancel: true,
+            lock: true
+        })
+    });
+
+    $('select[name="roomid"]').on('change', function(){
+        $('#J_room_notice').html('');
+    });
+
+    $('select[name="uin"]').on('change', function(){
+        $('#J_artist_notice').html('');
+    });
+});
+
+function roomRecommendUp(id){
+    operate(id,'room_recommend_up');
+}
+
+function roomRecommendDown(id){
+    operate(id,'room_recommend_down');
+}
+
+function artistRecommendUp(id){
+    operate(id,'artist_recommend_up');
+}
+
+function artistRecommendDown(id){
+    operate(id,'artist_recommend_down');
+}
+
+function delRoomRecommend(id){
+    delRecommend(id,'room_recommend_del');
+}
+
+function delArtistRecommend(id){
+    delRecommend(id,'artist_recommend_del');
+}
+
+function delRecommend(id,module){
+    art.dialog({
+        content: '您真的要删除该推荐位吗？',
+        ok: function(){
+            operate(id,module);
+        },
+        lock: true,
+        cancel: true,
+        icon: 'warning'
+    });
+}
+
+function operate(id,module){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: data.FlagString,
+                    ok: function(){
+                        location.href = '?module=recommend_list';
+                    },
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    ok: true,
+                    cancel: false,
+                    icon: 'error',
+                    lock: true
+                });
+            }
+        }
+    });
+}
+</script>

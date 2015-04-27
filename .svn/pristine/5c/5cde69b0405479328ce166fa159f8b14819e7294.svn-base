@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<title>财务对账-资金管理</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">财务对账-资金管理</div>
+</div >
+
+<ul class="page-tab">
+  {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">总平衡表</a></li>{/if}
+  {if $link_array[102]['url']}<li><a href="{$link_array[102]['url']}">分站平衡表</a></li>{/if}
+  {if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}">异常记录</a></li>{/if}
+  {if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}" class="active">资金管理</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+<form action="" method="get" name="myform" id="theForm">
+当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）&nbsp;&nbsp;&nbsp;
+日期：<input realvalue="" name="startDate" id="startDate" value="{$_GET['startDate']}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 150px;" type="text">至 <input realvalue="" name="endDate" id="endDate" value="{$_GET['endDate']}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 150px;" type="text">
+<input type="hidden" name="groupid" value="{$__ADMIN_CURGROUP['groupid']}" />
+<input type="hidden" name="module" value="{$_GET['module']}" />
+<input type="submit" value="查询" />
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+    <tr>
+    	<td width="12%">时间</td>
+    	<td width="5%">站ID</td>
+        <td width="7%">用户存入</td>
+        <td width="7%">用户支出</td>
+    	<td width="8%">用户余额</td>
+        <td width="7%">科目存入</td>
+        <td width="7%">科目支出</td>
+    	<td width="8%">科目余额</td>
+        <td width="7%">税收存入</td>
+        <td width="7%">税收支出</td>
+        <td width="8%">税收余额</td>
+        <td width="8%">合计</td>
+        <td width="9%">资金包</td>
+    </tr>
+    {foreach $finance_manage $key $val2}
+    <tr>
+        <td>{php echo date('Y-m-d',$val2['uptime']);}</td>
+        <td>{$val2['group_id']}</td>
+        <td>{$val2['user_income']}</td>
+        <td>{$val2['user_pay']}</td>
+        <td>{$val2['voucher_balance']}</td>
+        <td>{$val2['subject_income']}</td>
+        <td>{$val2['subject_pay']}</td>
+        <td>{$val2['voucher_parent_balance']}</td>
+        <td>{$val2['tax_income']}</td>
+        <td>{$val2['tax_pay']}</td>
+        <td>{$val2['tax_parent_balance']}</td>
+        <td>{$val2['tot']}</td>
+        <td>{$val2['purse']}</td>
+  	</tr>
+    {/foreach}
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

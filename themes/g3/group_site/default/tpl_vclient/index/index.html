@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>{$groupInfo['name']}</title>
+<!--[if lte IE 7]>
+<link href="{STATIC_API_PATH}/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<![endif]-->
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/quality.js"></script>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{STATIC_API_PATH}/frontend/plugin/slideBox/css/jquery.slideBox.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+</head>
+<body>
+{include file="header.html"}
+<div class="container">
+	<div class="body clearfix">
+        <div class="body-side pull-left">
+            <!-- 当前在线 -->
+        	{include file="index/online.html"}
+            <!-- 当前在线 -->
+            <!-- 搜索 -->
+        	{include file="index/search.html"}
+            <!-- 搜索 -->
+            <!-- 分类 -->
+        	{include file="index/category.html"}
+            <!-- 分类 -->
+            <!-- 自定义导航 -->
+			{include file="index/left_menu.html"}
+            <!-- 自定义导航 -->
+            {if $imgList[1]['status']==1&&$imgList[1]['img']!=''}
+            <div class="body-side-img">
+            {if $imgList[1]['link']}
+                <a href="{$imgList[1]['link']}"><img src="{PIC_API_PATH}/p/{$imgList[1]['img']}/145/80.jpg" width="145" height="80" /></a>
+            {else}
+            	<img src="{PIC_API_PATH}/p/{$imgList[1]['img']}/145/80.jpg" width="145" height="80" />
+            {/if}
+            </div>
+            {/if}
+        </div>
+        
+		<div class="body-main pull-right clearfix">
+        	<div class="body-main-left pull-left">
+            <!-- 轮播图 -->
+                {include file="index/adv_cycle.html"}
+            <!-- 轮播图 -->
+            <!-- 推荐位 -->
+            <div id="middle">
+				{include file="index/recommend.html"}
+            </div>
+            <div id="rooms"></div>
+            <div id="vips"></div>
+            <!-- 推荐位 -->
+            </div>
+            <div class="body-main-right pull-right">
+            <!-- 登录 -->
+                {include file="index/login.html"}
+            <!-- 登录 -->
+            <!-- 滚动消息 -->
+                {include file="index/message.html"}
+            <!-- 滚动消息 -->
+            <!-- 在麦会员 -->
+                {include file="index/vip_list.html"}
+            <!-- 在麦会员 -->
+            <!-- 排行榜 -->
+                {include file="index/rank.html"}
+            <!-- 排行榜 -->
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+{include file="index/index_js.html"}
+</body>
+</html>

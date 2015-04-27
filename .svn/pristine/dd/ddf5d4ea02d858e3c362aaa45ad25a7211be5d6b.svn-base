@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>游戏图标上传</title>
+<style type="text/css">
+.underline{border-bottom:1px solid #666;margin-bottom: 5px;}
+</style>
+</head>
+<body style="margin-top:-20px;">
+
+<form method="post" class="form" enctype="multipart/form-data" id="up_form">
+    <input type="hidden" name="key" value="{$_GET['key']}">
+    游戏图标：<input type="file" name="icon"><input type="button" value="上传" onclick="post()">
+</form>
+
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+var fileInfo = '{$rst}';
+var key = '{$key}';
+
+if(fileInfo){
+  fileInfo = $.parseJSON(fileInfo);
+  if(fileInfo.Flag == 100){
+    var pdocument = parent.document;
+    var obj = pdocument.getElementById('show_icon'+key);
+    var html = '<img src="{php echo cdn_url(PIC_API_PATH."/p/'+fileInfo.File+'/0/0.jpg") }">';
+    html += '<a style="cursor:pointer;" class="del_pic">删除</a>';
+    html += '<input type="hidden" name="row['+key+'][md5]" value="'+fileInfo.File+'">';
+    $(obj).html(html);
+  }
+}
+function post(){
+  var pdocument = parent.document;
+  var obj = pdocument.getElementById('show_icon'+key);
+  obj = $(obj);
+  if(obj.find('img').length > 0){
+    alert('已有上传图标，若想上传，先删除');
+    return;
+  }
+  $('#up_form').submit();
+}
+</script>
+</body>
+</html>

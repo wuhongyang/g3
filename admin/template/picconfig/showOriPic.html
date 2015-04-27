@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+{include file="head.html"}
+<title>查看原图</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type = "text/javascript" src = "template/js/myd.js"></script>
+<script type = "text/javascript">
+	var URL = "http://"+"{$_SERVER['HTTP_HOST']}/admin/picture_config.php?module=linkPic";
+	var pic_id = "{$_GET['id']}";
+	
+	$(function(){
+		linkPic();
+	})
+</script>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">查看原图</div>
+	<div class="header-button right">
+		{if $link_array[104]['url']}<a class="add-button" href="{$link_array[104]['url']}">返回</a>{/if}
+	</div>
+</div>
+
+<div class="body">
+	<div style = 'margin-left:30px;margin-bottom:10px;margin-top:10px;'>图片名称:{$img['pic_name']}</div>
+	<div style = 'margin-left:30px;margin-bottom:10px;'>
+		<form id = 'pic_form'>
+		<input type = 'hidden' name = 'module' value = 'showOriPic' id = 'form_id'>
+		图片分类:
+		<select name = 'cat_id' id = 'cat_id' onchange = "linkPic();">
+			<option value = ''>请选择</option>
+			{foreach $cats $cat}
+			<option value = "{$cat['id']}" {if $cat['id'] == $img['cat_id']}selected{/if} >{$cat['cat_name']}</option>
+			{/foreach}
+		</select>
+		<span id = 'pic_name'>
+
+		</span>
+		</form>
+	</div>
+	<div style = 'margin-left:30px;margin-bottom:10px;'>
+		
+		<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+			<param value="{php echo cdn_url(PIC_API_PATH.'/p/'.$img['img_path'].'/0/0.jpg')}" name="movie">
+			<param value="high" name="quality">
+			<embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$img['img_path'].'/0/0.jpg')}">
+		</object>
+
+	</div>
+</div>
+</body>
+</html>

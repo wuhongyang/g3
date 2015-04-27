@@ -1,0 +1,51 @@
+{include file="header.html"}
+<div class="mgt10 clearfix">
+    <div class="fl">选择房间：
+        <select onchange="selectRoom(this)">
+        {foreach $userRooms['roomList'] $room}
+          <option value="{$room['id']}" title="{$room['id']}" {if $room['id']==$roomid}selected{/if}>{$room['name']}</option>
+        {/foreach}
+        </select>
+    </div>
+    <a href="room_manage.php?module=room_list" class="bluebtn fr"><span>返回房间列表</span></a>
+</div>
+<script type="text/javascript">
+function selectRoom(obj){
+	location.href='room_manage.php?module={$module}&roomid='+obj.value;
+}
+</script>
+
+<div class="roomMLeft">
+    <ul class="clearfix">
+    {if $roomManageMenu['room_info']}
+        <li><a href="room_manage.php?module=room_info"{if $module=='room_info'} class="hover"{/if}>房间信息设置</a></li>
+    {/if}
+    {if $roomManageMenu['set_ui_package']}
+        <li><a href="room_manage.php?module=set_ui_package"{if $module=='set_ui_package'} class="hover"{/if}>房间界面管理</a></li>
+    {/if}
+    {if $roomManageMenu['roomnotice']}
+        <li><a href="room_manage.php?module=roomnotice"{if $module=='roomnotice'} class="hover"{/if}>房间轮播公告设置</a></li>
+    {/if}
+    {if $roomManageMenu['enter']}
+        <li><a href="room_manage.php?module=enter"{if $module=='enter'} class="hover"{/if}>进入房间设置</a></li>
+    {/if}
+    {if $roomManageMenu['admin']}
+        <li><a href="room_manage.php?module=admin"{if $module=='admin'} class="hover"{/if}>管理设置</a></li>
+    {/if}
+    {if $roomManageMenu['order']}
+        <li><a href="room_manage.php?module=order"{if $module=='order'} class="hover"{/if}>排麦规则设置</a></li>
+    {/if}
+    {if $roomManageMenu['release']}
+        <li><a href="room_manage.php?module=release"{if $module=='release'} class="hover"{/if}>封杀/释放设置</a></li>
+    {/if}
+    {if $roomManageMenu['recommend']}
+        <li><a href="room_manage.php?module=recommend"{if $module=='recommend'} class="hover"{/if}>推荐申请位</a></li>
+    {/if}
+    {if $roomManageMenu['roomip']}
+        <li><a href="room_manage.php?module=roomip"{if $module=='roomip'} class="hover"{/if}>在线人数统计</a></li>
+    {/if}
+    {if $roomManageMenu['roomranks']}
+		<li><a href="room_manage.php?module=roomranks"{if $module=='roomranks'} class="hover"{/if}>房间排行榜设置</a></li>
+    {/if}
+    </ul>
+</div>

@@ -1,0 +1,23 @@
+{if !empty($menuList)}
+{foreach $menuList $val}
+<dl class="body-side-list">
+    <dt><img src="{PIC_API_PATH}/p/{$val['icon']}/22/22.jpg" width="22" height="22" class="pull-left" /><h3 class="main_text">{$val['name']}</h3></dt>
+    {if !empty($val['child'])}
+    <dd>
+        <ul class="game-list">
+        {foreach $val['child'] $val2}
+            <li>
+            	<a{if $val2['url']!=''} href="create_url.php?url={echo base64_encode($val2['url']);}" target="_blank"{else} href="javascript:void(0);"{/if} class="minor_text" title="{$val2['name']}">
+            	{if !empty($val2['icon'])}
+                	<img width="22" height="22" src="{PIC_API_PATH}/p/{$val2['icon']}/22/22.jpg" class="pull-left">
+                {/if}
+                {php echo str_cut_out($val2['name']);}
+            	</a>
+            </li>
+        {/foreach}
+        </ul>
+    </dd>
+    {/if}
+</dl>
+{/foreach}
+{/if}

@@ -1,0 +1,124 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>申请渠道销售代理</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/actapply.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/resource/css/base.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/public.css">
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/footer.css">
+</head>
+<body>
+{include file="../common/header.html"}
+<div class="search-wrap">
+  <div id="top" class="hd-sub clearfix">
+      <div class="logo fl">
+          <a class="fl logo-pic" href="/">VV酷视频聊天</a>
+                  <div class="dhz"></div>
+              </div>
+      <div class="search fr">
+          <form onSubmit="return search();" action="javascript:void(0);">
+              <input type="hidden" id="search_type" value="1" name="search_type">
+              <input type="text" id="keyword" name="keyword" class="search-text">
+              <input type="submit" id="J_search" value="搜索" class="search-submit">
+          </form>
+          <ul id="J_search_type" class="search-type">
+              <li>搜房间</li>
+              <li style="display: none;" class="li2">搜艺人</li>
+          </ul>
+          <div class="search-type-bg"></div>
+      </div>
+  </div>
+</div>
+
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <div class="box770">
+        <h1>申请渠道销售代理</h1>
+		{if $isAgent<=0}
+        <div class="listbox">
+			<b style="margin-bottom:10px;display:block;font-size:14px;line-height:20px;">请仔细阅读《VV酷代理管理规定》</b>
+             <textarea name="" cols="120" rows="22" readonly class="grayborder">
+一、VV酷代理管理规定的确认和接纳
+    在您决定成为VV酷代理前，请仔细阅读本代理管理规定。您必须在完全同意如下条款的前提下，才能拥有代理的相关权利。代理在行使代理权利时必须完全、严格遵守本管理规定。
+	
+二、VV酷代理管理规定的完善和修改、完善
+    VV酷可根据公司及网站发展的需要修改、完善本代理管理规定，代理管理规定以最新公布销售代理管理规定为准。VV酷保留随时修改的权利，不需要对您或第三方负责。
+	
+三、VV酷代理资格的审核及认证
+    VV酷代理需经VV酷进行实名认证并进行资格审核，目前只对站长开放资格审核。
+	
+四、VV酷代理的管理规定
+    1、代理在本平台拥有代理调剂账户，购买商品均使用代理调剂账户余额进行购买，该账户只提供单向充值功能，不提供提现功能。成为销售代理，需要首次向调剂账户充值2000元人民币。
+    2、代理若想解除与本平台的合作关系，需向本平台提交解除合作申请，申请通过后将对代理调剂账户余额进行清算，剩余余额将返回代理。其他未销售套餐不予套餐转让和现金退还。
+    3、代理与本平台进行解决合作清算后三个月内无法再次申请成为本平台代理。
+    4、代理实际销售价格不得低于公司制定的销售指导价，不得以任何形式变相降价销售，不得相互竞价、压价，破坏公司规定的销售价格体系，同时严禁代理商或者委托他人以其他非工作号码进行上述任何形式的变相降价销售。
+    5、不得恶意中伤、诋毁、损害其他代理名誉，影响其他代理的销售；不得使用不正当手段故意拉抢其他代理的消费客户。
+    6、代理在销售过程中，不经允许，严禁乱窜他人代理房间，破坏房间秩序，对他人代理造成销售障碍。
+    7、代理不得以任何理由将自己的代理号码借给他人使用。
+    8、代理在销售过程中需要严格遵守国家的法律制度，不得从事赌博，色情，欺诈等违法行为。
+    9、代理不得捏造、散布虚假信息损害消费用户利益。
+    10、代理不可在其他互联网公司同时兼做代理。
+	
+五、VV酷监管职责
+    VV酷设立专职工作人员担任市场监督员，定期监督代理各种行为。
+    1、 发现代理有违反VV酷代理管理规定中第1、4、5、6、7条之行为，首次发现取消该代理该季度、年度返点，第二次发现，取消代理资格，对代理调剂账户进行清算，对未销售货物不予现金退还。
+    2、 发现代理有违反VV酷代理管理规定中第8、9、10条，则取消代理资格，对代理调剂账户余额进行清算，对未销售货物不予现金退还。
+	
+六、免责条款 
+    1、 VV酷对任何直接、间接、偶然、特殊及继起的损害不负责任，不予赔偿。这些损害来自：网络故障；不正当使用渠道商城服务内容；非法使用等。 
+    2、由于代理将个人密码告知他人或与他人共享注册帐户，由此导致的任何个人资料泄露，人身或财务的损失、损害或伤害，本网站不负任何责任。 
+    3、 代理须对其自身在VV酷的一切直接行为（包括故意和过失）负全部责任。 
+    4、 代理承诺提交的姓名、身份证号码、常住地址、联系方式等个人资料真实可靠。 
+    5、 对于因服务器的死机、网络的故障、数据库故障、软件升级等问题造成的服务中断和对代理数据及资料造成的损失，VV酷不负责任，亦不予补偿。 
+    6、 当政府司法机关依照法定程序要求本网站披露个人资料时，我们将根据执法单位之要求或为公共安全之目的提供个人资料。在此情况下之任何披露，本网站均得免责。 
+    7、 代理购买商品后,商品销售时限中含服务器维修、调整、升级时间，VV酷对服务器维修、调整、升级所占用的时间，不予补偿并保留解释权。 
+
+七、关于中断或终止服务： 
+    1、 因发生不可抗拒的事由，如政府行为、不可抗力，导致代理服务无法继续提供，VV酷将尽快通知您，但不承担由此对您造成的任何损失或退还任何已缴纳的收费服务费用。 
+    2、 如用户违反服务条款中的内容，VV酷有权取消代理资格，并中止向其继续提供服务。 
+  
+八、 服务内容的版权： 
+    VV酷提供的代理渠道商城服务（包括但不限于：文字、照片、图形、图像、图表、声音、FLASH 动画、视频、音频等〕，均受版权保护：由VV酷所有，或由第三方授权使用。用户不能擅自复制、再造这些内容、或创造与内容有关的派生产品。 
+    凡以任何方式登陆本网站或直接、间接使用本网站资料者，视为自愿接受本网站声明的约束。本声明未涉及的问题参见国家有关法律法规，当本声明与国家法律法规冲突时，以国家法律法规为准。 
+    本网站之声明以及其修改权、更新权及最终解释权均属杭州雅顾科技有限公司所有。 
+
+请仔细阅读以上条款，阅读结束后同意请按“下一步”按钮。
+</textarea>
+        </div>
+        <div class="listbox">
+        	<form method="post" name="apply" action="?module=payment">
+             <input type="checkbox" name="confirm" value="1" checked="checked" id="check" /><span class="fz12 songti">&nbsp;同意VV酷渠道销售代理协议</span>
+             </form>
+        </div>
+        <div class="dotted770"></div>
+        <div class="listbox">
+             <a href="javascript:;" onClick="post();" class="btnext" style="margin-left:530px;margin-top:0px;"><!--下一步--></a>
+        </div>
+		{else}
+		<div class="listbox">
+			<div style="font-size:14px;font-weight:bold;">对不起，您已经是代理，无法再次申请渠道销售代理</div>
+		</div>
+		{/if}
+    </div>
+</div>
+<script type="text/javascript">
+function post(){
+	var check = document.getElementById('check');
+	if(!check.checked){
+		art.dialog({
+			content: '请先同意VV酷渠道销售代理协议！',
+			ok: true,
+			lock: true
+		});
+		return false;
+	}
+	document.apply.submit();
+}
+</script>
+{include file="./footer.html"}
+</body>
+</html>
+

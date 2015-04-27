@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加一级科目</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加一级科目</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">一级科目列表</a></li>{/if}
+    {if $link_array[107]['url']}<li><a href="{$link_array[107]['url']}">二级科目列表</a></li>{/if}
+	{if $link_array[112]['url']}<li><a href="{$link_array[112]['url']}">三级科目列表</a></li>{/if}
+	{if $link_array[117]['url']}<li><a href="{$link_array[117]['url']}">四级科目列表</a></li>{/if}
+</ul>
+
+<form method="post" class="form" id="form1" action="{$url}">
+    {if $edit}<input type="hidden" name="bigcase_id" value="{$edit['bigcase_id']}" />{/if}
+    <p>
+        <label>一级科目名称：</label>
+        <input type="text" name="bigcase_name" size="32" value="{$edit['bigcase_name']}" />
+    </p>
+    <p>
+        <label>一级科目描述：</label>
+        <textarea name="bigcase_desc" rows="2" cols="26">{$edit['bigcase_desc']}</textarea>
+    </p>
+    <p>
+        <label>操作员：</label>
+        <input type="text" name="operator" size="32" value="{$edit['operator']}" />
+    </p>
+    <p>
+        <label>是否使用：</label>
+        <select name="bigcase_status">
+        <option value="1">使用</option>
+        <option value="0" {if $edit['bigcase_status']==0}selected{/if}>不使用</option>
+        </select>
+    </p>
+    <p>
+    	<label></label>
+    	<input type="button" class="submit" onclick="javascript:post(this);" value="保存信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+<script type="text/javascript">
+function post(obj){
+	obj.disabled = true;
+	document.getElementById("form1").submit();
+}
+</script>
+</body>
+</html>

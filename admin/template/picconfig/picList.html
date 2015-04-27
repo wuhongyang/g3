@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>图片分类列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">图片列表查询</div>
+  <!--<div class="header-button right">{if $link_array[103]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加合作商</a>{/if}</div>-->
+</div>
+
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" >图片分类列表</a></li>{/if}
+	{if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}" class="active">图片列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+    <form method="get" action ="" style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;" >
+		图片分类: 
+		<select name = 'cat_id'>
+			<option value = ''>请选择</option>
+			{foreach $cats $cat}
+			<option value = "{$cat['id']}" {if $case['cat_id'] == $cat['id']}selected{/if} >{$cat['cat_name']}</option>
+			{/foreach}
+		</select>
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<span>{if $link_array[105]['url']}<a href="{$link_array[105]['url']}" style = 'color:blue;font-size:14px;'>+添加图片</a>{/if}</span>
+		    <br><br>
+		状态:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select name = 'state'>
+			<option value = "">请选择</option>
+			<option value = "1" {if $case['state'] == 1} selected{/if}>启用</option>
+			<option value = "2" {if $case['state'] == 2} selected{/if}>停用</option>
+		     </select>
+		     <input type = 'submit' value = '查询' name = 'tj'>
+		     <input type = 'hidden' value = 'picList' name = 'module' id='module'>
+   </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>编号</th>
+		<th>图片类别</th>
+		<th>图片名称</th>
+		<th>创建时间</th>
+		<th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $lists $list}
+	<tr>
+		<td>{$list['id']}</td>
+		<td>{$list['cat_name']}</td>
+		<td>{$list['pic_name']}</td>
+		<td>{echo date('Y-m-d ',$list['ctime'])}</td>
+		<td>{if $list['state'] == '1'}启用{else}停用{/if}</td>
+		<td>{if $link_array[106]['url']}<a href="{$link_array[106]['url']}&id={$list['id']}">修改图片</a>{/if}</td>
+	 </tr>
+	{/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+{include file="../common/footer.html"}
+
+<script language="javascript" src="{php echo cdn_url(STATIC_API_PATH.'/static/js/rooms.js');"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=simple');"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/plugins/iframeTools.js');"></script>
+
+
+<!--[if IE 6]>
+	<script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+<div style="display:none">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>

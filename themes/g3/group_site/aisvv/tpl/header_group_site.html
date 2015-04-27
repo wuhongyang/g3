@@ -1,0 +1,64 @@
+<!--顶部导航-->
+<link href="{php echo cdn_url(STATIC_API_PATH.'/resource/css/topnav-min.css?b=14kkk');}" rel="stylesheet" type="text/css"></head>
+<div class="hd">
+    <div class="topnav clearfix">
+        <div class="topnav-left fll" id="J_head">
+            欢迎您
+            <a href="/passport/?account&index&url=/">登录</a>
+            | <a href="/passport/?user_name&index">注册</a>
+            | <a href="/rooms/shortcut.php?group_id={$groupId}&title={php echo urlencode($groupInfo['name']);}" class="minor_text">+收藏至桌面</a>
+        </div>
+        <div class="topnav-right">
+            <div id="site-nav">
+                <ul class="quick-menu">
+                    <li class="home"><a href="/">首页</a></li>
+                    <li class="mytaobao">
+                        <div class="menu">
+                            <a class="menu-hd gray" href="/service/profile.php">个人中心<b ></b> </a>
+
+                            <div class="menu-bd">
+                                <div class="menu-bd-panel">
+                                    <div>
+                                        <a href="/service/pass_manager.php" rel="nofollow">通行证管理</a><br>
+                                        <a href="/service/account.php" rel="nofollow">帐号管理</a><br>
+                                        <a href="/service/role_select.php" rel="nofollow">渠道管理</a><br>
+                                        <a href="/service/weibo.php" rel="nofollow">我的微博</a><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="home"><a href="/HQPlugin/hifi.html" target="_blank">高清插件</a></li>
+                    <!--<li class="favorite"><a href="/feedback.html" class="gray">反馈</a></li>
+                    <li class="help"><a href="/help/index.html" class="gray">帮助</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript">
+JsonUin=0;
+{if $moduleAction!='index'}
+$.ajax({
+	url: '/rooms/ajax_info.php',
+	type: 'POST',
+	async: false,
+	data: {"Tag":"GetLoginUser","GroupId":"{$groupId}"},
+	success: function(data){
+		json = jQuery.parseJSON(data);
+		if(json.Flag == 100){
+			//展示头部
+			var h_html = '欢迎您 <a class="yellow" href="/service/profile.php" style="color: #F0B45E;">' + json.Nick + '</a>  ';
+			h_html += '&nbsp;<a href="/service/loginout.php?back={$back_url}" class="gray">退出</a>  ';
+			h_html += '&nbsp;<a href="/rooms/shortcut.php?group_id={$groupId}&title={php echo urlencode($groupInfo['name']);}">+收藏至桌面</a>';
+			$('#J_head').html(h_html);
+			JsonUin=parseInt(json.Uin);
+		}
+	}
+});
+{/if}
+</script>
+<!--[if  IE 6]>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/js/fixTopNavForIE6.min.js');}"></script>
+<![endif]-->

@@ -1,0 +1,4 @@
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" {if $module=='single_create'}class="active"{/if}>开设账号</a></li>{/if}
+	{if $link_array[102]['url']}<li><a href="{$link_array[102]['url']}" {if $module=='range_create'}class="active"{/if}>开设号码段</a></li>{/if}
+</ul>

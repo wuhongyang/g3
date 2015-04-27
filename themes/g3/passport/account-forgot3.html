@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱帐号找回密码</title>
+<link href="<?php echo THEMES_URL ?>passport/css/global-min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo THEMES_URL ?>passport/css/style-min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<?php include_once dirname(__FILE__).'/header.html'; ?>
+<div class="body box clean">
+	<div class="body-title"><span class="pwd-icon">邮箱帐号找回密码</span></div>
+	<div class="body-left">
+		<h1 class="reg-title">设置新密码</h1>
+		<dl class="input-list">
+
+		<form method="post">
+			<input type="hidden" name="setcode" value="<?php echo $_GET['setcode']; ?>" />
+			<label><dt>设置密码：<font color="red">*</font></dt><dd><input type="password" name="password" onblur="reg.password(this)" title="error"  /><span></span></dd></dd></label>
+			<label><dt>重复密码：<font color="red">*</font></dt><dd><input type="password" name="repassword" onblur="reg.repassword(this)" title="error"  /><span></span></dd></dd></label>
+			<dt></dt><dd><input type="submit" value="修改密码" class="xiugai" /></dd>
+		</form>
+
+		</dl>
+	</div>
+</div>
+<script language="javascript" src="<?php echo THEMES_URL ?>passport/js/global.js"></script>
+</body>
+</html>

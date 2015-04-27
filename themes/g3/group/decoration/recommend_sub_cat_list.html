@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-推荐位设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.info p{line-height:30px;}
+.info p span{margin-right: 10px;text-align: right;}
+.info p select{height: 25px; width: 131px;}
+.info p select option{font-size: 14px;}
+.info p input.radio{position: relative;top:5px;}
+.info p.hide{display: none;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">{$parent_name}</h3>
+        <div class="fr">
+            <a href="/group/recommend.php?module=recommend_cat_list" class="bluebtn"><span>返回</span></a>
+            <a href="javascript:add();" class="bluebtn mgL10" style="right:0;top:10px;"><span>添加</span></a>
+        </div>
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20" id="table">
+      <tr>
+        <th>序号</th>
+        <th>标题名称</th>
+        <th>读取方式</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $list $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['name']}</td>
+        <td>{echo $val['mode']=='custom' ? '自定义' : '全部'}</td>
+        <td>{echo date('Y-m-d H:i',$val['uptime']);}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">左移</a>
+            {else}
+                <span style="color:#999;">左移</span>
+            {/if}
+            {if $key != count($list)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">右移</a>
+            {else}
+                <span style="color:#999;">右移</span>
+            {/if}
+            <a class="ahover" href="javascript:edit({$val['id']});">编辑</a>
+            {if $val['mode'] == 'custom'}
+            <a class="ahover" href="?module=recommend_show&parent_id={$val['id']}&pparent_id={$parent_id}">查看</a>
+            {else}
+            <span style="color:#999;">查看</span>
+            {/if}
+            <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+            <a class="ahover" href="javascript:visible({$val['id']});">{if $val['status'] == 1}不显示{else}显示{/if}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var phpVar = {
+    parent_id: '{$parent_id}',
+    type: '{$type}'
+}
+function add(){
+    var nums = $('#table').find('tr').length;
+    if(nums >= 6){
+        _show_msg('最多添加5个分类');
+        return ;
+    }
+    var content = '<div class="info">';
+    content += '<p><span>标题名称：</span><input type="text" name="name"><span class="notice" id="name_notice"></span></p>';
+    content += '<p><span>读取方式：</span><select name="mode"><option value="-1">请选择</option><option value="all">读取全部</option><option value="custom">自定义</option></select><span class="notice" id="mode_notice"></span></p>';
+    content += '<p id="hide" class="hide"><span>显示行数：</span><select name="row"><option value="-1">请选择</option><option value="1">1行</option><option value="2">2行</option><option value="3">3行</option><option value="4">4行</option><option value="5">5行</option><option value="6">6行</option><option value="7">7行</option><option value="8">8行</option></select><span class="notice" id="row_notice"></span></p>';
+    if(phpVar.type == 2){
+        content += '<p><span>图片大小：</span><input type="radio" name="pic" value="1" class="radio"> 小图(每行5个)&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="pic" value="2" class="radio" checked> 大图(每行3个)</p>';
+    }
+    content += '</div>';
+    art.dialog({
+        content: content,
+        ok: function(){
+            var module = 'recommend_sub_cat_add';
+            var name = $('input[name="name"]').val();
+            if(!check_name(name)){
+                return false;
+            }
+            var mode = $('select[name="mode"]').val();
+            if(!check_mode(mode)){
+                return false;
+            }
+            var row = 0;
+            if(mode == 'all'){
+                row = $('select[name="row"]').val();
+                if(!check_row(row)){
+                    return false;
+                }
+            }
+            var picObj = $('input[name="pic"]:checked');
+            var pic = 0;
+            if(picObj.length > 0){
+                pic = picObj.val();
+                if(!check_pic(pic)){
+                    return false;
+                }
+            }
+            data = {name:name,mode:mode,row:row,parent_id:phpVar.parent_id,pic:pic};
+            operate(module,data)
+        },
+        cancel: true,
+        lock: true
+    });
+}
+
+function check_name(name){
+    if(name == ''){
+        $('#name_notice').html('标题不能为空');
+        return false;
+    }
+    if(name.length > 5){
+        $('#name_notice').html('标题不能超过5个字');
+        return false;
+    }
+    return true;
+}
+
+function check_mode(mode){
+    if(mode < 0){
+        $('#mode_notice').html('请选择读取方式');
+        return false;
+    }
+    return true;
+}
+
+function check_row(row){
+    if(row < 0){
+        $('#row_notice').html('请选择显示行数');
+        return false;
+    }
+    return true;
+}
+function check_pic(pic){
+    if(pic != 1 && pic != 2){
+        $('#pic_notice').html('图片大小');
+        return false;
+    }
+    return true;
+}
+
+function order(id,type){
+    module = 'recommend_sub_cat_order';
+    operate(module,{id:id,type:type,parent_id:phpVar.parent_id});
+}
+
+function edit(id){
+    $.ajax({
+        url: '?module=recommend_sub_cat_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.id < 1){
+                return;
+            }
+            var content = '<div class="info">';
+            content += '<p><span>标题名称：</span><input type="text" name="name" value="'+json.name+'"><span class="notice" id="name_notice"></span></p>';
+            content += '<p><span>读取方式：</span><select name="mode"><option value="-1">请选择</option>';
+            if(json.mode == 'all'){
+                content += '<option value="all" selected>读取全部</option>';
+            }else{
+                content += '<option value="all">读取全部</option>';
+            }
+            if(json.mode == 'custom'){
+                content += '<option value="custom" selected>自定义</option>';
+            }else{
+                content += '<option value="custom">自定义</option>';
+            }
+            content += '</select><span class="notice" id="mode_notice"></span></p>';
+            if(json.mode == 'all'){
+                content += '<p id="hide">';
+            }else{
+                content += '<p id="hide" class="hide">';
+            }
+            content += '<span>显示行数：</span><select name="row"><option value="-1">请选择</option>';
+            if(json.row == 1){
+                content += '<option value="1" selected>1行</option>';
+            }else{
+                content += '<option value="1">1行</option>';
+            }
+            if(json.row == 2){
+                content += '<option value="2" selected>2行</option>';
+            }else{
+                content += '<option value="2">2行</option>';
+            }
+            if(json.row == 3){
+                content += '<option value="3" selected>3行</option>';
+            }else{
+                content += '<option value="3">3行</option>';
+            }
+            if(json.row == 4){
+                content += '<option value="4" selected>4行</option>';
+            }else{
+                content += '<option value="4">4行</option>';
+            }
+            if(json.row == 5){
+                content += '<option value="5" selected>5行</option>';
+            }else{
+                content += '<option value="5">5行</option>';
+            }
+            if(json.row == 6){
+                content += '<option value="6" selected>6行</option>';
+            }else{
+                content += '<option value="6">6行</option>';
+            }
+            if(json.row == 7){
+                content += '<option value="7" selected>7行</option>';
+            }else{
+                content += '<option value="7">7行</option>';
+            }
+            if(json.row == 8){
+                content += '<option value="8" selected>8行</option>';
+            }else{
+                content += '<option value="8">8行</option>';
+            }
+            content += '</select><span class="notice" id="row_notice"></span></p>';
+            if(phpVar.type == 2){
+                content += '<p><span>图片大小：</span>';
+                if(json.pic == 1){
+                    content += '<input type="radio" name="pic" value="1" class="radio" checked>';
+                }else{
+                    content += '<input type="radio" name="pic" value="1" class="radio">';
+                }
+                content += '小图(每行5个)&nbsp;&nbsp;&nbsp;&nbsp;';
+                if(json.pic == 2){
+                    content += '<input type="radio" name="pic" value="2" class="radio" checked>';
+                }else{
+                    content += '<input type="radio" name="pic" value="2" class="radio">';
+                }
+                content += ' 大图(每行3个) <span class="notice" id="pic_notice">&nbsp;</span></p>';
+            }
+            content += '</div>';
+            art.dialog({
+                content: content,
+                ok: function(){
+                    var module = 'recommend_sub_cat_edit';
+                    var name = $('input[name="name"]').val();
+                    if(!check_name(name)){
+                        return false;
+                    }
+                    var mode = $('select[name="mode"]').val();
+                    if(!check_mode(mode)){
+                        return false;
+                    }
+                    var row = 0;
+                    if(mode == 'all'){
+                        row = $('select[name="row"]').val();
+                        if(!check_row(row)){
+                            return false;
+                        }
+                    }
+                    var picObj = $('input[name="pic"]');
+                    var pic = 0;
+                    if(picObj.length > 0){
+                        pic = $('input[name="pic"]:checked').val();
+                        if(!check_pic(pic)){
+                            return false;
+                        }
+                    }
+                    data = {name:name,mode:mode,row:row,parent_id:phpVar.parent_id,id:json.id,pic:pic};
+                    operate(module,data);
+                },
+                cancel: true,
+                lock: true
+            })
+        }
+    });
+}
+
+function del(id){
+    art.dialog({
+        content: '您真的要删除吗？',
+        ok: function(){
+            var module = 'recommend_sub_cat_del';
+            operate(module,{id:id});
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+
+function visible(id){
+    module = 'recommend_sub_cat_visible';
+    operate(module,{id:id});
+}
+
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=recommend_sub_cat_show&parent_id='+phpVar.parent_id;
+                    },
+                    esc: false,
+                    cancel: false,
+                    lock: true,
+                    time: 2
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+$(function(){
+    $(document).on('change', 'select[name="mode"]', function(){
+        var mode = $(this).val();
+        if(mode == 'all'){
+            $('#hide').show();
+        }else{
+            $('#hide').hide();
+        }
+    });
+});
+</script>

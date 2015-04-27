@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-搜索功能配置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+.mgl30{margin-left: 30px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="J_form" target="iframe" onSubmit="return checkParam();">
+        <input type="hidden" name="role" value="{$role}">
+        <ul class="formlist" id="ulist">
+            <li class="clearfix">
+                <label>房间/艺人搜索：</label>
+                <div class="fl">
+                    <span><input type="radio" name="common_search" value="1" {if $info['common_search']==1}checked{/if}>开启</span>
+                    <span class="mgl30"><input type="radio" name="common_search" value="0" {if $info['common_search']==0}checked{/if}>关闭</span>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>会员搜索：</label>
+                <div class="fl">
+                    <span><input type="radio" name="vip_search" value="1" {if $info['vip_search']==1}checked{/if}>开启</span>
+                    <span class="mgl30"><input type="radio" name="vip_search" value="0" {if $info['vip_search']==0}checked{/if}>关闭</span>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <label style="margin-left:-20px;">标题栏名称：</label>
+                    <input type="text" name="title" value="{$info['title']}" size="26">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <input type="button" class="bluebtn2" value="保存" onclick="save();" />
+                </div>
+            </li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function save(){
+    var vip_search = $('input[name="vip_search"]:checked').val();
+    if(vip_search == 1){
+        var title = $('input[name="title"]').val();
+        if(title == ''){
+            _show_msg('标题栏名称不能为空');
+            return false;
+        }
+        if(title.length > 6){
+            _show_msg('标题栏名称不能超过6个字符');
+            return false;
+        }
+    }
+    $.ajax({
+        url: '?module=search_config_save',
+        type: 'POST',
+        data: $('#J_form').serialize(),
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    ok: false,
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true,
+                    time: 3
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

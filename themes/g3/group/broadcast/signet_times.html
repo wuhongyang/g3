@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>业务配置-印章时效设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script>
+$(function(){
+	$(".number").keyup(function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	})
+})
+</script>
+</head>
+<style type="text/css">
+td{
+	padding:5px;
+}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" action="?module=save_price">
+    <input type="hidden" name="back_module" value="signet_times">
+    <table>
+    	<tr>
+    		<td>印章时效设置：</td><td><input class="number" type="text" name="signet_times" value="{$data['signet_times']}" />&nbsp;&nbsp;分钟</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2" style="font-size:12px; color:#999999;">*默认时间30分钟</td>
+    	</tr>
+        <tr>
+    		<td>&nbsp;</td><td><input type="submit" class="bluebtn2" value="保存" /></td>
+    	</tr>
+    </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

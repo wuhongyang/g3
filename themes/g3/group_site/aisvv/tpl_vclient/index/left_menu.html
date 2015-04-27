@@ -1,0 +1,27 @@
+{if !empty($menuList)}
+{foreach $menuList $val}
+<dl class="body-side-list">
+    <dt><h3><i class="home-icon home-channel" style="background:url('{php echo cdn_url(PIC_API_PATH.'/p/'.$val['icon'].'/22/22.jpg');}') no-repeat;margin-top:3px;"></i><span>{$val['name']}</span></h3></dt>
+    {if !empty($val['child'])}
+    <dd>
+        <ul class="game-list">
+        {foreach $val['child'] $val2}
+            <li>
+            	{if preg_match('/\/g\/([0-9]+)/',$val2['url'])}
+                <a href="javascript:;" onclick="external.cpp_goSrc('{php echo str_replace('http://'.$_SERVER['HTTP_HOST'],'',$val2['url']).'&vclient';}','{$val2['name']}')" title="{$val2['name']}">
+                {else}
+            	<a{if $val2['url']!=''} href="/group_site/create_url.php?url={echo base64_encode($val2['url']);}" target="_blank"{else} href="javascript:void(0);"{/if} title="{$val2['name']}">
+                {/if}
+            	{if !empty($val2['icon'])}
+                	<img width="22" height="22" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val2['icon'].'/22/22.jpg');}" class="pull-left">
+                {/if}
+                {php echo str_cut_out($val2['name']);}
+            	</a>
+            </li>
+        {/foreach}
+        </ul>
+    </dd>
+    {/if}
+</dl>
+{/foreach}
+{/if}

@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>工单管理</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">工单列表</div>
+  <div class="header-button right"><a href="?module=issue_add" class="add-button">发起工单</a></div>
+</div>
+<ul class="page-tab">
+	{if $_GET['is_completed']}
+	<li><a href="{$link_array[101]['url']}">未完成</a></li>
+    <li><a href="{$link_array[101]['url']}&is_completed=1" class="active">已完成</a></li>
+	{else}
+    <li><a href="{$link_array[101]['url']}" class="active">未完成</a></li>
+    <li><a href="{$link_array[101]['url']}&is_completed=1">已完成</a></li>
+    {/if}
+</ul>
+<div class="page-tools main-width">
+<form action="" method="get" name="myform">
+	<span>提交时间范围：</span>
+	<input type="text" name="bg_date" value="{$_GET['bg_date']}" onFocus="WdatePicker({uptime:'%y-%M-%d',dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>
+	--
+	<input type="text" name="ed_date" value="{$_GET['ed_date']}" onFocus="WdatePicker({uptime:'%y-%M-%d',dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true})"/>&nbsp;&nbsp;
+	<span>问题类型：</span>
+	<select name="initiate_type_id">
+		<option value="">--请选择--</option>
+		{foreach $initiate_type_list $one}
+		<option value="{$one['id']}" {if $_GET['initiate_type_id'] == $one['id']}selected{/if}>{$one['name']}</option>
+		{/foreach}
+    </select>&nbsp;&nbsp;
+    <span>问题划分：</span>
+    <span id="level_content">
+   	{if $level_content}
+   	{$level_content}
+   	{else}
+    <input type="hidden" name="level_id"/>
+    <select class="level_id">
+      	<option value="">--请选择--</option>
+		{foreach $level_one_list $one}
+		<option value="{$one['id']}">{$one['name']}</option>
+		{/foreach}
+	</select>
+	{/if}
+	</span>
+    &nbsp;&nbsp;
+    <span>问题状态：</span>
+    <select name="status">
+    	<option value="">--请选择--</option>
+      	{foreach $status['all'] $key $one_status}
+      	<option value="{$key}" {if $_GET['status'] == $key}selected{/if}>{$one_status}</option>
+      	{/foreach}
+    </select>&nbsp;&nbsp;
+    <span>问题编号：</span><input type="text" name="id" value="{$_GET['id']}"/>&nbsp;&nbsp;
+    <input type="submit" class="normalbtn" value="查询">
+</form>
+</div>
+{if $_GET['is_completed']}
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-list main-width">
+    <tr>
+        <th style="background:#ECEBF0">问题编号</th>
+        <th style="background:#ECEBF0">问题标题</th>
+        <th style="background:#ECEBF0">问题类型</th>
+        <th style="background:#ECEBF0">问题划分</th>
+        <th style="background:#ECEBF0">问题状态</th>
+        <th style="background:#ECEBF0">提交时间</th>
+        <th style="background:#ECEBF0">操作</th>
+    </tr>
+    {if $res['Data']}
+    {foreach $res['Data'] $one}
+    <tr>
+		<td>{$one['id']}</td>
+		<td title="{$one['title1']}">{$one['title']}</td>
+		<td>{$one['initiate_type_name']}</td>
+		<td>{$one['level_name']}</td>
+		<td>{$status['all'][$one['status']]}</td>
+		<td>{echo date("Y-m-d H:i:s ", $one['add_time'])}</td>
+		<td>
+			<a class="ahover" href="issue_tracking.php?module=issue_detail&id={$one['id']}">查看</a>&nbsp;&nbsp;
+		</td>
+	</tr>
+    {/foreach}
+   	</table>
+    {$res['Page']}
+    {else}
+    <tr><td colspan="7">暂无数据</td></tr>
+    </table>
+    {/if}
+{else}
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-list main-width">
+    <tr>
+        <th style="background:#ECEBF0">问题编号</th>
+        <th style="background:#ECEBF0">问题标题</th>
+        <th style="background:#ECEBF0">问题类型</th>
+        <th style="background:#ECEBF0">问题划分</th>
+        <th style="background:#ECEBF0">问题状态</th>
+        <th style="background:#ECEBF0">提交时间</th>
+        <th style="background:#ECEBF0">截止当前耗时</th>
+        <th style="background:#ECEBF0">操作</th>
+    </tr>
+    {if $res['Data']}
+    {foreach $res['Data'] $one}
+    <tr>
+		<td>{$one['id']}</td>
+		<td title="{$one['title1']}">{$one['title']}</td>
+		<td>{$one['initiate_type_name']}</td>
+		<td>{$one['level_name']}</td>
+		<td>{$status['all'][$one['status']]}</td>
+		<td>{echo date("Y-m-d H:i:s ", $one['add_time'])}</td>
+		<td>{$one['till_now']}</td>
+		<td>
+			{if $one['status'] == 1}
+			<a class="ahover" href="issue_tracking.php?module=issue_receive&id={$one['id']}">接收工单</a>&nbsp;&nbsp;
+			{else}
+			<a class="ahover" href="issue_tracking.php?module=issue_edit&id={$one['id']}">处理</a>&nbsp;&nbsp;
+			{/if}
+		</td>
+	</tr>
+    {/foreach}
+   	</table>
+    <div class="main-width">
+		<div class="pagenavi">{$res['Page']}</div>
+	</div>
+    {else}
+    <tr><td colspan="8">暂无数据</td></tr>
+    </table>
+    {/if}
+{/if}
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.level_id').bind("change", function(){
+	}).live("change", function(){
+		var obj = $(this);
+		$('input[name=level_id]').val(obj.val());
+		$.ajax({
+			type:'POST',
+			async:false,
+			url:'?module=get_after_level&p_id='+$(this).val(),
+			dataType: 'JSON',
+			contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+			success:function(data){
+				obj.nextAll(".level_id").remove();
+				$('#level_content').append(data.Data);
+			}
+		});
+	}).live("click", function(){
+		if($.data(this, 'events') == null || $.data(this, 'events').change == undefined){
+			$(this).bind('change', function(){
+			});
+		}
+	});
+})
+</script>
+</body>
+</html>

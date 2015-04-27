@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix relative">
+        <span class="i-icon fl"></span>
+        <span class="fs14 fl">当前税收积分余额：</span>
+        <span class="yellow fl fs16">{$balance}</span>
+    </div>
+    <form method="get">
+    <div class="mgtb15 clearfix">
+        &nbsp;选择时间：<input name="start_date" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$start_time}"> 至 <input name="end_date" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$end_time}">
+        <input type="hidden" name="module" value="tax_detail" />
+        <input name="" type="submit" class="normalbtn" value="查询">
+    </div>
+    </form>
+    <p class="lineh30">发生金额（存入）合计：<span class="yellow mgR10">{echo (int)$pay_total}</span> 发生金额（支出）合计：<span class="yellow">{echo (int)$deposit_total}</span></p>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+                <th>流水编号</th>
+                <!--<th>用户ID</th>-->
+                <th>发生时间</th>
+                <!--<th>业务余额库</th>-->
+                <th>借贷</th>
+                <th>发生金额</th>
+                <!--<th>业务余额库余额</th>-->
+                <th>余额</th>
+                <th>备注</th>
+              </tr>
+              {foreach $lists $key $val}
+              <tr>
+                <td>{echo $val['id']}</td>
+                <!--<td>{$val['uin']}</td>-->
+                <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+                <!--<td>{$val['parent_name']}</td>-->
+                <td>{if $val['trade_type'] ==1}存入{else}支出{/if}</td>
+                <td>{$val['trade_money']}</td>
+                <!--<td>{$val['parent_balance']}</td>-->
+                <td>{$val['last_balance']}</td>
+                <td>{$val['trade_desc']}</td>
+              </tr>
+              {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

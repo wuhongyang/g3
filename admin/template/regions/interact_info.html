@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>游戏模块管理</title>
+<script type="text/javascript">
+function checkParam(){
+	var cmdPath = document.getElementById("cmd_path").value;
+	if(cmdPath == ''){
+		alert("扩展模块路径不能为空");
+		return false;
+	}
+	var pObj = document.getElementById("province");
+	var pIndex = pObj.selectedIndex;
+	var province = pObj.options[pIndex].value;
+	var cObj = document.getElementById("city");
+	var cIndex = cObj.selectedIndex;
+	var city = cObj.options[cIndex].value;
+	if(province==-1 || city==-1){
+		alert("请正确选择所属区域");
+		return false;
+	}
+	var bcObj = document.getElementById("bigcase");
+	var bigCaseId = bcObj.options[bcObj.selectedIndex].value;
+	var caseObj = document.getElementById("case");
+	var caseId = caseObj.options[caseObj.selectedIndex].value;
+	var parentObj = document.getElementById("parent");
+	var parentId = parentObj.options[parentObj.selectedIndex].value;
+	var categoryObj = document.getElementById("category");
+	var categoryId = categoryObj.options[categoryObj.selectedIndex].value;
+	var category_idObj = document.getElementById("category_id");
+	var category_Id = category_idObj.options[category_idObj.selectedIndex].value;
+	if(bigCaseId==0 || caseId==0 || parentId==0){
+		alert("请正确选择所属科目");
+		return false;
+	}
+	
+	if(categoryId <1 || category_Id <1){
+		alert("请正确选择游戏类型");
+		return false;
+	}
+	
+	var interactName = document.getElementById("interact_name").value;
+	if(interactName == ''){
+		alert("请填写游戏名称！");
+		return false;
+	}
+	
+	var ICObj = document.getElementById("interact_pic");
+	var IPic = ICObj.options[ICObj.selectedIndex].value;
+	if(IPic=='' || IPic <= 0){
+		alert("请正确选择游戏图标");
+		return false;
+	}
+	
+	var SObj = document.getElementById("status_pic");
+	var SPic = SObj.options[SObj.selectedIndex].value;
+	if(SPic=='' || SPic <= 0){
+		alert("请正确选择推广图标");
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改互动游戏</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="{$url}" method="post" onSubmit="return checkParam();"  class="form">
+    <{if $info}><input type="hidden" name="id" value="<{$info['id']}>"><{/if}>
+    <p>
+        <label>科目联动菜单：</label>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent"><option value="0">请选择</option></select>
+            
+    </p>
+    <p>
+        <label>游戏类型：</label>
+        <select name="category" id="category" onChange="show_category(this.value)" >
+        <option value="0">请选择</option>
+        <option value="1" {if $info['category'] == 1}selected{/if}>棋牌游戏</option>
+        <option value="2" {if $info['category'] == 2}selected{/if}>竞猜游戏</option>
+        <option value="3" {if $info['category'] == 4}selected{/if}>休闲游戏</option>
+        </select> &nbsp;
+        <select name="category_id" id="category_id"><option value="0">请选择</option></select> &nbsp;
+            
+    </p>
+    <p>
+    	<label>扩展模块CMD：</label>
+        <input type="text" name="cmd" value="{$info['cmd']}" id="cmd" />
+    </p>
+    <p>
+        <label>扩展模块路径：</label>
+        <input type="text" name="cmd_path" id="cmd_path" value="<{$info['cmd_path']}>" />
+    </p>
+    <p>
+        <label>游戏名称：</label>
+        <input type="text" name="interact_name" id="interact_name" value="<{$info['interact_name']}>" />
+    </p>
+    <p>
+        <label>游戏图标：</label>
+        <select name="interact_cat" id="interact_cat" onChange="showPic('interact_pic',this.value);"><option value="-1">请选择图片分类</option></select>
+        <select name="interact_pic" id="interact_pic"><option value="-1">请选择图片</option></select>
+        <input type="button" onclick="showOriginal('interact_pic')" value="查看原图" style="width:87px;" />
+    </p>
+    <p>
+        <label>推广图标：</label>
+        <select name="status_cat" id="status_cat" onChange="showPic('status_pic',this.value);"><option value="-1">请选择图片分类</option></select>
+        <select name="status_pic" id="status_pic"><option value="-1">请选择图片</option></select>
+        <input type="button" onclick="showOriginal('status_pic')" value="查看原图" style="width:87px;" />
+    </p>
+    <p>
+        <label>是否允许机器人：</label>
+        <input type="radio" name="robot" value="1" {if 1 == $info['robot']}checked="checked"{/if}>&nbsp;允许 &nbsp;&nbsp;
+        <input type="radio" name="robot" value="0" {if 0 == $info['robot']}checked="checked"{/if}>&nbsp;不允许 
+    </p>
+    <p>
+        <label>是否跨房间：</label>
+        <input type="radio" name="room_span" value="1" {if 1 == $info['room_span']}checked="checked"{/if}>&nbsp;可以 &nbsp;&nbsp;
+        <input type="radio" name="room_span" value="0" {if 0 == $info['room_span']}checked="checked"{/if}>&nbsp;不可以 
+    </p>
+    <p>
+        <label>状态：</label>
+        {foreach $status_arr $key $arr}
+        <input type="radio" name="interact_status" value="{$key}" {if $key == $info['interact_status']}checked="checked"{/if}>{$arr}&nbsp;
+        {/foreach}
+    </p>
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript">
+//科目联动
+getOptions("bigcase=1","bigcase","{$info['big_case_id']}");
+{if !empty($info['big_case_id'])}
+getOptions("case={$info['big_case_id']}",'case',"{$info['case_id']}");
+{/if}
+{if !empty($info['case_id'])}
+getOptions("parent={$info['case_id']}",'parent',"{$info['parent_id']}");
+{/if}
+{if !empty($info['category']) && !empty($info['category_id'])}
+show_category({$info['category']},{$info['category_id']});
+{/if}
+
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+showCategory("interact_cat","<{$info['interact_cat']}>");
+<{if $info['interact_cat']!='' && $info['interact_cat']!=-1}>
+showPic("interact_pic","$info['interact_cat']",'<{$info["interact_pic"]}>');
+<{/if}>
+
+showCategory("status_cat","<{$info['status_cat']}>");
+<{if $info['status_cat']!='' && $info['status_cat']!=-1}>
+showPic("status_pic","$info['status_cat']",'<{$info["status_pic"]}>');
+<{/if}>
+
+//查看原图
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+
+
+function show_category(category,val){
+	var category_array = {
+		'1' : {'1':'扑克类','2':'骨牌类','3':'棋类'},
+		'2' : {'1':'竞猜类'},
+		'3' : {'1':'休闲类'}
+	};
+	var opt = document.getElementById("category_id");
+	opt.options.length = 0;
+	opt.options.add(new Option('请选择',0));
+	var data = category_array[category];
+	for(i in data){
+		var newopt = new Option(data[i],i);
+		if(val==i) newopt.selected = true;
+		opt.options.add(newopt);
+	}
+}
+//得到扩展模块路径
+$(function(){
+	$("#parent").change(function(){
+		var bigcase_id = $("#bigcase").find("option:selected").val();
+		var case_id = $("#case").find("option:selected").val();
+		var parent_id = $("#parent").find("option:selected").val();
+		$.ajax({
+			url: 'interact_manage.php?module=ajax&bigcase_id='+bigcase_id+'&case_id='+case_id+'&parent_id='+parent_id,
+			type: 'GET',
+			success: function(data){
+				var cmd = $.parseJSON(data).FlashCMD;
+				var cmd_path = $.parseJSON(data).CmdPath;
+				var obj = $("#cmd");
+				var pathObj = $("#cmd_path");
+				obj.val('');
+				pathObj.val('');
+				if(cmd!=undefined && cmd!=''){
+					obj.val(cmd);
+				}
+				if(cmd_path!=undefined && cmd_path!=''){
+					pathObj.val(cmd_path);
+				}
+			}
+		});	
+	});	
+})
+
+</script>
+</body>
+</html>

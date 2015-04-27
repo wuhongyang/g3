@@ -1,0 +1,108 @@
+<?php
+require_once 'common.php';
+//如果通行证中没有渠道id
+if(empty($user['GroupId'])){
+	//是否已经提交申请
+	$param=array(
+		'extparam'=>array('Tag'=>'CheckApply','Uin'=>$user['Uin']),
+		'param'=>array('BigCaseId'=>10004,'CaseId'=>10035,'ParentId'=>10135,'ChildId'=>103)
+	);
+	$result=request($param);
+	if($result['Info']['status']==='0'){
+		$template='apply_audit';
+	}
+	else{
+		$template='no_apply';
+	}
+}
+else{
+	$Uin=$user['Uin'];
+	$partnerList=getChannelUserInfo($Uin);
+	//拥有身份数量
+	$partnerTotal=0;
+	//用户拥有的角色信息
+	$userRole=array(
+		'storeManagerGroupId'=>'',//站长,站ID
+		'isRoomManager'=>false,//是否签约了室主
+		'managerRoomList'=>array(),//室主,房间id列表
+		'entertainerRoomList'=>array(),//艺人,房间id
+		'isRoomEntertainer'=>false,//是否签约了艺人
+		'isProxy'=>false//是否签约了代理
+	);
+	$partnerTotal=0;
+	foreach($partnerList as $key=>$val){
+		if($val['type']==8){
+			$param=array(
+				'extparam'=>array('Tag'=>'GetGroupInfo','Uin'=>$Uin,'IsDetails'=>true),
+				'param'=>array('BigCaseId'=>10006,'CaseId'=>10045,'ParentId'=>10258,'ChildId'=>101,'Uin'=>$Uin,'Desc'=>'获取用户旗下站')
+			);
+			$userGroupInfo=request($param);
+			$userRole['storeManagerGroupId']=$userGroupInfo['Result']['groupid'];
+		}
+		elseif($val['type']==9){
+			$userRole['isRoomManager']=true;
+			if($val['room_id']>0){
+				$userRole['managerRoomList'][]=$val['room_id'];
+				$param=array(
+					'extparam'=>array('Tag'=>"getEnterInfo",'RoomId'=>$val['room_id']),
+					'param'=>array('Uin'=>$Uin,'BigCaseId'=>10006,'CaseId'=>10033,'ParentId'=>10102,'ChildId'=>101,'Desc'=>"房间排麦规则查看")
+				);
+				$result=request($param);
+				$partnerList[$key]['room_status']=$result['info']['status'];
+			}
+		}
+		elseif($val['type']==15){
+			$userRole['isRoomEntertainer']=true;
+			if($val['room_id']>0){
+				$userRole['entertainerRoomList'][]=$val['room_id'];
+			}
+		}
+		elseif($val['type']==16){
+			$userRole['isProxy']=true;
+		}
+		if(in_array($val['type'],array(8,9,15,16))){
+			$partnerTotal++;
+		}
+	}
+	//如果角色是站长或者是代理
+	if(!empty($userRole['storeManagerGroupId'])||$userRole['isProxy']==true){
+		$template='signed_list';
+	}
+	else{
+		if(($userRole['isRoomManager']==true&&!empty($userRole['managerRoomList']))||($userRole['isRoomEntertainer']==true&&!empty($userRole['entertainerRoomList']))){
+			$template='signed_list';
+		}
+		else{
+			$partnerTotal=intval($userRole['isRoomManager'])+intval($userRole['isRoomEntertainer']);
+			$template='no_signed';
+		}
+	}
+	//判断是否申请了站长
+	$param=array(
+		'extparam'=>array('Tag'=>'CheckApply','Uin'=>$Uin),
+		'param'=>array('BigCaseId'=>10004,'CaseId'=>10035,'ParentId'=>10135,'ChildId'=>103)
+	);
+	$result=request($param);
+	if($result['Info']['status']==='0'){
+		$apply=true;
+	}
+	if($partnerTotal < 1){
+		$template = 'no_apply';
+	}
+}
+
+$title='渠道管理';
+$serviceType='role_select';
+//载入模板
+if($themes=='default'){
+	$tpl = template::getInstance();
+	$tpl->setOptions(get_config('template','service'));
+}
+else{
+	$tmp_config=get_config('template','group_site');
+	$tmp_config['template_dir'].=$themes.'/tpl/service/';
+	$tmp_config['cache_dir'].=$themes.'/tpl/service/';
+	$tpl = template::getInstance();
+	$tpl->setOptions($tmp_config);
+}
+include template("channel/role/".$template.".html",$tpl);

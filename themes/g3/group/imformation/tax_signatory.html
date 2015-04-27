@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    <h1 class="yellow16">账户税收查询</h1>
+    <div class="mgt10 clearfix relative">
+        <span class="i-icon"></span>
+        <span class="fs14 fl">当前税收积分余额：</span>
+        <span class="yellow fl fs16">{$balance}</span>
+    </div>
+    <div class="tabletab">
+        <ul>
+        {if $taxDetail}
+            <li><a href="manage_imformation.php?module=tax_detail">税收流水查询</a></li>
+        {/if}
+        {if $taxExchange}
+            <li><a href="manage_imformation.php?module=tax_exchange">税收兑换记录</a></li>
+        {/if}
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgtb15 clearfix">
+            <form method="get">
+            <span > &nbsp;&nbsp;按&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="manage_imformation.php?module=tax_signatory&type=1">日</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="manage_imformation.php?module=tax_signatory&type=2">周</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="manage_imformation.php?module=tax_signatory&type=3">月</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="manage_imformation.php?module=tax_signatory&type=4">总</a>
+            </span> 
+            <span class="pre">       签约类型：</span>
+            <select name="role" style="width:120px;">
+                <option value=3>请选择</option>
+                <option value=1 {if $role==1} selected="selected"{/if}>室主</option>
+                <option value=2 {if $role==2} selected="selected"{/if}>艺人</option>
+            </select>
+            <input type="hidden" name="module" value="tax_signatory" />
+            <input type="hidden" name="type" value="{$_GET['type']}" />
+            &nbsp;<input name="" type="submit" class="normalbtn" value="查询">
+            </form>
+        </div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss">
+          <tr>
+            <th>编号</th>
+            <th>汇总时间</th>
+            <th>签约类型</th>
+            <th>用户ID</th>
+            <th>积分汇总</th>
+          </tr>
+          {foreach $list $one}
+          <tr>
+            <td>{$one['no']}</td>
+            <td>{if $one['uptime'] != 0}{$one['uptime']}{else}--{/if}</td>
+            <td>{$one['role']}</td>
+            <td>{$one['uin']}</td>
+            <td>{$one['weight']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

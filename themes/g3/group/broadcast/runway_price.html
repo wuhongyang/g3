@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>业务配置-跑道礼物价格设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script>
+$(function(){
+	$(".number").keyup(function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	})
+})
+</script>
+</head>
+<style type="text/css">
+td{
+	padding:5px;
+}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" action="?module=save_price">
+    <input type="hidden" name="back_module" value="runway_price">
+    <table>
+    	<tr>
+    		<td colspan="2">用户单次送礼累积满&nbsp;<input class="number" type="text" name="runway_price" value="{$data['runway_price']}" />&nbsp;金币，上跑道滚动显示</td>
+    	</tr>
+        <tr>
+    		<td>&nbsp;</td><td><input type="submit" class="bluebtn2" value="保存" /></td>
+    	</tr>
+    </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

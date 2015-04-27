@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>KMS</title>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">行为流水记录</div>
+</div >
+<div class="page-tools main-width">
+    <form action="" method="GET" name="myform" style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;">
+    <input type="hidden" name="module" value="<{$module}>" />
+    <p>
+	&nbsp;当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+	</p>
+    &nbsp;条件选择：<select name="select_type" id="select_type" onChange="showType(this.value);"><option value="1"{if $select_type == 1} selected{/if}>用户ID</option><option value="2"{if $select_type == 2} selected{/if}>四级科目</option><option value="3"{if $select_type == 3} selected{/if}>业务ID</option></select>
+    <p id="select_1">
+    &nbsp;用户类型：<select name="uin_type" id="uin_type"><option value="0">请选择</option><option value="1" {if $uin_type == 1}selected{/if}>发起用户</option><option value="2" {if $uin_type == 2}selected{/if}>目标用户</option></select>
+    &nbsp;用户ID：<input type="text" name="uin" id="uin" value="<{$uin}>" style="width:150" maxlength="250" />
+    </p>
+    <p id="select_2">
+    &nbsp;所属一级科目：<select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');clears('child');"><option value="0">请选择</option></select>
+    &nbsp;所属二级科目：<select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');clears('child');"><option value="0">请选择</option></select>
+    &nbsp;所属三级科目：<select name="parent_id" id="parent" onChange="getOptions('child='+this.value,'child');"><option value="0">请选择</option></select>
+    &nbsp;所属四级科目：<select name="child_id" id="child"><option value="0">请选择</option></select>
+    </p>
+    <p id="select_3">
+    &nbsp;业务ID：<input type="text" name="trade_id" id="trade_id" value="<{$trade_id}>" style="width:150" maxlength="250" />
+    </p>
+    <p>
+    &nbsp;时间：<input type="text" name="start_date" value="<{$start_date}>" style="width:150" maxlength="150" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" />
+    &nbsp;至&nbsp;<input type="text" name="end_date" value="<{$end_date}>" style="width:150" maxlength="150" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" />
+	<input type="hidden" name="data_group_id" value="{$__ADMIN_CURGROUP['groupid']}">
+	<input type="submit" value="搜索" />
+    </p>
+    </form>
+</div>
+<table class="table-list main-width" id="logList">
+<tr>
+    <th>编号</th>
+    <th>发生时间</th>
+    <th>发起用户ID</th>
+    <th>目标用户ID</th>
+    <th>业务ID</th>
+    <th>站ID</th>
+    <th>一级业务科目类别</th>
+    <th>二级业务科目类别</th>
+    <th>三级业务科目类别</th>
+    <th>业务科目</th>
+    <th>行为权重</th>
+    <th>资金权重</th>
+    <th>备注</th>
+</tr>
+{foreach $list['list'] $key $val}
+<tr>
+    <td>{echo $key+1}</td>
+    <td>{$val['uptime']}</td>
+    <td>{$val['Uin']}</td>
+    <td>{$val['TargetUin']}</td>
+    <td>{$val['ChannelId']}</td>
+    <td>{$val['GroupId']}</td>
+    <td>{$val['BigCaseName']}</td>
+    <td>{$val['CaseName']}</td>
+    <td>{$val['ParentName']}</td>
+    <td>{$val['ChildName']}</td>
+    <td>{$val['DoingWeight']}</td>
+    <td>{$val['MoneyWeight']}</td>
+    <td>{$val['Desc']}</td>
+</tr>
+{/foreach}
+</table>
+<div class="main-width"><div class="pagenavi" id="lopage">{$list['page']}</div></div>
+<script type="text/javascript">
+    
+    function showType(sValue){
+        var sValue = typeof(sValue) == 'undefined' ? 1 : sValue;
+        $('#select_1').attr("style","display:none");
+        $('#select_2').attr("style","display:none");
+        $('#select_3').attr("style","display:none");
+        $('#select_'+sValue).attr("style","display:block");
+    }
+    
+    showType(<{$select_type}>);
+    
+    getOptions("bigcase=1","bigcase","{$_GET['bigcase_id']}");
+    
+    {if !empty($_GET['bigcase_id'])}
+    getOptions("case={$_GET['bigcase_id']}",'case',"{$_GET['case_id']}");
+    {/if}
+    {if !empty($_GET['case_id'])}
+    getOptions("parent={$_GET['case_id']}",'parent',"{$_GET['parent_id']}");
+    {/if}
+    {if !empty($_GET['parent_id'])}
+    getOptions("child={$_GET['parent_id']}",'child',"{$_GET['child_id']}");
+    {/if}
+</script>
+</body>
+</html>

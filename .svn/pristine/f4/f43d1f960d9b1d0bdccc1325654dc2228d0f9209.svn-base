@@ -1,0 +1,10 @@
+<div class="container register-ft">
+    <div class="footer ftbd">
+        <div><a href="#">关于我们</a> | <a href="#">联系我们</a> | <a href="#">产品与服务</a></div>
+        <div>{$GroupData['Icpinfo']}</div>
+        <div>平台支持：<a href="http://www.vvku.com" title="vvku">vvku</a></div>
+    </div>
+</div>
+<!--[if lte IE 6]>
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store_ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->

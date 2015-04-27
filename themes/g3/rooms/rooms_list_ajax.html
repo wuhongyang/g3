@@ -1,0 +1,76 @@
+<div>	
+    <div class="clearfix other">
+    	<h2 class="ajax-search-list">房间搜索</h2>
+    	{if !empty($roomsListbyRoom)}
+	    	{foreach $roomsListbyRoom $rooms}
+	     	<dl style="margin-right:30px;">
+				<dt class="cover-other">
+					<img src="{PIC_API_PATH}/roomid/{$rooms['id']}/150/110.jpg" width="150" height="110" alt="{$rooms['description']}">
+					{if $rooms['hasplay'] > 0}
+					<span class="zb">直播中</span>
+					{/if}
+					<span class="rs">{$rooms['curuser']}人正在观看</span>
+					<div class="othermask">
+						<a href="/v/{$rooms['id']}" class="piclink" target="_blank">
+							<img src="{PIC_API_PATH}/roomid/{$rooms['id']}/150/110.jpg" width="150" height="110" alt="{$rooms['description']}">
+						</a>
+						{if $rooms['hasplay'] > 0}
+						<span class="zhibo">直播中</span>
+						{/if}
+						<span class="renshu">{$rooms['curuser']}人正在观看</span>
+						<h5>{$rooms['name']}</h5>
+						<p><em>({$rooms['id']})</em></p>
+					</div>
+	            </dt>
+	            <dd><span class="room-name">{$rooms['name']}</span></dd>
+	     	</dl>
+	     	{/foreach}
+     	{else}
+			<h2 class="ajax-search-notfound">找不到房间哦！</h2>
+		{/if}
+	</div>
+	<div class="clearfix other">
+		{if $request['sortID'] < 1}
+			<h2 class="ajax-search-list">艺人搜索</h2>
+			{if !empty($roomsListbyArt)}
+				{foreach $roomsListbyArt $rooms}
+		     	<dl>
+		         	<dt class="cover-other">  
+						<img src="{PIC_API_PATH}/roomid/{$rooms['id']}/150/110.jpg" width="150" height="110" alt="{$rooms['description']}">
+						{if $rooms['hasplay'] > 0}
+						<span class="zb">直播中</span>
+						{/if}
+						<span class="rs">{$rooms['curuser']}人正在观看</span>
+						<div class="othermask">
+							<a href="http://{$_SERVER['HTTP_HOST']}/v/{$room['id']}" target="_blank" class="piclink">
+								<img src="{PIC_API_PATH}/roomid/{$rooms['id']}/150/110.jpg" width="150" height="110" alt="{$rooms['description']}">
+							</a>
+							{if $rooms['hasplay'] > 0}
+							<span class="zhibo">直播中</span>
+							{/if}
+							<span class="renshu">{$rooms['curuser']}人正在观看</span>
+							<h5>{$rooms['name']}</h5>
+							<p><em>({$rooms['id']})</em></p>
+						</div>
+		            </dt>
+		            <dd><span class="room-name">{$rooms['name']}</span></dd>
+		     	</dl>
+		     	{/foreach}
+			{else}
+				<h2  class="ajax-search-notfound">找不到艺人哦！</h2>
+			{/if}
+		{/if}
+	</div>
+</div>
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/rooms.js"></script>
+<script type="text/javascript">
+var pagebox=$('#J_page'),
+	page_cur=pagebox.find('.page-cur'),
+	page_items=pagebox.find('.page-items'),
+	page_list=pagebox.find('.pagelist');
+	page_list.hover(function (){
+		page_items.show();
+	},function (){
+		page_items.hide();
+	});
+</script>

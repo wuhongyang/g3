@@ -1,0 +1,169 @@
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$(function(){
+	var html = $('#content').html();
+	art.dialog({
+		id:'createForm',
+		title:'',
+		lock:true,
+		cancel:false,
+		content: html
+	});
+	
+	//发送失败
+	var getCodeFail = function(data){
+		//$('#get_code').bind('click',_get_code);
+		$('#get_code').attr('disabled',false);
+		alert(data.FlagString);
+	}
+
+	//发送成功
+	var getCodeSuccess = function(data){
+		$('#get_code').html('短信已发送，<span id="sec">60</span>秒后可点此重发');
+        var hideObj = $('input[name="uniqueid"]');
+        if(hideObj.length > 0){
+            hideObj.remove();
+        }
+        var hidden = '<input type="hidden" name="uniqueid" value="' + data.UniqueId + '">';
+        $('#regForm').append(hidden);
+		var sec = 60;
+		var si = setInterval(function(){
+			--sec;
+			if(sec == 0){
+				clearInterval(si);
+                $('#get_code').html('点此重发验证码');
+				//$('#get_code').bind('click',_get_code);
+				$('#get_code').attr('disabled',false);
+			}
+			$('#sec').html(sec);
+		},1000);
+	}
+	
+	//$('#get_code').bind("click", _get_code);
+	$('#get_code').live('click', function (){
+		var phone = $('#phone').val();
+		if(phone == '' || !/^(13|14|15|18)\d{9,9}$/.test(phone)){
+        	alert('请输入正确的手机号码');
+		   	return false;
+		}
+		$(this).unbind('click');
+        $(this).attr('disabled','disabled');
+        $.ajax({
+            url: '/group_site/intentional_customer.php?module=sendcode',
+            type: 'POST',
+            data: {nouser:phone},
+            dataType: 'JSON',
+            success: function(data){
+                if(data.Flag != 100){
+                    getCodeFail(data)
+                }else{
+                    getCodeSuccess(data);
+                }
+            }
+        });
+	})
+	
+	$('#nick').live("blur", function(){
+		var nick = $(this).val();
+		if(nick.length > 10){
+			$('.text').css("visibility","visible");
+		}
+	})
+	$('#nick').live("focus", function(){
+		$('.text').css("visibility","hidden");
+	})
+	
+	$('#reg_now').live('click', function(){
+		var nick = $('#nick').val();
+		var phone = $('#phone').val();
+		var msgcode = $('#msgcode').val();
+		if(nick.length <= 0 || nick.length > 10){
+			alert("称呼长度为1-10个字");
+			return false;
+		}
+		if(phone == '' || !/^(13|14|15|18)\d{9,9}$/.test(phone)){
+        	alert('请输入正确的手机号码');
+		    return false;
+		}
+		if(msgcode == '' || !/\d{6,6}$/.test(msgcode)){
+        	alert('请输入6位数验证码');
+		    return false;
+		}
+		var html = '<div class="test-account-box">\
+			<div class="loadimg">\
+				<img src="{THEMES_URL}group_site/{$themes}/src/img/loading.gif" width="32" height="32"/>\
+			</div>\
+			<p class="loadtext">正在努力为您创建账号</p>\
+		</div>';
+		var data = $('#reg_form').serialize();
+		art.dialog({id:'createForm'}).content(html);
+		$.ajax({
+			url: '/group_site/intentional_customer.php?module=intendreg',
+            type: 'GET',
+			cache:false, 
+            data: data,
+            dataType: 'JSON',
+			success: function(data){
+				alert(1);
+				alert(data);
+            	if(data.Flag != 100){
+            		alert(data.FlagString);
+            		var html = $('#content').html();
+            		art.dialog({id:'createForm'}).content(html);
+            	}else{
+            		var html = '<div class="test-account-box">\
+	           						<h5 class="success-title">您的账号创建成功</h5>\
+	           						<div class="leftpad"><a href="#" onclick="jump(\''+data['role_name']+'\','+data['account_pos']+');" class="btn btn-info nowexperience">立即体验网站</a></div>\
+	           					</div>';
+       		    	art.dialog({id:'createForm'}).content(html);
+            	}
+            },error: function(XMLHttpRequest, textStatus, errorThrown){
+				alert(2);
+				console.log(XMLHttpRequest);
+				alert(XMLHttpRequest);
+				alert(textStatus);
+				alert(errorThrown);
+			}
+        });
+	})
+});
+function jump(role_name, account_pos){
+	//location.href = 'index.php?is_guide=1&role='+return_data;
+	location.href = "/self/home.php?is_guide=1&role_name="+role_name+"&account_pos="+account_pos;
+}
+</script>
+<div id="content" style="display:none;">
+<div class="test-account-box">
+	<h5><span>以便更好体验网站功能！</span>请创建测试账号</h5>
+    <form class="form-horizontal" id="reg_form">  
+        <div class="control-group">    
+            <label class="control-label">您的称呼：</label>    
+            <div class="controls">     
+                <input type="text" id="nick" name="nick" class="input-hover"/>
+                <span class="text" style="visibility:hidden;">称呼不能超过10个字！</span>   
+            </div> 
+        </div>  
+        <div class="control-group">   
+            <label class="control-label">联系手机：</label>    
+            <div class="controls">    
+                <input type="text" id="phone" name="phone"/> 
+                <div style="margin-top:5px;">
+                    <button type="button" id="get_code" class="btn btn-info getyzm">获取验证码</button>
+                </div>  
+            </div>  
+        </div>
+        <div class="control-group">    
+            <label class="control-label">验证码：</label>    
+            <div class="controls">     
+                <input type="text" id="msgcode" name="msgcode"/>   
+            </div> 
+        </div>  
+        <div class="control-group">
+            <label class="control-label">&nbsp;</label>    
+            <div class="controls">   
+                <button type="button" id="reg_now" class="btn btn-info nowcreate">立即创建</button>   
+            </div> 
+        </div>
+    </form>
+</div>
+</div>

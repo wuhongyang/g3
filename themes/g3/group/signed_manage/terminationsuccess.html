@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+	<div class="centerdiv center">
+        <h2 style="font-size:25px;color:#ce2c21;line-height:50px;">解约人员成功!</h2>
+        <p class="fs14 mgt10">您已成功与{if $records['channel_type']==9}室主{elseif $records['channel_type']==15}艺人{/if}"{$records['uin']}（{$records['user_nick']}）"解除签约。
+        <br/><br/>
+   		{if $records['channel_type']==9}
+        <a href="signed_manage.php?module=signed&room_id={$_GET['room_id']}&role_id=10185" class="greenbtn" style="margin-left:45%;"><span>点击邀请签约</span></a>
+	    {/if}
+	    </p>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

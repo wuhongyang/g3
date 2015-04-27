@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>靓号管理-赠送靓号</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+.mgl30{margin-left: 30px;}
+.hide{display:none;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="J_form">
+        <ul class="formlist" id="ulist">
+            <li class="clearfix">
+                <label>用户码：</label>
+                <div class="fl">
+                    <input type="text" name="uin">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>用户昵称：</label>
+                <div class="fl">
+                    <span id="nick"></span>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>绑定靓号：</label>
+                <div class="fl">
+                    <input type="text" name="special_num">
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <input type="button" class="bluebtn2" value="确认" onclick="checkParam();" />
+                </div>
+            </li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$('input[name="uin"]').blur(function(){
+    var uin = $(this).val();
+    if(!uin || !/^\d+$/.test(uin)){
+        return ;
+    }
+    $.ajax({
+        url: 'ajax_info.php?Tag=userinfo',
+        type: 'GET',
+        data: {uin:uin},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                $('#nick').html(json.Nick);
+            }else{
+                html = '<span style="color:red">' + json.FlagString + '</span>';
+                $('#nick').html(html);
+            }
+        }
+    });
+});
+$('input[name="uin"]').focus(function(event) {
+    $('#nick').html('');
+});
+function checkParam(){
+    var uin = $('input[name="uin"]').val();
+    if(!uin){
+        _show_msg('用户码不能为空');
+        return ;
+    }
+    if(!/^\d+$/.test(uin)){
+        _show_msg('用户码只能为数字');
+        return ;
+    }
+
+    var special_num = $('input[name="special_num"]').val();
+    if(!special_num){
+        _show_msg('绑定靓号不能为空');
+        return false;
+    }
+    if(!/^\d+$/.test(special_num)){
+        _show_msg('绑定靓号只能为数字');
+        return false;
+    }
+    $.ajax({
+        url: '?module=gift',
+        type: 'POST',
+        data: $('#J_form').serialize(),
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: '赠送靓号成功',
+                    lock: true,
+                    ok: function(){
+                        location.href= '?module=cate';
+                    },
+                    icon: 'succeed'
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    })
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>群组配置</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style type="text/css">
+.error{margin-left: 5px; color: #DF0000;}
+.line{border-top: 1px solid #666; margin: 15px 0 0 40px; width: 35%;}
+.room_interface{margin-left: 122px;}
+.room_interface:hover{background-color: #74C354; width:320px;}
+.w300{width:300px; display: inline-block;}
+.del_room_ui{display: inline-block; cursor: pointer;}
+.ktv_module{margin-left: 122px;}
+.ktv_module:hover{background-color: #74C354; width:320px;}
+.del_ktv_module{display: inline-block; cursor: pointer;}
+</style>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">群组配置</div>
+</div>
+
+<div class="body">
+    <form method="post" action="?module={if $id > 0}editGroup{else}addGroup{/if}" class="form" onSubmit="return checkParam();">
+    	<input type="hidden" name="Id" value="{$case['id']}" />
+        <input type="hidden" name="group_id" value="{$case['groupid']}">
+        <p>
+        	<label>站ID：</label>
+            <span id="group_id_show">{$case['groupid']}</span>
+        </p>
+        <p>
+        	<label>站名称：</label>
+            <input type="text" name="GroupName" value="{$case['name']}" size="30" id="group_name" />
+        </p>
+		<p>
+        	<label>站长ID：</label>
+            {if $id > 0}
+            {$case['uin']}
+            {else}
+            <input type="text" name="uin" size="30">
+            <span class="error"></span>
+            {/if}
+        </p>
+        {if !$id}
+        <p>
+            <label>用户名：</label>
+            <input type="text" name="user" size="30">
+        </p>
+        {/if}
+        <p>
+            <label>模板选择：</label>
+            <select name="module_id" id="module_id">
+                <option value="0">--请选择--</option>
+                {foreach $moduleList $val}
+                <option value="{$val['id']}" {if $case['module_id']==$val['id']}selected{/if}>{$val['name']}</option>
+                {/foreach}
+            </select>
+        </p>
+        <p>
+            <label>KTV模板选择：</label>
+            <select name="ktv_template">
+                <option value="-1">--请选择--</option>
+                {foreach $ktv_list $val}
+                <option value="{$val}">{$val}</option>
+                {/foreach}
+            </select>
+            <input type="button" value="添加" onclick="javascript:add_ktv_module();">
+        </p>
+        <p id="ktv_template_wrap">
+            <label>版本选择：</label>
+            <select name="ktv_version">
+            <option value="-1">--请选择--</option>
+            </select>
+            <input type="button" id="sync2" value=" 同 步 " onclick="sync(2);"/>
+            {foreach $ktv_templates $val}
+            <div class="ktv_module">
+                <input type="hidden" name="ktv_templates[]" value="{$val}">
+                <span class="w300">{$val}</span>
+                <span class="del_ktv_module">X</span>
+            </div>
+            {/foreach}
+        </p>
+        <p id="room_ui_wrap">
+            <label>房间界面：</label>
+            <select name="room_ui">
+                <option value="-1">请选择</option>
+                {foreach $rooms_ui $key $val}
+                <option value="{$key}">{$val}</option>
+                {/foreach}
+            </select>
+            <input type="button" value="添加" onclick="javascript:add_room_ui();">
+            {foreach $case['room_ui'] $val}
+            <div class="room_interface">
+                <input type="hidden" name="rooms_ui[]" value="{$val}">
+                <span class="w300">{$rooms_ui[$val]}</span>
+                <span class="del_room_ui">X</span>
+            </div>
+            {/foreach}
+        </p>
+        <p>
+            <label>页面界面：</label>
+            <select name="template">
+                <option value="-1">请选择</option>
+                {foreach $group_sites $val}
+                <option value="{$val}" {if $info['template']==$val}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+        </p>
+        <p>
+            <label>版本选择：</label>
+            <select name="version">
+                <option value="-1">请选择</option>
+                {foreach $versions $val}
+                <option value="{$val}" {if $info['version']==$val}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+            <input type="button" id="sync1" value=" 同 步 " onclick="sync(1);"/>
+        </p>
+        <p>
+            <label>站货币单位：</label>
+            <input type="text" name="currency_unit" value="{$case['currency_unit']}">
+        </p>
+        <p>
+        	<label>房间额度：</label>
+            <input type="text" name="open_num" value="{if $id > 0}{echo intval($case['open_num'])}{/if}" >
+            <!--{echo (int)$case['open_num']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="?module=openNum&groupid={$case['groupid']}&uin={$case['uin']}&open_num={$case['open_num']}">修改房间额度</a>-->
+        </p>
+        <p>
+        	<label>是否使用：</label>
+            <input type="radio" name="is_use" value="0" {if $case['is_use']==0}checked="checked"{/if} />否&nbsp;&nbsp;
+            <input type="radio" name="is_use" value="1" {if $case['is_use']==1}checked="checked"{/if} />是
+            <!--{echo (int)$case['open_num']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="?module=openNum&groupid={$case['groupid']}&uin={$case['uin']}&open_num={$case['open_num']}">修改房间额度</a>-->
+        </p>
+        <p class="line">
+            <strong>站点扩展信息：</strong>
+        </p>
+        <p>
+            <label>域名：</label>
+            <input type="text" name="domain" value="{$info['domain']}" />
+        </p>
+        <p>
+            <label>ICP备案：</label>
+            <input type="text" name="icp" value="{$info['icp']}" />
+        </p>
+        <p>
+            <label>底部备案信息：</label>
+            <input type="text" name="icp_info" value="{$info['icp_info']}" />
+        </p>
+        <table class="table-list main-width" id="table-list">
+            <tr>
+                <th>配置名</th><th>配置字段</th><th>配置值</th>
+            </tr>
+            {foreach $ext $key $val}
+         <tr>
+            <td><input type="text" name="descr[]" value="{$val['descr']}"/></td>
+            <td><input type="text" name="key[]" value="{$key}" style="width:50%"/></td>
+            <td>
+                <input type="text" name="value[]" value="{$val['value']}" style="width:50%"/>&nbsp;&nbsp;
+                <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        <div style="margin:20px;"><a onclick="addConfig();" href="javascript:void(0);">添加一项配置</a> &nbsp; <font color="#999999">* 为API添加一项配置参数</font></div>
+        <p>
+        	<label></label><input type="submit" value="保存信息" />
+        </p>
+	</form>
+</div>
+
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+var room_ui_json = '{$room_ui_json}';
+room_ui_json = $.parseJSON(room_ui_json);
+var ktv_module_json = '{$info['ktv_template']}';
+ktv_module_json = $.parseJSON(ktv_module_json);
+var room_ui_array = [];
+for(var i in room_ui_json){
+    room_ui_array.push(room_ui_json[i])
+}
+var ktv_module_array = [];
+for(var i in ktv_module_json){
+    ktv_module_array.push(ktv_module_json[i])
+}
+
+$(function(){
+    //KTV模板
+    $('select[name="ktv_template"]').change(function(){
+        var options = '<option value="-1">请选择</option>';
+        $('select[name="ktv_version"]').html(options);
+        var template = $(this).val();
+        if(template === "-1"){
+            return ;
+        }
+        $.ajax({
+            url: '?module=get_version',
+            type: 'GET',
+            data: {template:template,timestamp:new Date().getTime(),type:2},
+            success: function(data){
+                var json = $.parseJSON(data);
+                if(json.length < 1){
+                    return ;
+                }
+                for(var i = 0, len = json.length; i < len; i++){
+                    options += '<option value="' + json[i] + '">' + json[i] + '</option>';
+                }
+                $('select[name="ktv_version"]').html(options);
+            }
+        });
+    });
+
+    //界面删除
+    $(document).on('click', '.del_room_ui', function(e) {
+        //e.preventDefault();
+        var odiv = $(this).parents('.room_interface');
+        var index = room_ui_array.index(odiv.find('input').val());
+        if(index !== false){
+            room_ui_array.remove(index);
+        }
+        odiv.remove();
+    });
+
+    //站长ID检测
+    $('input[name="uin"]').blur(function(){
+        var uin = $(this).val().trim();
+        var oError = $(this).siblings('.error');
+        if(uin.isEmpty()){
+            oError.html('站长ID不能为空');
+            return false;
+        }
+        if(!uin.isNumber()){
+            oError.html('站长ID必须为数字');
+            return false;
+        }
+        $('input[name="GroupId"]').val(uin);
+        $('#group_id_show').html(uin);
+        /*
+        $.ajax({
+            url: 'ajax.php?module=uin_exists',
+            type: 'GET',
+            data: {uin:uin,timestamp:new Date().getTime()},
+            success: function(data){
+                data = $.parseJSON(data);
+                if(data.Flag != 100){
+                    oError.html('站长ID不存在');
+                }else{
+                    $('#group_id_show').html(uin);
+					$('input[name="GroupId"]').val(uin);
+                }
+            }
+        });*/
+    });
+
+    $('input[name="uin"]').focus(function(){
+        $(this).siblings('.error').html('');
+    });
+
+    $('select[name="template"]').change(function(){
+        var options = '<option value="-1">请选择</option>';
+        $('select[name="version"]').html(options);
+        var template = $(this).val();
+        if(template === "-1"){
+            return ;
+        }
+        $.ajax({
+            url: '?module=get_version',
+            type: 'GET',
+            data: {template:template,timestamp:new Date().getTime(),type:1},
+            success: function(data){
+                var json = $.parseJSON(data);
+                if(json.length < 1){
+                    return ;
+                }
+                for(var i = 0, len = json.length; i < len; i++){
+                    options += '<option value="' + json[i] + '">' + json[i] + '</option>';
+                }
+                $('select[name="version"]').html(options);
+            }
+        });
+    });
+
+    //KTV模板删除
+    $(document).on('click', '.del_ktv_module', function() {
+        var odiv = $(this).parents('.ktv_module');
+        var index = ktv_module_array.index(odiv.find('input').val());
+        if(index !== false){
+            ktv_module_array.remove(index);
+        }
+        odiv.remove();
+    });
+});
+
+function add_ktv_module(){
+    var ktv_template_id = $('select[name="ktv_template"]').val();
+    var ktv_template_name = $('select[name="ktv_template"]').find('option:selected').text();
+
+    if(ktv_template_id == -1){
+        alert('请选择要添加的KTV模板');
+        return ;
+    }
+
+    //是否已存在
+    if(ktv_module_array.index(ktv_template_id) !== false){
+        alert('不能重复添加KTV模板');
+        return ;
+    }
+    ktv_module_array.push(ktv_template_id);
+    
+    var html = '<div class="ktv_module"> \
+                <input type="hidden" name="ktv_templates[]" value="' + ktv_template_id + '"> \
+                <span class="w300">' + ktv_template_name + '</span> \
+                <span class="del_ktv_module">X</span> \
+            </div>';
+    $('#ktv_template_wrap').append(html);
+}
+
+function add_room_ui(){
+    var room_ui_id = $('select[name="room_ui"]').val();
+    var room_ui_name = $('select[name="room_ui"]').find('option:selected').text();
+
+    if(parseInt(room_ui_id, 10) < 1){
+        alert('请选择要添加的房间界面');
+        return ;
+    }
+
+    //是否已存在
+    if(room_ui_array.index(room_ui_id) !== false){
+        alert('不能重复添加房间界面');
+        return ;
+    }
+    room_ui_array.push(room_ui_id);
+    appendHtml(room_ui_id,room_ui_name);
+}
+
+function appendHtml(id, name){
+    var html = '<div class="room_interface"> \
+                <input type="hidden" name="rooms_ui[]" value="' + id + '"> \
+                <span class="w300">' + name + '</span> \
+                <span class="del_room_ui">X</span> \
+            </div>';
+    $('#room_ui_wrap').append(html);
+}
+
+//同步模板
+function sync(type){
+    if(type==1){
+        var template = $('select[name="template"]').val();
+        var version = $('select[name="version"]').val();
+    }else if(type==2){
+        var template = $('select[name="ktv_template"]').val();
+        var version = $('select[name="ktv_version"]').val();
+    }
+    if(template == -1){
+        alert('请选择模板');
+        return;
+    }
+    if(template == 'default' && type==1){
+        alert('默认模板无需同步');
+        return;
+    }
+    if(version == -1){
+        alert('请选择版本');
+        return;
+    }
+	$('#sync'+type).attr('disabled',true);
+	$('#sync'+type).val('正在同步...');
+    $.ajax({
+        url: '?module=sync',
+        type: 'POST',
+        data: {template:template,version:version,type:type},
+        success: function(data){
+            var json = $.parseJSON(data);
+            if(json.Flag == '100'){
+                alert('同步成功');
+            }else{
+                alert('同步失败');
+            }
+			$('#sync'+type).attr('disabled',false);
+			$('#sync'+type).val(' 同 步 ');
+        }
+    });
+}
+
+function addConfig(){
+    var id = document.getElementById('table-list');
+    var newtr = id.insertRow(-1);
+    var td1   = document.createElement("td");
+    var td2   = document.createElement("td");
+    var td3   = document.createElement("td");
+    td1.innerHTML = '<input type="text" name="descr[]">';
+    td2.innerHTML = '<input type="text" name="key[]" style="width:50%">';
+    td3.innerHTML = '<input type="text" name="value[]" style="width:50%"> <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>';
+    newtr.appendChild(td1);
+    newtr.appendChild(td2);
+    newtr.appendChild(td3);
+}
+function delConfig(obj){
+    obj = obj.parentNode.parentNode;
+    obj.parentNode.removeChild(obj);
+}
+
+function checkParam(){
+    var group_name = $('#group_name').val();
+    if(group_name.trim().isEmpty()){
+        alert('请填写站名称');
+        return false;
+    }
+
+    var oUin = $('input[name="uin"]');
+    var uin = oUin.val().trim();
+    if(oUin.length > 0){
+        if(uin.isEmpty() || !uin.isNumber()){
+            alert('请填写正确的站长ID');
+            return false;
+        }
+    }
+
+    //模板
+    var module_id = $('#module_id').val();
+    if(parseInt(module_id, 10) < 1){
+        alert('请选择模板');
+        return false;
+    }
+
+    //房间界面
+    if($('.room_interface').length < 1){
+        alert('请添加房间界面');
+        return false;
+    }
+
+    //页面界面
+    if($('select[name="template"]').val() == -1){
+        alert('请选择页面界面');
+        return false;
+    }
+
+    //货币单位
+    var vCurrencyUnit = $('input[name="currency_unit"]').val();
+    if(vCurrencyUnit.trim().isEmpty()){
+        alert('请填写站货币单位');
+        return false;
+    }
+
+    //域名
+    var vDomain = $('input[name="domain"]').val();
+    if(vDomain.trim().isEmpty()){
+        alert('请填写域名');
+        return false;
+    }
+
+    //ICP备案
+    var vICP = $('input[name="icp"]').val();
+    if(vICP.trim().isEmpty()){
+        alert('请填写ICP备案');
+        return false;
+    }
+
+    //底部备案信息
+    var vICPInfo = $('input[name="icp_info"]').val();
+    if(vICPInfo.trim().isEmpty()){
+        alert('请填写底部备案信息');
+        return false;
+    }
+
+    //底部信息配置
+    var hasConfig = $('#table-list').find('tr').length;
+    if(hasConfig < 2){
+        alert('请配置底部信息');
+        return false;
+    }
+
+    return true;
+}
+</script>
+</body>
+</html>

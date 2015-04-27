@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>站点风格模板</title>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">站点风格模板添加/修改</div>
+    <div class="header-button right">{if $link_array[103]['url']}<a href="{$link_array[103]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form method="post" class="form" action="?module=save" onsubmit="return check_form(this);">
+<input type="hidden" name="id" value="{$_GET['id']}" />
+	<p>
+    	<label>风格名称：</label>
+        <input type="text" name="name" value="{$info['name']}" />
+    </p>	
+    <p style="float:left;">
+   		<label>分类：</label>
+        <select name="cat_id" id="cat_id">
+        	<option value="0">不指定</option>
+        	{foreach $category $val}
+        	<option value="{$val['id']}" {if $info['cat_id'] == $val['id']}selected{/if}>{$val['name']}</option>
+            {/foreach}
+        </select>
+        <input type="button" value="添加分类" onclick="$('#add_category').show();" />
+    </p>
+    <table style="text-align:center; display:none;left:280px; position:fixed;" id="add_category">
+        <tr style=" height:5px;">
+            <td colspan="2" style="background:#E6EDF3; border:1px solid #D7D7D7;"><b>添加分类</b></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid #D7D7D7">&nbsp;&nbsp;分类名称：</td>
+            <td style="border-right:1px solid #D7D7D7"><input type="text" name="new_cat_name" id="new_cat_name" size="10" />&nbsp;&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" style="border:1px solid #D7D7D7; border-top:none;"><input type="button" value="确定" onclick="add_category();" />&nbsp;&nbsp;<input type="button" id="cancel" value="取消" onclick="$('#add_category').hide();" /></td>
+        </tr>
+    </table>
+    <p style="clear:both;"><label><strong>颜色样式</strong></label></p>
+    <p>
+    	<label>主文字：</label>
+        <input type="text" name="main_text" size="10" value="{$info['color_style']['main_text']}" />
+    </p>
+    <p>
+    	<label>次文字：</label>
+        <input type="text" name="minor_text" size="10" value="{$info['color_style']['minor_text']}" />
+    </p>
+    <p>
+    	<label>边框：</label>
+        <input type="text" name="border" size="10" value="{$info['color_style']['border']}" />
+    </p>
+    <p>
+    	<label>底框文字：</label>
+        <input type="text" name="bottom_text" size="10" value="{$info['color_style']['bottom_text']}" />
+    </p>
+    <p>
+    	<label>页面背景：</label>
+        <input type="text" name="page_bg" size="10" value="{$info['color_style']['page_bg']}" />
+    </p>
+    <p>
+    	<label>内容背景：</label>
+        <input type="text" name="content_bg" size="10" value="{$info['color_style']['content_bg']}" />
+    </p>
+    <p><label><strong>图片</strong></label></p>
+    <p>
+		<label>大背景图：</label>
+		<span id="bg_img">
+			<select id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+			<select name="bg_img" id="pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+			<input type="button" onClick="showPicture('pic','show_gif','bg_img');" value="图片预览" style="width:87px;">
+			<input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+		</span>
+	</p>
+    <p>
+    	<label>是否使用：</label>
+        <input type="radio" name="bg_status" value="1"{if $info['bg_status']==1} checked="checked"{/if} />是&nbsp;<input type="radio" name="bg_status" value="0"{if $info['bg_status']==='0'} checked="checked"{/if} />否
+    </p>
+    <p>
+    	<label>显示：</label>
+        <input type="radio" name="bg_tile" value="1"{if $info['bg_tile']==1} checked="checked"{/if} />平铺&nbsp;<input type="radio" name="bg_tile" value="0"{if $info['bg_tile']==='0'} checked="checked"{/if} />不平铺
+    </p>
+    <p>
+    	<label>对齐：</label>
+        <input type="radio" name="bg_align" value="1"{if $info['bg_align']==1} checked="checked"{/if} />居左&nbsp;<input type="radio" name="bg_align" value="2"{if $info['bg_align']==2} checked="checked"{/if} />居中&nbsp;<input type="radio" name="bg_align" value="3"{if $info['bg_align']==3} checked="checked"{/if} />居右
+    </p>
+    <p>
+		<label>顶部通栏：</label>
+		<span id="banner">
+			<select id="category2" onChange="showPic('pic2',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+			<select name="banner" id="pic2"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+			<input type="button" onClick="showPicture('pic2','show_gif2','banner');" value="图片预览" style="width:87px;">
+			<input type="button" onclick="showOriginal('pic2')" value="查看原图" style="width:87px;" />
+		</span>
+	</p>
+    <p>
+    	<label>是否使用：</label>
+        <input type="radio" name="banner_status" value="1"{if $info['banner_status']==1} checked="checked"{/if} />是&nbsp;<input type="radio" name="banner_status" value="0"{if $info['banner_status']==='0'} checked="checked"{/if} />否
+    </p>
+    <p>
+		<label>风格缩略图：</label>
+		<span id="thumb">
+			<select id="category3" onChange="showPic('pic3',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+			<select name="thumb" id="pic3"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+			<input type="button" onClick="showPicture('pic3','show_gif3','thumb');" value="图片预览" style="width:87px;">
+			<input type="button" onclick="showOriginal('pic3')" value="查看原图" style="width:87px;" />
+		</span>
+	</p>
+    <p><label></label><input type="submit" value=" 提 交 " /></p>
+</form>
+
+<script type="text/javascript">
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+//gif图
+showCategory("category","<{$info['bg_img_cat']}>");
+<{if $info['bg_img_cat']!='' && $info['bg_img_cat']!=-1}>
+showPic("pic","$info['bg_img_cat']",'<{$info["bg_img"]}>');
+<{/if}>
+
+showCategory("category2","<{$info['banner_cat']}>");
+<{if $info['banner_cat']!='' && $info['banner_cat']!=-1}>
+showPic("pic2","$info['banner_cat']",'<{$info["banner"]}>');
+<{/if}>
+
+showCategory("category3","<{$info['thumb_cat']}>");
+<{if $info['thumb_cat']!='' && $info['thumb_cat']!=-1}>
+showPic("pic3","$info['thumb_cat']",'<{$info["thumb"]}>');
+<{/if}>
+
+//pic:图片所在select的id
+//pic_show:创建样式id
+//show_area:显示位置
+function showPicture(pic_select_id,pic_show,show_area){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById(pic_show);
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById(show_area);
+			var div = document.createElement("div");
+			div.id = pic_show;
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="300" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }" name="movie"><param value="high" name="quality"><embed width="300" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+
+function add_category(){
+	var name=$('#new_cat_name').val();
+	if(name==''){
+		alert('请输入分类名称');
+		return;
+	}
+	$.ajax({
+		url: '?module=add_category',
+		type: 'POST',
+		cache: false,
+		data: {name:name},
+		success: function(data){
+			var json = $.parseJSON(data);
+			if(parseInt(json.Flag)==100){
+				$("#cat_id").prepend("<option value='"+json.Id+"' selected>"+name+"</option>");
+				$("#add_category").hide();
+			}
+			else{
+				alert(json.FlagString);
+			}
+		}
+	});
+}
+
+function check_form(form){
+	if(form.name.value==''){
+		alert('风格名称不能为空');
+		return false;
+	}
+	if(form.main_text.value==''){
+		alert('主文字不能为空');
+		return false;
+	}
+	if(form.minor_text.value==''){
+		alert('次文字不能为空');
+		return false;
+	}
+	if(form.border.value==''){
+		alert('边框不能为空');
+		return false;
+	}
+	if(form.bottom_text.value==''){
+		alert('底框文字不能为空');
+		return false;
+	}
+	if(form.page_bg.value==''){
+		alert('页面背景不能为空');
+		return false;
+	}
+	if(form.content_bg.value==''){
+		alert('内容背景不能为空');
+		return false;
+	}
+	if(parseInt(form.bg_img.value)>0){
+		if(!$('input[name="bg_status"]:checked').val()){
+			alert('请选择大背景图是否使用');
+			return false;
+		}
+		if(!$('input[name="bg_tile"]:checked').val()){
+			alert('请选择大背景图显示方式');
+			return false;
+		}
+		if(!$('input[name="bg_align"]:checked').val()){
+			alert('请选择大背景图对齐方式');
+			return false;
+		}
+	}
+	if(parseInt(form.banner.value)>0){
+		if(!$('input[name="banner_status"]:checked').val()){
+			alert('请选择顶部通栏是否使用');
+			return false;
+		}
+	}
+	if(parseInt(form.thumb.value)<=0){
+		alert('请选择风格缩略图');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

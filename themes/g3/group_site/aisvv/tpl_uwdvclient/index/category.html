@@ -1,0 +1,10 @@
+<dl class="body-side-list">
+    <dt><h3><i class="home-icon home-room"></i><span>站内房间</span></h3></dt>
+    <dd>
+        <ul>
+        {foreach $recommendCat $val}
+            <li><a href="javascript:select_category(this,{$val['id']},'{$val['name']}');" title="{$val['name']}">{php echo str_cut_out($val['name']);}</a></li>
+        {/foreach}
+        </ul>
+    </dd>
+</dl>

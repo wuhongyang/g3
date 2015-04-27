@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/reset.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/shop.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--顶部banner-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" /></a>
+            {else}
+                <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--套餐列表-->
+        <div class="shopwrap">
+            {foreach $allGoods $goods}
+                <h2 class="nonebr">
+                    <div class="shopnav">{$goods['name']}</div>
+                </h2>
+                <ul class="taocan-items clearfix">
+                {foreach $goods['goods'] $val}
+                    <li class="clearfix">
+                        <div class="item-left">
+                            <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['package_img'].'/0/0.jpg');}" width="268" height="250" alt="{$val['package_name']}" title="{$val['package_name']}"/>
+                        </div>
+                        <div class="item-right">
+                            <h5>{$val['package_name']}{if $val['in_room']}<span class="text-muted">(房间商品只能在对应房间生效）</span>{/if}</h5>
+                            <p><span class="text-muted">原价：<span class="textline">{$val['original_price']}</span>{$unit}</span></p>
+                            <p>套餐价：<span class="text-warning">{$val['price']}{$unit}</span></p>
+                            <p class="fs15">本优惠套餐包含以下商品：</p>
+                            <div class="taocan-list clearfix">
+                            {foreach $val['goods'] $val2}
+                                <button type="button" class="btn btn-default">{$val2['info']['commodity_name']} {$val2['value']}{if $val2['commodityInfo']['type']==1}天{else}个{/if}</button>
+                            {/foreach}
+                            </div>
+                            <p><button type="button" class="btn btn-warning" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$val['id']}&room_id={$room_id}';">立即购买</button></p>
+                        </div>
+                    </li>
+                {/foreach}
+                </ul>
+            {/foreach}
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

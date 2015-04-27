@@ -1,0 +1,69 @@
+<!--顶部导航-->
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/resource/css/base-min.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/resource/css/topnav-min.css" />
+<div class="hd">
+    <div class="topnav clearfix">
+        <div class="topnav-left fll" id="J_head">
+            <a href="/passport/?account&index&url=/">登录</a>
+            | <a href="/passport/">注册</a>
+            | <a href="/rooms/shortcut.php">+桌面图标</a>
+        </div>
+        <div class="topnav-right">
+            <div id="site-nav">
+                <ul class="quick-menu">
+                    <li class="home"><a href="/">首页</a></li>
+                    <li class="mytaobao">
+                        <div class="menu">
+                            <a class="menu-hd gray" href="/service/profile.php">个人中心<b></b> </a>
+
+                            <div class="menu-bd">
+                                <div class="menu-bd-panel">
+                                    <div>
+                                        <a href="/service/pass_manager.php" rel="nofollow">通行证管理</a><br>
+                                        <a href="/service/account.php" rel="nofollow">帐号管理</a><br>
+                                        {if $GroupData['Template']!='vvai'}
+                                        <a href="/service/role_select.php" rel="nofollow">渠道管理</a><br>
+                                        {/if}
+                                        <a href="/service/weibo.php" rel="nofollow">我的微博</a><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--<li class="favorite"><a href="/feedback.html" class="gray">反馈</a></li>
+                    <li class="help"><a href="/help/index.html" class="gray">帮助</a></li>-->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/json2.js"></script>
+<script type="text/javascript">
+//动态加载CSS文件
+function loadCSS(url){
+	var cssTag = document.createElement('link');
+	cssTag.setAttribute('rel','stylesheet');
+	cssTag.setAttribute('type','text/css');
+	cssTag.setAttribute('href',url);
+	document.getElementsByTagName('head')[0].appendChild(cssTag);
+}
+
+$.ajax({
+	url: '/rooms/ajax_info.php',
+	type: 'POST',
+	data: {"Tag":"GetLoginUser"},
+	success: function(data){
+		json = jQuery.parseJSON(data);
+		if(json.Flag == 100){
+			//展示头部
+			var h_html = '欢迎您 <a class="yellow" href="/service/profile.php" style="color: #F0B45E;">' + json.Nick + '</a>  ';
+			h_html += '<a href="/service/loginout.php?back=/" class="gray">退出</a>';
+			$('#J_head').html(h_html);
+		}
+	}
+});
+</script>
+<!--[if  IE 6]>
+<script type="text/javascript" src="{THEMES_URL}shop/js/fixTopNavForIE6-min.js"></script>
+<![endif]-->

@@ -1,0 +1,107 @@
+{foreach $rankList $n $val}
+<dl class="body-main-right-ranks minor_text">
+    <dt><h3 class="main_text">{$val['name']}</h3></dt>
+    <dd>
+        <ul class="nav nav-pills">
+            <li class="active"><a href="#week_{$n}" data-toggle="tab">本周</a></li>
+            <li><a href="#last_week_{$n}" data-toggle="tab">上周</a></li>
+            <li><a href="#month_{$n}" data-toggle="tab">月榜</a></li>
+            <li><a href="#total_{$n}" data-toggle="tab">总榜</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="week_{$n}">
+                <table>
+                {foreach $val['week'] $key $val2}
+                    <tr>
+                        <td width="30" align="center">
+                        {if $key<3}
+                            <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                        {else}
+                            <span>{echo $key+1}</span>
+                        {/if}
+                        </td>
+						<td align="left">
+						{if $val2['SortType']==2}
+							<a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{php echo str_cut_out($val2['Nick']);}</a>
+						{else}
+							<a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{php echo str_cut_out($val2['Nick']);}</a>
+						{/if}
+						</td>
+                        <td align="right">{$val2['Weight']}</td>
+                    </tr>
+                {/foreach}
+                </table>
+            </div>
+            <div class="tab-pane" id="last_week_{$n}">
+                <table>
+                {foreach $val['last_week'] $key $val2}
+                    <tr>
+                        <td width="30" align="center">
+                        {if $key<3}
+                            <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                        {else}
+                            <span>{echo $key+1}</span>
+                        {/if}
+                        </td>
+						<td align="left">
+						{if $val2['SortType']==2}
+							<a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{php echo str_cut_out($val2['Nick']);}</a>
+						{else}
+							<a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{php echo str_cut_out($val2['Nick']);}</a>
+						{/if}
+						</td>
+                        <td align="right">{$val2['Weight']}</td>
+                    </tr>
+                {/foreach}
+                </table>
+            </div>
+            <div class="tab-pane" id="month_{$n}">
+                <table>
+                {foreach $val['month'] $key $val2}
+                    <tr>
+                        <td width="30" align="center">
+                        {if $key<3}
+                            <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                        {else}
+                            <span>{echo $key+1}</span>
+                        {/if}
+                        </td>
+						<td align="left">
+						{if $val2['SortType']==2}
+							<a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{php echo str_cut_out($val2['Nick']);}</a>
+						{else}
+							<a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{php echo str_cut_out($val2['Nick']);}</a>
+						{/if}
+						</td>
+                        <td align="right">{$val2['Weight']}</td>
+                    </tr>
+                {/foreach}
+                </table>
+            </div>
+            <div class="tab-pane" id="total_{$n}">
+                <table>
+                {foreach $val['total'] $key $val2}
+                    <tr>
+                        <td width="30" align="center">
+                        {if $key<3}
+                            <span class="home-icon home-top{echo $key+1}">{echo $key+1}</span>
+                        {else}
+                            <span>{echo $key+1}</span>
+                        {/if}
+                        </td>
+						<td align="left">
+						{if $val2['SortType']==2}
+							<a href="/v/{$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/roomid/{$val2['Link']}/40/28.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="28" />{php echo str_cut_out($val2['Nick']);}</a>
+						{else}
+							<a href="/service/home.php?user={$val2['Link']}" title="{$val2['Nick']}" target="_blank"><img src="{PIC_API_PATH}/uin/{$val2['Link']}/40/40.jpg" alt="{$val2['Nick']}" title="{$val2['Nick']}" width="40" height="40" />{php echo str_cut_out($val2['Nick']);}</a>
+						{/if}
+						</td>
+                        <td align="right">{$val2['Weight']}</td>
+                    </tr>
+                {/foreach}
+                </table>
+            </div>
+        </div>
+    </dd>
+</dl>
+{/foreach}

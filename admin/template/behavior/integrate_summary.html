@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>积分汇总</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">积分汇总</div>
+</div>
+<ul class="page-tab">
+    {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">积分流水表</a></li>{/if}
+    {if $link_array[102]['url']}<li><a class="active" href="{$link_array[102]['url']}">积分汇总表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+    <form action="" method="get" name="myform" class="search-form" id="form1">
+        <p>
+		当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+		</p>
+        <span id="label_div">
+		{foreach $label_name[$_GET['rule']] $kk $vv}
+		{if !is_array($vv)}
+			{$vv}：<input type="text" name="search[keys][{$kk}]" value="{$_GET['search']['keys'][$kk]}" />&nbsp;&nbsp;&nbsp;&nbsp;  {/if}
+		{/foreach}
+		</span>
+        积分规则名称：<select name="rule" id="rule" onChange="show_label(this.value)" >
+                        {foreach $ruleDefineList $key $val}
+                        <option value="{$key}" {if isset($_GET['rule']) && $_GET['rule']==$key}selected{/if}>{$val}</option>
+                        {/foreach}
+                    </select>&nbsp;&nbsp;&nbsp;&nbsp;
+		<input type="hidden" name="style" value="{php echo $_GET['style'] ? $_GET['style'] : 1}" id="style" />
+		<input type="hidden" name="data_group_id" value="{$__ADMIN_CURGROUP['groupid']}">
+		<input type="hidden" name="module" value="summaryList" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+{if $link_array[102]['url']}
+<ul class="page-tab" id="switch-rule">
+    <li><a {if $_GET['style']==1 || !isset($_GET['style'])}class="active"{/if} id="1" href="javascript:void(0);">日汇总</a></li>
+    <li><a {if $_GET['style']==2}class="active"{/if} id="2" href="javascript:void(0);">周汇总</a></li>
+    <li><a {if $_GET['style']==3}class="active"{/if} id="3" href="javascript:void(0);">月汇总</a></li>
+    <li><a {if $_GET['style']==4}class="active"{/if} id="4" href="javascript:void(0);">年汇总</a></li>
+    <li><a {if $_GET['style']==5}class="active"{/if} id="5" href="javascript:void(0);">总汇总</a></li>
+</ul>
+{/if}
+<table class="table-list main-width" id="table-list">
+  <tr>
+    <th>编号</th>
+	{foreach $label_name[$_GET['rule']] $vv}
+    {if !is_array($vv)}<th>{$vv}</th> {/if}
+	{/foreach}
+    <th>积分规则</th>
+    <th>汇总积分</th>
+  </tr>
+  {foreach $list['list'] $key $val}
+  <tr>
+    <td>{echo $key+1}</td>
+	{foreach $label_name[$_GET['rule']] $v_k $v_v}
+    {if !is_array($v_v)}<td>{$val[$v_k]}</td>{/if}
+	{/foreach}
+    <td>{if $_GET["rule"] > 0} {$ruleDefineList[$_GET['rule']]} {else} {$ruleDefineList[1]} {/if}</td>
+    <td>{$val['Weight']}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width"><div class="pagenavi" id="lopage">{$list['page']}</div></div>
+<script type="text/javascript">
+function show_label(category,val){
+	var label = '{$json_label_name}';
+	var label_array = eval('('+label+')');
+	var opt = document.getElementById("label_div");
+	var data = label_array[category];
+	var html ='';
+	for(i in data){
+		if(typeof(data[i]) !== 'object'){
+			html += data[i]+'：<input type="text" name="search[keys]['+i+']" value="" />&nbsp;&nbsp;&nbsp;&nbsp;';
+		}
+	}
+	opt.innerHTML = html;
+}
+
+$(function(){
+    $("#switch-rule").find("a").each(function(){
+        $(this).click(function(){
+            var style = $(this).attr("id");
+            var rule = $("#rule").find("option:selected").val();
+            $("#switch-rule").find("a").removeClass("active");
+            location.href="{$link_array[102]['url']}&style="+style+"&rule="+rule;
+        });
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>商城</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style-min.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+	
+	<!--主体-->
+    <div class="bd clearfix" id="bd-daoju">
+        <ul class="step-list clearfix">
+            <li  class="active">选择购买会员</li>
+            <li>填写购买信息</li>
+            <li>确认购买信息</li>
+            <li>购买成功</li>
+        </ul>
+        <div class="step3-1">
+            <div class="desc">
+                <p>VV酷专属VIP会员！</p>
+            </div>
+            <div class="cont1">
+                <table cellpadding="0" cellspacing="0" width="890" id="J_tbl_info" class=" tbl_vip">
+                    <thead>
+                    <tr>
+                        <th class="th1">商品名称</th>
+                        <th class="th2">会员特权</th>
+                        <th class="th3">有效期</th>
+                        <th class="th4">价格</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+					{foreach $vip $val}
+                    <tr>
+                        <td>
+                            <p class="bold fz14">{$val['name']}</p>
+
+                            <p><a href="?module=vip_step2&parent_id={$val['parent_id']}" class="btn btn-buy">购买</a></p>
+                        </td>
+                        <td>
+                            <ul class="vipdesc">
+                                {$val['desc']}
+                            </ul>
+                        </td>
+                        <td>{$val['expire']}天</td>
+                        <td>{$val['price']}V宝</td>
+                    </tr>
+					{/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+	{include file="footer.html"}
+</div>
+
+<script type="text/javascript" src="{THEMES_URL}shop/js/buy_num_change-min.js"></script>
+<!--[if  IE 6]>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/fixTopNavForIE6.min.js"></script>
+<![endif]-->
+</body>
+</html>
+

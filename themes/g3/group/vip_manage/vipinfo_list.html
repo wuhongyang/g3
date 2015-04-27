@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10">
+        <h3>会员申请设置</h3>
+    </div>
+    
+    <form method="post" action="?module=set_vip" style="margin:20px 0;" id="set_form">
+        <span>申请审核：</span>
+        <span style="margin-right:20px;"><input type="radio" name="set_vip" value="2" {if $Ginfo['vip_set']!=1}checked{/if}> 需要审核加入</span>
+        <span style="margin-right:20px;"><input type="radio" name="set_vip" value="1" {if $Ginfo['vip_set']==1}checked{/if}> 自动容许加入</span>
+        <input type="submit" class="bluebtn2"  value="设置"/>
+        <p class="gray lineh30">注：设置'自动容许加入' 则用户申请后直接成为站内会员；设置'需要审核加入' 则用户申请进入如下申请列表审核。</p>
+    </form>
+    
+    <div class="mgt10">
+        <h3>会员申请列表</h3>
+    </div>
+    <form method="post" action="?module=vipinfo_list" id="search_form" style="margin:20px 0;">
+        <span>用户ID：</span>
+        <input name="uin" id="uin" type="text" value="{$_POST['uin']}">
+        <select name="status" id="status"><option>请选择</option><option value='1' {if $_POST['status']==1}selected{/if}>审核通过</option><option value=2 {if $_POST['status']==2}selected{/if}>审核返回</option></select>
+        <span class="mgL20">所在地：</span>
+        <select name="province" id="province">
+            <option value="-1">请选择</option>
+            {foreach $provinces $key $val}
+            <option value="{$key}" {if $_POST['province']==$key}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+        <select name="city" id="city">
+            <option value="-1">请选择</option>
+        </select>
+        <input name="" type="submit" value="查询" class="normalbtn">
+    </form>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+      <tr>
+        <th>编号</th>
+        <th>用户ID</th>
+        <th>昵称</th>
+        <th>性别</th>
+        <th>所在地</th>
+        <th>真实姓名</th>
+        <th>申请时间</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+      {foreach $lists $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['uin']}</td>
+        <td>{$val['nick']}</td>
+        <td>{echo $val['sex']==1 ?'男' : '女'}</td>
+        <td>{$val['province']} {$val['city']}</td>
+        <td>{$val['name']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>{echo $val['status']==1 ?'审核通过' : ($val['status']==0 ? '未审核' :'审核返回')}</td>
+        <td><a href="?module=vip_info_check&Uin={$val['uin']}" class="ahover">查看/审核资料</a></td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="page" id="lopage">
+       {$page}
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+{if $_POST['province'] > 0}
+window.onload = function(){
+	_display_cities({$_POST['province']},{$_POST['city']});//默认选中省编号
+}
+{/if}
+$(function(){
+    $('#province').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+});
+</script>
+</body>
+</html>

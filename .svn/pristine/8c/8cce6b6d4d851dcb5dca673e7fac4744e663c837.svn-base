@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-图片模块设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.info{width:350px;}
+.info p{line-height:40px;height: 30px;}
+.info .mgl{margin-left: 80px;color:#666;}
+.info p span{margin-right: 10px;text-align: right;display: inline-block;width:70px;}
+.info .hide{display: none;}
+.info p.notice{color:red;margin-left:80px;}
+#show_adv_pic{margin-top: 10px;margin-left:10px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <span class="fr"><a href="javascript:add();" class="bluebtn"><span>添加</span></a></span>
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+      <tr>
+        <th>编号</th>
+        <th>名称</th>
+        <th>链接</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $imageList $key $val}
+      <tr>
+        <td>{echo $key+1;}</td>
+        <td>{$val['name']}</td>
+        <td>{$val['link']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($imageList)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:edit({$val['id']});">编辑</a>
+            <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+            <a class="ahover" href="javascript:visible({$val['id']});">{if $val['status'] == 1}不显示{else}显示{/if}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function add(){
+    var content = getHtml();
+    art.dialog({
+        content: content,
+        lock: true,
+        ok: function(){
+            var module = 'image_add';
+            var name = $('input[name="name"]').val();
+            if(name == ''){
+                $('#notice').html('名称不能为空');
+                return false;
+            }
+            if(name.length > 6){
+                $('#notice').html('名称不能超过6个字符');
+                return false;
+            }
+            var img = $('input[name="img"]').val() || '';
+            if(img=='' || img.length!= 32){
+                $('#notice').html('请先上传图片');
+                return false;
+            }
+            var link = $('input[name="link"]').val() || '';
+            if(link && !/^http:\/\//.test(link)){
+                $('#notice').html('链接格式错误');
+                return false;
+            }
+            operate(module,{name:name,img:img,link:link});
+        },
+        cancel: true
+    });
+}
+
+function edit(id){
+    $.ajax({
+        url: '?module=image_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.id != id){
+                return false;
+            }
+            var content = getHtml(json);
+            art.dialog({
+                content: content,
+                lock: true,
+                ok: function(){
+                    var module = 'image_edit';
+                    var name = $('input[name="name"]').val();
+                    if(name == ''){
+                        $('#notice').html('名称不能为空');
+                        return false;
+                    }
+                    if(name.length > 6){
+                        $('#notice').html('名称不能超过6个字符');
+                        return false;
+                    }
+                    var img = $('input[name="img"]').val();
+                    if(img=='' || img.length!= 32){
+                        $('#notice').html('请先上传图片');
+                        return false;
+                    }
+                    var link = $('input[name="link"]').val() || '';
+                    if(link && !/^http:\/\//.test(link)){
+                        $('#notice').html('链接格式错误');
+                        return false;
+                    }
+                    operate(module,{id:id,name:name,img:img,link:link});
+                }
+            })
+        }
+    });
+}
+
+function del(id){
+    art.dialog({
+        content: '您真的要删除该图片吗？',
+        ok: function(){
+            var module = 'image_del';
+            operate(module,{id:id});
+        },
+        lock: true,
+        cancel: true,
+        icon: 'warning'
+    });
+}
+
+function visible(id){
+    var module = 'visible';
+    operate(module,{id:id});
+}
+
+function order(id,type){
+    var module = 'order';
+    operate(module,{id:id,type:type});
+}
+
+function getHtml(json){
+    json = json || {};
+    var content = '<div class="info">';
+    content += '<p class="notice" id="notice"></p>'
+    content += '<p><span>名称：</span><input type="text" name="name" value="'+(json.name || '')+'"></p>';
+    content += '<p><span>上传图片：</span><iframe src="upload_img.php" height="30" width="150" frameborder="0" scrolling="no" style="display:inline-block;position: relative;top:9px;"></iframe></p>';
+    if(json.img){
+        content += '<div id="show_adv_pic">';
+        content += '<img src="{php echo cdn_url(PIC_API_PATH."/p/' + json.img + '/0/0.jpg");}" width="300">';
+        content += '<input type="hidden" name="img" value="' + json.img + '">';
+    }else{
+        content += '<div id="show_adv_pic" class="hide">';
+    }
+    content += '</div>';
+    content += '<p><span>链接：</span><input type="text" name="link" value="' + (json.link || '') + '"></p>';
+    content += '<div class="mgl">例：http://www.vvku.com</div>';
+    content += '</div>';
+    return content;
+}
+
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: data.FlagString,
+                    ok: function(){
+                        location.href = '?module=image_list';
+                    },
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    ok: true,
+                    cancel: false,
+                    icon: 'error',
+                    lock: true
+                });
+            }
+        }
+    });
+}
+
+function show_img(md5){
+    var html = '<img src="{php echo cdn_url(PIC_API_PATH."/p/'+md5+'/0/0.jpg");}" width="300">';
+    html += '<input type="hidden" name="img" value="'+md5+'">';
+    $('#show_adv_pic').show().html(html);
+    $('#notice').html('');
+}
+</script>

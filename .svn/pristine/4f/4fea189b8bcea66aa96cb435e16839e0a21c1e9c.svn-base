@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城管理-商城商品管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script>
+$(function(){
+	$(".move_up").each(function(){
+		$(this).click(function(){
+			var tr = $(this).parent().parent();
+			move(tr.attr("id"), tr.attr("cate_id"), tr.attr("sub_cate_id"), "raise");
+			return false;
+		})
+	})
+	$(".move_down").each(function(){
+		$(this).click(function(){
+			var tr = $(this).parent().parent();
+			move(tr.attr("id"), tr.attr("cate_id"), tr.attr("sub_cate_id"), "down");
+			return false;
+		})
+	})
+})
+function move(id, cate_id, sub_cate_id, option){
+	$.post("/group/goods.php?module=goods_move", {"id":id, "cate_id":cate_id, "sub_cate_id":sub_cate_id, "option":option}, function(data){
+		var json = eval("("+data+")");
+		alert(json.FlagString);
+		if(json.Flag == 100){
+			location.reload();
+		}
+	})
+}
+</script>
+<style type="text/css">
+.dialog_table td{ padding:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <a href="?module=sub_cate_list&cate_id={$cate_id}" class="bluebtn2" style="float:right;margin-left:10px;">返回</a>
+    {if $_GET['cate_id'] != -1}
+    <a href="?module=add_goods&goods_cate_id={$cate_id}&sub_cate_id={$cateInfo['id']}&cate_id={$_GET['cate_id']}" class="bluebtn2" style="float:right">添加</a>
+    {else}
+    <a href="?module=add_package&goods_cate_id={$cate_id}&sub_cate_id={$cateInfo['id']}&cate_id={$_GET['cate_id']}" class="bluebtn2" style="float:right">添加</a>
+    {/if}
+    <p>{$cateInfo['name']}-商品列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="10%">序号</th>
+        <th width="20%">名称</th>
+        <th width="10%">类别</th>
+        <th width="10%">价格</th>
+        {if $_GET['cate_id'] != -1}
+        <th width="10%">使用期限</th>
+        {/if}
+        <th width="10%">状态</th>
+        <th width="20%">操作</th>
+        </tr>
+        {foreach $res['Data'] $k $one}
+        <tr id="{$one['id']}" cate_id="{$cate_id}" sub_cate_id="{$cateInfo['id']}">
+        <td>{echo $k+1}</td>
+        <td>{$one['name']}</td>
+        <td>{$cateInfo['name']}</td>
+        <td>{$one['price']}</td>
+        {if $_GET['cate_id'] != -1}
+            {if $one['duration'] == 0}
+            <td>永久</td>
+            {else}
+            <td>{$one['duration']}</td>
+            {/if}
+        {/if}
+        <td>{if $one['state']==1}在售{elseif $one['state']==0}已下架{/if}</td>
+        <td>
+        	<a class="move_up" href="#">上移</a>
+        	<a class="move_down" href="#">下移</a>
+        	{if $_GET['cate_id'] != -1}
+		    <a href="?module=add_goods&id={$one['id']}&sub_cate_id={$cateInfo['id']}&goods_cate_id={$cate_id}&cate_id={$_GET['cate_id']}">编辑</a>
+		    {else}
+		    <a href="?module=add_package&sub_cate_id={$cateInfo['id']}&id={$one['id']}&goods_cate_id={$cate_id}&cate_id={$_GET['cate_id']}">编辑</a>
+		    {/if}
+        </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$res['Page']}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-通行证管理</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.advise {margin:20px auto;width:85%;min-height:40px;line-height: 40px;background-color: #D0DFFF;border: 1px solid #8EABFF;padding-left:50px;color:#3366CC;position:relative;}
+.advise div {font-size:15px;font-weight:bold;padding-left:20px;}
+.advise p {line-height:180%;color:#666;line-height: 40px;padding-left:20px;}
+.advise p span {font-size:15px;font-weight:bold;}
+.advise p a {color:#2d527b;font-size:14px;}
+#form {padding-left:100px;}
+#form ul {margin-bottom:40px;padding-left:30px;}
+#form ul li {line-height:300%; font-size:13px;clear:both;}
+#form ul li span {margin-right:30px;}
+#form ul li.note {color:#999;}
+#form ul li.note span { display:inline-block;}
+#modify {margin-left:20px;}
+#cover {display:none;}
+.btn1 {width: 194px;height: 34px;line-height: 34px;font-size: 14px;}
+.alignimg{position:absolute;top:13px;left:28px;z-index:1000;}
+center {margin-left: -474px;margin-bottom: 50px;}
+</style>
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            <h1 class="profile-title">推荐位申请</h1>
+            <div class="profile-main">
+                <div class="advise">            
+                    {if $info['status'] == 1}
+                    <div style="color:#669933;"><img src="{THEMES_URL}service/icons/rec_success.png" class="alignimg"/>恭喜您！您的艺人推荐位申请已通过审核！您将会免费享用导航站热门艺人推荐位！</div>
+                    {elseif $info['status'] == 2}
+                    <div style="color:#CC0000;"><img src="{THEMES_URL}service/icons/rec_error.png" class="alignimg"/>对不起，您的推荐位申请未通过。</div>
+                    <p><span>退回原因：</span>{$info['desc']}</p>
+                    <p><a href="javascript:void(0);" id="reapply">返回修改并重新申请</a></p>
+                    {elseif $info['status'] == '0'}
+                    <img src="{THEMES_URL}service/icons/rec_wait.png" class="alignimg"/>您的申请已提交，我们会在1-2个工作日内为您审核，届时请查看后台或者联系房间经理。
+                    {else}
+                    <img src="{THEMES_URL}service/icons/rec_warning.png" class="alignimg"/>温馨提示：完善推荐位资料，通过审核，您可以免费享用导航站广告宣传位！
+                    {/if}
+                </div>
+                <form method="post" class="form1" id="form" enctype="multipart/form-data" action="">
+                <input type="hidden" name="uin" value="{$info['uid']}">
+                <input type="hidden" name="roomid" value="{$info['room_id']}">
+                <input type="hidden" name="region_id" value="{$info['region_id']}">
+                <input type="hidden" name="user_photo" id="user_photo" value="{$info['photo']}">
+                    <ul>
+                        <li>
+                            <span>所属站：{$info['up_uid']}</span>
+                        </li>
+                        <li>
+                            <span>绑定房间：{$info['room_id']}</span>
+                        </li>
+                        <li>
+                            <span>艺人昵称：{$info['nick']}</span>
+                            <span>艺人ID：{$info['uid']}</span>
+                        </li>
+                        <li>
+                            我的靓照：<br><i id="img"><img style="margin:-25px 0 0 65px;" src="{PIC_API_PATH}/{if !empty($info['photo'])}p/{$info['photo']}/200/150.jpg{else}images/user_photo.png{/if}"></i>
+                            {if empty($info['uin']) || $info['status']<0}<a href="javascript:void(0);" id="modify"><img src="{THEMES_URL}service/icons/rec_edit.png" />&nbsp;修改基本资料</a>{/if}
+                        </li>
+                        <li id="cover" >
+                            <iframe src="cover.php" width="340" height="350" frameborder="0" scrolling="no"></iframe>
+                        </li>
+                        <li class="note">
+                            <span>温馨提示：为了使图片达到更好的效果，请选择清晰的个人正面近照，采用4：3规格。</span>
+                        </li>
+                    </ul>
+                    {if empty($info['uin']) || $info['status']<0}<center><input value="确认如上信息，提交" type="submit" class="button" style="width:130px;height:30px;"></center>{/if}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script> 
+<script>
+$(function(){
+    $('#modify').live('click',function(){
+        $('#cover').show();
+    });
+    
+    $('#reapply').click(function(){
+        var uin = '{$info["uid"]}';
+        $.ajax({
+            url: '?module=reapply',
+            type: 'GET',
+            data: {uin:uin},
+            success: function(data){
+                window.location.href = '?module=recommend';
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

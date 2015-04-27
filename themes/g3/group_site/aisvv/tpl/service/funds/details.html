@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>领取记录-房间公积金</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="funds/tool.html"}
+            <div class="rightdiv">
+                <h1>领取记录</h1>
+                <div class="relative">
+                    <form method="get" id="J_form">
+                        <div class="boxdate flowhide mgt10">
+                        	<span class="mgL20">选择房间：</span>
+                        	<input type="hidden" name="module" value="details" />
+                        	<select name="room_id" style="float:left">
+                        	<option value="">请选择</option>
+                        	{foreach $res['Rooms'] $room_id $room_name}
+                        	<option {if $_GET['room_id'] == $room_id}selected="selected"{/if} value="{$room_id}">{$room_name}({$room_id})</option>
+                        	{/foreach}
+                        	</select>
+                            <span class="mgL20">起止时间：</span>
+                            <input name="startDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{echo $_GET['startDate']?$_GET['startDate']:date("Y-m-1")}"> 
+                            <span class="pre"> - </span>
+                            <input name="endDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{echo $_GET['endDate']?$_GET['endDate']:date("Y-m-d")}">
+                            <input name="" type="submit" class="normalbtn" value="筛选">
+                        </div>
+                    </form>
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+                        <tr>
+                            <th width="25%">用户ID</th>
+                            <th width="25%">房间ID</th>
+                            <th width="25%">兑换金额</th>
+                            <th width="25%">兑换时间</th>
+                        </tr>
+                        {foreach $res['Data'] $one}
+                        <tr>
+                        <td>{$one['UinId']}</td>
+                        <td>{$one['ChannelId']}</td>
+                        <td>{$one['Weight']}</td>
+                        <td>{echo date("Y-m-d H:i:s", $one['Uptime'])}</td>
+                        </tr>
+                        {/foreach}
+                      </table>
+                      {$page}
+		           	</div>
+		         </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/date/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+</body>
+</html>

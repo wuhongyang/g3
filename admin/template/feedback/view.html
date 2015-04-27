@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户反馈列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">用户反馈查看</div>
+</div>
+<table class="table-list main-width" style="margin-top:20px;" id="table-list">
+	<tr>
+		<td height="25" width="150" align="right" valign="top">反馈内容：</td>
+		<td height="25" align="left" valign="top">{$list['content']}</td>
+	</tr>
+	<tr>
+		<td height="25" width="150" align="right" valign="top">上传图片：</td>
+		<td height="25" align="left" valign="top">
+        	{foreach $list['img'] $img}
+            <a href="{$img}" target="_blank" title="点击查看原图"><img src="{$img}" width="80" height="70" /></a>
+            {/foreach}
+        </td>
+	</tr>
+</table>
+<div class="main-width" style="padding-left:200px;margin-top:20px;">
+	<input type="button" onClick="history.back()" value="&lt; 返回" />
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <{if $link_array[103]['url']}><input type="button" onClick="location.href='{$link_array[103]['url']}&id={$list['_id']}'" value="处理 &gt;" /><{/if}>
+</div>
+</body>
+</html>

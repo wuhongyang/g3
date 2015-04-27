@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的商品-{$cates[$category]}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>{$cates[$category]}</h1>
+                <div class="clearfix">
+                    <div class="daojuList mgt20">
+                        <ul>
+							{if !$commodities}
+							<li style="color:#888">您目前还没有购买该类商品！</li>
+							{/if}
+                            {foreach $commodities $val}
+                            <li>
+                                <div class="imgwrap">
+                                    <img src="{$val['image_md5']}" width="150" height="120">
+                                    <p>
+                                        <span class="fL">{$val['name']}</span>
+                                        {if $val['scope'] == 2}
+                                        <span class="fR">
+                                            <img src="{THEMES_URL}service/images/fan.jpg" style="width:18px;height:18px;position:relative;top:0;margin-right:4px;" title="仅限房间{$val['roomid']}使用" />
+                                        </span>
+                                        {/if}
+                                        <span class="fR" style="height: 20px;">
+                                            <a href="/shop/shop.php?module=info&category_id={$val['category']}&goods_id={$val['goods_id']}&room_id={$val['roomid']}" style="position:relative;" target="_blank">{if $val['type'] == 1}续费{else}购买{/if}</a>
+                                        </span>
+                                    </p>
+                                    {if $val['type'] == 1}
+                                    <p class="ybg">距离到期剩余：{echo ceil(($val['quality']-time())/86400)<1 ? '已过期' : ceil(($val['quality']-time())/86400).'天';}</p>
+                                    {else}
+                                    <p class="ybg">剩余数量：{$val['quality']}个</p>
+                                    {/if}
+                                </div>
+                                {if $val['category'] == 1}
+                                <div class="mg5">
+                                    <input name="set_default" type="radio" class="fl mgL5 radios" value="{$val['parent_id']}" {if $val['other_id'] == 1}checked mode="1"{/if}> 
+                                    <label for="radio{$key}" class="fl lineh26">设置为默认进场道具</label> 
+                                </div>
+                                {/if}
+                            </li>
+                            {/foreach}                            
+                        </ul>
+                    </div>                    
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>
+</body>
+</html>

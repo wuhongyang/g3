@@ -1,0 +1,18 @@
+<style type="text/css">
+#uin:hover{cursor: default;}
+#formMsg{padding-left:250px;color:#F00;height:35px;line-height:25px; font-size:14px;}
+.readonly{border:solid 1px #FFF;}
+</style>
+<div id="formMsg"><span></span></div>
+<div class="control-group">
+    <label class="control-label">充值账号：</label>
+    <div class="controls">
+        <input type="text" value="{$user['Uin']}" id="uin" name="pay_uin" readonly style="background: white;-webkit-box-shadow: none;" /><a href="javascript:;" class="text-info mgl10" id="otherUser">给好友充值</a>
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label">充值账号昵称：</label>
+    <div class="controls">
+        <span id="Nick">{$user['Nick']} <i class="icon-success"></i></span>
+    </div>
+</div>

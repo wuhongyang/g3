@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加发送邮件</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="content"]', {
+		allowFileManager : true,	
+		urlType : 'domain'
+	});
+	K('input[name=getHtml]').click(function(e) {
+		alert(editor.html());
+	});
+	K('input[name=isEmpty]').click(function(e) {
+		alert(editor.isEmpty());
+	});
+	K('input[name=getText]').click(function(e) {
+		alert(editor.text());
+	});
+	K('input[name=selectedHtml]').click(function(e) {
+		alert(editor.selectedHtml());
+	});
+	K('input[name=setHtml]').click(function(e) {
+		editor.html('<h3>Hello KindEditor</h3>');
+	});
+	K('input[name=setText]').click(function(e) {
+		editor.text('<h3>Hello KindEditor</h3>');
+	});
+	K('input[name=insertHtml]').click(function(e) {
+		editor.insertHtml('<strong>插入HTML</strong>');
+	});
+	K('input[name=appendHtml]').click(function(e) {
+		editor.appendHtml('<strong>添加HTML</strong>');
+	});
+	K('input[name=clear]').click(function(e) {
+		editor.html('');
+	});
+});
+
+$(function(){
+	$("#form").submit(function(){
+		filename = $("input[name=user_file]").val();
+		title = $("input[name=title]").val();
+
+		if(!filename){
+			alert("收件人不能为空");
+			return false;
+		}
+		if(filename.substr(filename.lastIndexOf(".")+1) != "txt"){
+			alert("收件人文件格式不正确");
+			return false;
+		}
+		if(!$.trim(title)){
+			alert("标题不能为空");
+			return false;
+		}
+		if(!$.trim(editor.html())){
+			alert("正文不能为空");
+			return false;
+		}
+		
+	})
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加发送邮件</div>
+  <div class="header-button right">{if $link_array[105]['url']}<a href="{$link_array[105]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+
+<form method="post" id="form" class="form" enctype="multipart/form-data">
+	<p>
+		<label>收件人：</label>
+		<input type="file" name="user_file" />
+		&nbsp;&nbsp;(<span style="color:red">收件人文件格式只允许txt，每个收件人占一行。</span>)
+	</p>
+	<p>
+		<label>标题：</label>
+		<input type="text" name="title" size="64" value="{$edit['title']}" />
+		&nbsp;&nbsp;(<span style="color:red">请将标题控制在15个汉字内。</span>)
+	</p>
+    <p>
+		<label style="float:left">正文：</label>
+		<span style="display:block;margin-left:125px;margin-bottom:20px;margin-top:10px;">
+        <textarea name="content" style="width:760px;height:480px;visibility:hidden;"></textarea>
+        </span>
+	</p>
+	<p>
+		<label>&nbsp;</label>
+		<input type="submit" class="submit" value="提交信息" />
+	</p>
+</form>
+
+
+</body>
+</html>

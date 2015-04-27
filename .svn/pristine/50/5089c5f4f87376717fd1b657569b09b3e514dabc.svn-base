@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab" style="border-bottom:none;height:10px;">
+        <a href="?module=join_list" class="bluebtn ar" style="right:0;top:10px;"><span>返回加入我们</span></a>
+    </div>
+    <form method="post" id="J_form" target="iframe" onSubmit="return checkParam();">
+        <input type="hidden" name="id" value="{$info['id']}">
+        <ul class="formlist" id="ulist">
+            <li class="clearfix">
+                <label>招募角色：</label>
+                <div class="fl"><input type="text" name="role" id="role" value="{$info['role']}"><span>2-7个字</span></div>
+            </li>
+            <li class="clearfix">
+                <label>岗位要求：</label>
+                <div class="fl">
+                    <textarea name="content" id="content" cols="90" rows="20">{$info['content']}</textarea>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>联系方式：</label>
+            </li>
+            {if $count<0}
+                <li class="clearfix"   id="firstphone">
+                    <label>手机：</label>
+                    <input type="text" name="phone[]" size="30" value="">
+                    <label>QQ：</label>
+                    <input type="text" name="qq[]" value="">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </li>
+                <li class="clearfix" id='phonelist'>
+                    <label>手机：</label>
+                    <input type="text" name="phone[]" size="30" value="">
+                    <label>QQ：</label>
+                    <input type="text" name="qq[]" value="">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </li>
+            {else}
+                {foreach $contact $key $val}
+                <li class="clearfix" {if $key==0} id="firstphone" {elseif $key==$count} id='phonelist'{/if}>
+                    <label>手机：</label>
+                    <input type="text" name="phone[]" size="30" value="{$val['phone']}">
+                    <label>QQ：</label>
+                    <input type="text" name="qq[]" value="{$val['qq']}">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{if $key > 1}<a href="javascript:void(0);" onclick="delConfig(this)">删除</a>{/if}
+                </li>
+                {/foreach}
+            {/if}
+            <li class="clearfix" id="last_list">
+                <label>&nbsp;</label>
+                <a class="ahover" href="javascript:void(0);" onclick="addConfig();">继续添加</a>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div class="fl">
+                    <input type="submit" class="bluebtn2" value="保存" />
+                </div>
+            </li>
+        </ul>
+    </form>
+    <iframe name="iframe" style="display:none;"></iframe>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="content"]', {
+        allowFileManager : true
+    });
+    K('input[name=getHtml]').click(function(e) {
+        alert(editor.html());
+    });
+    K('input[name=isEmpty]').click(function(e) {
+        alert(editor.isEmpty());
+    });
+    K('input[name=getText]').click(function(e) {
+        alert(editor.text());
+    });
+    K('input[name=selectedHtml]').click(function(e) {
+        alert(editor.selectedHtml());
+    });
+    K('input[name=setHtml]').click(function(e) {
+        editor.html('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=setText]').click(function(e) {
+        editor.text('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=insertHtml]').click(function(e) {
+        editor.insertHtml('<strong>插入HTML</strong>');
+    });
+    K('input[name=appendHtml]').click(function(e) {
+        editor.appendHtml('<strong>添加HTML</strong>');
+    });
+    K('input[name=clear]').click(function(e) {
+        editor.html('');
+    });
+});
+
+function checkParam(){
+    var qqObj = $('input[name="qq[]"]');
+    var phoneObj = $('input[name="phone[]"]');
+    var qqlen = qqObj.length;
+    var role = $('#role').val();
+    
+    if(role.length > 7 || role.length < 2){
+    	 _show_msg('招募角色为2-7个字');
+         return false;
+    }
+    
+    for(var i=0; i<qqlen; i++){
+        var phone = $(phoneObj[i]).val();
+        if(phone != ''){
+            if(!_is_phone(phone)){
+                _show_msg('请输入正确的手机号');
+                return false;
+            }
+        }
+        var qq = $(qqObj[i]).val();
+        if(qq != ''){
+            if(!/^[1-9]\d+$/.test(qq)){
+                _show_msg('请输入正确的QQ号');
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=join_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+function addConfig(){
+	var t='<label>手机：</label><input type="text" name="phone[]" size="30"><label>QQ：</label><input type="text" name="qq[]">  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0);" onclick="delConfig(this)">删除</a>';
+	$("#last_list").before('<li>'+t+'</li>');
+}
+function delConfig(obj){
+	obj = obj.parentNode;
+	if(obj.id != 'firstphone'){
+		obj.parentNode.removeChild(obj);
+	}
+}
+</script>
+</body>
+</html>

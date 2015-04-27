@@ -1,0 +1,440 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>业务规则定义</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<style type="text/css">
+.hide{display: none;}
+</style>
+<script type="text/javascript">
+function checkParam(){
+	var name = $("#name").val();
+	name = name.replace(/^\s+|\s+$/g,'');
+	if(name == ''){
+		alert("请填写业务规则名称");
+		return false;
+	}
+	/*
+	var user_id_type = $("#user_id_type").val();
+	var business_id_type = $("#business_id_type").val();
+	var extended_parameters = $("#extended_parameters").val();
+	if((user_id_type != 0 && user_id_type == business_id_type) || 
+		(business_id_type != 0 && business_id_type == extended_parameters) || 
+		(user_id_type != 0 && user_id_type == extended_parameters)){
+		alert("主键规则需要保持唯一");
+		return false;
+	}
+	if(user_id_type == '0' && business_id_type == '0' && extended_parameters == '0'){
+		alert("请至少选择一个数据主键规则");
+		return false;
+	}
+	*/
+	var scope = $('select[name="scope"]').find('option:selected').val();
+	if(scope < 1){
+		alert('请选择作用域');
+		return false;
+	}
+	return true;
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">业务规则定义</div>
+    <!--
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+    -->
+</div>
+
+<script>
+active_li = 1;
+</script>
+{include file="template/tpl_header.html"}
+
+<form name="myform" action="{if $info}?module=update{else}?module=add{/if}" method="post" onSubmit="return checkParam();" class="form" id="form">
+    {if $info}<input type="hidden" name="id" value="<{$info['id']}>" />{/if}
+    <p>
+        <label>业务规则名称：</label>
+        <input type="text" name="info[name]" value="{$info['name']}" id="name" size="32" />
+    </p>
+    <p>
+        <label>规则描述：</label>
+        <textarea rows="2" cols="26" name="info[desc]">{$info['desc']}</textarea>
+    </p>
+    <p>
+        <label>数据主键规则：</label>
+        <!-- 
+         <select name="info[user_id_type]" id="user_id_type">
+            <option value="0" {if $info['user_id_type']=='0' || !isset($info['user_id_type'])}selected{/if}>主键1选择</option>
+			<optgroup label="用户ID">
+            <option value="1" {if $info['user_id_type']=='1'}selected{/if}>发起用户ID</option>
+            <option value="2" {if $info['user_id_type']=='2'}selected{/if}>目标用户ID</option>
+            <option value="3" {if $info['user_id_type']=='3'}selected{/if}>艺人ID</option>
+            <option value="4" {if $info['user_id_type']=='4'}selected{/if}>室主ID</option>
+            <option value="8" {if $info['user_id_type']=='8'}selected{/if}>站内会员ID</option>
+			</optgroup>
+			<optgroup label="业务ID">
+			<option value="5" {if $info['user_id_type']=='5'}selected{/if}>房间ID</option>
+			</optgroup>
+        </select>
+        <select name="info[business_id_type]" id="business_id_type">
+            <option value="0" {if $info['business_id_type']=='0' || !isset($info['business_id_type'])}selected{/if}>主键2选择</option>
+			<optgroup label="用户ID">
+            <option value="1" {if $info['business_id_type']=='1'}selected{/if}>发起用户ID</option>
+            <option value="2" {if $info['business_id_type']=='2'}selected{/if}>目标用户ID</option>
+            <option value="3" {if $info['business_id_type']=='3'}selected{/if}>艺人ID</option>
+            <option value="4" {if $info['business_id_type']=='4'}selected{/if}>室主ID</option>
+            <option value="8" {if $info['business_id_type']=='8'}selected{/if}>站内会员ID</option>
+			</optgroup>
+			<optgroup label="业务ID">
+			<option value="5" {if $info['business_id_type']=='5'}selected{/if}>房间ID</option>
+			</optgroup>
+			<optgroup label="扩展参数">
+			<option value="6" {if $info['business_id_type']=='6'}selected{/if}>地域ID</option>
+            <option value="7" {if $info['business_id_type']=='7'}selected{/if}>群ID</option>
+            <option value="9" {if $info['business_id_type']=='9'}selected{/if}>发起男</option>
+            <option value="10" {if $info['business_id_type']=='10'}selected{/if}>目标男</option>
+			<option value="11" {if $info['business_id_type']=='11'}selected{/if}>发起女</option>
+			<option value="12" {if $info['business_id_type']=='12'}selected{/if}>目标女</option>
+			</optgroup>
+        </select>
+        <select name="info[extended_parameters]" id="extended_parameters">
+            <option value="0" {if $info['extended_parameters']=='0' || !isset($info['extended_parameters'])}selected{/if}>主键3选择</option><
+			<optgroup label="扩展参数">
+			<option value="6" {if $info['extended_parameters']=='6'}selected{/if}>地域ID</option>
+            <option value="7" {if $info['extended_parameters']=='7'}selected{/if}>群ID</option>
+			</optgroup>
+        </select>
+         -->
+       	{foreach $key_list $name $options}
+         	<select name="info[keys][{$name}]">
+         		{foreach $options $option}
+         		<option value='{$option['value']}' {if $key_select[$name] == $option['value']}selected="selected"{/if}>{$option['name']}</option>
+         		{/foreach}
+         	</select>&nbsp;&nbsp;
+         {/foreach}
+         
+    </p>
+    <p>
+	<label>房内回调科目设置：</label>
+    <select name="info[bigcase_id]" id="bigcase_new" onChange="getOptions('case='+this.value,'case_new');clears('parent_new');clears('child_new');"><option value="0">请选择</option></select>
+    <select name="info[case_id]" id="case_new" onChange="getOptions('parent='+this.value,'parent_new');clears('child');"><option value="0">请选择</option></select>
+    <select name="info[parent_id]" id="parent_new" onChange="getOptions('child='+this.value,'child_new');"><option value="0">请选择</option></select>
+    <select name="info[child_id]" id="child_new"><option value="0">请选择</option></select>
+    </p>
+    <p>
+    	<label>排名类型：</label>
+        <input type="radio" name="info[sort_type]" value="0" {if !isset($info['sort_type']) or $info['sort_type']==0}checked{/if} />请选择&nbsp;&nbsp;
+        <input type="radio" name="info[sort_type]" value="1" {if isset($info['sort_type']) && $info['sort_type']==1}checked{/if} />用户排行&nbsp;&nbsp;
+        <input type="radio" name="info[sort_type]" value="2" {if isset($info['sort_type']) && $info['sort_type']==2}checked{/if} />房间排行&nbsp;&nbsp;
+        <input type="radio" name="info[sort_type]" value="3" {if isset($info['sort_type']) && $info['sort_type']==3}checked{/if} />礼物排行&nbsp;&nbsp;
+	</p>
+    <p>
+    	<label>读取主键组：</label>
+        <select name="info[sort_key]">
+        <option value="">请选择</option>
+        {foreach $compose_list $one}
+        <option value="{$one['engname']}" {if $info['sort_key'] == $one['engname']}selected="selected"{/if}>{$one['name']}</option>
+        {/foreach}
+        </select>
+    </p>
+    <p>
+    	<label>状态：</label>
+        <input type="radio" name="info[status]" value="1" {if $info['status']==1}checked{/if} /><span style="margin:0 10px 0 2px; position:relative; top:-2px;">启用</span>
+        <input type="radio" name="info[status]" value="0" {if isset($info['status']) && $info['status']==0}checked{/if} /><span style="margin:0 0 0 2px; position:relative; top:-2px;">不启用</span>
+    </p>
+    <p>
+    	<label>作用域：</label>
+    	<select name="info[scope]">
+    		<option value="-1">--请选择--</option>
+    		<option value="1" {if $info['scope']==1}selected{/if}>平台</option>
+    		<option value="2" {if $info['scope']==2}selected{/if}>站</option>
+    	</select>
+    </p>
+    <p>
+    	<label>规则类型：</label>
+    	<select name="info[rule_type]">
+    		<option value="1" {if $info['rule_type']==1}selected{/if}>业务类</option>
+    		<option value="2" {if $info['rule_type']==2}selected{/if}>排行类</option>
+    	</select>
+    </p>
+    <div id="range" {if $info['rule_type']!=2}class="hide"{/if}>
+    	<p>
+	    	<label>类型：</label>
+	    	<input type="radio" name="info[interval_type]" value="1" {if $info['interval_type']==1}checked{/if}>排名&nbsp;&nbsp;
+	    	<input type="radio" name="info[interval_type]" value="2" {if $info['interval_type']==2}checked{/if}>区间&nbsp;&nbsp;
+	    </p>
+	    <p>
+	    	<label>请选择积分时长：</label>
+	    	<input type="radio" name="info[period]" value="1" {if $info['period']==1}checked{/if}>日&nbsp;&nbsp;
+	    	<input type="radio" name="info[period]" value="2" {if $info['period']==2}checked{/if}>周&nbsp;&nbsp;
+	    	<input type="radio" name="info[period]" value="3" {if $info['period']==3}checked{/if}>月&nbsp;&nbsp;
+	    </p>
+	    <p>
+	    	<label>设置排行名次规则：</label>
+	    	<input type="button" value="+添加排名规则" style="height:28px;width:100px;" onclick="addRuleType();">
+	    </p>
+	    {foreach $extend['rankInfo'] $key $value}
+    	<p class="rule_type">
+    		{if $info['interval_type']==1}
+	    	<label>排名规则{echo $key+1}：</label>
+	    	{else}
+	    	<label>区间{echo $key+1}：</label> 
+	    	<input type="text" name="rule_type[start][]" value="{$value['start']}" size="12"> 至
+	    	<input type="text" name="rule_type[end][]" value="{$value['end']}" size="12">
+	    	<span>变量值：</span>
+	    	{/if}
+	    	<input type="text" name="rule_type[range_rule][]" size="16" value="{$value['val']}">
+	    	<label>角色赋予：</label>
+	    	
+	    	<select class="role_cate">
+	    		<option value="-1">--请选择--</option>
+	    		{foreach $cateList $val}
+	    		<option value="{$val['cate_id']}" {if $value['cate_id']==$val['cate_id']}selected{/if}>{$val['cate_name']}</option>
+	    		{/foreach}
+	    	</select>
+	    	<select class="role_list" name="rule_type[role][]">
+	    		<option value="-1">--请选择--</option>
+	    			{foreach $roleListArr[$value['cate_id']] $arr}
+		    		<option value="{$arr[0]}" {if $value['role']==$arr[0]}selected{/if}>{$arr[1]}</option>
+		    		{/foreach}
+	    	</select>
+	    	<label><a class="del_extend" style="cursor:pointer;">删除</a></label>
+	    </p>
+	    {/foreach}
+    </div>
+    <div style="border-bottom:1px #999 solid; width:75%; margin:7px 0 7px 24px;;"></div>
+    <p>
+        <label>请选择业务科目：</label>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');clears('child');"><option value="0">请选择</option></select> &nbsp;&nbsp;&nbsp;&nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');clears('child');"><option value="0">请选择</option></select> &nbsp;&nbsp;&nbsp;&nbsp;
+        <select name="parent_id" id="parent" onchange="getOptions('child='+this.value,'child')"><option value="0">请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <select name="child_id" id="child"><option value="0">请选择</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <select name="weight" id="weight"><option value="0">权重选择</option><option value="1">行为权重</option><option value="2">货币权重</option></select>
+    </p>
+    <p>
+        <label>数学符号：</label>
+        <select name="symbol" id="symbol">
+        	<option value="0">请选择</option>
+            <option value="+">+&nbsp;&nbsp;加</option>
+            <option value="-">-&nbsp;&nbsp;减</option>
+            <option value="*">*&nbsp;&nbsp;乘</option>
+            <option value="/">/&nbsp;&nbsp;除</option>
+        </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        变量值：<input type="text" name="val" id="val" size="10" />&nbsp;&nbsp;&nbsp;&nbsp;
+       权重属性：<select id="atrribute" name="atrribute"><option value="+">+(正数)</option><option value="-">-(负数)</option></select>
+    </p>
+	<p>
+		<label>时间阈值：</label>
+		<input type="text" name="s_time" id="s_time" value="00:00:00" style="width:60" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" /> —
+		<input type="text" name="e_time" id="e_time" value="23:59:59" style="width:60" onfocus="WdatePicker({dateFmt:'HH:mm:ss'})" />
+		<span style="position:relative;right:-70px;"><input type="button" value="添  加" id="add-btn" style="width:80px;" /></span>
+	</p>
+    <div style="margin-top:10px;"></div>
+    <table class="table-list" id="table-list" style="line-height:26px; width:75%; margin-left:24px;">
+        <tr>
+            <th>编号</th>
+            <th>一级科目类别</th>
+            <th>二级科目类别</th>
+            <th>三级科目类别</th>
+            <th>业务科目</th>
+            <th>权重</th>
+            <th>数学符号</th>
+            <th>变量值</th>
+            <th>数值属性</th>
+			<th>开始时间</th>
+			<th>结束时间</th>
+            <th>操作</th>
+        </tr>
+    </table>
+    <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+   <div style="margin:100px 0 0 300px;"><input type="submit" class="submit" value="保存信息" /></div>
+</form>
+</center>
+<script>
+getOptions("bigcase=1","bigcase");
+getOptions("bigcase=1","bigcase_new","{$cb_subject['bigcase_id']}");
+
+{if !empty($cb_subject['bigcase_id'])}
+getOptions("case={$cb_subject['bigcase_id']}",'case_new',"{$cb_subject['case_id']}");
+{/if}
+{if !empty($cb_subject['case_id'])}
+getOptions("parent={$cb_subject['case_id']}",'parent_new',"{$cb_subject['parent_id']}");
+{/if}
+{if !empty($cb_subject['parent_id'])}
+getOptions("child={$cb_subject['parent_id']}",'child_new',"{$cb_subject['child_id']}");
+{/if}
+var roleOptions = {};
+roleOptions["0"] = '<option value="-1">--请选择--</option>';
+{foreach $roleListArr $cate_id $arr}
+	roleOptions["{$cate_id}"] = "";
+	{foreach $arr $one}
+	roleOptions["{$cate_id}"] += '<option value="{$one[0]}">{$one[1]}</option>';
+	{/foreach}
+{/foreach}
+var roleCate = '<option value="-1">--请选择--</option>';
+{foreach $cateList $one}
+	roleCate += '<option value="{$one["cate_id"]}">{$one["cate_name"]}</option>';
+{/foreach}
+
+$(function(){
+	$("#add-btn").click(function(){
+		//检测参数
+		var bigcaseName = $("#bigcase").find("option:selected").html();
+		var bigcaseId = $("#bigcase").val();
+		var caseName = $("#case").find("option:selected").html();
+		var caseId = $("#case").val();
+		var parentName = $("#parent").find("option:selected").html();
+		var parentId = $("#parent").val();
+		var childName = $("#child").find("option:selected").html();
+		var childId = $("#child").val();
+		var weightName = $("#weight").find("option:selected").html();
+		var weightId = $("#weight").val();
+		var symbol = $("#symbol").val();
+		var attribute = $("#atrribute").val();
+		var val = $("#val").val();
+		var s_time = $("#s_time").val();
+		var e_time = $("#e_time").val();
+		//var interfaceName = $("#interface_id").find("option:selected").html();
+		//var interfaceId = $("#interface_id").find("option:selected").val();
+		if(bigcaseId==0 || caseId==0 || parentId==0 || childId==0 ){
+			alert('请选择业务科目');
+			return false;
+		}
+		if(weightId==0){
+			alert('请选择权重');
+			return false;
+		}
+		if(symbol==0){
+			alert('请选择数学符号');
+			return false;
+		}
+		if(isNaN(val) || val<0 || val==''){
+			alert('请正确填写变量值');
+			return false;
+		}
+		if(s_time=='' || e_time==''){
+			alert('请选择时间阈值');
+			return false;
+		}
+
+		var r = {"bigcaseId":bigcaseId,"caseId":caseId,"parentId":parentId,"childId":childId,"weightId":weightId,"symbol":symbol,"val":val,"bigcaseName":bigcaseName,"caseName":caseName,"parentName":parentName,"childName":childName,"weightName":weightName,"symbol":symbol,"val":val,"attribute":attribute,"s_time":s_time,"e_time":e_time};
+		toShow(r);
+	});
+	
+	//数据库数据列表显示
+	{if $info}
+	var rule = '{$rule}';
+	rule = str2obj(rule);
+	for(var i in rule){
+		toShow(rule[i]);
+	}
+	{/if}
+
+
+	$('select[name="info[rule_type]"]').change(function(){
+		var rule_type = $(this).val();
+		if(rule_type == 2){
+			$('#range').show();
+		}else{
+			$('#range').hide();
+		}
+	});
+
+	//删除
+	$('.del_extend').live('click', function(){
+		$(this).parents('p').remove();
+	});
+	
+	$('.role_cate').live('change', function(){
+		if(roleOptions[$(this).val()]){
+			$($(this).next(".role_list")[0]).html(roleOptions[$(this).val()]);
+		}else{
+			$($(this).next(".role_list")[0]).html("<option value='-1'>--请选择--</option>");
+		}
+		
+	});
+});
+
+//展示到页面并把其写入hidden
+function toShow(r){
+	if(r.s_time == undefined){
+		r.s_time = '';
+	}
+	if(r.e_time == undefined){
+		r.e_time = '';
+	}
+	if(r.attribute == undefined){
+		r.attribute = "+";
+		attributeName = "+(正数)";
+	}else if(r.attribute == "+"){
+		attributeName = "+(正数)";
+	}else{
+		attributeName = "-(负数)";
+	}
+	var rule = '{"bigcaseId":'+r.bigcaseId+',"caseId":'+r.caseId+',"parentId":'+r.parentId+',"childId":'+r.childId+',"weightId":'+r.weightId+',"symbol":"'+r.symbol+'","val":'+r.val+',"bigcaseName":"'+r.bigcaseName+'","caseName":"'+r.caseName+'","parentName":"'+r.parentName+'","childName":"'+r.childName+'","weightName":"'+r.weightName+'","symbol":"'+r.symbol+'","val":"'+r.val+'","attribute":"'+r.attribute+'","s_time":"'+r.s_time+'","e_time":"'+r.e_time+'"}';
+	var tr = $("#table-list").find("tr").length;
+	var del = $('<input type="button" value="删  除" style="width:60px;">');
+	var content = $('<tr><td>'+tr+'</td><td>'+r.bigcaseName+'</td><td>'+r.caseName+'</td><td>'+r.parentName+'</td><td>'+r.childName+'</td><td>'+r.weightName+'</td><td>'+r.symbol+'</td><td>'+r.val+'</td><td>'+attributeName+'</td><td>'+r.s_time+'</td><td>'+r.e_time+'</td><td></td></tr>');
+	var hidden = $('<input type="hidden" name="rule[]" value=\''+rule+'\'>');
+	$("#table-list").append(content);
+	$("#table-list").find("tr:last").find("td:last").append(del);
+	$("#form").append(hidden);
+	del.click(function(){
+		content.remove();
+		del.remove();
+		hidden.remove();
+	});
+}
+
+//把json字串转成json对象
+function str2obj(str){
+	var obj;
+	try{
+		obj = eval('('+ str +')');
+	}catch(e){
+		obj = {};
+	}
+	return obj;
+}
+
+function addRuleType(){
+	var interval_type = $('input[name="info[interval_type]"]:checked').val();
+	if(interval_type != 1 && interval_type != 2){
+		alert('请先选择类型');
+		return false;
+	}
+	var html = createRuleType(interval_type);
+	$('#range').append(html);
+}
+
+function createRuleType(interval_type){
+	var num = $('#range').find(".rule_type").length + 1;
+	var html = '<p class="rule_type">';
+	if(interval_type == 1){
+		html += '<label>排名规则' + num + '：</label>';
+		html +=	' <input type="text" name="rule_type[range_rule][]" size="16">'
+	}else if(interval_type == 2){
+		html += '<label>区间' + num + '：</label>';
+		html += ' <input type="text" name="rule_type[start][]" size="12"> 至';
+		html += ' <input type="text" name="rule_type[end][]" size="12">';
+		html +=	' <span>变量值：</span>';
+		html += ' <input type="text" name="rule_type[range_rule][]" size="16">';
+	}
+	html +=	' <label>角色赋予：</label>';
+	html += '<select class="role_cate">';
+	html += roleCate;
+	html += '</select>';
+	html +=	' <select class="role_list" name="rule_type[role][]">';
+	html += '<option value="-1">--请选择--</option>';
+	html += '</select>';
+	html += '<label><a class="del_extend" style="cursor:pointer;">删除</a></label>'
+	html += '</p>';
+	return html;
+}
+
+</script>
+</body>
+</html>

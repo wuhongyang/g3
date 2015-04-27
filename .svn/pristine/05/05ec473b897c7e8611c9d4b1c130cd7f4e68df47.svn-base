@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱帐号找回密码</title>
+<link href="<?php echo THEMES_URL ?>passport/css/global-min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo THEMES_URL ?>passport/css/style-min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<?php include_once dirname(__FILE__).'/header.html'; ?>
+<div class="body box clean">
+	<div class="body-title"><span class="pwd-icon">邮箱帐号找回密码</span></div>
+	<div class="body-left">
+		<h1 class="reg-title">一、输入邮箱帐号</h1>
+		<dl class="input-list clean">
+
+		<form action="?user_email&sendreset" method="post" onsubmit="return reg.onsubmit(this)">
+			<label>
+				<dt>邮箱地址：<font color="red">*</font></dt><dd><input type="text" name="email" id="email" onblur="reg.pwdCheckMail(this)" /><span></span>
+				<div class="auto-email" id="mails"></div>
+				<div class="tips"><p>请填写您常用的邮箱</p><p>目前只支持com net cn org后缀的邮箱</p></div></dd>
+			</label>
+			<dt></dt><dd><input type="submit" value="下一步" class="submit2" /></dd>
+		</form>
+
+		</dl>
+	</div>
+</div>
+
+<script language="javascript" src="<?php echo THEMES_URL ?>passport/js/global.js"></script>
+</body>
+</html>

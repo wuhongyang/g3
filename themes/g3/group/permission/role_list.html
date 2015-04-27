@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        {if $isDz==1 || in_array(10280,$permission)}
+        <a href="/group/role.php?module=info" class="bluebtn fr"><span>添加角色组</span></a>
+        {/if}
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20">
+        <tr>
+            <th>编号</th>
+            <th>角色组名称</th>
+            <th>创建时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        {foreach $roleList $key $val}
+        <tr>
+            <td>{echo $key+1}</td>
+            <td>{$val['name']}</td>
+            <td>{echo date('Y-m-d',$val['uptime'])}</td>
+            <td>{echo $val['status']==1 ? '启用' : '不启用';}</td>
+            <td>
+                {if $permissionInfo}
+                <a href="/group/permission.php?module=permissionInfo&id={$val['id']}" class="ahover st">赋予角色组权限</a>
+                {/if}
+                <a href="/group/role.php?module=info&id={$val['id']}" class="ahover mgL20 st">修改角色组</a>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>

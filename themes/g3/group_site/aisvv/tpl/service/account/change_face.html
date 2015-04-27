@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>账号管理-更换头像</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.current{border-top: 1px solid #000;width:700px;font-size: 13px;}
+.current p{color:#999;margin: 20px 0;}
+.current .range{float: left;margin-left: 35px;}
+.current .first{margin-left: 0;width:320px;}
+.current .middle{width: 160px;margin-top: 38px;}
+.current .range .pic-desc{text-align: center;color: #777;line-height: 30px;}
+.current .small{margin-top: 138px;}
+</style>
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>更换头像</h1>
+                <form method="post" action="account.php?module=changeFace" enctype="multipart/form-data" id="J_form">
+                    <div class="clearfix">
+                        <div class="mgt30 clearfix">
+                            <strong class="fs14">当前头像</strong>
+                            <div class="current">
+                                <p>您上传的头像会生成两种格式，请注意小尺寸头像清晰度。</p>
+                                <div class="range first">
+                                    <img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$uin.'big/320/240.jpg');}" width="320" height="240" id="big">
+                                    <div class="pic-desc">大尺寸图片</div>
+                                </div>
+                                <div class="range middle">
+                                    <img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$uin.'middle/160/200.jpg');}" width="160" height="200" id="middle">
+                                    <div class="pic-desc">中尺寸图片</div>
+                                </div>
+                                <div class="range small">
+                                    <img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$uin.'/100/100.jpg');}" width="100" height="100" id="small">
+                                    <div class="pic-desc">小尺寸图片</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mgt30 clearfix">
+                            <strong>设置新头像</strong>
+                            <div class="current">
+                                <p>支持JPG、JPEG、GIF和PNG文件，最大2M，推荐尺寸320*240</p>
+                                <iframe src="/service/upload_face.php" frameborder="0" scrolling="no" width="340" height="320"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+<script type="text/javascript">
+function selectDefaultFace(obj){
+    var hidden = '<input  type="hidden" name="stshead" value="'+obj.src+'">';
+    $('input[name="stshead"]').remove();
+    $('#J_form').append(hidden);
+    $('#J_textfield').val(obj.alt);
+}
+
+$('#J_fileField').change(function(){
+    var value = this.value;
+    var start = value.lastIndexOf('\\');
+    if(start == -1){
+        if(value.length > 16){
+            value = '...'+value.substr(value.length-16,value.length);
+        }
+    }else{
+        value = value.substr(start+1);
+    }
+    $('input[name="stshead"]').remove();
+    $('#J_textfield').val(value);
+});
+
+$('#J_submit').click(function(){
+    $('#J_form').submit();
+});
+</script>
+</body>
+</html>

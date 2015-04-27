@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>权限管理-赋予角色组权限</title>
+</head>
+<body>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+
+<div class="bodywrap">
+{include file="header.html"}
+    <div class="w980">
+        <div class="content">
+            <div class="tabletab">
+                <ul>
+                    <li><a href="javascript:;" class="hover" style="cursor:default;">赋予角色组权限</a></li>
+                </ul>
+                {if $roleList}
+                <a href="/group/role.php?module=roleList" class="bluebtn ar"><span>返回角色组列表</span></a>
+                {/if}
+            </div>
+            <div class="tablewrap">
+            <form id="form">
+              <input type="hidden" name="id" value="{$id}">
+                <p class="mgL10 fs14 mgt10"><b>角色组：{$info['name']}</b></p>
+                <p class="mgL10 fs14 mgt20 mgL50">赋予功能权限：<span class="gray">（勾选您想赋予给该角色的功能权限）</span></p>
+                {foreach $list $val}
+                <fieldset>
+                  <legend><label><input name="case[]" type="checkbox" value="{$val['case_id']}" class="checks"> {$val['case_name']}</label></legend>
+                  {foreach $val['parent'] $key $value}
+                  <label>
+                      <input name="parent[]" type="checkbox" value="{$value['parent_id']}" {if in_array($value['parent_id'],(array)$info['permission'])}checked{/if} {if $value['parent_id']==10258}disabled{/if} class="checks {if ($key)%5!=0}mgL50{/if} parent">
+                      {$value['parent_name']}
+                  </label>
+                  {if ($key+1)%5 == 0}
+                  <div class="mgt10"></div>
+                  {/if}
+                  {/foreach}
+                </fieldset>
+                {/foreach}
+                <div style="height:30px;margin:30px 0 50px 450px;"><a href="javascript:;" id="sbt" class="bluebtn"><span>保存信息</span></a></div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+  $('input[name="case[]"]').click(function(){
+    var caseChecked = this.checked;
+    var parent = $(this).parents('fieldset').find('.parent');
+    var len = parent.length;
+    for(var i=0; i<len; i++){
+      if(parent[i].checked != caseChecked){
+        parent.attr('checked',caseChecked);
+      }
+      if(parent[i].disabled){
+        $(parent[i]).attr('checked','checked');
+      }
+    }
+  });
+
+  $('#sbt').click(function(){
+    var data = $('#form').serialize();
+    $.ajax({
+      url: '?module=setPermission',
+      type: 'POST',
+      data: data,
+      dataType: 'JSON',
+      success: function(data){
+        if(data.Flag == 100){
+          art.dialog({
+            content: '角色组权限更新成功',
+            lock: true,
+            ok: function(){
+                location.href='/group/role.php?module=roleList';
+            },
+            cancel: false,
+            esc: false
+          });
+        }else{
+          art.dialog({
+            content: data.FlagString,
+            lock: true,
+            ok: true,
+            time: 2
+          });
+        }
+      }
+    })
+  });
+});
+</script>

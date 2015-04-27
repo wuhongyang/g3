@@ -1,0 +1,51 @@
+/*reset*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{margin:0;padding:0;}
+body{font-size:12px;font-family:"微软雅黑", "MS Serif", "New York", "宋体";}
+table{border-collapse:collapse;border-spacing:0;}
+fieldset,img{border:none;} 
+ol,ul{list-style:none;} 
+h1,h2,h3,h4,h5,h6{font-size:100%;}
+input, textarea, select{*font-size:100%;}
+a{color:#595959;text-decoration:none;}
+a:hover{color:#595959;text-decoration:none;}
+
+/*Global*/
+.left{float:left;}
+.right{float:right;}
+.clean:before, .clean:after{content:"";display:table;}
+.clean:after{clear:both;}
+.clean{zoom:1;overflow:hidden;}
+
+/*页面样式*/
+.header{background:#416AA3;color:#FFF;padding:5px;}
+.header-title{padding:5px;font-weight:bold;}
+.add-button{background:#EEE;border-radius:5px;color:#395782;display:inline-block;padding:5px 10px;margin-right:10px;}
+.add-button:hover{background:#FFF;}
+
+.page-tab{background:#ECECEC;border-bottom:solid 1px #CCC;height:30px;padding:0 20px;_overflow:hidden;}
+.page-tab li,.page-tab li a{float:left;overflow:hidden;}
+.page-tab li a{border-left:solid 1px #ECECEC;border-right:solid 1px #ECECEC;border-bottom:solid 1px #CCC;display:inline-block;height:30px;line-height:30px;padding:0 15px;}
+.page-tab li a.active{background:#FFF;border-left:solid 1px #CCC;border-right:solid 1px #CCC;border-bottom:solid 1px #FFF;}
+.page-tab li a:hover{background:#FFF;}
+
+.main-width{width:98%; margin:0 auto;}
+.page-tools{padding:10px 0;}
+.table-list{text-align:center;border:solid 1px #CCC;font-size:12px;}
+.table-list tr th{background:#E0ECFF;padding:5px;border:solid 1px #CCC;}
+.table-list tr td{padding:5px;border:solid 1px #CCC;}
+.table-list tr:hover{background:#E0ECFF;}
+
+.form{line-height:38px;margin-top:20px;}
+.form label{display:inline-block;width:120px;text-align:right;}
+.form select{padding:2px;}
+.form input{padding:2px;}
+.form .submit{padding:2px 10px;}
+.form .reset{padding:2px 10px; margin-left:30px;}
+
+.pagenavi{margin:15px 0;color:#666;float:left;}
+.pagenavi .num{color:#F30;display:inline-block;padding:2px;}
+.pagenavi a{background:#F1F1F1;border:solid 1px #DDD;display:inline-block;padding:2px 8px;}
+.pagenavi a:hover{background:#FFF;}
+.pagenavi .curr{border:solid 1px #DDD;display:inline-block;padding:2px 8px;}
+
+.runtime{color:#999;float:right;padding:10px;text-align:right;}

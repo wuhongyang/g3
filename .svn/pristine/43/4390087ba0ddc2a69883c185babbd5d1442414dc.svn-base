@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购买{$categories[$category_id]['pack_name']}</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+
+<div class="container flow">
+    <ul class="nav nav-pills">
+        <li class="active lis"><span class="num">1 </span>选择购买商品</li>
+        <li class="jian">&nbsp;</li>
+        <li class="lis"><span class="num">2</span>填写购买信息</li>
+        <li class="jian gray">&nbsp;</li>
+        <li class="lis"><span class="num">3</span>购买成功</li>
+    </ul>
+</div>
+
+<div class="container goodnumber">
+    <form method="get">
+        <div class="clearfix">
+            <div class="input-append">
+                <input type="hidden" name="module" value="search_liang">
+                <input type="hidden" name="category_id" value="{$category_id}">
+                <input class="span2" id="appendedInputButton" type="text" name="name" placeholder="搜索靓号">
+                <button class="btn" type="submit"><i class="icon-search"></i></button>
+            </div>
+        </div>
+    </form>
+    
+    {if $status == 2}
+        <!--已出售-->
+        <ul class="numlist thumbnails">
+            <li class="span2 sale" commodity_id="{$numInfo['id']}">
+                <p class="text-warning">{$_GET['name']}</p>
+                <p>价格：{$numInfo['price']}{$unit}</p>
+                <div class="layer"></div>
+            </li>
+        </ul>
+    {elseif $status == 3}
+        <!--在架上-->
+        <ul class="numlist thumbnails">
+            <li class="span2" commodity_id="{$numInfo['id']}">
+                <p class="text-warning">{$_GET['name']}</p>
+                <p>价格：{$numInfo['price']}{$unit}</p>
+                <div class="layer"></div>
+            </li>
+        </ul>
+    {else}
+        <!--未添加-->
+        <span style="color:#FF0000;">
+        该靓号未上架，您可以联系客服进行购买
+        {if !empty($link_qq)}
+            <a target="_blank" href=http://wpa.qq.com/msgrd?v=3&amp;uin={$link_qq}&amp;site=qq&amp;menu=yes><img border="0" src="{STATIC_API_PATH}/static/images/qqtalk.png" width="79" height="20" /></a>
+        {/if}
+        </span>
+    {/if}
+</div>
+
+{include file="foot.html"}
+
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".numlist li").hover(
+        function(){
+            if($(this).hasClass('sale')){
+                return;
+            }
+            $(this).children(".layer").show();
+        },
+        function(){
+            $(this).children(".layer").hide();  
+        }
+    );
+
+    $('li.span2').click(function() {
+        if($(this).hasClass('sale')){
+            return;
+        }
+        var commodity_id = $(this).attr('commodity_id');
+        location.href='?module=info&category_id={$category_id}&commodity_id='+commodity_id+'&group_back_config=1&room_id={$room_id}';
+    });
+});
+</script>
+</body>
+</html>

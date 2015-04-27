@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>选择购买道具</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+	
+	<!--主体-->
+    <div class="bd clearfix" id="bd-daoju2">
+        <ul class="step-list clearfix">
+            <li  class="active">选择购买道具</li>
+            <li>填写购买信息</li>
+            <li>确认购买信息</li>
+            <li>购买成功</li>
+        </ul>
+        <div class="step1">
+            <div class="desc">
+                <p><div class="bottom-line">进场道具</div></p>
+            </div>
+            
+            <ul class="pro-list clearfix">
+				{foreach $lists $key $val}
+			    <li>
+                    <div class="pro">         
+						<input type="hidden" value="{$val['swf_url']}" class="swf-url">
+                        <div class="pro-pic" title="{$val['desc']}">
+						    <div class="middle-in">
+								<img alt="" src="{PIC_API_PATH}{$val['pic_url']}">
+							</div>
+                        </div>
+						<p class="pro-name">{$val['name']}</p>
+                        <div class="pro-price">
+                            <p>价格：<span>{$val['price']}</span>v宝/{$val['expire']}天</p>
+                        </div>
+						<div class="pro-btn">
+                                <a class="btn-buy" href="buyprops.php?module=shopInfo&id={$key}">立即购买</a>
+								<a class="preview" href="javascript:void(0);">预览</a>
+                        </div>
+                    </div>
+                </li>
+				{/foreach}
+			</ul>              
+        </div>
+    </div>
+
+	{include file="footer.html"}
+</div>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$(function(){
+	//预览
+	$('.preview').click(function(){
+		var name = $(this).parents('li').find('.pro-name').html();
+		var swf_url = $(this).parents('li').find('.swf-url').val();
+		art.dialog({
+			title: '预览'+name,
+			content: '<object width="440" height="220" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{PIC_API_PATH}'+swf_url+'" name="movie"><param value="high" name="quality"><embed width="440" height="220" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{PIC_API_PATH}'+swf_url+'"></object>',
+			width: 440,
+			height: 220,
+			top: '50%',
+			lock: true,
+			resize: false
+		});
+	});
+});
+</script>
+<script type="text/javascript" src="{THEMES_URL}shop/js/buy_num_change-min.js"></script>
+<!--[if  IE 6]>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/fixTopNavForIE6.min.js"></script>
+<![endif]-->
+</body>
+</html>
+

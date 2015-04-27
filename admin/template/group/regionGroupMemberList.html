@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>群组成员管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">群组成员管理</div>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>群组ID</th>
+    <th>用户ID</th>
+    <th>时间</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+
+  {foreach $lists $list}
+			<tr>
+      	<td>{$list['id']}</td>
+          <td>{$list['group_id']}</td>
+          <td>{$list['uin']}</td>
+          <td>{echo date('Y-m-d H:i',$list['uptime'])}</td>
+          <td>{if $list['state']==1}通过{else}未通过{/if}</td>
+          <td>
+      			{if $link_array['109']['url']}<a href="{$link_array['109']['url']}&edit={$list['id']}&group_id={$list['group_id']}">修改</a>{/if}
+      			{if $link_array['107']['url']}<a href="{$link_array['107']['url']}&del={$list['id']}&group_id={$list['group_id']}" onClick="if(!confirm('确定删除?')) return false">删除</a>{/if}
+      			{if $link_array['108']['url']}<a href="{$link_array['108']['url']}&state={$list['state']}&upid={$list['id']}&group_id={$list['group_id']}" >修改状态</a>{/if}
+          </td>
+      </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

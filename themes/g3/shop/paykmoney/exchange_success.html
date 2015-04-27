@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>兑换成功</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+{include file="header.html"}
+
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+		<div class="charge-info-box">
+        	<h3>兑换成功</h3>
+            <div class="charge-info">
+            	<p class="title">您的帐号 <font color="#FF0000">{$user['Uin']}</font> 兑换成功！</p>
+                <p>兑换方式：<font color="#FF0000">金豆兑换</font></p>
+                <p>获得：<font color="#FF0000">{$vdian}</font> {$GroupData['currency_unit']}</p>
+                <p>充值站点：<a href="/" target="_blank">{$groupName}</a></p>
+            </div>
+        </div>
+    </div>    
+</div>
+
+{include file="foot.html"}
+
+</body>
+</html>

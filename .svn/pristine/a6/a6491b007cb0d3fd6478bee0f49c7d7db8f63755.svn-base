@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">游戏配置列表</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}">返回</a>{/if}</div>
+</div>
+
+<form method="post" action="?module=modifyConfig">
+	<input type="hidden" name="cmd" value="{$cmd}" />
+    <table class="table-list main-width" id="table-list">
+        <tr>
+        <th>配置名</th>
+        <th>配置字段</th>
+        <th>配置值</th>
+      </tr> 
+      {foreach $descr $key $val}
+      <tr>
+        <td><input type="text" name="descr[]" value="{$val}" style="width:80%;"></td>
+        <td width="20%"><input type="text" name="key[]" value="{$key}" style="width:80%;"></td>
+        <td>
+        	<input type="text" name="value[]" value="{php echo htmlspecialchars($value[$key])}" style="width:80%">&nbsp;&nbsp;
+            <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    <div style="margin:20px;"><a onclick="addConfig();" href="#">添加一项配置</a> &nbsp; <font color="#999999">* 为游戏添加一项配置参数</font></div>
+    <center><input type="submit" value="保存配置" style="width:80px; height:30px;" /></center>
+</form>
+
+<script type="text/javascript">
+function addConfig(){
+	var id = document.getElementById('table-list');
+	var newtr = id.insertRow(-1);
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	td1.innerHTML = '<input type="text" name="descr[]">';
+	td2.innerHTML = '<input type="text" name="key[]">';
+	td3.innerHTML = '<input type="text" name="value[]" style="width:50%"> <a href="#" onclick="delConfig(this)">删除</a>';
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+}
+function delConfig(obj){
+	obj = obj.parentNode.parentNode;
+	obj.parentNode.removeChild(obj);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+            	{include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+                    <div class="roomhd">房间信息设置</div>
+                    <form method="post" id="form" onsubmit="return checkForm();" enctype="multipart/form-data">
+                    <input type="hidden" id="maxuser" value="{$maxuser}" />
+                    <ul class="formlist formlist5">
+                        <li class="clearfix">
+                            <label>房间名称：</label>
+                            <input type="text" size="40" name="name" value="{$name}" id="name" class="input" />
+                            <span class="gray">20个汉字以内</span>
+                        </li>
+                        <li class="clearfix">
+                            <label>进入房间角色：</label>
+                            <select name="type">
+                              {foreach $roles $key $val}
+                              <option value="{$key}" {if $selectRole == $key}selected{/if}>{$val}</option>
+                              {/foreach}
+                            </select>
+                        </li>
+                        <li class="clearfix">
+                            <label>房间信息：</label>
+                            <textarea cols="35" rows="5" name="description" id="description">{$description}</textarea>
+                            <span class="gray">100个汉字以内</span>
+                        </li>
+                        <li class="clearfix">
+                            <label>房间公告:</label>
+                            <textarea cols="35" rows="5" name="salutatory" id="salutatory">{$salutatory}</textarea>
+                            <span class="gray">100个汉字以内</span>
+                        </li>
+<!--                        <li class="clearfix">
+                            <label>机器人基数：</label>
+                            <input name="robot_base_num" id="robot_base_num" value="{$robotBaseNum}" type="text" class="input">
+                        </li>
+                        <li class="clearfix">
+                            <label>每个真人对应机器人数：</label>
+                            <input name="robot_num" id="robot_num" value="{$robotNum}" type="text" class="input">
+                            <span class="gray">默认值为1:300</span>
+                        </li>-->
+                        <li class="clearfix">
+                            <label><b>房间封面设置：</b><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$roomid.'/80/60.jpg');}" width="80" height="58" /></label>
+                            <input type="hidden" name="room_cover" id="room_cover" />
+                            <input type="hidden" name="room_cover_coords" id="room_cover_coords" />
+                            <iframe src="upcover.php" width="405" height="350" frameborder="0" scrolling="no"></iframe>
+                        </li>
+                        <li class="clearfix">
+                            <label><b>房间背景设置</b>&nbsp;<br><img src="{php echo cdn_url(PIC_API_PATH.'/roombg/'.$roomid.'/80/60.jpg');}" width="80" height="58" /></label>
+                            <div class="pd3">
+                                <div class="st"><b>默认背景模板：</b></div>
+                                <div class="imgwrap">
+                                    <img src="../pic/roombg/1.jpg" width="85" height="50" onClick='$(this).siblings("input").attr("checked","checked");' />
+                                    <input type="radio" name="default_roombg" value="1" class="radios" /><span>蓝色VVKU</span>
+                                </div>
+                                <div class="imgwrap">
+                                    <img src="../pic/roombg/2.jpg" width="85" height="50" onClick='$(this).siblings("input").attr("checked","checked");' />
+                                    <input name="default_roombg" type="radio" value="2" class="radios"><span>炫丽VVKU</span>
+                                </div>
+                                <div class="imgwrap">
+                                     <img src="../pic/roombg/3.jpg" width="85" height="50" onClick='$(this).siblings("input").attr("checked","checked");' />
+                                    <input name="default_roombg" type="radio" value="3" class="radios"><span>清爽木纹</span>
+                                </div>
+                                <div class="imgwrap">
+                                     <img src="../pic/roombg/4.jpg" width="85" height="50" onClick='$(this).siblings("input").attr("checked","checked");' />
+                                    <input name="default_roombg" type="radio" value="4" class="radios"><span>舞台幕布</span>
+                                </div>
+                                <div class="imgwrap">
+                                     <img src="../pic/roombg/5.jpg" width="85" height="50" onClick='$(this).siblings("input").attr("checked","checked");' />
+                                    <input name="default_roombg" type="radio" value="5" class="radios"><span>魅力舞台</span>
+                                </div>
+                                <div class="st"><b>自定义背景：</b></div>
+                                <div>
+                                    <div id="type-file-box">
+                                        <input type="file" size="40" style="height:25px;" name="room_bg" id="room_bg" onChange="read(this);" />
+                                    </div>
+                                </div>
+                                <div class="txt2">请上传2MB以内的jpg,png,gif格式的图片</div>
+                                <div class="st"><b>排列方式：</b></div>
+                                <div class="st">
+                                    <input type="radio" name="bgalign" class="radios" value="1" {if $bgalign==1}checked="checked"{/if} /><span class="txt4">左上平铺</span>
+                                    <input type="radio" name="bgalign" class="radios" value="2" {if $bgalign==2}checked="checked"{/if} /><span class="txt4">居中平铺</span>
+                                    <input type="radio" name="bgalign" class="radios" value="3" {if $bgalign==3}checked="checked"{/if} /><span class="txt4">右上平铺</span>
+                                </div>
+                                <div><input type="submit" value="保存" class="yellowbtn2" /></div>
+                              </div>
+                        </li>
+                    </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+function checkForm(){
+	var name = document.getElementById('name');
+	var desc = document.getElementById('description');
+	var salutatory = document.getElementById('salutatory');
+	var robot_base_num=document.getElementById('robot_base_num');
+	var robot_num=document.getElementById('robot_num');
+	var maxuser=document.getElementById('maxuser');
+	if(name.value==''||name.value.length>20){
+		alert('房间名称不能为空并且不能超过20个汉字');
+		name.focus();
+		return false;
+	}
+	if(desc.value.length>100){
+		alert('房间信息不能超过100个汉字');
+		desc.focus();
+		return false;
+	}
+	if(salutatory.value.length>100){
+		alert('房间公告不能超过100个汉字');
+		salutatory.focus();
+		return false;
+	}
+//	var pattern=/^\d+$/;
+//	if(robot_base_num.value==''){
+//		robot_base_num.value=0;
+//	}
+//	if(!pattern.test(robot_base_num.value)){
+//		alert("机器人基数只能为数字");
+//		robot_base_num.focus();
+//		return false;
+//	}
+//	if(robot_num.value==''){
+//		robot_num.value=0;
+//	}
+//	if(!pattern.test(robot_num.value)){
+//		alert("每个真人对应机器人数只能为数字");
+//		robot_num.focus();
+//		return false;
+//	}
+//	if(parseInt(robot_num.value)>parseInt(maxuser.value)){
+//		alert('每个真人对应机器人数不能超过'+maxuser.value+'人');
+//		robot_num.focus();
+//		return false;
+//	}
+	return true;
+}
+function read(obj){
+	value = obj.value;
+	if(value.length > 16){
+		value = '...'+value.substr(value.length-16,value.length);
+	}
+	document.getElementById('readfile').value=value
+}
+</script>
+</body>
+</html>

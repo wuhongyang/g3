@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<title>KMS</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">{$config_array[$database][$table]['table_name']}</div>
+</div >
+
+{include file="kmoney/fund_top.html"}
+
+
+<div class="page-tools main-width">
+<form action="" method="get" name="myform" id="theForm">
+<input type="hidden" name="database" value="{$database}" class="form_value" />
+<input type="hidden" name="table" value="{$table}" class="form_value" />
+{foreach $searchField $val}
+	{if $val=='Uin'}
+    用户ID：<input type="text" name='Uin' id="Uin" class="form_value"{if $_GET['Uin']!=''} value="{$_GET['Uin']}"{/if} />
+    {elseif $val=='Balance_status'}
+    状态：<select name="Balance_status" id="Balance_status" class="form_value">
+    	<option value="-1"{if $_GET['Balance_status']<0} selected="selected"{/if}>请选择</option>
+        <option value="1"{if $_GET['Balance_status']==1} selected="selected"{/if}>正常</option>
+        <option value="0"{if $_GET['Balance_status']==='0'} selected="selected"{/if}>冻结</option>
+    </select>
+    {elseif $val=='Core_three'}
+    一级科目：<select name="Bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');clears('child');" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    二级科目：<select name="Case_id" id="case" onChange="getOptions('parent='+this.value,'parent');clears('child');" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    三级科目：<select name="Parent_id" id="parent" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    {elseif $val=='Core_four'}
+    一级科目：<select name="Bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');clears('child');" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    二级科目：<select name="Case_id" id="case" onChange="getOptions('parent='+this.value,'parent');clears('child');" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    三级科目：<select name="Parent_id" id="parent" onChange="getOptions('child='+this.value,'child');" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    四级科目：<select name="Child_id" id="child" class="form_value">
+    	<option value="0">请选择</option>
+    </select>
+    {elseif $val=='Trade_info'}
+    交易属性：<select name="Trade_property" id="Trade_property" class="form_value">
+    	<option value="-1"{if $_GET['Trade_property']<0} selected="selected"{/if}>请选择</option>
+        <option value="3"{if $_GET['Trade_property']==3} selected="selected"{/if}>科目交易</option>
+        <option value="4"{if $_GET['Trade_property']==4} selected="selected"{/if}>税金交易</option>
+        <option value="5"{if $_GET['Trade_property']==5} selected="selected"{/if}>用户交易</option>
+    </select>
+    借贷关系：<select name="Trade_type" id="Trade_type" class="form_value">
+    	<option value="-1"{if $_GET['Trade_type']<0} selected="selected"{/if}>请选择</option>
+        <option value="1"{if $_GET['Trade_type']==1} selected="selected"{/if}>存入</option>
+        <option value="2"{if $_GET['Trade_type']==2} selected="selected"{/if}>支出</option>
+    </select>
+    是否净收支：<select name="Income_pay" id="Income_pay" class="form_value">
+    	<option value="-1"{if $_GET['Income_pay']<0} selected="selected"{/if}>请选择</option>
+        <option value="3"{if $_GET['Income_pay']==3} selected="selected"{/if}>平台净收支</option>
+        <option value="4"{if $_GET['Income_pay']==4} selected="selected"{/if}>账户净收支</option>
+        <option value="5"{if $_GET['Income_pay']==5} selected="selected"{/if}>账户内收支</option>
+    </select>
+    {elseif $val=='Trade_info2'}
+    交易属性：<select name="Trade_property" id="Trade_property" class="form_value">
+    	<option value="-1"{if $_GET['Trade_property']<0} selected="selected"{/if}>请选择</option>
+        <option value="3"{if $_GET['Trade_property']==3} selected="selected"{/if}>科目交易</option>
+        <option value="4"{if $_GET['Trade_property']==4} selected="selected"{/if}>税金交易</option>
+        <option value="5"{if $_GET['Trade_property']==5} selected="selected"{/if}>用户交易</option>
+    </select>
+    借贷关系：<select name="Trade_type" id="Trade_type" class="form_value">
+    	<option value="-1"{if $_GET['Trade_type']<0} selected="selected"{/if}>请选择</option>
+        <option value="1"{if $_GET['Trade_type']==1} selected="selected"{/if}>存入</option>
+        <option value="2"{if $_GET['Trade_type']==2} selected="selected"{/if}>支出</option>
+    </select>
+    {elseif $val=='Date_range'}
+    日期：<input type="text" name='StartDate' id="startDate" class="form_value" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 150px;" value="{$StartDate}" /> 至 <input type="text" name='EndDate' id="endDate" class="form_value" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" style="width: 150px;" value="{$EndDate}" />
+    {elseif $val=='Date_range2'}
+    日期：<input type="text" name='StartDate' id="startDate" class="form_value" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 150px;" value="{$StartDate2}" /> 至 <input type="text" name='EndDate' id="endDate" class="form_value" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width: 150px;" value="{$EndDate2}" />
+    {elseif $val=='Group_id'}
+    当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）
+    {/if}
+    <br /><br /> 
+{/foreach}
+{if $statistics}
+{$statistics}：<span id="statistics"></span>&nbsp;&nbsp;<a href="javascript:get_statistics();" style="color:blue;">点击根据检索条件统计余额值</a><br /><br />
+{/if}
+<input type="submit" value="查询" />
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>编号</th>
+		{foreach $config_array[$database][$table]['col'] $key $arr}
+		<th>{$arr}</th>
+		{/foreach}
+        {if in_array($table,array('kmoney_balance','voucher_balance','tax_balance'))}
+        <th>操作</th>
+        {/if}
+	</tr>
+	{foreach $list_array $keys $arr}
+	<tr>
+		<td>{php echo $keys+1;$num=0;$count=count($config_array[$database][$table]['col'])-1;}</td>
+		{foreach $config_array[$database][$table]['col'] $key $arrs}
+		<td>{if $key=='uptime'} {echo date('Y-m-d H:i:s',$arr[$key])} {elseif $key == 'trade_type'} {echo $tradeType_config[$arr[$key]]} {elseif $key == 'trade_property'} {echo $tradeProperty_config[$arr[$key]]} {else} {$arr[$key]} {/if}</td>
+        {if in_array($table,array('kmoney_balance','voucher_balance','tax_balance'))&&$num==$count}
+        	{if $database=='kkyoo_kmoney'}
+        	<td><a href="fund_system.php?database=kkyoo_kmoney&table=kmoney_running&Uin={$arr['uin']}">科目流水表查询</a></td>
+            {elseif $database=='kkyoo_voucher'}
+        	<td><a href="fund_system.php?database=kkyoo_voucher&table=voucher_running&Uin={$arr['uin']}&Group_id={$arr['group_id']}">科目流水表查询</a></td>
+            {elseif $database=='kkyoo_tax'}
+        	<td><a href="fund_system.php?database=kkyoo_tax&table=tax_running&Group_id={$arr['group_id']}">科目流水表查询</a></td>
+        	{/if}
+        {/if}
+        {php $num++;}
+		{/foreach}
+	</tr>
+	{/foreach}
+</table>
+<div class="main-width">{$page}</div>
+<script language="javascript">
+if(document.getElementById('bigcase')){
+	getOptions("bigcase=1","bigcase","{$_GET['Bigcase_id']}");
+}
+{if !empty($_GET['Bigcase_id'])}
+getOptions("case={$_GET['Bigcase_id']}",'case',"{$_GET['Case_id']}");
+{/if}
+{if !empty($_GET['Case_id'])}
+getOptions("parent={$_GET['Case_id']}",'parent',"{$_GET['Parent_id']}");
+{/if};
+{if !empty($_GET['Parent_id'])}
+getOptions("child={$_GET['Parent_id']}",'child',"{$_GET['Child_id']}");
+{/if};
+{if $statistics}
+function get_statistics(){
+	var form_value=$('.form_value');
+	var url='fund_system.php?module=get_statistics';
+	for(var i=0;i<form_value.length;i++){
+		url+='&'+form_value[i].name+'='+form_value[i].value;
+	}
+	$.ajax({
+		url: url,
+		type: 'GET',
+		cache: false,
+		data: {},
+		beforeSend: function(){
+			$('#statistics').html('统计中，请稍候...');
+		},
+		success: function(data){
+			var json = $.parseJSON(data);
+			if(parseInt(json.Flag)==100){
+				$('#statistics').html(json.Result);
+			}
+			else{
+				alert(json.FlagString);
+			}
+		}
+	});
+}
+{/if}
+</script>
+</body>
+</html>

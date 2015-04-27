@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.formlist li label{width:100px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" id="J_form" target="iframe" enctype="multipart/form-data" onSubmit="return checkParam();">
+    <ul class="formlist">
+        <li class="clearfix">
+            <label>活动标题：</label>
+            <div class="fl">
+                <input type="text" name="title" value={$info['title']}><span class="txt2">不能超过15个字。</span>
+            </div>
+        </li>
+        <li class="clearfix">
+            <label>活动范围：</label>
+            <select name="roomid">
+                <option value="0">全部房间</option>
+                {foreach $rooms $key $val}
+                <option value="{$key}" {if $info['range']==$key}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+        </li>
+        <li class="clearfix">
+            <label>活动时间：</label>
+            <div class="fl">
+                <input type="text" name="start_time" value="{$info['start_time']}" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d'})" style="width:100px;padding-left:10px;">&nbsp;--&nbsp;
+                <input type="text" name="end_time" value="{$info['end_time']}" style="width:100px;padding-left:10px;float:none;">
+            </div>
+        </li>
+        <li class="clearfix">
+            <label>规则描述：</label>
+            <div class="fl">
+                <textarea name="content" id="content" cols="90" rows="20">{$info['content']}</textarea>
+            </div>
+        </li>
+        <li class="clearfix">
+            <label>活动宣传图：</label>
+            <div>
+                <input type="file" name="image"><span class="txt2">建议图片尺寸为540*200。用于轮播图推荐和活动页面显示</span>
+            </div>
+        </li>
+        <li class="clearfix">
+            {if !empty($info)}
+            <div style="margin-left:100px;">
+                <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$info['image'].'/540/200.jpg');}" style="border:1px solid #ddac3f;">
+            </div>
+            <input type="hidden" name="current_image" value="{$info['image']}">
+            <input type="hidden" name="id" value="{$info['id']}">
+            {/if}
+        </li>
+        <li class="clearfix">
+            <label>&nbsp;</label>
+            <div class="fl">
+                <input type="submit" class="bluebtn2" value="保存" />
+            </div>
+        </li>
+    </ul>
+    </form>
+            <iframe name="iframe" style="display:none;"></iframe>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/kindeditor-min.js"></script>
+<script type="text/javascript" src="/admin/template/js/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+var editor;
+KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="content"]', {
+        allowFileManager : true
+    });
+    K('input[name=getHtml]').click(function(e) {
+        alert(editor.html());
+    });
+    K('input[name=isEmpty]').click(function(e) {
+        alert(editor.isEmpty());
+    });
+    K('input[name=getText]').click(function(e) {
+        alert(editor.text());
+    });
+    K('input[name=selectedHtml]').click(function(e) {
+        alert(editor.selectedHtml());
+    });
+    K('input[name=setHtml]').click(function(e) {
+        editor.html('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=setText]').click(function(e) {
+        editor.text('<h3>Hello KindEditor</h3>');
+    });
+    K('input[name=insertHtml]').click(function(e) {
+        editor.insertHtml('<strong>插入HTML</strong>');
+    });
+    K('input[name=appendHtml]').click(function(e) {
+        editor.appendHtml('<strong>添加HTML</strong>');
+    });
+    K('input[name=clear]').click(function(e) {
+        editor.html('');
+    });
+});
+</script>
+<script type="text/javascript">
+
+$(function(){
+    //设置结束时间的最小时间
+    $('input[name="end_time"]').focus(function(){
+        var day = $('input[name="start_time"]').val();
+        var myday = new Date();
+        var year = myday.getFullYear();
+        var month = myday.getMonth() + 1;
+        var d = myday.getDate()
+        day = day || year+'-'+month+'-'+d;
+        WdatePicker({dateFmt:'yyyy-MM-dd',minDate:day});
+    });
+});
+
+function checkParam(){
+    var title = $('input[name="title"]').val();
+    if(title == ''){
+        _show_msg('活动标题不能为空');
+        return false;
+    }
+    if(title.length > 15){
+        _show_msg('活动标题不能超过15个字符');
+        return false;
+    }
+    var start_time = $('input[name="start_time"]').val();
+    var end_time = $('input[name="end_time"]').val();
+    if(start_time == ''){
+        _show_msg('活动开始时间不能为空');
+        return false;
+    }
+    if(end_time == ''){
+        _show_msg('活动结束时间不能为空');
+        return false;
+    }
+    start_time = start_time.replace(/-/g,'');
+    start_time = parseInt(start_time, 10);
+    end_time = end_time.replace(/-/g,'');
+    end_time = parseInt(end_time, 10);
+    if(start_time - end_time > 0){
+        _show_msg('活动结束时间不能在开始时间之前');
+        return false;
+    }
+    var image = $('input[name="image"]').val() || $('input[name="current_image"]').val();
+    if(!image){
+        _show_msg('请上传活动宣传图');
+        return false;
+    }
+    return true;
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=activity_list';
+            },
+            //lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed',
+			init: function () {
+				var that = this, i = 6;
+				var fn = function () {
+					that.title(i + '秒后跳转');
+					!i && that.close();
+					i --;
+				};
+				timer = setInterval(fn, 1000);
+				fn();
+			},
+			close: function () {
+				clearInterval(timer);
+				location.href = '?module=activity_list';
+			}
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+</script>
+</body>
+</html>

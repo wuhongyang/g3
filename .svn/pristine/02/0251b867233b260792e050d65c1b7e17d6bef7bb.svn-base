@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-站点风格</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/footer.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+h1{font-size:12px;font-weight:bold;position:relative;margin-bottom:20px;text-indent:10px;}
+.nowstyle{position:relative;padding:0 0 20px 0;border-bottom:1px dashed #d2d2d2;margin-bottom:20px;}
+.nowstyle .imgwrap{width:160px;height:100px;position:absolute;top:0;left:10px;}
+.nowstyle .info{padding-left:180px;line-height:26px;}
+.nowstyle .info .btncs{width:124px;height:22px;text-align:center;background:#41659f;color:#fff;border:0;margin-top:20px;cursor:pointer;}
+.styletab{position:absolute;right:0;top:0;}
+.styletab a{display:inline-block;width:45px;height:22px;line-height:22px;font-weight:normal;text-align:center;}
+.styletab a:hover, .styletab a.hover{background:#7493c2;color:#fff;}
+.recomstyle{width:100%;overflow:hidden;}
+.recomstyle ul {padding:10px;}
+.recomstyle ul li{float:left;width:160px;margin:0 30px 30px 0;position:relative;}
+.recomstyle .mask{border:1px solid #df662f;display:none;position:absolute;top:-4px;left:-4px;padding:3px;}
+.recomstyle .mask .use{width:46px;height:22px;display:block;line-height:22px;text-align:center;background:#e06730;color:#fff;position:absolute;left:117px;top:105px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <h1>当前风格</h1>
+    <div class="nowstyle">
+        <img src="../images/160100.jpg" width="160" height="100" class="imgwrap">
+        <div class="info">
+            <p>当前主题：<span class="yellow">海阔天空</span></p>
+            <p>所属分类：<span class="yellow">风景</span></p>
+            <p><input name="" type="button" value="修改当前风格" class="btncs"></p>
+        </div>
+    </div>
+    <h1>
+        <span>推荐风格</span>
+        <div class="styletab">
+            <a href="#" class="hover">所有</a>
+            <a href="#">音乐</a>
+            <a href="#">舞蹈</a>
+            <a href="#">交友</a>
+            <a href="#">游戏</a>
+        </div>
+    </h1>
+    <div class="recomstyle">
+        <ul>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+            <li class="recompic">
+                <img src="../images/160100.jpg" width="160" height="100">
+                <p>音乐天堂</p>
+                <div class="mask">
+                    <a href="#"><img src="../images/160100.jpg" width="160" height="100"></a>
+                    <p>音乐天堂</p>
+                    <a class="use" href="#">使用</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="lopage" class="page">
+        <div id="lopage" class="pagenavi">
+            有<span class="num">100</span>条记录&nbsp;&nbsp;&nbsp;共<span class="num">5</span>页&nbsp;&nbsp;|&nbsp;&nbsp; <span class="curr">1</span>
+            <a href="/group/vip.php?module=vip_list&amp;page=2">2</a>
+            <a href="/group/vip.php?module=vip_list&amp;page=3">3</a>
+            <a href="/group/vip.php?module=vip_list&amp;page=4">4</a>
+            <a href="/group/vip.php?module=vip_list&amp;page=5">5</a>
+        </div>    
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/jquery-1.8.0.min.js');}"></script>
+<script type="text/javascript">
+ $(function(){
+    $(".recompic").hover(
+      function(){$(this).children(".mask").show()},
+      function(){$(this).children(".mask").hide()}
+    )
+  })
+</script>
+</body>
+</html>

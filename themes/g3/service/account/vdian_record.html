@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站金币管理</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>站金币管理</h1>
+                <div class="clearfix">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+                        <tr>
+                            <th>站点名称</th>
+                            <th width="140">金币余额</th>
+                            <th width="180">操作</th>
+                        </tr>
+                        {foreach $lists $val}
+                        <tr>
+                        <td class="shijian">{$val['group_name']}({$val['group_id']})</td>
+                        <td class="shijian pre">{echo intval($val['last_balance'])}</td>
+                        <td class="shijian"><a href="/shop/index.php?groupId={$val['group_id']}" class="ahover" target="_blank">充值</a>&nbsp;<a href="/shop/index.php?type=vdouexchange&groupId={$val['group_id']}" class="ahover mgL10" target="_blank">兑换</a><a href="?module=vdianlist&group_id={$val['group_id']}&uin={$val['uin']}" class="ahover mgL10">金币交易记录</a></td>
+                        </tr>
+                        {/foreach}
+                        <tr>
+                    </table>
+                    {$page}
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>
+<script type="text/javascript" src="{THEMES_URL}service/js/account.js"></script>

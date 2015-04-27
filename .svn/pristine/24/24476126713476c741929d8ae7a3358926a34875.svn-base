@@ -1,0 +1,79 @@
+﻿<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>常见问题解答-VV酷帮助中心</title>
+<meta name="keywords" content="VV酷帮助中心,VV酷疑难问题解答,网上互动娱乐商圈,在线视频聊天,免费在线KTV,免费视频聊天" /> 
+<meta name="description" content="VV酷打造全新的网上互动娱乐商圈，包括在线KTV、在线游戏、在线视频聊天等娱乐活动，帮助中心旨在帮助用户解决使用过程中的疑难问题，通过新手帮助和常见问题解答使用户更懂VV酷。"/><link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/help.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css" />
+<style type="text/css">
+.to_top{width:45px;height:44px;right:450px;position:fixed;bottom:200px;_position:absolute;_top:expression(eval(document.documentElement.scrollTop+document.documentElement.clientHeight-80))}
+</style>
+<body>
+
+{include file="header.html"}
+
+
+<div class="main_apply">
+    <div class="help_top"></div>
+	<div class="help_mid">
+		<div class="help_title">
+			 <h1><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/help_01.jpg"  width="48" height="44" style="vertical-align:text-bottom"> 用户帮助中心</h1>
+			<div class="fengline1"></div>
+		</div>
+		<div class="help_mune">
+			<a href="/passport/" title="用户注册" target="_blank"> <img src="{STATIC_API_PATH}/frontend/modules/rooms/img/mune_01.jpg" width="111" height="32" border="0"></a>
+			<a href="/rooms/join.php?module=BasicInfo&type=2" title="室主/艺人签约" target="_blank"> <img src="{STATIC_API_PATH}/frontend/modules/rooms/img/mune_02.jpg" width="111" height="32" border="0"></a>
+			<a href="/rooms/join.php?module=BasicInfo&type=1" title="站长加盟" target="_blank"> <img src="{STATIC_API_PATH}/frontend/modules/rooms/img/mune_03.jpg" width="111" height="32" border="0"></a>
+		</div>
+		<div class="help_kf">
+			<div class="kf_title">
+				<img src="{STATIC_API_PATH}/frontend/modules/rooms/img/kf_01.jpg" width="93" height="30" >
+			</div>
+			<div class="kf_mune">
+				<ul>
+				<li><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/button_qq.gif" width="25" height="17"> <a href="http://wpa.qq.com/msgrd?V=1&amp;Uin=4006772115&amp;Site=客服QQ号&amp;Menu=yes&quot;" title="客服QQ" target="_blank">客服QQ</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="help_shoum">
+        	{foreach $typelist $type}
+			<div class="help_sm01">
+				<div class="help_sm01_title">
+					<span>{$type['name']}</span>
+				</div>
+				<div class="help_sm01_nr">
+					<ul>
+                    	{foreach $type['list'] $list}
+						<li><a href="/help/{$list['id']}.html" target="_blank">{$list['title']}</a></li>
+                        {/foreach}
+					</ul>
+				</div>
+			</div>
+			<br clear="all" />
+			{/foreach}
+        </div>
+		<div class="cj_wt">
+			<div class="kf_title">
+				<span>{$commonlist['name']}</span>
+			</div>
+			<div class="cj_wt_01">
+				<ul>
+					{foreach $commonlist['list'] $list}
+					<li><a href="/help/{$list['id']}.html" target="_blank"><span style="font-size:16px">·</span>{$list['title']}</a></li>
+					<li>{echo mb_substr($list['content'],0,1000)}</li>
+                    {/foreach}
+				</ul>
+			</div>
+		</div>
+		
+	</div>
+	<div class="help_foot"></div>
+
+</div>   
+
+<a href="#" class="to_top" title="返回顶部"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/go_top.jpg" width="45" height="44" border="0" /></a>
+
+{include file="footer.html"}
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>艺人税收</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+          <div class="mgt10 mgb10 fl" style="font-size:16px;">当月税收余额：<span class="fs16 yellow"> {$currentMonthTax} </span></div>
+          <form method="get">
+          <div class="boxdate flowhide">
+              <span class="mgL20">选择时间：</span>
+              <input name="stime" type="text" style="width:95px;text-indent:5px;" onfocus="WdatePicker()" class="Wdate" value="{echo isset($_GET['stime']) ? $_GET['stime'] : date('Y-m-d')}"> 
+              <span class="pre"> 至 </span>
+              <input name="etime" type="text" style="width:95px;text-indent:5px;" onfocus="WdatePicker()" class="Wdate" value="{echo isset($_GET['etime']) ? $_GET['etime'] : date('Y-m-d')}">
+              <input name="" type="submit" class="normalbtn" value="筛选" style="height:22px;width:50px;line-height:22px;*height:30px;">
+          </div>
+          </form>
+          <div class="mgt10 mgb10">发生金额合计：<span class="fs16 yellow" style="font-size:11px !important;"> {$totalTax} </span></div>
+          <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss">
+            <tr>
+              <th>编号</th>
+              <th>描述</th>
+              <th>积分</th>
+              <th>发生时间</th>
+            </tr>
+            {foreach $list $key $val}
+            <tr>
+              <td>{echo $key+1}</td>
+              <td>{$val['Desc']}</td>
+              <td>{$val['Weight']}</td>
+              <td>{echo date('Y-m-d H:i',$val['Uptime'])}</td>
+            </tr>
+            {/foreach}
+            <tr>
+            	<td colspan="4">{$page}</td>
+            </tr>
+          </table>      
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/My97DatePicker/WdatePicker.js"></script>
+</body>
+</html>

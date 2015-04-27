@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/static/js/jquery.js');}"></script>
+<script>
+$(function(){
+	var html = "<tr class=\"add_tr\" height=\"35\">\
+				<td><input type=\"text\" class=\"num_name\" name=\"name[]\"></td>\
+				<td><input type=\"text\" class=\"num_price\" name=\"price[]\"></td>\
+				<td>{$cate_name}</td>\
+				<td><a href='#' class='delete'>删除此栏</a></td>\
+				</tr>";
+	var last_line = $("#last_line");
+	$("#add_line").click(function(){
+		if($(".add_tr").length >= 20){
+			alert("最多新增20栏");
+			return false;
+		}
+		last_line.before(html);
+	});
+	$("#submit_btn").click(function(){
+		if($('#form').find('.err').length > 0){
+			alert('存在相同账号，请确认后再提交');
+		}else{
+			var post_data = $("#form").serializeArray();
+			post_data.push({"name":"cate_id", "value":{$_GET['cate_id']}});
+			$.post("/group/special_num.php?module=num_add", post_data, function(data){
+				var json = eval("("+data+")");	
+	    		alert(json.FlagString);
+	    		if(json.Flag == 100){
+	    			location.href="/group/special_num.php?module=num_list&cate_id="+{$_GET['cate_id']};
+	    		}
+			})
+		}
+		return false;
+	});
+	$(document).on("click", "a.delete", function(){
+		if($("a.delete").length <= 1){
+			alert("必须保留一个");
+			return false;
+		}
+		$(this).parent().parent().remove();
+		return false;
+	});
+
+	$(document).on("keydown", ".num_name", function(e){
+		if((e.keyCode >= 48 && e.keyCode <=57) || (e.keyCode >= 96 && e.keyCode <= 105) || (e.keyCode == 8)){
+			return true;
+		}
+		return false;
+	});
+	$(document).on("keydown", ".num_price", function(e){
+		if((e.keyCode >= 48 && e.keyCode <=57) || (e.keyCode >= 96 && e.keyCode <= 105) || (e.keyCode == 8)){
+			return true;
+		}
+		return false;
+	});
+	$(document).on('blur', '.num_name', function(e) {
+		var already = [];
+		var oNumName = $('.num_name');
+		for(var i = 0, len = oNumName.length; i < len; i++){
+			if(this != oNumName[i]){
+				if(parseInt($(this).val(), 10) == parseInt(oNumName[i].value, 10)){
+					$(this).parent().append('<br><span style="color:red;" class="err">不能开设相同靓号</span>');
+					return;
+				}
+			}
+		}
+	});
+	$(document).on('focus', '.num_name', function(e) {
+		$(this).siblings('br').remove();
+		$(this).siblings('span').remove();
+	});
+	$("#add_line").trigger("click");
+})
+</script>
+<style type="text/css">
+#add_num_table td{padding-top:3px;}
+.delete{color:blue}
+</style>
+</head>
+<body>
+<table id="num_content" style="display:none">
+	<tr>
+	<td><input type="text" name="num[]"></td>
+    <td><input type="text" name="value[]"></td>
+    <td>33</td>
+    </tr>
+</table>
+<div class="bodywrap">
+	<!-- {include file="header.html"} -->
+	<a href="/group/special_num.php?module=num_list&cate_id={$_GET['cate_id']}" class="bluebtn2" style="float:right">返回</a>
+	<p><b>{$cate_name}</b>-开设靓号</p>
+	<br/>
+	<form id="form">
+    <table width="100%" id="add_num_table">
+        <tr>
+        <th width="20%">靓号</th><th width="25%">购买价格</th><th width="25%">所属分类</th><th>操作</th>
+        </tr>
+        <tr>
+        <td colspan="4"><hr style="color:#ccc" /></td>
+        </tr>
+        <tr id="last_line">
+        	<td colspan='4'><br/><a id="add_line" href="#" style="color:blue">+新增一栏</a>(最多新增20栏)</td>
+        </tr>
+        <tr>
+        	<td colspan='4'><br/><button id="submit_btn">确认开设</button></td>
+        </tr>
+    </table>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>

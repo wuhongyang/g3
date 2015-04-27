@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/number.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/kcost.js"></script>
+<title>资金平衡调节</title>
+<script>
+$(function(){
+	$("#form").submit(function(){
+		if(!$("#MoneyWeight").attr("value") || $("#ChildId").attr("value")==-1 || $("#MoneyWeight").attr("value") == "-"){
+			alert("未填写金额数或选择财务科目类型");
+			return false;
+		}
+		if($("#Desc").val() == ""){
+			alert("请填写备注");
+			return false;
+		}
+	})	
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">资金平衡调节</div>
+</div >
+{include "kcost/tab.html"}
+
+<form method="post" class="form" action="" id="form">
+    <p>
+        <label style="width:145px;">选择币种资金账户类别：</label>
+        <select name="type" id="type">
+			<OPTION value="-1">请选择</OPTION>
+			<!--<OPTION value="0">现金币账户</OPTION>-->
+			<OPTION value="1">虚拟币账户</OPTION>
+        </select>
+    </p>
+    <p>
+        <label style="width:145px;">成本中心余额：</label>
+        虚拟币：{echo $balance['money']},&nbsp;&nbsp;现金币：{echo $balance['wealth']}
+    </p>
+    <p>
+    	<label style="width:145px;">选择财务科目类型：</label>
+    	<select name="ChildId" id="ChildId">
+		<OPTION value="-1">请选择</OPTION>	
+        </select>
+    </p>
+    <p>
+        <label style="width:145px;">充值金额：</label>
+        <input type="text" name="MoneyWeight" size="32" value="" id="MoneyWeight" />
+        &nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>不能为小数；</font>
+        <p>
+			<label style="width:145px;">备注：</label>
+			<input type="text" name="Desc" size="32" value="" id="Desc" />
+		</p>
+		<p style="margin-left:155px;color:blue" name="string" id="string">零</p>        
+    </p>
+    <p>
+    	<label></label>
+    	<input type="submit" class="submit" value="保存信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+
+</body>
+</html>

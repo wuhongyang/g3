@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <div class="weltit">
+                    <p>欢迎进入渠道管理</p>
+                </div>
+                <div class="border3">
+                    <p class="mgL10 fs14 mgb10 mgt10">系统检测到您通行证下属"<span class="yellow">{$Uin}</span>"账号已绑定了渠道身份，进入渠道管理会默认显示您好的渠道账号信息。</p>
+                </div>
+                <p class="fs14 mgtb15 mgL10 mgt20">您的账号：{$Uin}，有<span class="yellow">{$partnerTotal}</span>个渠道身份，分别是：</p>
+                <ul class="formlist formlist4">
+                {foreach $partnerList $val}
+                	{if $val['type']==9||$val['type']==15}
+                    <li class="clearfix border2">
+                        <span class="mgL30">{if $val['type']==9}室主{elseif $val['type']==15}艺人{/if}：</span>
+                        <span class="mglr20">|</span>
+                        <div class="mglr20 fl" style="width:345px;">
+                            <p class="yellow">您还未签约房间，不能正常兑换收入</p>
+                            <p>若无目标签约房间，请联系官方人员，推荐签约房间。</p>
+                        </div>
+                    </li>
+                    {/if}
+                {/foreach}
+                </ul>
+                {if $apply}
+                <p class="mgL10 mgt20 fs14" style="color:#C33">您已申请了站长，目前正处于审核期，我们会在1-2个工作日内以手机短信方式提醒您审核结果。</p>
+                {/if}
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

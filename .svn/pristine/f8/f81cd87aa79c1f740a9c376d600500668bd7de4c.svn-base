@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>室主艺人资料</title>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">{$role_type[$joinuser['role_type']]}资料查看</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="{$link_array[103]['url']}" method="post" class="form" id="form">
+    <input type="hidden" name="id" value="{$id}">
+    <div style="font-size:18px;font-weight:bold;margin-left:20px;">申请信息：</div>
+    <p>
+        <label>申请类型：</label>
+		<span>{$role_type[$info['type']]}</span>
+    </p>
+	<p>
+        <label>申请ID：</label>
+        <span>{$info['uin']}</span>
+    </p>
+	<p>
+        <label>常驻城市：</label>
+        <span>{echo $pName.' '.$cName}</span>
+    </p>
+	<p>
+        <label>真实姓名：</label>
+        <span>{$info['name']}</span>
+    </p>
+	<p>
+        <label>身份证：</label>
+        <span>{$info['idcard']}</span>
+    </p>
+    <p>
+        <label>QQ号：</label>
+        <span>{$info['qq']}</span>
+    </p>
+	<p>
+        <label>申请时间：</label>
+        <span>{echo date('Y-m-d H:i:s',$info['apply_time'])}</span>
+    </p>
+    <div style="font-size:18px;font-weight:bold;margin-left:20px;">审核操作：</div>
+    <p>
+        <label>审核状态：</label>
+        <span>
+            {if $info['status']==1 || $info['status']==2}
+                {echo $info['status']==1 ? '审核通过' : '审核返回';}
+            {else}
+            <label style="text-align:left;"><input type="radio" name="status" value="1" {if $info['status']=='1'}checked{/if}>&nbsp;&nbsp;审核通过</label>
+            <label style="text-align:left;"><input type="radio" name="status" value="2" {if $info['status']=='2'}checked{/if}>&nbsp;&nbsp;审核返回</label>
+            {/if}
+        </span>
+    </p>
+    <p {if $info['status']!='2'}style="display:none;"{/if} id="J_check_desc">
+        <label>审核描述：</label><textarea name="desc" id="desc" style="width:300px;height:80px;" {if $info['status']==2}disabled{/if}>{$info['reason']}</textarea>
+        {if $info['status']!='2'}
+        <font color="red">* 审核返回时填写不通过原因 </font>
+        {/if}
+    </p>
+    {if $info['status'] < 1}
+    <p>
+        <label>是否短信提醒：</label>
+        <span>
+            <label style="text-align:left;"><input type="radio" name="msg_tip" value="1">&nbsp;&nbsp;是</label>
+            <label style="text-align:left;"><input type="radio" name="msg_tip" value="0">&nbsp;&nbsp;否</label>
+        </span>
+    </p>
+    <p style="display:none;" id="J_message">
+        <label>短信：</label>
+        <textarea name="message" rows="5" cols="38" style="color:#999;padding:4px 6px;"></textarea>
+    </p>
+    {/if}
+    {if $info['status'] != 2}
+    <div id="J_last_operation" {if $info['status']!=1}style="display:none;"{/if}>
+        <div style="font-size:18px;font-weight:bold;margin-left:20px;">后续操作：</div>
+        <p>
+            <label>分配站点：</label>
+            {if $info['status']==1}
+            {echo $provinceName.$cityName.$areaName;}
+            {else}
+            <span>
+                <select name="province" id="province">
+                    <option value="-1">--请选择--</option>
+                    {foreach $openProvince $val}
+                    <option value="{$val['province_id']}">{$val['province_name']}</option>
+                    {/foreach}
+                </select>
+                <select name="city" id="city">
+                    <option value="-1">--请选择--</option>
+                </select>
+                <select name="area" id="area">
+                    <option value="-1">--请选择--</option>
+                </select>
+            </span>
+            {/if}
+        </p>
+        <p id="J_region">
+            <label>站点ID：</label>
+            <span>{$region_id}</span>
+        </p>
+        <p>
+            <label>地域负责人ID：</label>
+            <span id="J_station_head_span"></span>
+        </p>
+        <p>
+            <label>站ID：</label>
+            <span>{$info['uin']}</span>
+        </p>
+    </div>
+    {/if}
+    {if $info['status'] < 1}
+    <p>
+        <label></label>
+        {if $link_array[103]['url']}
+        <input type="hidden" name="joinid" value="<{$joinuser['id']}>" />
+        <input type="button" class="submit" id="J_submit" value="保存信息" />
+        {/if}
+    </p>
+    {/if}
+</form>
+</center>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/partner.js"></script>
+<script type="text/javascript">
+var city_JSONDATA = '{$city_JSONDATA}';
+city_JSONDATA = $.parseJSON(city_JSONDATA);
+var area_JSONDATA = '{$area_JSONDATA}';
+area_JSONDATA = $.parseJSON(area_JSONDATA);
+var r_id = '{$region_id}';
+$(function(){
+    //初始化
+    if(r_id > 0){
+        _ajax_get_station_head(r_id);
+    }
+    //审核状态
+    $('input[name="status"]').click(function(){
+        if($(this).val() == 2){
+            $('#J_check_desc').show();
+            $('#J_last_operation').hide();
+        }else{
+             $('#J_check_desc').hide();
+             $('#J_last_operation').show();
+        }
+        _show_msg();
+    });
+    //短信提醒
+    $('input[name="msg_tip"]').click(function(){
+        _show_msg();
+    });
+
+
+    //提交
+    $('#J_submit').click(function(){
+        var status = $('input[name="status"]:checked').val();
+        if(status == 1){ //通过
+            var city = $('#city').val();
+            if(city == -1){
+                alert('请选择分配站点');
+                return false;
+            }
+        }else{//不通过
+            var desc = $('#desc').val();
+            if(desc == ''){
+                alert('请填写审核不通过原因');
+                return false;
+            }
+        }
+        $('#form').submit();
+    })
+});
+
+function _show_msg(){
+    var tipStatus = $('input[name="msg_tip"]:checked').val();
+    if(tipStatus == 1){
+        var status = $('input[name="status"]:checked').val();
+        var content = '';
+        if(status == 1){
+            content = '恭喜，您申请的VV酷站长身份已审核通过，请登录vv酷完善资料。';
+        }else if(status == 2){
+            content = '抱歉，您申请的VV酷站长身份未能审核通过，详细原因请登录VV酷官网';
+        }
+        $('textarea[name="message"]').val(content);
+        $('#J_message').show()
+    }else{
+        $('#J_message').hide();
+    }
+}
+</script>
+</body>
+</html>

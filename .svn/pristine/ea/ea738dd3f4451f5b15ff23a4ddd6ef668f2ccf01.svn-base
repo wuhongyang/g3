@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>道具模块管理</title>
+<style type="text/css">
+#thumb{position:absolute;left:520px;top:260px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">修改房间</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" onsubmit='javascript:return checkParam();' method="post" action="rooms.php?module={$operate}&group={$_GET['group']}" class="form">
+	<input type="hidden" name="id" id="id" value="{$id}" />
+	<p>
+    	<label>房间ID：</label>{$id}
+    </p>
+    <p>
+    	<label>房间名称：</label>
+    	<input type="text" name="name" value="{$info[name]}"> &nbsp;<font color="red">可以不填，则房间名称同房间编号。</font>
+    </p>
+    <p>
+    	<label>所属站：</label>{$info[group]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{if $info[group]>0}<a href="group.php?module=info&edit={$info[group_id]}">[查看站信息]</a>{/if}
+    </p>
+    <p>
+    	<label>室主账号：</label>
+        <{if $info['ownuin']=='0'}>
+        <font color="red">该房间没有签约室主</font>
+        <{else}>
+        {$info['ownuin']}
+        <{/if}>
+    </p>
+    <p>
+    	<label>开设时间：</label>{$info[date]}
+    </p>
+    <p>
+    	<label>每个真人对应机器人数：</label>
+        <input type="text" name="robot_num" id="robot_num" value="{$info['robot_num']}" size="30" />
+    </p>
+	<p>
+    	<label>房间人数上限：</label>
+        <input type="text" name="maxuser" id="maxuser" value="{$info['maxuser']}" size="30" />&nbsp;<font color="red">* 请输入数字。</font>
+    </p>
+	<p>
+    	<label>房间版本号：</label>
+        <input type="text" name="room_version" id="room_version" value="{$info['room_version']}" size="30" />
+    </p>
+	<p>
+    	<label>房间界面：</label>
+        <select name="ui_version" onchange="showthumb(this)">
+            {foreach $rooms_ui $ui}
+                <option title="{$ui['pics']}" value="{$ui['id']}" {if $info['ui_version']==$ui['id']}{php $curpic = $ui['pics']}selected{/if}>{$ui['name']}</option>
+            {/foreach}
+		</select>
+        {$rooms_ui[$info['room_ui']]['name']}
+    </p>
+    <p>
+    	<label>签约艺人配额：</label>
+        <input type="text" name="entertainer_quota" id="entertainer_quota" value="{$info['entertainer_quota']}" size="30" />&nbsp;<font color="red">* 请输入数字。</font>
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<div id="thumb">{if $rooms_ui[$info['ui_version']]['pics']}<img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$rooms_ui[$info['ui_version']]['pics'].'/0/0.jpg')}" width="350" height="227" />{/if}</div>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+function showthumb(obj){
+	var pic = $(obj).find('option:selected').attr('title');
+	$('#thumb').html('<img src="{php echo cdn_url(PIC_API_PATH."/p/'+pic+'/0/0.jpg") }" width="350" height="227" />');
+}
+
+function checkParam(){
+	var id = document.getElementById("id").value;
+	if(id=='' || !isInteger(id)){
+		alert("房间ID只能为数字");
+		return false;
+	}
+	
+	var pObj = document.getElementById("province");
+	var pIndex = pObj.selectedIndex;
+	var province = pObj.options[pIndex].value;
+	var cObj = document.getElementById("city");
+	var cIndex = cObj.selectedIndex;
+	var city = cObj.options[cIndex].value;
+	if(province==-1 || city==-1){
+		alert("请正确选择所属区域");
+		return false;
+	}
+	
+	var maxuser = document.getElementById("maxuser").value;
+	if(maxuser=='' || !isInteger(maxuser)){
+		alert("房间人数上限只能为数字");
+		return false;
+	}
+	var entertainer_quota = document.getElementById("entertainer_quota").value;
+	if(entertainer_quota=='' || !isInteger(entertainer_quota)){
+		alert("签约艺人配额只能为数字");
+		return false;
+	}
+}
+</script>
+</body>
+</html>

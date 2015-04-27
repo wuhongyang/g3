@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>意向客户列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">意向客户列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">编辑新邮件</a>{/if}</div>
+</div>
+
+<div class="page-tools main-width">
+  <form method='get'>
+  <label>访问站点：
+  <input type="text" name="groupId" value="{$_GET['groupId']}"/>
+  </label>&nbsp;&nbsp;
+  <label>时间：
+  <input type="text" name="StartTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" size="12" value="{$_GET['StartTime']}" /> 
+      至 
+  <input type="text" name="EndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" size="12" value="{$_GET['EndTime']}" />
+  </label>
+  <input type="submit" value="查询" />
+  </form>
+</div>
+<table class="table-list main-width" >
+	<tr>
+		<th>编号</th>
+		<th>姓名</th>
+		<th>手机号码</th>
+        <th>访问站点ID</th>
+		<th>访问时间</th>
+	</tr>
+	{foreach $result['Data'] $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['user_name']}</td>
+		<td>{$one['telephone']}</td>
+		<td>{$one['group_id']}</td>
+		<td>{echo date('Y-m-d H:i:s',$one['uptime'])}</td>
+	</tr>
+	{/foreach}
+</table>
+<div class="main-width">
+	<div class="pagenavi">{$result['Page']}</div>
+</div>
+</body>
+</html>

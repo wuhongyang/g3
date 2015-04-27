@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>群组配置</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">群组配置{$data}</div>
+</div>
+<div class="body">
+    <form method="post" style="padding:20px;">
+    	<input type="hidden" name="id" value="{$case['id']}" />
+        <input type="hidden" name="group_id" value="{$_GET['group_id']}">
+        <p><label>群组ID：</label> {$_GET['group_id']}</p><br>
+		<p><label>用户ID：</label> <input type="text" name="uin" value="{$case['uin']}" size="32" /></p>
+		<br>
+        <p style="margin-left:90px;"><input type="submit" value="添加"> &nbsp; <input type="reset" value="重置"></p>
+	</form>
+</div>
+
+</body>
+</html>

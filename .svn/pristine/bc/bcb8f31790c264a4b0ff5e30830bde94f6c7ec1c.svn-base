@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-导航模块设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+p span.notice{color:red;margin-left:10px;width:90px;display: inline-block;}
+p#notice{margin-left: 80px; color:red;}
+p span{display: inline-block;width: 80px;text-align: right;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt20 clearfix">
+        <div class="fr">
+            <span style="display:inline-block;"><a class="bluebtn" href="javascript:add();"><span>添加</span></a></span>
+        </div>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="room_table">
+      <tr>
+        <th>显示名称</th>
+        <th>模块名</th>
+        <th>操作</th>
+      </tr>
+      {foreach $navigateList $key $val}
+      <tr>
+        <td>{$val['name']}</td>
+        <td>{$val['module_name']}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:leftMove({$val['id']});">左移</a>
+            {else}
+                <span style="color:#999;">左移</span>
+            {/if}
+            {if $key != count($navigateList)-1}
+                <a class="ahover" href="javascript:rightMove({$val['id']});">右移</a>
+            {else}
+                <span style="color:#999;">右移</span>
+            {/if}
+            <a class="ahover" href="javascript:editNavigate({$val['id']});">编辑</a>
+            <a class="ahover" href="javascript:visible({$val['id']});">{if $val['status'] == 1}不显示{else}显示{/if}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var modules_JSON = '{$modules_JSON}';
+var modules_JSON = $.parseJSON(modules_JSON);
+function add(){
+    var content = '<p id="notice"></p>';
+    content += '<p style="line-height:28px;"><span>模块：</span><select name="module"><option value="-1">请选择</option>';
+    for(var i in modules_JSON){
+        content += '<option value="' + i + '">' + modules_JSON[i] + '</option>';
+    }
+    content += '</select></p>';
+    content += '<p style="line-height:28px;"><span>显示名称：</span><input type="text" name="name"></p>';
+    art.dialog({
+        content: content,
+        ok: function(){
+            var m = $('select[name="module"]').val();
+            if(m < 1){
+                $('#notice').htmnl('请选择模块');
+                return false;
+            }
+            var name = $('input[name="name"]').val();
+            if(name==''){
+                 $('#notice').htmnl('请填写显示名称');
+                 return false;
+            }
+            operate('navigate_add',{m:m,name:name});
+        },
+        cancel: true,
+        lock: true
+    });
+}
+
+$(function(){
+    $(document).on('change', 'select[name="module"]', function(){
+        $('input[name="name"]').val($(this).find('option:selected').text());
+    })
+})
+
+function editNavigate(id){
+    $.ajax({
+        url: '?module=navigate_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(data){
+            var content = '<p style="line-height:28px;"><span>显示名称：</span><input type="text" name="name" value="'+data.name+'"></p>';
+            content += '<p style="line-height:28px;"><span>对应模块：</span>'+data.module_name+'</p>';
+            art.dialog({
+                content: content,
+                ok: function(){
+                    var name = $('input[name="name"]').val();
+                    operate('navigate_edit',{id:id,name:name});
+                },
+                cancel: true,
+                lock: true
+            })
+        }
+    });
+}
+function leftMove(id){
+    module='left_move';
+    operate(module,{id:id});
+}
+function rightMove(id){
+    module = 'right_move';
+    operate(module,{id:id});
+}
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=navigate_list';
+                    },
+                    esc: false,
+                    cancel: false,
+                    lock: true,
+                    time: 2
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+
+function visible(id){
+    operate('visible',{id:id});
+}
+</script>

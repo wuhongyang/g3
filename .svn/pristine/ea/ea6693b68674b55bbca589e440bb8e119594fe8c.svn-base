@@ -1,0 +1,105 @@
+{if !empty($site['item_url'])}
+<style type="text/css">
+.region-name{background:url({php echo cdn_url(PIC_API_PATH.'/p/'.$site['item_url'].'/0/0.jpg');}) repeat-x;color:#222;}
+</style>
+{/if}
+<!--header-->
+<!--<div class="banner" id="J_banner">
+	{if empty($banner)}
+		<a href="/activity/kaizhan.html" target="_blank"><img src="{STATIC_API_PATH}/static/images/banner.gif" width="980" height="80"></a>
+	{else}
+		<a href="{$banner['href']}"><img src="{$banner['src']}" width="980" height="80"></a>
+	{/if}
+    <div id="J_close" title="关闭">×</div>
+</div>-->
+<div class="hd-sub clearfix" id="top">
+    <div class="topnav"><a id="J_advise" href="/feedback.html" target="_blank">意见反馈</a> <a href="/help/index.html" target="_blank">帮助中心</a> <a href="/rooms/shortcut.php" class="red">+添加至桌面</a></div>
+    <div class="logo fl">
+        <h1><a href="/" class="fl logo-pic" alt="VV酷视频社区" title="VV酷-打造全新网上娱乐商圈">VV酷视频聊天</a></h1>
+        {if $site['region_id'] > 0}
+        <div class="region fl">
+            <span class="region-name">{$site['city_name']}</span>
+            <a href="javascript:;" onClick="art.dialog.open('/rooms/allcity.html',{follow:this});" style="margin-left:-5px;">[切换城市]</a>
+        </div>
+        {else}
+        <div class="dhz"></div>
+        {/if}
+    </div>
+    <div class="daohang">
+        <ul>
+            <li><a href="/" {if strpos($_SERVER['SCRIPT_NAME'],'index')}class="hover"{/if}>首页</a></li>
+            {if $site['region_id'] > 0}
+            <li><a href="/top/{$site['region_id']}.html">排行榜</a></li>
+            {else}
+            <li><a href="/top.html">排行榜</a></li>
+            {/if}
+			<li><a href="/games.html" {if strpos($_SERVER['SCRIPT_NAME'],'games.php')}class="hover"{/if}>游戏</a></li>
+        </ul>
+    </div>
+    <div class="search fr">
+        <form action="javascript:void(0);" onsubmit="return search();" id="search_form">
+            <input type="text"   class="search-text" name="keyword" id="keyword" placeholder="房间/艺人号" id="searchtext">
+            <input type="button" class="search-bar" onclick="javascript:$('#search_form').submit();">
+        </form>
+    </div>
+</div>
+<div class="dashedline"></div>
+<!--/header-->
+<script type="text/javascript">
+	            $(function (){//搜索内容清空
+					$("#searchtext").focus(function(){  //输入框获得鼠标焦点
+						var txt_value=$(this).val();  //得到当前文本框的值
+						if(txt_value=="输入艺人/房间号"){
+							$(this).val(""); //如果符合条件，则清空文本框内容
+						}
+					});
+					$("#searchtext").blur(function(){  //输入框获得鼠标焦点
+						var txt_value=$(this).val();  //得到当前文本框的值
+						if(txt_value==""){
+							$(this).val("输入艺人/房间号"); //如果符合条件，则清空文本框内容
+						}
+					});
+	            });
+</script>
+<script type="text/javascript">
+function search(){
+	var keyword = $('#keyword').val();
+	var region_id='{$site["region_id"]}';
+	ajaxSearch({keyword:keyword,region_id:region_id});
+}
+
+$.ajax({
+    url: '/rooms/ajax_info.php',
+    type: 'POST',
+    data: {"Tag":"GetLoginUser"},
+    success: function(data){
+        json = jQuery.parseJSON(data);
+        if(json.Flag == 100){
+            //展示头部
+            var h_html = '<a class="yellow" href="/service/profile.php">' + json.Nick + '</a>';
+            h_html += ' (<a href="/service/loginout.php?back=/" class="nowhite">退出</a>)';
+            $('#J_advise').before(h_html);
+        }
+    }
+});
+
+$(function(){
+    $('#J_close').click(function(){
+        var _height = $('#J_banner').height();
+        var index = setInterval(function(){
+            _height = _height -5;
+            if(_height < 5){
+                $('#J_banner').css('height',0);
+                for(var i=0; i<arr.length; i++){
+                    clearInterval(arr[i]);
+                }
+            }else{
+                $('#J_banner').css('overflow','hidden').css('height',_height);
+            }
+        },30);
+        var arr = [];
+        arr.push(index);
+        
+    })
+})
+</script>

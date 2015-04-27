@@ -1,0 +1,11 @@
+<div class="title">
+    <span class="title-text" id="J_headerTitle">页面</span>
+    <a class="asite" target="_blank" href="/">进入站首页</a>
+</div>
+<script type="text/javascript">
+if(top == this){
+	var url = window.location.href.split(document.domain);
+    window.location.href='/group/mgr.html#'+url[1];
+}
+document.getElementById('J_headerTitle').innerHTML = document.title;
+</script>

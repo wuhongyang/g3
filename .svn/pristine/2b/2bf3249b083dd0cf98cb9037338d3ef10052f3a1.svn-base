@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>广告统计</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">广告统计</div>
+</div>
+<div class="page-tools main-width">
+    <form action="" method="get" name="myform" class="search-form">
+        时间：<input type="text" style="width:100px;" class="Wdate" value="{$_GET['search']['stime']}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="search[stime]"> 至 
+              <input type="text" style="width:100px;" class="Wdate" value="{$_GET['search']['etime']}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" name="search[etime]"> &nbsp;&nbsp;
+              <input value="list" name="module" type="hidden" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+  <tr>
+    <th>用户ID</th>
+	<th>账号</th>
+    <th>昵称</th>
+    <th>注册时间</th>
+    <th>注册ip</th>
+    <th>最后登陆时间</th>
+    <th>最后登陆IP</th>
+    <th>登出房间时间</th>
+    <th>推广页面</th>
+    <th>注册房间</th>
+    <th>来源网站</th>
+    <th>联盟ID</th>
+    <th>联盟站ID</th>
+    <th>是否充值</th>
+  </tr>
+  {foreach $list['list'] $key $val}
+  <tr>
+    <td>{$val['Uin']}</td>
+    <td>{$val['TargetUin']}</td>
+    <td>{$val['Nick']}</td>
+    <td>{echo date('Y-m-d H:i:s',$val['RegisterTime'])}</td>
+    <td>{$val['RegisterIp']}</td>
+    <td>{echo date('Y-m-d H:i:s',$val['LastLoginTime'])}</td>
+    <td>{$val['LastLoginIp']}</td>
+    <td>{echo date('Y-m-d H:i:s',$val['RoomLogout'])}</td>
+    <td>{$val['FileName']}</td>
+    <td>{$val['ChannelId']}</td>
+    <td>{$val['Referer']}</td>
+    <td>{$val['Fromname']}</td>
+    <td>{$val['Fromuid']}</td>
+    <td>{if $val['Kwealth'] ==1}是{else}否{/if}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width"><div class="pagenavi" id="lopage">{$list['page']}</div></div>
+</body>
+</html>

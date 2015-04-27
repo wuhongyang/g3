@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>上传图片</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.up-input input{position:absolute;left:0;cursor:pointer;display:inline-block;width:60px;height:26px;opacity:0;filter:alpha(opacity=0);z-index:100;}
+</style>
+</head>
+<body>
+<form method="post" enctype="multipart/form-data" id="upload_form">
+  <span class="fl up-input">
+  <input type="file" size="1" name="adv_pic" onChange="document.getElementById('upload_form').submit()" />
+  <label class="greenbtn"><span>选择图片</span></label>
+  </span>
+</form>
+
+
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript">
+var upfileInfo = '{$rst}';
+if(upfileInfo){
+    upfileInfo = $.parseJSON(upfileInfo);
+    if(upfileInfo.Flag == 100){
+    	parent.show_img(upfileInfo.File);
+    }else{
+        parent._show_msg('图片上传失败');
+    }
+}
+</script>
+</body>
+</html>

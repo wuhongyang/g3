@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商城管理-商城商品管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script>
+$(function(){
+	$("#add_cate").click(function(){
+		var dlg=art.dialog({
+			title:"添加商品分类",
+			content: $("#dialog_content")[0],
+			lock: true,
+			button: [{
+	            name: '确定',
+	            callback: function () {
+	            	var name = $.trim($("#a_cate_name").val());
+	            	if(name.length < 2 || name.length > 5){
+	            		alert("分类名称必须在2-5个字之间");
+	            		return false;	
+	            	}else{
+	            		$("#form").submit();
+	            		return false;
+	            	}
+	            },
+	            focus: true
+	        },{
+				name: '返回',
+	            callback: function () {
+	                this.close();
+	            }
+			}]
+		});
+	})
+	
+	$(".edit").each(function(){
+		$(this).click(function(){
+			
+			var dlg=art.dialog({
+				title:"修改商品分类",
+				content: "加载中......",
+				lock: true,
+				button: [{
+		            name: '确定',
+		            callback: function () {
+		            	var name = $.trim($("#cate_name").val());
+		            	if(name.length < 2 || name.length > 5){
+		            		alert("分类名称必须在2-5个字之间");
+		            		return false;
+		            	}else{
+		            		$("#form2").submit();
+		            		return false;
+		            	}
+		            },
+		            focus: true
+		        },{
+					name: '返回',
+		            callback: function () {
+		                this.close();
+		            }
+				}]
+			});
+
+			var cate_id = $(this).parent().parent().attr("cate_id");
+			$.get("/group/goods.php?module=cate_detail&r="+Math.random(), {"cate_id":cate_id}, function(data){
+				var json = eval("("+data+")");
+				
+				if(json.Flag == 100){
+					$("#cate_name").val(json.Data.cate_name);
+					$("#cate_id").val(json.Data.cate_id);
+					$("#img_src").val(json.Data.img_src);
+					$("#id").val(json.Data.id);
+					if(json.Data.state == 1){
+						$("#r1").attr("checked", true);
+						$("#r2").attr("checked", false);
+					}else if(json.Data.state == 0){
+						$("#r1").attr("checked", false);
+						$("#r2").attr("checked", true);
+					}
+					if(json.Data.img_path){
+						$("#img_tr").show();
+						$("#img").html("<img style='width:160px;height:50px;' src='"+json.Data.img_path+"' />");
+					}else{
+						$("#img_tr").hide();
+						$("#img").html("");
+					}
+					dlg.content($("#dialog_content2")[0]);
+				}else{
+					dlg.content(json.FlagString);
+				}
+			})
+			
+			return false;
+		})
+	})
+	$(".move_up").each(function(){
+		$(this).click(function(){
+			move($(this).parent().parent().attr("cate_id"), "raise");
+			return false;
+		})
+	})
+	$(".move_down").each(function(){
+		$(this).click(function(){
+			move($(this).parent().parent().attr("cate_id"), "down");
+			return false;
+		})
+	})
+	$(".delete").each(function(){
+		$(this).click(function(){
+			if(!confirm("删除分类将删除分类下的所有靓号,是否删除?")){
+				return false;
+			}
+			cate_id = $(this).parent().parent().find(".cate_id").html();
+			$.post("/group/special_num.php?module=cate_delete&r="+Math.random(), {"cate_id":cate_id}, function(data){
+				var json = eval("("+data+")");
+				alert(json.FlagString);
+				if(json.Flag == 100){
+					location.reload();
+				}
+			})
+			return false;
+		})
+	})
+})
+function move(cate_id, option){
+	$.post("/group/goods.php?module=cate_move&r="+Math.random(), {"cate_id":cate_id, "option":option}, function(data){
+		var json = eval("("+data+")");
+		alert(json.FlagString);
+		if(json.Flag == 100){
+			location.reload();
+		}
+	})
+}
+</script>
+<style type="text/css">
+.dialog_table td{ padding:5px;}
+</style>
+</head>
+<body>
+<div id="dialog_content" style="display:none">
+		<form method="post" enctype="multipart/form-data" id="form">
+		<table class="dialog_table">
+			<tr>
+				<td>商品分类名称:</td><td><input id="a_cate_name" name="cate_name" type="text">&nbsp;&nbsp;<span style="color:red">（2-5个字）
+				</span></td>
+			</tr>
+			<tr>
+				<td>商品类别:</td>
+				<td>
+                <select name="cate_id">
+					{foreach $res['Category'] $one}
+					<option value="{$one['id']}">{$one['name']}</option>
+					{/foreach}
+					<option value="-1">套餐</option>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td>页面banner图:</td><td><input type="file" name="img" /></td>
+			</tr>
+			<tr>
+				<td>图片链接:</td><td>
+				<input type="text" name="img_src" />
+				<span style="color:red">(非本站的链接请以http://开头)</span>
+				</td>
+			</tr>
+			<tr>
+				<td>状态:</td><td><input type="radio" name="state" value=1 checked="checked" />启用&nbsp;&nbsp;<input type="radio" name="state" value=0 />不启用</td>
+			</tr>
+		</table>
+		</form>
+</div>
+<div id="dialog_content2" style="display:none">
+		<form method="post" enctype="multipart/form-data" id="form2">
+		<table class="dialog_table">
+			<input type="hidden" name="id" id="id" />
+			<tr>
+				<td>商品分类名称:</td><td><input id="cate_name" name="cate_name" type="text">&nbsp;&nbsp;<span style="color:red">（2-5个字）
+				</span></td>
+			</tr>
+			<tr>
+				<td>商品类别:</td>
+				<td>
+                <select id="cate_id" name="cate_id">
+					{foreach $res['Category'] $one}
+					<option value="{$one['id']}">{$one['name']}</option>
+					{/foreach}
+					<option value="-1">套餐</option>
+				</select>
+				</td>
+			</tr>
+			<tr>
+				<td>页面banner图:</td><td><input type="file" name="img" /></td>
+			</tr>
+			<tr id="img_tr">
+				<td>&nbsp;</td><td><span id="img"></span>&nbsp;&nbsp;<input type="checkbox" name="del_img" />删除<span style="color:red">（替换原图时无需勾选删除）</span></td>
+			</tr>
+			<tr>
+				<td>图片链接:</td>
+				<td><input id="img_src" type="text" name="img_src" />
+				<span style="color:red">(非本站的链接请以http://开头)</span>
+				</td>
+			</tr>
+			<tr>
+				<td>状态:</td><td><input type="radio" name="state" value=1 id="r1" />启用&nbsp;&nbsp;<input type="radio" name="state" value=0 id="r2" />不启用</td>
+			</tr>
+		</table>
+		</form>
+</div>
+<div class="bodywrap">
+    {include file="header.html"}
+    <button id="add_cate" class="bluebtn2" style="float:right">添加</button>
+    <p>商品分类列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="20%">序号</th><th width="20%">商品分类名称</th><th width="15%">下属商品</th><th width="20%">状态</th><th>操作</th>
+        </tr>
+        {foreach $res['Data'] $k $one}
+        <tr cate_id={$one['id']}>
+        <td>{echo $k+1}</td>
+        <td>{$one['cate_name']}</td>
+        <td>{$one['count']}</td>
+        <td>{if $one['state']==1}启用{elseif $one['state']==0}不启用{/if}</td>
+        <td>
+        	<a class="move_up" href="#">上移</a>
+        	<a class="move_down" href="#">下移</a>
+        	<a class="edit" href="#">编辑</a>
+        	<a href="?module=sub_cate_list&cate_id={$one['id']}">查看</a>
+        </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$res['Page']}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

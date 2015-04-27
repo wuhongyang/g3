@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>工单管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet"/>
+<style type="text/css">
+.warning{color:red;}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+{include file="js/textareafix.js"}
+{include file="js/jquery.bubbleup.js"}
+<script type="text/javascript">
+$(function(){
+	$('.level_id').bind("change", function(){
+	}).live("change", function(){
+		var obj = $(this);
+		$('input[name=level_id]').val(obj.val());
+		$.ajax({
+			type:'POST',
+			async:false,
+			url:'?module=get_after_level&p_id='+$(this).val(),
+			dataType: 'JSON',
+			contentType: "application/x-www-form-urlencoded; charset=utf-8", 
+			success:function(data){
+				obj.nextAll(".level_id").remove();
+				$('#level_content').append(data.Data);
+			}
+		});
+	}).live("click", function(){
+		if($.data(this, 'events') == null || $.data(this, 'events').change == undefined){
+			$(this).bind('change', function(){
+			});
+		}
+	});
+	var w=window.innerWidth
+	|| document.documentElement.clientWidth
+	|| document.body.clientWidth;
+	
+	$("img").each(function(){
+		var scale = (w*0.65*0.6);
+		$(this).bubbleup({tooltip: true, scale:scale});
+	})
+	
+})
+function close_ticket(){
+	var html = '<tr class="close_tr">\
+					<td rowspan="6">关闭工单</td>\
+					<td style="text-align:right;">客服解决日期时间：</td>\
+					<td style="text-align:left;">\
+						<input type="text" name="cusservice_resolve" onFocus="WdatePicker({uptime:\'%y-%M-%d %H:%i:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\',alwaysUseStartDate:true})"/>\
+						<span class="warning">问题划分为咨询类时填写</span>\
+					</td>\
+				</tr>\
+				<tr class="close_tr">\
+					<td style="text-align:right;">运维解决日期时间：</td>\
+					<td style="text-align:left;">\
+						<input type="text" name="operation_resolve" onFocus="WdatePicker({uptime:\'%y-%M-%d %H:%i:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\',alwaysUseStartDate:true})"/>\
+						<span class="warning">问题划分为故障类时填写</span>\
+					</td>\
+				</tr>\
+				<tr class="close_tr">\
+					<td style="text-align:right;">BUG实际上线日期：</td>\
+					<td style="text-align:left;">\
+						<input type="text" name="bug_resolve" onFocus="WdatePicker({uptime:\'%y-%M-%d %H:%i:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\',alwaysUseStartDate:true})"/>\
+						<span class="warning">问题划分为bug类时填写</span>\
+					</td>\
+				</tr>\
+				<tr class="close_tr">\
+					<td style="text-align:right;">需求实际上线日期：</td>\
+					<td style="text-align:left;">\
+						<input type="text" name="demand_resolve" onFocus="WdatePicker({uptime:\'%y-%M-%d %H:%i:%s\',dateFmt:\'yyyy-MM-dd HH:mm:ss\',alwaysUseStartDate:true})"/>\
+						<span class="warning">问题划分为需求类时填写</span>\
+					</td>\
+				</tr>\
+				<tr class="close_tr">\
+					<td style="text-align:right;">问题原因：</td>\
+					<td style="text-align:left;"><textarea name="reason"></textarea></td>\
+				</tr>\
+				<tr class="close_tr">\
+					<td style="text-align:right;">处理情况：</td>\
+					<td style="text-align:left;"><textarea name="resolve_situation"></textarea></td>\
+				</tr>\
+				<tr>\
+					<td colspan="3">\
+						<input type="button" value="关闭工单" class="bluebtn2" onclick="form_post()"/>\
+						<input type="button" value="&nbsp;&nbsp;返回&nbsp;&nbsp;" class="bluebtn2" onclick="javascript:history.back();return false;"/>\
+					</td>\
+				</tr>';
+	$('#button_tr').before(html);
+	$('#button_tr').remove();
+	textarea();
+}
+function form_post(act){
+	act = act?act:"close";
+	if(act == "update"){
+		$('body').find(".close_tr").remove();
+	}
+	$('input[name=act]').val(act);
+	$('#form').submit();
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">处理工单</div>
+  <div class="header-button right"><a href="?module=issue_add" class="add-button">返回</a></div>
+</div>
+<br/>
+<div class="bodywrap" style="width:60%">
+<form method="post" action="?module=issue_edit" id="form" enctype="multiple/form-data">
+<input type="hidden" name="act"/>
+<input type="hidden" name="id" value="{$_GET[id]}">
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="table-list main-width">
+    <tr>
+    		<td rowspan="11" width="10%">工单信息</td>
+    		<td style="text-align:right;width:20%;">区拼音简称/站ID：</td>
+    		<td style="text-align:left;">{$info['area_id']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;width:20%;">区/站名称：</td>
+    		<td style="text-align:left;">{$info['area_name']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">反应人ID：</td>
+    		<td style="text-align:left;">{$info['response_user']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">反应人昵称：</td>
+    		<td style="text-align:left;">{$info['response_nick']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">反应人邮箱：</td>
+    		<td style="text-align:left;">{$info['response_email']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">反应人手机号：</td>
+    		<td style="text-align:left;">{$info['response_phone']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">反应时间：</td>
+    		<td style="text-align:left;">{if $info['response_time']}{echo date("Y-m-d H:i:s",$info['response_time'])}{/if}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">问题类型：</td>
+    		<td style="text-align:left;">{$info['initiate_type_name']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">问题标题：</td>
+    		<td style="text-align:left;" title="{$info['title1']}">{$info['title']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">问题描述：</td>
+    		<td style="text-align:left;width:800px;word-wrap:break-word;word-break:break-all;">{$info['desc']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">附件列表：</td>
+    		<td style="text-align:left;">
+    		{if $img}
+    		{foreach $img $key $val}
+    		<img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val.'/0/0.$img_ext[$key]')}" style="width:80px;"/><br/>
+			{/foreach}
+			{else}
+    		无
+    		{/if}
+    		</td>
+    	</tr>
+    	
+    	<tr>
+    		<td rowspan="6">客服处理信息</td>
+    		<td style="text-align:right;">问题划分：</td>
+    		<td style="text-align:left;">{$info['level_name']}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">是否复现：</td>
+    		<td style="text-align:left;">{if $info["is_reappear"] == 1}可复现{elseif $info["is_reappear"] == 2}不可复现{/if}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">客服回复时间：</td>
+    		<td style="text-align:left;">{if $info['cusservice_reply']}{echo date("Y-m-d H:i:s", $info['cusservice_reply'])}{/if}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">运维回复时间：</td>
+    		<td style="text-align:left;">{if $info['operation_reply']}{echo date("Y-m-d H:i:s", $info['operation_reply'])}{/if}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">产品回复时间：</td>
+    		<td style="text-align:left;">{if $info['product_reply']}{echo date("Y-m-d H:i:s", $info['product_reply'])}{/if}</td>
+    	</tr>
+    	<tr>
+    		<td style="text-align:right;">BUG/需求预计上线日期：</td>
+    		<td style="text-align:left;">{if $info['predict_online']}{echo date("Y-m-d", $info['predict_online'])}{/if}</td>
+    	</tr>
+    	
+    	{if $supply}
+    	{foreach $supply $key $one}
+    	{if $key == 0}
+    	<tr>
+    		<td rowspan="{$rowspan}">工单补充</td>
+    		<td style="text-align:right;">{$one['operator_id']}({$one['operator_name']})：<br/>{echo date("Y-m-d H:i:s",$one['operator_time'])}</td>
+    		<td style="text-align:left;width:800px;word-wrap:break-word;word-break:break-all;">{$one['content']}</td>
+    	</tr>
+    	{else}
+    	<tr>
+    		<td style="text-align:right;">{$one['operator_id']}({$one['operator_name']})：<br/>{echo date("Y-m-d H:i:s",$one['operator_time'])}</td>
+    		<td style="text-align:left;width:800px;word-wrap:break-word;word-break:break-all;">{$one['content']}</td>
+    	</tr>
+    	{/if}
+    	{/foreach}
+    	<tr>
+    		<td style="text-align:right;">问题补充：</td>
+    		<td style="text-align:left;"><textarea name="supply"></textarea></td>
+    	</tr>
+    	{else}
+    	<tr>
+    		<td>工单补充</td>
+    		<td style="text-align:right;">问题补充：</td>
+    		<td style="text-align:left;"><textarea name="supply"></textarea></td>
+    	</tr>
+    	{/if}
+    	<tr id="button_tr">
+			<td colspan="3" align="left">
+				<input type="button" value="&nbsp;&nbsp;更新工单&nbsp;&nbsp;" class="bluebtn2" onclick="form_post('update')"/>
+				<input type="button" value="&nbsp;&nbsp;关闭工单&nbsp;&nbsp;" class="bluebtn2" onclick="close_ticket()"/>
+				<input type="button" value="&nbsp;&nbsp;返回&nbsp;&nbsp;" class="bluebtn2" onclick="javascript:history.back();return false;"/>
+			</td>
+		</tr>
+</table>
+</form>  
+</div> 
+</body>
+</html>

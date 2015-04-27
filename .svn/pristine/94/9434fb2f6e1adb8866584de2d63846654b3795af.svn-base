@@ -1,0 +1,28 @@
+<div id="topmenu">
+    <ul>
+    {if $menuPermissions['groupManage']>0}
+        <li><a href="{if checkGroupPermission(10258,$permission)}/group/group.php?module=group_info{elseif checkGroupPermission(10259,$permission)}/group/manage_imformation.php?module=manage_imformation{elseif checkGroupPermission(10315,$permission)}/group/group.php?module=group_config{/if}"{if $serviceType=='group_manage'} class="hover"{/if}>站信息</a></li>
+    {/if}
+    {if $menuPermissions['decoration']>0}
+    <li><a href="{if checkGroupPermission(10318,$permission)}/group/decoration.php{elseif checkGroupPermission(10319,$permission)}/group/room_sort.php{elseif checkGroupPermission(10327,$permission)}/group/recommend.php{elseif checkGroupPermission(10328,$permission)}/group/menu.php{elseif checkGroupPermission(10329,$permission)}/group/recommend.php{elseif checkGroupPermission(10330,$permission)}/group/activity.php{elseif checkGroupPermission(10331,$permission)}/group/joinus.php{/if}" {if $serviceType=='decoration'}class="hover"{/if}>主页装修</a></li>
+    {/if}
+    {if $menuPermissions['roomManage']>0}
+        <li><a href="/group/room_manage.php?module=room_list"{if $serviceType=='room_manage'} class="hover"{/if}>房间管理</a></li>
+    {/if}
+    {if $menuPermissions['signedManage']>0}    
+        <li><a href="{if checkGroupPermission(10261,$permission)}/group/signed_manage.php?module=signed_manage{elseif checkGroupPermission(10273,$permission)}/group/signed_manage.php?module=guardian{elseif checkGroupPermission(10262,$permission)}/group/group.php?module=group_proxy{/if}"{if $serviceType=='signed_manage'} class="hover"{/if}>签约管理</a></li>
+    {/if}
+    {if $menuPermissions['vipManage']>0}    
+        <li><a href="/group/vip.php?module={if checkGroupPermission(10267,$permission)}vip_list{elseif checkGroupPermission(10268,$permission)}vipinfo_list{/if}"{if $serviceType=='vip'||$serviceType=='vipinfo'} class="hover"{/if}>会员管理</a></li>
+    {/if}
+    {if $menuPermissions['voucherManage']>0}    
+        <li><a href="/group/voucher.php?module={if checkGroupPermission(10269,$permission)}voucher_account{elseif checkGroupPermission(10270,$permission)}voucher_balance{/if}"{if $serviceType=='voucher'} class="hover"{/if}>资金管理</a></li>
+    {/if}
+    {if $menuPermissions['imformation']>0}
+        <li><a href="/group/manage_imformation.php?module={if checkGroupPermission(10263,$permission)}tax_detail{elseif checkGroupPermission(10264,$permission)}tax_exchange{elseif checkGroupPermission(10265,$permission)}tax_signatory{/if}"{if $serviceType=='manage_imformation' && ($_GET['module']=='tax_detail' || $_GET['module']=='tax_exchange' || $_GET['module']=='tax_signatory')} class="hover"{/if}>税收管理</a></li>
+    {/if}
+    </ul>
+	{if checkGroupPermission(10280,$permission)}
+    <a href="/group/role.php" class="qxgl"><span class="qxglimg"></span>权限管理</a>
+    {/if}
+</div>

@@ -1,0 +1,54 @@
+<div class="room-navsite">
+	<h2 class="title">
+	 	<div class="bar-title">热门房间</div>
+	</h2>
+  	<div class="top clearfix"> 
+  		{foreach $top2 $key $room}
+			{if !empty($room)}
+			<dl class="{if $key==1}fr{else}fl{/if}">
+			  	<dt class="cover-top"> 
+			      	<div class="jianpic"></div>
+			          	<img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/260/190.jpg');}" width="260" height="190" alt="{$room['description']}">
+			          	<span class="b">{$room['name']}<i>({$room['id']})</i> <em>{$room['curuser']}人</em></span>
+			          	<div class="topmask">
+			              	<a href="http://{$room['group']}.'.'.{$_SERVER['HTTP_HOST']}/v/{$room['id']}" target="_blank">
+								<img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/260/190.jpg');}" width="260" height="190" alt="{$room['description']}">
+							</a>
+			              	<div>
+			                  	<h5>{$room['name']}<span>({$room['id']})</span></h5>
+			                  	<p>{$room['description']}</p>
+			              	</div>
+			          	</div>
+			  	</dt>
+			  	<dd><a href="http://{$room['group']}.'.'.{$_SERVER['HTTP_HOST']}" title="进入站主页" id="J_region">——{$room['groupname']}——</a></dd>
+			</dl>
+			{/if}
+		{/foreach}
+    </div>
+    <div style="clear:both;"></div>
+    <div class="clearfix other"> 
+    	{foreach $recommend_rooms $room}
+		<dl>
+		 	<dt class="cover-other"> 
+				<img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$room['description']}" class="img">
+				{if $room['hasplay'] > 0}
+				<span class="zb">直播中</span>
+				{/if}
+				<span class="rs">{$room['curuser']}人正在观看</span>
+				<div class="othermask">
+					<a href="http://{$room['group']}.'.'.{$_SERVER['HTTP_HOST']}/v/{$room['id']}" target="_blank" class="piclink">
+						<img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$room['description']}">
+					</a>
+					{if $room['hasplay'] > 0}
+					<span class="zhibo">直播中</span>
+					{/if}
+					<span class="renshu">{$room['curuser']}人正在观看</span>
+					<h5>{$room['name']}</h5>
+					<p><em>({$room['id']})</em><a class="zhan" href="http://{$room['group']}.'.'.{$_SERVER['HTTP_HOST']}" title="进入站主页" target="_blank">{$room['groupname']}</a></p>
+				</div>
+			</dt>
+			<dd><span class="room-name">{$room['name']}</span></dd>
+		</dl>
+		{/foreach}
+  	</div>
+</div>

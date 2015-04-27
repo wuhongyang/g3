@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>礼物模块管理</title>
+<style>
+.config_del, #add_config{
+	cursor:pointer;
+}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改礼物</div>
+    <!--
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+    -->
+</div>
+
+<script>
+active_li = 5;
+</script>
+{include file="template/tpl_header.html"}
+
+<{if $info}>
+<form name="myform" action="props_manage.php?module=props_update&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}&cate_id={$_GET['cate_id']}" method="post" onSubmit="return checkParam();" class="form">
+<{else}>
+<form name="myform" action="props_manage.php?module=props_add&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}&cate_id={$_GET['cate_id']}" method="post" onSubmit="return checkParam();" class="form">
+<{/if}>
+    <{if $info}><input type="hidden" name="id" value="<{$info['id']}>"><{/if}>
+    {if $_GET['is_tricky']}
+        <input type="hidden" name="cate_id" value="{$_GET['cate_id']}" />
+    {else}
+    <p>
+        <label>礼物分类：</label>
+        <select name="cate_id">
+        <option>请选择</option>
+        {foreach $cate $one}
+        <option value="{$one['cate_id']}" {if ($info['cate_id'] == $one['cate_id']) || ($_GET['cate_id'] == $one['cate_id'])} selected="selected"{/if}>{$one['cate_name']}</option>
+        {/foreach}
+        </select>
+    </p>
+    {/if}
+    <p>
+        <label>科目联动菜单：</label>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent" onChange="getCmdPath('cmd_path')"><option value="0">请选择</option></select>
+    </p>
+    <p>
+    	<label>扩展模块CMD：</label>
+        <input type="text" name="cmd" value="{$info['cmd']}" id="cmd" size="32" />
+    </p>
+    <p>
+        <label>礼物名称：</label>
+        <input type="text" name="props_name" id="props_name" value="{$info['props_name']}" size="32" />
+    </p>
+    <p>
+        <label>价格（虚拟币）：</label>
+        <input type="text" name="props_money" id="props_money" value="{$info['props_money']}" size="32" />
+    </p>
+    <p id="pool_percent_p">
+        <label>奖池比例：</label>
+        <input type="text" name="pool_percent" id="pool_percent" value="{$info['pool_percent']}" size="32" />
+    </p>
+    <p>
+        <label>税收分成占比：</label>
+        <input type="text" name="tax_percent" id="tax_percent" value="{$info['tax_percent']}" size="32" />
+    </p>
+    <p>
+        <label>接收方占比：</label>
+        <input type="text" name="receive_percent" id="receive_percent" value="{$info['receive_percent']}" size="32" />
+    </p>
+    <p>
+        <label>扩展模块路径：</label>
+        <input type="text" name="cmd_path" id="cmd_path" value="<{$info['cmd_path']}>" size="32" />
+    </p>
+    <p>
+        <label>礼物描述：</label>
+        <input type="text" name="props_desc" id="props_desc" value="<{$info['props_desc']}>" size="32" />
+    </p>
+    <p>
+        <label>礼物类型：</label>
+        <select id="props_size" name="props_size" onchange="bigswftoggle(this.value)">
+        {foreach $size_arr $key $value}
+        <option value="{$key}"{if $key == $info['props_size']} selected="selected"{/if}>{$value}</option>
+        {/foreach}
+        </select>
+    </p>
+    <p>
+        <label>刷屏显示尺寸：</label>
+        <select name="screen_size">
+        {foreach $screen_size $key $value}
+        <option value="{$key}"{if $key == $info['screen_size']} selected="selected"{/if}>{$value}</option>
+        {/foreach}
+        </select>
+    </p>   
+    <p>
+        <label>礼物图标GIF：</label>
+        <span id="gif_review">
+            <select name="category" id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="pic" id="pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('pic','show_gif','gif_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+         </span>
+    </p>
+    <p>
+        <label>礼物图标SWF：</label>
+        <span id="swf_review">
+            <select name="swf_category" id="swf_category" onChange="showPic('swf_pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="swf_pic" id="swf_pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('swf_pic','show_swf','swf_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('swf_pic')" value="查看原图" style="width:87px;" />
+        </span>
+    </p>
+	<p id="bigswfbox">
+        <label>大礼物图标SWF：</label>
+        <span id="big_swf_review">
+            <select name="big_swf_category" id="big_swf_category" onChange="showPic('big_swf_pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="big_swf_pic" id="big_swf_pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('big_swf_pic','show_swf','big_swf_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('big_swf_pic')" value="查看原图" style="width:87px;" />
+        </span>
+    </p>
+    <p>
+        <label>是否为中奖礼物：</label>
+        <input type="radio" class="is_prize" name="is_prize" value='1' {if $info['is_prize']==1 && isset($info['is_prize'])}checked="checked"{/if} />是
+        <input type="radio" class="is_prize" name="is_prize" value='0' {if $info['is_prize']==0 || !isset($info['is_prize'])}checked="checked"{/if} />否
+    </p>
+    <p>
+    	{if $info['is_prize']==1 && isset($info['is_prize'])}
+    		<table id="prize_config" style="margin-left:125px;">
+    	{else}
+	    	<table id="prize_config" style="margin-left:125px;display:none">
+    	{/if}
+    	<tr>
+    		<td width="200">配置名</td><td width="200">配置字段</td><td width="200">配置值</td>
+    	</tr>
+    	{foreach $info['value'] $one}
+    	<tr>
+    		<td><input type='text' name='config_name[]' value="{$one['config_name']}" /></td>
+    		<td><input type='text' name='key[]'  value="{$one['key']}" /></td>
+    		<td><input type='text' name='value[]'  value="{$one['value']}" /><a class='config_del'>删除</a></td>
+    		</tr>
+    	{/foreach}
+    	<tr>
+    		<td id="add_config">+ 添加一项配置</td><td>&nbsp;</td><td>&nbsp;</td>
+    	</tr>
+    	</table>
+    </p>
+    <p>
+        <label>艺人渠道税收：</label>
+        <input type="radio" name="actor_tax" value="0" {if $info['actor_tax'] == 0}checked="checked"{/if}/>不启用&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="actor_tax" value="1" {if $info['actor_tax'] == 1}checked="checked"{/if}/>启用
+    </p>
+    <p>
+        <label>状态：</label>
+        {foreach $status_arr $key $arr}
+        <input type="radio" name="props_status" value="{$key}" {if $key == $info['props_status']}checked="checked"{/if}>{$arr}&nbsp;&nbsp;&nbsp;&nbsp;
+        {/foreach}
+    </p>  
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>  
+</form>
+<script type="text/javascript">
+function bigswftoggle(type){
+    if(type > 1){
+        document.getElementById('bigswfbox').style.display = 'block';
+    }else{
+        document.getElementById('bigswfbox').style.display = 'none';
+        document.getElementById('big_swf_pic').selectedIndex = 0;
+        document.getElementById('big_swf_category').selectedIndex = 0;
+    }
+}
+
+var psize = document.getElementById('props_size');
+bigswftoggle(psize.options[psize.selectedIndex].value);
+
+function checkParam(){
+	var propsName = document.getElementById("props_name").value;
+	if(isEmpty(propsName)){
+		alert('道具名称不能为空！');
+		return false;
+	}
+
+	var cmdPath = document.getElementById("cmd_path").value;
+	if(isEmpty(cmdPath)){
+		alert("扩展模块路径不能为空");
+		return false;
+	}
+	
+	var tax_percent = document.getElementById("tax_percent").value;
+	var receive_percent = document.getElementById("receive_percent").value;
+	var pool_percent = document.getElementById("pool_percent").value;
+	var is_price = parseInt($("input[name=is_prize]:checked").val());
+	if(!is_price && (parseInt(receive_percent) + parseInt(tax_percent) != 100)){
+		alert("税收比例不正确");
+		return false;
+	}else if(is_price && (parseInt(receive_percent) + parseInt(tax_percent) + parseInt(pool_percent) != 100)){
+		alert("税收比例不正确");
+		return false;
+	}
+	
+	var bcObj = document.getElementById("bigcase");
+	var bigCaseId = bcObj.options[bcObj.selectedIndex].value;
+	var caseObj = document.getElementById("case");
+	var caseId = caseObj.options[caseObj.selectedIndex].value;
+	var parentObj = document.getElementById("parent");
+	var parentId = parentObj.options[parentObj.selectedIndex].value;
+	if(bigCaseId==0 || caseId==0 || parentId==0){
+		alert("请正确选择所属科目");
+		return false;
+	}
+	
+	var picObj = document.getElementById("pic");
+	var picId = picObj.options[picObj.selectedIndex].value;
+	if(picId==-1 || picId==-2 || !picId){
+		alert('请正确选择道礼物GIF图标');
+		return false;
+	}
+    
+    var picObj = document.getElementById("swf_pic");
+	var picId = picObj.options[picObj.selectedIndex].value;
+	if(picId==-1 || picId==-2 || !picId){
+		alert('请正确选择礼物SWF图标');
+		return false;
+	}
+    
+    var optObj = document.getElementById("props_size");
+	if(optObj.options[optObj.selectedIndex].value > 1){
+        var picObj = document.getElementById("big_swf_pic");
+        var picId = picObj.options[picObj.selectedIndex].value;
+        if(picId==-1 || picId==-2 || !picId){
+            alert('请正确选择大礼物SWF图标');
+            return false;
+        }
+    }
+	
+	var key_names = [];
+	$("input[name='key[]']").each(function(){
+		key_names.push($(this).val())
+	})
+	var s = key_names.join(',') + ",";
+    for (var i = 0; i < key_names.length; i++) {
+        if (s.replace(key_names[i] + ",", "").indexOf(key_names[i] + ",") > -1 && key_names[i]){
+        	alert('有重复的配置字段!');
+        	return false;
+        }
+    }
+	
+}
+
+//科目联动
+getOptions("bigcase=1","bigcase","{$info['big_case_id']}");
+{if !empty($info['big_case_id'])}
+getOptions("case={$info['big_case_id']}",'case',"{$info['case_id']}");
+{/if}
+{if !empty($info['case_id'])}
+getOptions("parent={$info['case_id']}",'parent',"{$info['parent_id']}");
+{/if}
+
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+
+//gif图
+showCategory("category","<{$info['cat_id']}>");
+<{if $info['cat_id']!='' && $info['cat_id']!=-1}>
+showPic("pic","$info['cat_id']",'<{$info["pic_id"]}>');
+<{/if}>
+
+//swf图
+showCategory("swf_category","<{$info['swf_cat_id']}>");
+<{if $info['swf_cat_id']!='' && $info['swf_cat_id']!=-1}>
+showPic("swf_pic","$info['swf_cat_id']",'<{$info["swf_pic_id"]}>');
+<{/if}>
+
+//大swf图
+showCategory("big_swf_category","<{$info['big_swf_cat_id']}>");
+<{if $info['big_swf_cat_id']!='' && $info['big_swf_cat_id']!=-1}>
+showPic("big_swf_pic","$info['big_swf_cat_id']",'<{$info["big_swf_pic_id"]}>');
+<{/if}>
+
+//pic:图片所在select的id
+//pic_show:创建样式id
+//show_area:显示位置
+function showPicture(pic_select_id,pic_show,show_area){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById(pic_show);
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById(show_area);
+			var div = document.createElement("div");
+			div.id = pic_show;
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+
+//得到扩展模块
+$(function(){
+	$("#add_config").click(function(){
+		var html = "<tr><td><input type='text' name='config_name[]' /></td><td><input type='text' name='key[]' /></td><td><input type='text' name='value[]' /><a class='config_del'>删除</a></td></tr>";
+		$(this).parent().before(html);
+	})
+	
+	if($(".config_del").length == 0){
+		$("#add_config").trigger("click");
+	}
+	
+	$(".config_del").live("click", function(){
+		$(this).parent().parent().remove();
+	})
+	
+	$(".is_prize").each(function(){
+		$(this).click(function(){
+			if($(this).attr("value") == '1'){
+				$("#prize_config").show();
+				$("#pool_percent_p").show();
+			}else{
+				$("#prize_config").hide();
+				$("#pool_percent_p").hide();
+			}
+		})
+	})
+	
+	$("input[name=is_prize]:checked").trigger("click");
+	
+	$("#parent").change(function(){
+		var bigcase_id = $("#bigcase").find("option:selected").val();
+		var case_id = $("#case").find("option:selected").val();
+		var parent_id = $("#parent").find("option:selected").val();
+		$.ajax({
+			url: 'props_manage.php?module=ajax&bigcase_id='+bigcase_id+'&case_id='+case_id+'&parent_id='+parent_id,
+			type: 'GET',
+			success: function(data){
+				var cmd = $.parseJSON(data).FlashCMD;
+				var cmd_path = $.parseJSON(data).CmdPath;
+				var obj = $("#cmd");
+				var pathObj = $("#cmd_path");
+				obj.val('');
+				pathObj.val('');
+				if(cmd!=undefined && cmd!=''){
+					obj.val(cmd);
+				}
+				if(cmd_path!=undefined && cmd_path!=''){
+					pathObj.val(cmd_path);
+				}
+			}
+		});	
+	});
+})
+</script>
+</body>
+</html>

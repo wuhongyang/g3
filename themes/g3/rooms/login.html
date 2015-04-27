@@ -1,0 +1,146 @@
+<div class="login" id="J_login">
+<!--    <div style="height:50px;">
+        <span class="yrqy J_join">艺人签约</span>
+        <span class="szjm  J_join">室主加盟</span>
+    </div> -->  
+    <div class="quicklogin"><h2>快速登录</h2><a href="/passport/?account&forgot" class>忘记密码？</a></div>
+    <form method="post" action="/passport/?account&login" class="login-form" id="J_login_form">
+        <input type="hidden" name="url" value="{if $_GET['gid']}http://{$_GET['gid']}.'.'.{$_SERVER['HTTP_HOST']}{else}/{/if}" />
+        <input type="hidden" name="rememberme" value="1" />
+        <input name="username" type="text" class="text" id="user" placeholder="邮箱/手机账号" />
+        <input name="password" type="password" class="text" id="pass" placeholder="密码" />
+        <div class="clearfix">
+            <input name="" type="submit" value="登录" class="denglu" />
+            <input name="" type="button" value="新用户注册" onclick="location.href='/passport/'" class="zhuce" />
+        </div>
+        <div style="margin-top:26px;">
+            其他方式登录：
+            <a href="javascript:;" onclick="openlogin('qq');"><img src="{STATIC_API_PATH}/static/images/qq_login_6.png" title="用QQ帐号登录" alt="QQ登录" /></a>
+        </div>
+    </form>
+</div>
+<!--登陆后-->
+<div class="user"  id="J_login_info" style="display: none;">
+<!--    <div style="height:50px;">
+        <span class="yrqy J_join">艺人签约</span>
+        <span class="szjm J_join">室主加盟</span>
+    </div>  --> 
+    <h3 class="welcome">欢迎，<a href="/service/profile.php">{*name*}</a></h3>
+    <ul class="user-info">
+        <li class="clearfix infohead">
+            <!--头像-->
+            <div class="fl">
+                <div class="head">
+                    <div class="middle-in">
+                        <a href="/service/profile.php"><img userimgurl width="67" height="65"></a>
+                    </div>
+                </div>
+            </div>
+            <ul class="fl rightlist">
+                <li class="id">ID：{*uin*}</li>
+                <li><a href="/service/profile.php">未读消息（<span id="J_unread" style="color:#CC0000;">0</span>）</a></li>
+                <li>
+                    <a href="javascript:void(0);" class="ptyh" id="J_role">普通用户</a> 
+                    <a href="javascript:void(0);" class="phone" id="J_phone">手机</a> 
+                    <a href="javascript:void(0);" class="mail" id="J_mail">邮箱</a> 
+                </li>
+            </ul>
+        </li>
+        <!-- <li class="infolist">
+            <span class="item-name">V宝：<span class="yellow">{*wealth*}</span></span>
+        </li>
+        <li class="infolist">
+            <span class="item-name">V豆：<span class="yellow">{*money*}</span></span>
+        </li> -->
+    </ul>
+</div>
+<script type="text/javascript">
+function openlogin(type){
+    var childWindow;
+    childWindow = window.open("http://openlogin.vvku.com/passport/openlogin/"+type+"/login.php?back={$_SERVER['HTTP_HOST']}","OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+$('#J_log_in').click(function(){
+    $('#J_login_form').submit();
+});
+
+$('.yrqy').on('click', function(){
+    location.href="/rooms/join.php?module=info&type=1";
+})
+
+$('.szjm').on('click', function(){
+    location.href="/rooms/join.php?module=info&type=2";
+});
+
+
+$.ajax({
+	url: '/rooms/ajax_info.php',
+	type: 'POST',
+	data: {"Tag":"GetLoginUser"},
+	success: function(data){
+		json = jQuery.parseJSON(data);
+		if(json.Flag == 100){
+            $.ajax({
+                url: '/rooms/footprint.php',
+                type: 'GET',
+                data: {module:'getHistoryAccess'},
+                success: function(data){
+                    var html = '';
+                    var json = jQuery.parseJSON(data);
+                    if(json.length > 0){
+                        html += '<ul class="list">';
+                        for(var i in json){
+                            if(parseInt(json[i].id) > 0){
+                                html += '<li><a target="_blank" href="/v/' + json[i].id + '">' + json[i].name + '</a></li>';
+                            }
+                        }
+                        html += '</ul>';
+                        $('.caicai').hide();
+                        $('#J_foot_block').append(html);
+                    }
+                }
+            });
+
+			//右部登录信息
+			var html = $('#J_login_info').html().replace('{*uin*}',json.Uin).replace('{*name*}',json.Nick).replace('userimgurl','src="{php echo cdn_url(PIC_API_PATH."/uin/'+json.Uin+'/50/50.jpg");}"');
+			$('#J_login_info').html(html);
+			
+			if(json.ChannelType){
+				if(json.ChannelType == 8){
+					$('#J_role').attr('class','dz').attr('href','/service/role_select.php').html('站长');
+				}else if(json.ChannelType == 9){
+					$('#J_role').attr('class','sz').attr('href','/service/role_select.php').html('室主');
+				}else if(json.ChannelType == 15){
+					$('#J_role').attr('class','yr').attr('href','/service/role_select.php').html('艺人');
+				}
+			}else{
+				$('#J_role').css('cursor','default');
+			}
+
+            $('#J_unread').html(json.Count)
+			
+            if(json.Openid){
+                if(json.Phone){
+                    $('#J_phone').attr('class','phone');
+                    $('#J_phone').attr('title','手机已认证');
+                }else{
+                    $('#J_phone').attr('class','phonegray');
+                    $('#J_phone').attr('title','手机未认证');
+                    $('#J_phone').attr('href','/service/safe_setting.php?module=phone');
+                    $('#J_phone').css('cursor','pointer');
+                }
+                if(json.Email){
+                    $('#J_mail').attr('class','mail');
+                    $('#J_mail').attr('title','邮箱已认证');
+                }else{
+                    $('#J_mail').attr('class','mailgray');
+                    $('#J_mail').attr('title','邮箱未认证');
+                    $('#J_mail').attr('href','/service/safe_setting.php?module=email');
+                    $('#J_mail').css('cursor','pointer');
+                }
+            }
+			$('#J_login').hide();
+			$('#J_login_info').show();
+		}
+	}
+});
+</script>

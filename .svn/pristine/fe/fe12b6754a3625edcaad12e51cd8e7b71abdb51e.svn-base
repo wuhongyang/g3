@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>已发送邮件列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">已发送邮件列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">编辑新邮件</a>{/if}</div>
+</div>
+
+<div class="page-tools main-width">
+  <form method='get'>
+  <label>时间：
+  <input type="text" name="StartTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" size="12" value="{$_GET['StartTime']}" /> 
+      至 
+  <input type="text" name="EndTime" onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" size="12" value="{$_GET['EndTime']}" />
+  </label>
+  <input type="submit" value="查询" />
+  </form>
+</div>
+<table class="table-list main-width" >
+	<tr>
+		<th>编号</th>
+		<th>发送日期</th>
+		<th>发送数量</th>
+        <th>邮件主题</th>
+		<th>发送内容</th>
+	</tr>
+	{foreach $result['Data'] $one}
+	<tr>
+		<td>{$one['id']}</td>
+		<td>{$one['send_time']}</td>
+		<td>{$one['send_num']}</td>
+		<td>{$one['title']}</td>
+		<td><a href="?module=detail&id={$one['id']}">查看发送内容</a></td>
+	</tr>
+	{/foreach}
+</table>
+<div class="main-width">
+	<div class="pagenavi">{$result['Page']}</div>
+</div>
+</body>
+</html>

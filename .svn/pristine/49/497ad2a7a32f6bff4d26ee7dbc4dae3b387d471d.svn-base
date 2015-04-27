@@ -1,0 +1,31 @@
+<div class="user" id="J_login_info">
+    <div class="clearfix">
+        <div class="pull-left userface"><a href="/service/profile.php"><img userimgurl width="70" height="70"></div>
+        <div class="pull-left userinfo">
+            <div class="username"><a href="/service/profile.php" class="welcome-name main_text" target="_blank">{*name*}</a></div>
+            <div class="verify minor_text">
+                <div style="height:25px;" class="clearfix"><a href="javascript:void(0);" id="J_phone" target="_blank">手机</a><span class="pull-left" id="J_phone_text">手机认证</span></div>
+                <div style="height:25px;" class="clearfix"><a href="javascript:void(0);" id="J_mail" target="_blank">邮箱</a><span class="pull-left" id="J_mail_text">邮箱认证</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="userbalance">
+    	<div class="clearfix"><span class="pull-left minor_text">ID：{*uin*}</span> <a href="/service/profile.php" title="未读消息" class="pull-right minor_text" target="_blank">消息 (<span id="J_unread" class="main_text">0</span>)</a></div>
+        <div class="clearfix"><span class="pull-left minor_text">金币：{*voucher*}</span><a href="/shop/index.php?groupId={$groupId}" target="_blank" class="pull-right main_text">获取金币</a></div>
+	</div>
+    <div class="collectinfo" style="display:none;">
+        <ul class="unstyled">
+        	{if $setting['my_attention']['attention_user']['is_open']}
+            <li onclick="get_focus(this);">{$setting['my_attention']['attention_user']['name']}（<span id="focus_num"></span>）</li>
+            {/if}
+            {if $setting['my_attention']['collection_room']['is_open']}
+            <li onclick="get_collect(this);">{$setting['my_attention']['collection_room']['name']}（<span id="collect_num"></span>）</li>
+            {/if}
+            {if $setting['my_attention']['my_footprint']['is_open']}
+            <li onclick="get_history(this);">{$setting['my_attention']['my_footprint']['name']}（<span id="history_num"></span>）</li>
+            {/if}
+        </ul>
+    </div>
+</div>
+
+{if $groupInfo['notice']}<div class="notice main_text">{$groupInfo['notice']}&nbsp;</div>{/if}

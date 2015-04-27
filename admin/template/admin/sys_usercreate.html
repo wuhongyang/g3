@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>kms_usercreate</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">权限管理</div>
+  <div class="header-button right"><a href="?module=cluster_list" class="add-button">返回</a></div>
+</div>
+
+<form name="myform" onsubmit='javascript:return <{$admin_array['js_name']}>();'  class="form">
+<p>
+	<label>权限集群名称：</label>
+	<input type="text" name="cluster" id="cluster" value="<{$admin_array['cluster_name']['cluster_name']}>" maxlength="20" style="width:150">
+</p>
+<p>
+	<label>是否启用：</label>
+	<input name="status" id="status" value="1" {if $admin_array['cluster_name']['status'] == 1} checked="checked" {/if} type="radio">启用&nbsp;
+	<input name="status" id="status" value="0" {if $admin_array['cluster_name']['status'] == 0} checked="checked" {/if} type="radio">不启用&nbsp;</td>
+</p>
+<p>
+	<label></label>
+	<input type="submit" name="btnSubmit" value=" 开 始 创 建 >>> " style="width:140;height:32">&nbsp;<input type="hidden" id="cid" name="cid" value="<{$Cid}>">
+</p>
+</form>
+</body>
+</html>

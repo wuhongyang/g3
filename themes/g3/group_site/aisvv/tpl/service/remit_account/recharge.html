@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+			<div class="rightdiv">
+                <h1>代理划账</h1>
+                <form action="?module=recharge_submit" id="form" method="post" onSubmit="return checkForm(this);">
+                <div class="mgt20">
+                    <ul class="formlist6">
+                        <li class="flowhide">
+                            <label>填写充值信息：</label>
+                            <div>
+                                <p>填写用户ID：<input name="uin" type="text" class="input"><span id="J_desc" style="margin-left:10px;color:red;"></span></p>
+                                <p>确认用户ID：<input name="confirm_uin" type="text" class="input"></p>
+                                <p>用户昵称：<span id="J_nick"></span></p>
+                                <p>输入充值金额：<input name="money" type="text" class="input"></p>
+                                <p>账户余额：<span class="yellow">{$vmoney}</span></p>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="mgL150"><input type="submit" class="bluebtn2" style="width:60px;" value="立即充值"></div>
+                </div>
+                </form>
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+	$(function(){
+		if($('input[name="uin"]').val()!=''){
+			var uin = $('input[name="uin"]').val();
+			__ajax_user_info(uin);
+		}
+		$('input[name="uin"]').blur(function(){
+			var uin = $(this).val();
+			__ajax_user_info(uin);
+		});
+	});
+	function __ajax_user_info(uin){
+		$.ajax({
+			type:'POST',
+			url:'/rooms/ajax_info.php',
+			async:false,
+			data:{
+				'Tag':'GetSsoInfo',
+				'Uin':uin
+			},
+			success:function (data) {
+				var json = jQuery.parseJSON(data);
+				if(json.Flag!=100){
+					$('#J_nick').html('');
+					$('#J_desc').html('账号不存在，请重新输入');
+					return;
+				}
+				else{
+					if(json.Info.group_id!='{$group_id}'){
+						$('#J_nick').html('');
+						$('#J_desc').html('该用户不是本站会员');
+						return;
+					}
+					else{
+						_ajax_user_info({uin:uin,_nick_dom:'J_nick',_uin_desc:'J_desc'});
+					}
+				}
+			}
+		});
+	}
+	function checkForm(form){
+			var uin = $('input[name="uin"]').val();
+			var confirm_uin = $('input[name="confirm_uin"]').val();
+			var nick = $('#J_nick').html();
+			var money = $('input[name="money"]').val();
+			var balance = {$vmoney};
+			var userId = '{$Uin}';
+			var m = /^[0-9]*[1-9][0-9]*$/;
+			if(!m.test(money)){
+				alert('充值金额只能为正整数');
+				return false;
+			}
+			money=parseInt(money);
+			if(uin=='' || uin<=0 || nick==''){
+				alert('请输入正确的用户ID');
+				return false;
+			}
+			if(uin==userId){
+				alert('不可以给自己充值');
+				return false;
+			}
+			var isEqual = _equal(uin,confirm_uin);
+			if(!isEqual){
+				alert('两次输入的用户ID不同，请重新输入');
+				return false;
+			}
+			if(money>balance){
+				alert('您的余额不足，无法充值');
+				return false;
+			}
+			return true;
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>靓号管理-靓号销售记录</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/static/js/jquery.js');}"></script>
+</head>
+<body>
+<div class="bodywrap">
+	{include file="header.html"}
+    <form method="get">
+        <input type="hidden" name="module" value="num_record">
+        <span>用户码：</span><input type="text" name="uin" value="{$_GET['uin']}">&nbsp;&nbsp;&nbsp;&nbsp;
+        <span>靓号：</span><input type="text" name="special_num" value="{$_GET['special_num']}">
+        <input type="submit" class="normalbtn" value="查询">
+    </form>
+    <table class="tablecss" border="1" width="100%" style="margin-top:20px;">
+        <tr>
+            <th>用户码</th>
+            <th>靓号ID</th>
+            <th>操作</th>
+        </tr>
+        {foreach $list $one}
+        <tr>
+            <td class="id">{$one['nick']}({$one['uin']})</td>
+            <td>{$one['liang_id']}</td>
+            <td>
+                <a href="javascript:recycle({$one['id']});">收回靓号</a>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$page}
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function recycle(stock_id){
+    if(stock_id < 1){
+        return;
+    }
+    $.ajax({
+        url: '?module=recycle',
+        type: 'POST',
+        data: {stock_id:stock_id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '收回靓号成功',
+                    icon: 'succeed',
+                    lock: true,
+                    time: 2,
+                    ok: function(){
+                        location.href = '?module=num_record';
+                    }
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    ok: true
+                });
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

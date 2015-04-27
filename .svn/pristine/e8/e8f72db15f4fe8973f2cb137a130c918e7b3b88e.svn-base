@@ -1,0 +1,97 @@
+{foreach $recommendCat $key $val}
+{if $val['child']}
+<div class="body-main-rooms">
+    <div class="tabbable">
+        <ul class="nav nav-tabs">
+        {foreach $val['child'] $key2 $val2}     	
+            <li class="{if $key2==0}active{/if}"><a href="#recommend_{$val2['id']}" data-toggle="tab">{$val2['name']}</a></li>
+        {/foreach}
+        </ul>
+        <div class="tab-content">
+        {foreach $val['child'] $key2 $val2}
+            <div class="tab-pane{if $key2==0} active{/if}" id="recommend_{$val2['id']}">
+                <ul class="thumbnails{if $val2['pic']==1} artist-small{/if}">
+                {if $val['type']==3&&$val2['mode']==2}<div class="story-list">{/if}
+                {foreach $val2['list'] $val3}
+                {if $val['type']==1}
+                    <li>
+                        <div class="thumbnail room">
+                            <a href="javascript:;" onclick="external.cpp_goSrc('/v/{$val3['id']}?vclient','{$val3['name']}')" title="{$val3['name']}"><img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/roomid/{$val3['id']}/150/110.jpg" width="150" height="110" alt="{$val3['name']}" title="{$val3['name']}" /></a>
+                            <p class="look">{$val3['curuser']}人正在观看...</p>
+                            {if $val3['hasplay']>0}
+                            <p class="zhibo">直播中</p>
+                            {/if}
+                            <p><a href="javascript:;" onclick="external.cpp_goSrc('/v/{$val3['id']}?vclient','{$val3['name']}')" class="name" title="{$val3['name']}">{$val3['name']}</a></p>
+                            <div class="mask">
+                                <a class="piclink" href="javascript:;" onclick="external.cpp_goSrc('/v/{$val3['id']}?vclient','{$val3['name']}')"><img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/roomid/{$val3['id']}/150/110.jpg" width="150" height="110" alt="{$val3['name']}"></a>
+                                {if $val3['hasplay']>0}<span class="zhibo">直播中</span>{/if}
+                                <span class="look">{$val3['curuser']}人正在观看...</span>
+                                <p><a href="javascript:;" onclick="external.cpp_goSrc('/v/{$val3['id']}?vclient','{$val3['name']}')" class="name" title="{$val3['name']}">{$val3['name']}</a></p>
+                                <p class="collect" style="display:none;" id="{$val2['id'].'_'.$val3['id']}">{$val3['id']}</p>
+                                <p class="num"><em>房间号:{$val3['id']}</em><span id="R_{$val2['id'].'_'.$val3['id']}" class="R_{$val3['id']}"></span></p>
+                            </div>
+                        </div>
+                    </li>
+                {elseif $val['type']==2}
+                    <li>
+                        <div class="thumbnail actor">
+                            <a href="http://{$_SERVER['HTTP_HOST']}/service/home.php?user={$val3['uin']}" title="{$val3['nick']}" target="_blank">
+                            {if $val2['pic']==1}
+                            <img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/uin/{$val3['uin']}middle/0/0.jpg" width="80" height="100" alt="{$val3['nick']}" title="{$val3['nick']}" />
+                            {else}
+                            <img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/uin/{$val3['uin']}big/150/110.jpg" width="150" height="110" alt="{$val3['nick']}" title="{$val3['nick']}" />
+                            {/if}
+                            </a>
+                            <p class="name">{$val3['nick']}</p>
+                            <p class="listen" style="display:none;" id="{$val2['id'].'_'.$val3['uin']}">{$val3['uin']}</p>
+                            {if $val2['pic']==1}
+                            <p id="J_{$val2['id'].'_'.$val3['uin']}" style="display:block;" class="J_{$val3['uin']}"></p>
+                            {else}
+                            <p class="attention"><span id="J_{$val2['id'].'_'.$val3['uin']}" class="J_{$val3['uin']}"></span></p>
+                            {/if}
+                        </div>
+                    </li>
+                {elseif $val['type']==3}
+                	{if $val2['mode']==1}
+                	<li>
+                        <div class="thumbnail room">
+                            <a href="{$val3['link']}" title="{$val3['title']}"><img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/p/{$val3['pic']}/150/110.jpg" width="150" height="110" alt="{$val3['title']}" title="{$val3['title']}"></a>
+                            <p class="normal">{$val3['title']}</p>
+                            <p class="normal2">{$val3['subtitle']}</p>
+                            <div class="mask">
+                                <a href="{$val3['link']}" title="{$val3['title']}"><img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/p/{$val3['pic']}/150/110.jpg" width="150" height="110" alt="{$val3['title']}" title="{$val3['title']}"></a>
+                                <p class="normal">{$val3['title']}</p>
+                                <p class="normal2">{$val3['subtitle']}</p>
+                            </div>
+                        </div>
+                    </li>
+                	{else}
+                    <li> <a href="{$val3['link']}" title="{$val3['title']}">&gt; {$val3['title']}</a></li>
+                	{/if}
+                {elseif $val['type']==4}
+                    <li>
+                        <div class="thumbnail actor">
+                            <a href="javascript:;" onclick="external.cpp_goSrc('/v/{$val3['room_id']}?vclient','{$val3['nick']}')" title="{$val3['nick']}">
+                            <img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{PIC_API_PATH}/uin/{$val3['uin']}big/150/110.jpg" width="150" height="110" alt="{$val3['nick']}" title="{$val3['nick']}" />
+                            </a>
+                            <p class="name">{$val3['nick']}</p>
+                            <p class="listen" style="display:none;" id="{$val2['id'].'_'.$val3['uin']}">{$val3['uin']}</p>
+                            <p class="attention"><span id="J_{$val2['id'].'_'.$val3['uin']}" class="J_{$val3['uin']}"></span></p>
+                            <p>{$val3['curuser']}<span class="muted">人正在观看</span></p>
+                            <p>所属站点：{$groupInfo['name']}</p>
+                        </div>
+                    </li>
+                {/if}
+                {/foreach}
+                {if $val['type']==3&&$val2['mode']==2}</div>{/if}
+                </ul> 
+                {if $val2['page']!=''}
+                    {$val2['page']}
+                {/if}  
+            </div>
+        {/foreach}
+        </div>
+    </div>				
+</div>
+{/if}
+{/foreach}

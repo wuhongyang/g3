@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10">
+        <form method="get" action="room_manage.php?module=room_list" id="search_form">
+            <span>房间ID：</span>
+            <input name="channel_id" id="channel_id" value="" type="text">
+            <input name="" type="submit" class="normalbtn" value="查询">
+        </form>
+    </div>    
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20">
+      <tr>
+        <th>房间号</th>
+        <th>房间容量</th>
+        <th>房间室主</th>
+        <th>签约艺人数</th>
+        <th>开设时间</th>
+        <th>到期时间</th>
+        <th>房间状态</th>
+        <th>操作</th>
+        <th>提示</th>
+      </tr>
+      {foreach $userRooms['roomList'] $val}
+      <tr>
+        <td>{$val['name']}（{$val['id']}）</td>
+        <td>{$val['maxuser']}</td>
+        <td>{$val['ownuin']}</td>
+        <td>{$val['entertainer_total']}</td>
+        <td>{$val['date']}</td>
+        <td>--</td>
+        <td>{if $val['status']==0}<font color="#999999">冻结</font>{else}<font color="green">正常</font>{/if}</td>
+        {if $roomManage||$permission['isDz']==1}
+        <td><a href="room_manage.php?module={$roomManageModule}&roomid={$val['id']}" class="mgL20 ahover">管理房间</a><a href="/v/{$val['id']}" target="_blank" class="mgL20 ahover">进入房间</a></td>
+        {else}
+        <td><a href="/v/{$val['id']}" target="_blank" class="ahover">进入房间</a></td>
+        {/if}
+        <td>还未升级房间容量</td>
+      </tr>
+      {/foreach}
+      <tr>
+        <td colspan="9">{$userRooms['page']}</td>
+      </tr>
+    </table>
+    <p class="red mgt10 mgL20">* 每个房间最多签约1个室主，100个艺人。</p>
+</div>
+{if $openRoom&&$roomsSurplusTotal<=0}
+<div id="J_agreement" style="display:none;">
+	<p style="font-weight:bold; font-size:16px;">温馨提示：</p><br />
+    <p style="font-size:14px; margin-left:30px;" class="red">对不起，您站的免费房间额度已用完，无法开设新房间。</p><br />
+    <p style="font-size:14px; margin-left:30px;"><span style="float:left; margin-top:5px;">若有疑问，请联系客服</span><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=4006772115&site=qq&menu=yes" class="qqbg"></a></p>
+</div>
+
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script> 
+<script type="text/javascript">
+$(function(){
+	$('#J_show').click(function(){
+		content = $('#J_agreement').html();
+		art.dialog({
+			content: content,
+			ok: false,
+			lock: true,
+			cancelVal: '关闭',
+			cancel: true
+		});
+	});
+})
+</script>
+{/if}
+</body>
+</html>

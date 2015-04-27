@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>图片配置管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type = "text/javascript" src = "template/js/myd.js"></script>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+	.span_1{
+		text-align:right;
+		font-size:12px;
+	}
+    #preview_wrapper{  
+        display:inline-block;  
+        width:800px;  
+        height:500px;  
+        background-color:#CCC;  
+    }  
+    #preview_fake{ /* 该对象用于在IE下显示预览图片 */  
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale);  
+    }  
+    #preview_size_fake{ /* 该对象只用来在IE下获得图片的原始尺寸，无其它用途 */  
+        filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=image);    
+        visibility:hidden;  
+    }  
+    #preview{ /* 该对象用于在FF下显示预览图片 */  
+        width:800px;  
+        height:500px;  
+    }
+	.thumb{border:solid 1px #CCC;text-align:center;width:100px;padding:10px;}
+	.view-source{}
+</style>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">图片配置管理</div>
+	<div class="header-button right">
+		{if $link_array[104]['url']}<a class="add-button" href="{$link_array[104]['url']}">返回</a>{/if}
+	</div>
+</div>
+
+<div class="body">
+    <form method="post" style="padding:20px;" enctype='multipart/form-data'>
+	    <input type = 'hidden' name = 'id' id = 'is_id' value = "{$message['id']}">
+	    <span class = 'span_1'>图片分类:</span> <select name = 'cat_id' id = 'cat_id'>
+		    	<option value = ''>请选择</option>
+			{foreach $cats $cat}
+			<option value = "{$cat['id']}" {if $message['cat_id'] == $cat['id'] }selected{/if}>{$cat['cat_name']}</option>
+			{/foreach}
+			</select>
+	    	<br><br>
+	    <span class = 'span_1'>图片名称:</span> <input type = 'text' name = 'pic_name' id = 'pic_name' value = "{$message['pic_name']}"><br><br>
+	    {if !empty($message['img_path']) }
+	    <div style="width:200px;">
+			<div class="thumb">
+                <object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+                <param value="{php echo cdn_url(PIC_API_PATH.'/p/'.$message['img_path'].'/100/100.jpg')}" name="movie">
+                <param value="high" name="quality">
+                <embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$message['img_path'].'/100/100.jpg')}">
+                </object>
+            	<a href="{php echo cdn_url(PIC_API_PATH.'/p/'.$message['img_path'].'/0/0.jpg')}" class="view-source" target="_blank">查看原图</a>
+			</div>
+		</div>
+		<br><br>
+	    {/if}
+	    <span class = 'span_1'>选择图片:</span> <input type='file' name='img_path' id='img_path' onchange="javascript:onUploadImgChange(this);"><br><br>
+	    <span class = 'span_1'>是否启用:</span> <input type = 'radio' name = 'state' value = '1' checked  >启用 <input type = 'radio' name = 'state' value = '2' {if $message['state'] == 2}checked{/if} >不启用<br><br>
+	    <input type = 'submit' name = 'tj' value = '提交信息' onclick="return checkPic()">&nbsp;&nbsp;&nbsp;&nbsp;<input type = 'reset' value = '重置'>
+    </form>
+</div>
+<div id="preview_wrapper">  
+	<div id="preview_fake">  
+		<img id="preview" onload="onPreviewLoad(this)"/>  
+	</div>  
+</div> 
+<img id="preview_size_fake"/>  
+<script type="text/javascript">
+//JS预览上传图片
+function onUploadImgChange(sender){  
+	/*
+	if( !sender.value.match( /.jpg|.gif|.png|.bmp/i ) ){  
+		alert('图片格式无效！');  
+		return false;  
+	}*/ 
+	  
+	var objPreview = document.getElementById( 'preview' );  
+	var objPreviewFake = document.getElementById( 'preview_fake' );  
+	var objPreviewSizeFake = document.getElementById( 'preview_size_fake' );  
+	  
+	if( sender.files &&  sender.files[0] ){  
+		objPreview.style.display = 'block';  
+		objPreview.style.width = 'auto';  
+		objPreview.style.height = 'auto';  
+		  
+		// Firefox 因安全性问题已无法直接通过 input[file].value 获取完整的文件路径  
+		//objPreview.src = sender.files[0].getAsDataURL();    
+		objPreview.src = window.URL.createObjectURL(sender.files[0]);		
+	}else if( objPreviewFake.filters ){   
+		// IE7,IE8 在设置本地图片地址为 img.src 时出现莫名其妙的后果  
+		//（相同环境有时能显示，有时不显示），因此只能用滤镜来解决  
+		  
+		// IE7, IE8因安全性问题已无法直接通过 input[file].value 获取完整的文件路径  
+		sender.select();  
+		var imgSrc = document.selection.createRange().text;  
+		
+		objPreviewFake.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;  
+		objPreviewSizeFake.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = imgSrc;  
+		  
+		autoSizePreview( objPreviewFake,objPreviewSizeFake.offsetWidth, objPreviewSizeFake.offsetHeight );  
+		objPreview.style.display = 'none';  
+	}  
+}  
+  
+function onPreviewLoad(sender){  
+	autoSizePreview( sender, sender.offsetWidth, sender.offsetHeight );  
+}  
+  
+function autoSizePreview( objPre, originalWidth, originalHeight ){  
+	var zoomParam = clacImgZoomParam( 800, 500, originalWidth, originalHeight );  
+	objPre.style.width = zoomParam.width + 'px';  
+	objPre.style.height = zoomParam.height + 'px';  
+	objPre.style.marginTop = zoomParam.top + 'px';  
+	objPre.style.marginLeft = zoomParam.left + 'px';  
+}  
+  
+function clacImgZoomParam( maxWidth, maxHeight, width, height ){  
+	var param = { width:width, height:height, top:0, left:0 };  
+	  
+	if( width>maxWidth || height>maxHeight ){  
+		rateWidth = width / maxWidth;  
+		rateHeight = height / maxHeight;  
+		  
+		if( rateWidth > rateHeight ){  
+			param.width =  maxWidth;  
+			param.height = height / rateWidth;  
+		}else{  
+			param.width = width / rateHeight;  
+			param.height = maxHeight;  
+		}  
+	}  
+	  
+	param.left = (maxWidth - param.width) / 2;  
+	param.top = (maxHeight - param.height) / 2;  
+	  
+	return param;  
+}  
+</script>
+
+</body>
+</html>

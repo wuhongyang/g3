@@ -1,0 +1,40 @@
+<div class="myroom">
+	<h3>我的房间</h3>
+	<div class="rooms">
+		<h5 class="collect_room">我收藏的房间</h5>
+		<ul class="clearfix">
+	
+		   {if $setting['my_attention']['collection_room']['is_open']}
+			{foreach $setting['my_attention']['collection_room']  $key $val}
+			<li  onclick="get_collect(this);">
+				<a href="#" target="_blank" class="img">
+					<img src="../img/uline/10073.png" width="100" height="73" alt="" title="风去点歌台">
+				</a>
+				<a href="#" target="_blank" title="风去点歌风去点歌台台" class="name">{$setting['my_attention']['collection_room']['name']}</a>
+				<p>房间号：5880115</p>
+				<p>人数：<span class="num">268</span></p>
+				<a href="#" class="del">删除</a>
+			</li>
+			{/foreach}
+			{/if}
+		</ul>
+		<h5 class="reach_room">我去过的房间</h5>
+		<ul class="clearfix">
+		   
+		   
+			<li>
+				<a href="#" target="_blank" class="img">
+					<img src="../img/uline/10073.png" width="100" height="73" alt="" title="风去点歌台">
+				</a>
+				<a href="#" target="_blank" title="风去点歌风去点歌台台" class="name">风去点歌台风去点歌台</a>
+				<p>房间号：5880115</p>
+				<p>人数：<span class="num">268</span></p>
+			</li>
+		</ul>
+	</div>
+	<!-- rooms -->
+</div>
+
+
+
+        

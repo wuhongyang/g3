@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>道具模块管理</title>
+<script type="text/javascript">
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">修改房间</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" onsubmit='javascript:return checkParam();' method="post" action="rooms.php?module={$operate}" class="form">
+	<{if $operate=='room_update'}>
+    <input type="hidden" name="id" value="{$id}">
+    <{/if}>
+	<p>
+    	<label>选择城市：</label>
+        <select name="province" id="province" onChange="show_city(this.value);changeSort();"><option value="-1">请选择</option></select>&nbsp;
+        <select name="city" id="city" onChange="show_area(this.value);showSort(this.value);"><option value="-1">请选择</option></select>&nbsp;
+        <select name="area" id="area" onChange="getSort('',this.value);"><option value="0">请选择</option></select>&nbsp;
+    </p>
+    <p>
+    	<label>所属分类：</label>
+        <select name="parent_id" id="parent_id" onChange="showSort($('city').value,$('area').value,this.value);">
+            <option value="0">一级分类</option>
+        </select>&nbsp;
+        <select name="sortid" id="sortid">
+            <option value="0">二级分类</option>
+        </select>&nbsp;<font color="red">*&nbsp;&nbsp;</font>
+    </p>
+    <{if $operate=='room_add'}>
+    <p>
+    	<label>房间规模：</label>
+        <select name="maxuser"><option value="0">----请选择----</option><{foreach $maxuser_arr $k $v}><option value="<{$k}>"><{$v}></option><{/foreach}></select>&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+    	<label>可用时长：</label>
+        <select name="expire"><option value="0">--请选择--</option><{foreach $expire $k $v}><option value="<{$k}>"><{$v}></option><{/foreach}></select>&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+    	<label>房间编号：</label>
+        <input type="text" name="id" size="30" />&nbsp;<font color="red">* 请输入房间编号。</font>
+    </p>
+    <p>
+    	<label>房间名称：</label>
+        <input type="text" name="name" size="30" /> &nbsp;<font color="red">可以不填，则房间名称同房间编号。</font>
+    </p>
+    <{/if}>
+    <p>
+    	<label>室主账号：</label>
+        <input type="text" name="ownuin" id="ownuin" value="{$info['ownuin']}" size="30" />&nbsp;<font color="red">* 输入VV酷(IM)号码，室主帐号同管理员帐号一致，务必要输入。</font>
+    </p>
+    <p>
+    	<label>群号：</label>
+        <input type="text" name="group" id="group" value="{$info['group']}" size="30" />
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+var open_citys = '<{$areaInfo}>';
+
+open_citys = eval('('+open_citys+')');
+var province_JSONDATA = open_citys.province;
+var city_JSONDATA = open_citys.city;
+var area_JSONDATA = open_citys.area;
+
+show_province("<{$info['province_id']}>");//显示联动数据
+show_city("<{$info['province_id']}>","<{$info['city_id']}>");
+show_area("<{$info['city_id']}>","<{$info['area_id']}>");
+
+var roomCase = '<{$roomCase}>';
+roomCase = eval('(' + roomCase + ')');
+//生成一级分类
+var cObj = document.getElementById("city");
+var city = cObj.options[cObj.selectedIndex].value;
+if(city != -1)
+	showSort('<{$info["city_id"]}>','<{$info["area_id"]}>','','<{$parentId}>');
+//生成二级分类
+var parentObj = document.getElementById("parent_id");
+var parentId = parentObj.options[parentObj.selectedIndex].value;
+if(parentId != '0')
+	showSort('<{$info["city_id"]}>','<{$info["area_id"]}>','<{$parentId}>','<{$info["sortID"]}>');
+
+function showSort(city_id,area_id,parent_id,selectId){
+	var option_id = (parent_id=='' || parent_id==undefined) ? 'parent_id' : 'sortid';
+	//alert(option_id);
+	NewOption = document.getElementById(option_id);
+	NewOption.length = 0;
+	var str = '';
+	if(option_id == 'parent_id')
+		str = '一级分类';
+	else
+		str = '二级分类';
+	NewOption.options.add(new Option(str,'0'));
+	for(var i in roomCase){
+		if(option_id == 'parent_id'){
+			if(roomCase[i].city==city_id){
+				NewOption.options.add(new Option(roomCase[i].name,roomCase[i].id));
+			}
+		}else{
+			if(parent_id == roomCase[i].id){
+				for(var j in roomCase[i].child){
+					NewOption.options.add(new Option(roomCase[i].child[j].name,roomCase[i].child[j].id));
+				}
+			}
+		}
+	}
+	if(option_id == 'parent_id'){
+		var nOption = $("sortid");
+		nOption.length = 0;
+		nOption.options.add(new Option('二级分类','0'));
+	}
+	for(var key=0; key<NewOption.length;key++){
+		if(selectId == NewOption.options[key].value){
+			NewOption.options[key].selected = true;
+		}
+	}
+}
+
+function changeSort(){
+	NewOption = document.getElementById("parent_id");
+	NewOption.length = 0;
+	NewOption.options.add(new Option('一级分类','0'));
+	
+	nOption = document.getElementById("sortid");
+	nOption.length = 0;
+	nOption.options.add(new Option('二级分类','0'));
+}
+
+</script>
+</body>
+</html>

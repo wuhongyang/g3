@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发起工单</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+{include file="js/textareafix.js"}
+<script type="text/javascript">
+$(function(){
+	$('#area_id').change(function(){
+		var val = $(this).find("option:selected").text();
+		$(this).parents("p").find("input[name=area_name]").val(val);
+	})
+})
+function check(){
+	var area_id = $.trim($('#area_id').val());
+	if(!area_id){
+		alert("区/站名称不能为空");
+		return false;
+	}
+	var response_user = $.trim($('#response_user').val());
+	if(response_user){
+		var strRegex = "^[A-Za-z0-9_]+$";
+		var re=new RegExp(strRegex);
+		if (!re.test(response_user)) {
+			alert("反应人id由字母数字下划线组成，请正确填写！");
+			return false;
+		}
+	}
+	var response_nick = $.trim($('#response_nick').val());
+	if(!response_nick){
+		alert("反应人昵称不能为空");
+		return false;
+	}
+	var response_time = $.trim($('#response_time').val());
+	if(!response_time){
+		alert("反应时间不能为空");
+		return false;
+	}
+	var initiate_type_id = $.trim($('#initiate_type_id').val());
+	if(!initiate_type_id){
+		alert("问题类型不能为空");
+		return false;
+	}
+	var title = $.trim($('#title').val());
+	if(!title){
+		alert("问题标题不能为空");
+		return false;
+	}
+	var desc = $.trim($('#desc').val());
+	if(!desc){
+		alert("问题描述不能为空");
+		return false;
+	}
+	return true;
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">发起工单</div>
+</div>
+
+<form method="post" id="form" class="form" enctype="multipart/form-data" onsubmit="return check();">
+	<p>
+		<label><span style="color:red">*</span>区/站名称：</label>
+		<input type="hidden" name="area_name"/>
+		<select name="area_id" id="area_id">
+			<option value="">--请选择--</option>
+			{foreach $area_arr $one_area}
+			<option value="{$one_area['group_id']}">{$one_area['name']}</option>
+			{/foreach}
+		</select>
+	</p>
+	<p>
+		<label>反应人ID：</label>
+		<input type="text" name="response_user" id="response_user"/>
+	</p>
+	<p>
+		<label><span style="color:red">*</span>反应人昵称：</label>
+		<input type="text" name="response_nick" id="response_nick"/>
+	</p>
+	<p>
+		<label>反应人邮箱：</label>
+		<input type="text" name="response_email" id="response_email"/>
+	</p>
+	<p>
+		<label>反应人手机号：</label>
+		<input type="text" name="response_phone" id="response_phone"/>
+	</p>
+	<p>
+		<label><span style="color:red">*</span>反应时间：</label>
+		<input type="text" name="response_time" id="response_time" onFocus="WdatePicker({uptime:'%y-%M-%d %H:%i:%s',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})"/>
+	</p>
+	<p>
+		<label><span style="color:red">*</span>问题类型：</label>
+		<select name="initiate_type_id" id="initiate_type_id">
+			<option value="">--请选择--</option>
+			{foreach $initiate_type_list $one}
+			<option value="{$one['id']}">{$one['name']}</option>
+			{/foreach}
+		</select>
+	</p>
+	<p>
+		<label><span style="color:red">*</span>问题标题：</label>
+		<input type="text" name="title" size="64" id="title"/>
+	</p>
+	<p>
+		<label><span style="color:red">*</span>问题描述：</label>
+		<label><textarea name="desc" id="desc"></textarea></label>
+	</p>
+	<p>
+		<label>问题图片：</label>
+		<label><input type="file" name="img[]"/><br/>
+		<input type="file" name="img[]"/><br/>
+		<input type="file" name="img[]"/></label>
+	</p>
+	<p>
+		<label>&nbsp;</label>
+		<input type="submit" class="submit" value="提交信息" />
+	</p>
+</form>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script src="template/js/global.js"></script>
+<script src="template/js/jquery.min.js"></script>
+<script>
+	$(function(){
+		var mail = $("#email");
+		$("#form").submit(function(){
+			var value = mail.attr("value");
+			if(!checkValue(value, 'email')){
+				alert("邮箱格式错误!");
+				return false;
+			}
+		})
+	})
+</script>
+</head>
+<body>
+<div class="header clean">
+  	<div class="header-title left">修改邮箱</div>
+</div>
+<div style="margin:40px;">
+<form method="post" id="form">
+	<p>原邮箱地址:&nbsp;&nbsp;&nbsp;&nbsp;{$email}</p>
+	<br/>
+	<p>邮箱地址：<input type="text" id="email" name="email" value="{$email}" /></p>
+	<br/>
+	<p><input type="submit" value="提交" /></p>
+</form>
+</div>
+</body>
+</html>

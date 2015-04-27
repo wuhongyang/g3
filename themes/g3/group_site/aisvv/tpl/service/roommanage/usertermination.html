@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+            	<h1>签约房间</h1>
+                <div class="box1">
+                    <span class="yellow"><span class="tanhao"></span>提示：解约与房间的签约关系后，请重新签约房间以便获得演艺税收</span>
+                </div>
+                <h2 class="yellow">解约房间</h2>
+                <div class="formlist formlist2">
+                    <ul>
+                        <li class="clearfix"><label>解除用户ID：</label><span>{$Uin}({$Nick})</span></li>
+                        <li class="clearfix"><label>解约房间ID：</label><span>{$signedInfo['roomInfo']['id']}（$signedInfo['roomInfo']['name']）</span></li>
+                        <li class="clearfix"><label>所属站：</label><span>$signedInfo['roomInfo']['group']</span></li>
+                        <li class="clearfix"><label>签约类型：</label><span>{if $signedInfo['type']==9}室主{elseif $signedInfo['type']==15}艺人{/if}</span></li>
+                        <li class="clearfix"><label>签约时间：</label><span>{$signedInfo['uptime']}</span></li>
+                        <li class="clearfix">
+                            <div class="mgL50">
+                                <a href="room_channel_user.php?module=user_termination_submit&id={$id}" onclick="return confirm('确定与房间 {$signedInfo['roomInfo']['id']}（$signedInfo['roomInfo']['name']） 解除 {if $signedInfo['type']==9}室主{elseif $signedInfo['type']==15}艺人{/if} 关系吗？');" class="yellowbtn"><span>确定解约</span></a>
+                                <a href="room_channel_user.php?module=user_signed_list" class="bluebtn mgL20"><span>返回</span></a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

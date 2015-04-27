@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    <div class="tabletab">
+        <ul>
+            {if $voucherAccount}
+            <li><a href="?module=voucher_account"{if in_array($module,array('voucher_account','voucher_recharge','voucher_to_vip','voucher_config'))} class="hover"{/if}>资金充值管理</a></li>
+            {/if}
+            {if $voucherBalance}
+            <li><a href="?module=voucher_balance"{if in_array($module,array('voucher_balance','voucher_running','voucher_parent'))} class="hover"{/if}>资金明细管理</a></li>
+            {/if}
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <div class="mgtb15 clearfix">
+            <span class="yellow16">站金币充值</span>
+        </div>
+        <div class="mgL20">
+            <p class="fs14">站金币预存账户余额：<span class="yellow">{echo intval($voucher)} 金币</span></p>
+            <div class="mgt20 clearfix">
+                <a href="?module=voucher_recharge" class="yellowbtn"><span>预存账户充值</span></a>
+                <a href="?module=voucher_to_vip" class="yellowbtn mgL20"><span>给用户充值</span></a>
+                {if checkGroupPermission(10314,$permission)}
+                <a href="?module=voucher_config" class="yellowbtn mgL20"><span>业务资金库配置</span></a>
+                {/if}
+            </div>
+        </div>
+        <div class="border2 mgtb15"></div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

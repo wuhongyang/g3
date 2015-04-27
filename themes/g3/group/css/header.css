@@ -1,0 +1,350 @@
+@charset "utf-8";
+/* CSS Document */
+/*头部导航样式*/
+.hd {
+	width:100%;
+	background:#3f3d3e;
+}
+.hd .quicknav {
+    width: 960px;
+    height: 32px;
+    line-height: 32px;
+    margin: 0 auto;
+    position: relative;
+    color: #fff;
+}
+.hd .quicknav a {
+    color: #e2e1e1;
+	font-family:"宋体";
+	text-decoration:none;
+}
+.hd .quicknav a:hover {
+    color: #f50;
+    text-decoration: underline;
+}
+.hd .topnav .quicknav-left, .hd .quicknav .quicknav-right {
+    color: #fff;
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+}
+#right {
+    width: 380px;
+    float: right;
+    position:absolute;
+	top:0;
+	right:0;
+}
+#right #site-nav {
+    width: 500px
+}
+#right #site-nav a {
+    color: #e2e1e1
+}
+#right #site-nav a:hover {
+    color: #f50
+}
+.menu-bd a {
+    color: #aaa !important
+}
+.menu-bd a:hover {
+    color: #f50 !important
+}
+/*.menu:hover .menu-hd a {*/
+    /*color: red !important*/
+/*}*/
+
+#right #site-nav .quick-menu {
+    width: 392px;
+    margin-left: 140px;
+    float: right
+}
+#right #site-nav .quick-menu li {
+    float: left;
+    display: inline
+}
+#right #site-nav .quick-menu li .last {
+    background: none transparent scroll repeat 0 0
+}
+#right #site-nav .quick-menu li .menu-item {
+    padding-right: 0;
+    padding-left: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+    position: relative
+}
+#right #site-nav .quick-menu .home {
+    padding: 1px 15px 0 0
+}
+#right #site-nav .quick-menu .rank, .favorite, .help {
+    padding: 1px 15px 0 0
+}
+#right #site-nav .menu-hd {
+    padding: 0 22px 0 2px;
+    z-index: 10002;
+    padding-bottom: 0;
+    cursor: pointer;
+    position: relative;
+    height: 20px
+}
+#right #site-nav .menu-hd b {
+    border-right: transparent 4px solid;
+    border-top: #fff 4px solid;
+    font-size: 0;
+    right: 10px;
+    border-left: transparent 4px solid;
+    width: 0;
+    line-height: 0;
+    border-bottom: transparent 4px solid;
+    position: absolute;
+    top: 14px;
+    height: 0;
+    -webkit-transition: -webkit-transform .2s ease-in;
+    -moz-transition: -webkit-transform .2s ease-in;
+    -o-transition: -webkit-transform .2s ease-in;
+    transition: -webkit-transform .2s ease-in
+}
+#right #site-nav .menu-bd {
+    border-right: #bfbfbf 1px solid;
+    border-top: #bfbfbf 1px solid;
+    display: none;
+    z-index: 10001;
+    right: 0;
+    background: #fff;
+    border-left: #bfbfbf 1px solid;
+    border-bottom: #bfbfbf 1px solid;
+    position: absolute;
+    top: 21px;
+    padding-bottom: 40px
+}
+#right #site-nav .mytaobao .menu-hd {
+    width: 48px;
+    padding-top: 1px;
+    float: left;
+    z-index: 10002
+}
+.mytaobao {
+    position: relative;
+    padding: 1px 0 0
+}
+#right #site-nav .mytaobao .menu-bd {
+    width: 94px;
+    line-height: 20px;
+    position: absolute;
+    top: 21px;
+    _left: 0;
+    _top: 21px;
+    z-index: 10001;
+    _margin-left: -96px;
+    *padding: 0;
+    padding: 0 \9;
+    padding: 0
+}
+#right #site-nav .mytaobao .menu-bd-panel {
+    position: relative;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-bottom: 8px;
+    padding-top: 8px
+}
+#right #site-nav .services .menu-hd {
+    width: 48px;
+    padding-top: 1px;
+    _padding-top: 1px
+}
+#right #site-nav .menu {
+    position: relative;
+    z-index: 1000
+}
+#right #site-nav .menu:hover .menu-hd, .ie6hd {
+    border-right: #bfbfbf 1px solid;
+    border-top: #bfbfbf 1px solid;
+    background: white;
+    margin: 0;
+    border-left: #bfbfbf 1px solid;
+    border-bottom: #bfbfbf 1px;
+    _height: 20px;
+    _display: inline-block;
+    _overflow: hidden
+}
+#right #site-nav .menu:hover .menu-hd b{
+    border-left-color: #fff;
+    filter: progid:dximagetransform.microsoft.basicimage(rotation = 2);
+    border-bottom-color: #fff;
+    border-top-color: #666;
+    top: 12px;
+    border-right-color: #fff;
+    -moz-transform: rotate(180deg);
+    -moz-transform-origin: 50% 30%;
+    -webkit-transform: rotate(180deg);
+    -webkit-transform-origin: 50% 30%;
+    -o-transform: rotate(180deg);
+    -o-transform-origin: 50% 30%;
+    transform: rotate(180deg);
+    transform-origin: 50% 30%
+}
+.ie6b{
+    /*border-width: 6px !important ;*/
+    _top:8px !important;
+    border-color: #fff #fff  #aaa #fff !important;
+}
+#right #site-nav .menu:hover .menu-bd {
+    display: block
+}
+#right #site-nav .menu:hover .menu-hd {
+    color: #aaa !important;
+}
+.topnav-cur{
+    color: #aaa !important;
+}
+/*头部一级菜单样式*/
+.daohang ul{
+	float:left;
+	margin-top:25px;
+	width:400px;
+	position:relative;
+}
+.daohang ul li{
+	float:left;
+}
+.daohang ul li a{
+	font-weight:bold;
+	display:inline-block;
+	height:45px;
+	line-height:25px;
+	padding:0 26px;
+	color:#4a4a4a;
+	font-size:20px;
+	text-align:center;
+	bottom:-3px;
+	position:relative;
+}
+.daohang ul li a.hover,
+.daohang ul li a:hover{
+	color:#ee2d00;
+	background:url("../images/menubg.jpg") no-repeat center bottom;
+}
+.dashedline{
+	height:25px;
+	background:url("../images/linebg.png") repeat-x;
+}
+.more {
+	position:absolute;
+	right:15px;
+	top:0;
+	font-weight: normal;
+    font-size: 12px;
+}
+a.more:hover{
+	text-decoration:underline;
+}
+.hd-sub {
+	width: 980px;
+    height: 65px;
+    margin: 5px auto;
+	position:relative;
+}
+.hd-sub .topnav{
+	position:absolute;
+	top:0;
+	right:0px;
+	height:12px;
+}
+.hd-sub .topnav a{
+	font-size:12px;
+	font-family:"宋体";
+	margin-left:10px;
+}
+.hd-sub .topnav .yellow{
+	font-family:"宋体";
+	color:#ee4b00;
+}
+.hd-sub .topnav .nowhite{
+	margin-left:0;
+}
+.hd-sub .topnav a.red{
+	color:#f32134;
+}
+.hd-sub .logo {
+	position: relative;
+    width: 280px;
+    margin: 10px 0 0 0;
+}
+.hd-sub .dhz2 {
+    background: url("../images/dhz2.png") no-repeat scroll 0 0 transparent;
+    height: 67px;
+    position: absolute;
+    left:150px;
+    top:0;
+    width: 140px;
+}
+.hd-sub .logo .logo-pic {
+	display: block;
+    width: 145px;
+    height: 47px;
+    font-size: 0px;
+    overflow: hidden;
+	text-indent:-9999em;
+    background-image: url("../images/logo.png") !important;
+    background-repeat: no-repeat;
+}
+.hd-sub .region {
+	background: url("../images/regionbg.jpg") 0 0 no-repeat;
+    margin: 4px 0 0 5px;
+    padding-left: 12px;
+    padding-top: 3px;
+}
+.hd-sub .region .region-name {
+	display: block;
+    width: 47px;
+    height: 22px;
+	font-size:0;
+	line-height:0;
+    overflow: hidden;
+}
+.hd-sub .region a:hover {
+	text-decoration: underline;
+}
+.hd-sub .search {
+    position: relative;
+	margin-top:30px;
+	width:140px;
+	height:29px;
+	background:url("../images/indexbtn.png") no-repeat 0 -162px;
+}
+.search .search-room, .search .search-actor{
+	display:block;
+	float:left;
+	width:44px;
+	height:29px;
+	text-indent:-9999em;
+	overflow:hidden;
+	cursor:pointer;
+	border:0;
+	background:none;
+}
+.search .search-text{
+	display:block;
+	float:left;
+    width: 100px;
+    height: 24px;
+    line-height: 24px;
+    padding-left: 5px;
+    border:0;
+    outline: none;
+    vertical-align: middle;
+    margin-top: 2px;
+	margin-left:3px;
+}
+.search .search-bar{
+	position:absolute;
+	top:0;
+	right:0;
+	width:28px;
+	height:29px;
+	display:block;
+	float:left;
+	background:none;
+	border:none;
+	cursor:pointer;
+}

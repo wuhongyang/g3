@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>通行证资料</title>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">修改通行证资料</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form class="form" method="post">
+    <input type="hidden" name="uin" value="{$info['uin']}">
+    <p>
+        <label>通行证邮箱账号：</label>
+        <span>{$info['login']}</span>
+    </p>
+    <p>
+        <label>真实姓名：</label>
+        <input type="text" name="name" value="{$info['name']}">
+    </p>
+    <p>
+        <label>身份证：</label>
+        <input type="text" name="idcard" value="{$info['idcard']}">
+    </p>
+    <p>
+        <label>QQ号码：</label>
+        <input type="text" name="qq" value="{$info['qq']}">
+    </p>
+    
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+</center>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/partner.js"></script>
+
+</body>
+</html>

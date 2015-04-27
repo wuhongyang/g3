@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>游戏链接</title>
+<style type="text/css">
+.underline{border-bottom:1px solid #666;margin-bottom: 5px;}
+.h22{height: 22px;}
+table tbody tr{height:24px;}
+.span{position: relative;top:-15px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">游戏链接</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form method="post" class="form">
+    <input type="hidden" name="group_id" value="{$group_id}">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin:0 0 30px 70px;">
+        <tr class="underline">
+            <td width="15%">游戏名称</td>
+            <td>游戏资金链接</td>
+        </tr>
+        {foreach $games $key $val}
+        <tr>
+            <td>{$val['parent_names']}</td>
+            <td>
+                <input type="text" class="h22" name="row[{$key}][url]" size="100" value="{$urls[$val['parent_id']]}">
+                <input type="hidden" name="row[{$key}][bigcase_id]" value="{$val['bigcase_id']}">
+                <input type="hidden" name="row[{$key}][case_id]" value="{$val['case_id']}">
+                <input type="hidden" name="row[{$key}][parent_id]" value="{$val['parent_id']}">
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    <p><label>&nbsp;</label><input type="submit" value=" 提 交 " /></p>
+</form>
+</body>
+</html>

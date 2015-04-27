@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+	{include file="header.html"}
+    <div>
+        <div class="mgL200"><span class="fs16 yellow bold">您的房间开设成功！</span></div>
+    </div>
+    <ul class="formlist">
+        <li class="clearfix"><label class="mgL100">房间ID：</label><span>{$roomInfo['id']}</span></li>
+        <li class="clearfix"><label class="mgL100">房间规模：</label><span>{$roomInfo['maxuser']}人</span></li>
+        {if !$signedManage}
+        <li class="clearfix">
+            <a href="room_manage.php?module=room_list" style="margin-left:240px;" class="bluebtn mgtb15"><span>返回房间列表</span></a>
+        </li>
+        {/if}
+    </ul>
+    {if $signedManage}
+    <div class="border2 mgtb15"></div>
+    <div class="fs16 mgL50"><span class="yqqy"></span>为更好使用房间各项功能，请给房间分配室主。</div>
+    <ul class="formlist">
+        <li class="clearfix">
+            <a href="signed_manage.php?module=signed&room_id={$roomInfo['id']}&role_id=10185" class="greenbtn mgtb15" style="margin-left:180px;"><span>点击邀请签约</span></a>
+        </li>
+    </ul>
+    {/if}
+</div>
+{include file="foot.html"}
+
+</body>
+</html>

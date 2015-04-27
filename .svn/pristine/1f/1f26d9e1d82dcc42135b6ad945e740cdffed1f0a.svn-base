@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<style type="text/css">
+* {margin: 0;padding: 0;}
+.clearfix:after {visibility: hidden;display: block;font-size:0;content: " ";clear: both;height: 0;}
+.clearfix {zoom: 1; /* for IE6 IE7 */}
+.fl, fr {display: inline;}
+.fl {float: left;}
+.fr {float: right;}
+body {font-size:14px;font-family: "宋体";}
+a {color: #000;text-decoration: none;}
+a:hover {color: #B01117;}
+ul, li {list-style: none;}
+.city-list {width:440px;padding:20px 15px;background:#fff;color:#818181;margin:0 auto;}
+.city-hot a {display: inline-block;width: 50px;text-align: center;}
+.city-all {margin-top: 15px;}
+.city-tab {width: 386px;margin-left: 10px;}
+.tab-title {z-index: 2}
+.tab-title li {width: 24px;height: 28px;text-align: center;}
+.tab-title li a {display: block;cursor: pointer;border: 1px solid #fff;border-bottom: none;}
+.tab-title li a:hover, .tab-title li a.active {color: #B01117;border: 1px solid #bababa;border-radius:3px 3px 0 0;border-bottom-color:#fff;}
+.tab-cont {width: 100%;padding-top: 10px;margin-top: -11px;border-top: 1px solid #bababa;}
+.tab-cont li {padding: 0 5px;}
+</style>
+</head>
+<body>
+<div class="city-list">
+        <div class="city-hot">
+            <span>热 门</span>
+            <a href="http://{$_SERVER['HTTP_HOST']}" target="_top">导航站&raquo;</a>
+            {foreach $hot_citys $city}
+            <a href="http://{$_SERVER['HTTP_HOST']}/city/{$city['region_id']}" target="_top">{$city['city_name']}</a>
+            {/foreach}
+        </div>
+        {foreach $sites $key $index}
+        {if count($index) > 0}
+        {php $word_index[] = $key;$word_city[] = $index;}
+        {/if}
+        {/foreach}
+        <div class="city-all clearfix"><span class="fl">拼 音</span>
+
+            <div class="city-tab fl" id="J_tab">
+                <ul class="tab-title clearfix" id="J_tab_title">
+                    {foreach $word_index $key $index}
+                    <li class="fl"><a {if empty($key)}class="active"{/if}>{$index}</a></li>
+                    {/foreach}
+                </ul>
+                <div class="tab-cont" id="J_tab_cont">
+                    {foreach $word_city $key $index}
+                    <ul class="clearfix" {if !empty($key)}style="display:none;"{/if}>
+                    {foreach $index $city}
+                    <li class="fl"><a href="/city/{$city['region_id']}" target="_top">{$city['city_name']}</a></li>
+                    {/foreach}
+                    </ul>
+                    {/foreach}
+                </div>
+            </div>
+        </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var tab_title = $('#J_tab_title').find('a'),
+                tab_cont = $('#J_tab_cont').find('ul'),
+                tab = $('#J_tab_title');
+        tab_title.hover(function (index) {
+            var index = tab_title.index($(this));
+            tab_title.removeClass('active');
+            $(this).addClass('active');
+            tab_cont.hide().eq(index).show();
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>已发送邮件内容</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	var users_tr = $("#users_tr")
+	$("#show_user").click(function(){
+		users_tr.toggle();
+		if(users_tr.is(":visible"))
+			$(this).html("点击关闭列表")
+		else
+			$(this).html("点击展开列表")
+	})
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">已发送邮件内容</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<table style="width:100%" cellspacing="20">
+<tr>
+	<td style="font-size:18px;font-weight:bold;">{$title}</td>
+</tr>
+<tr>
+	<td>发给{$users_count}个用户，<span style="color:green;cursor:pointer" id="show_user">点击展开列表</span></td>
+</tr>
+<tr id="users_tr" style="display:none">
+	<td>
+	<table>
+	{foreach $users $name $done}
+	<tr>
+		<td width="200">{$name}</td>
+		{if $done}
+		<td><span style="color:green;">发送成功</span></td>
+		{else}
+		<td><span style="color:red;">发送失败</span></td>
+		{/if}
+	</tr>
+	{/foreach}
+	</table>
+	</td>
+</tr>
+<tr>
+	<td>
+	<div>
+	{$content}
+	</div>
+	</td>
+</tr>
+</table>
+
+
+<div class="main-width">
+	<div class="pagenavi">{$result['Page']}</div>
+</div>
+</body>
+</html>

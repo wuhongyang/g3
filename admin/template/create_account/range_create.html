@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>开设账号</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">开设号码段</div>
+</div >
+{include "create_account/tab.html"}
+
+<form method="post" class="form" action="" id="form">
+    <p>
+        <label style="width:145px;">范围开号：</label>
+		<span style="color:red">*系统将在起止号码范围内开设。范围越大速度越慢，且会影响整个平台。另，请注意跳号现象。</span>
+    </p>
+	<p>
+        <label style="width:145px;">起始号码：</label>
+		<input type="text" name="start_uin" />
+    </p>
+	<p>
+        <label style="width:145px;">终止号码：</label>
+		<input type="text" name="end_uin" />
+    </p>
+    <p>
+    	<label style="width:145px;"></label>
+    	<input type="submit" class="submit" value="批量申请" />
+    </p>
+</form>
+
+</body>
+</html>

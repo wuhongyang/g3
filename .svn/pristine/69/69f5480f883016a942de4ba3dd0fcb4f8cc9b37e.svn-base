@@ -1,0 +1,42 @@
+<div class="container storelist">
+    <ul class="thumbnails">
+        {foreach $commodities $val}
+        <li class="span3">
+            <div class="thumbnail  hover">
+                <div class="imgwrap">
+                    <img alt="{$val['name']}" title="{$val['desc']}" data-src="holder.js/205x180" style="width: 205px; height: 180px;" src="{$val['image_md5']}">
+                </div>
+                <div class="caption">
+                    <input type="hidden" name="swf_url" value="{$val['flash_md5']}" class="swf-url">
+                    <h3>{$val['name']}</h3>
+                    <p class="orange">价格：{$val['price']}{$unit}/{if $val['type']==1}{$val['expire']}天{else}个{/if}</p>
+                    <p>
+                        <a class="btn btn-primary btncolor" href="?module=info&category_id={$category_id}&commodity_id={$val['id']}&group_back_config={$categories[$category_id]['group_back_config']}&room_id={$room_id}">立即购买</a>
+                        {if !empty($val['flash_md5'])}
+                        <a class="btn btn-primary btnpreview" href="javascript:;">预览</a>
+                        {/if}
+                    </p>
+
+                </div>
+            </div>
+        </li>
+        {/foreach}
+    </ul>
+    {include file="group_shop/page.html"}
+</div>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+$('.btnpreview').click(function(){
+    var name = $(this).parents('.caption').find('h3').html();
+    var swf_url = $(this).parents('.caption').find('.swf-url').val();
+    art.dialog({
+        title: '预览'+name,
+        content: '<object width="440" height="220" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="'+swf_url+'" name="movie"><param value="high" name="quality"><embed width="440" height="220" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="'+swf_url+'"></object>',
+        width: 440,
+        height: 220,
+        top: '50%',
+        lock: true,
+        resize: false
+    });
+});
+</script>

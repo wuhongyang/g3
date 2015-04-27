@@ -1,0 +1,19 @@
+{if $isGroupManger}
+<div class="box4">
+    <span>选择房间：
+        <select onchange="selectRoom(this)">
+        {foreach $myrooms $room}
+          <option value="{$room['id']}" title="{$room['id']}" {if $room['id']==$roomid}selected{/if}>{$room['name']}</option>
+        {/foreach}
+        </select>
+    </span>
+    {if $isGroupManger}
+    <a href="group.php?module=room_list" class="bluebtn arT5"><span>返回房间列表</span></a>
+    {/if}
+</div>
+<script type="text/javascript">
+function selectRoom(obj){
+	location.href='roommanage.php?roomid='+obj.value;
+}
+</script>
+{/if}

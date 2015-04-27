@@ -1,0 +1,20 @@
+<div id="leftmenu">
+    <dl>
+        <dt class="accountTitle">帐号管理</dt>
+        <dd><a href="account.php?module=basic&uin={$uin}" {if $module=='basic'}class="hover"{/if}>基本信息</a></dd>
+        <dd><a href="account.php?module=modifyInfo&uin={$uin}" {if $module=='modifyInfo'}class="hover"{/if}>修改资料</a></dd>
+        <dd><a href="account.php?module=changeFace&uin={$uin}" {if $module=='changeFace'}class="hover"{/if}>更换头像</a></dd>
+        <!--<dd><a href="account.php?module=vipList&uin={$uin}" {if $module=='vipList'}class="hover"{/if}>站会员查询</a></dd>-->
+    </dl>
+    <dl>
+        <dt class="tradeTitle">交易记录</dt>
+        <!-- <dd><a href="account.php?module=vbaoRecord&uin={$uin}" {if $module=='vbaoRecord'}class="hover"{/if}>V宝交易记录</a></dd> -->
+        <dd><a href="account.php?module=vdianlist&group_id={$user['GroupId']}" {if $module=='vdianlist'||$module=='vdianRecord'}class="hover"{/if}>站金币管理</a></dd>
+    </dl>
+    <dl>
+        <dt class="daojuTitle">我的商品</dt>
+        {foreach $categories $key $val}
+            <dd><a href="account.php?module=commodity&category={$val['cate_id']}" {if $category==$val['cate_id']}class="hover"{/if}>{$val['cate_name']}</a></dd>
+        {/foreach}
+    </dl>
+</div>

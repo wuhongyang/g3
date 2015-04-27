@@ -1,0 +1,196 @@
+/* CSS Document */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
+pre, form, fieldset, table, th, td { margin: 0; padding: 0; }
+ul,li { list-style:none;}
+body{ margin:0px auto;padding:0px; font-size:12px;   font-family:"微软雅黑"; background:url(../images/zhuc_02.jpg);} 
+#box{ width:100%; height:894px; margin:0px auto; padding:0px; }
+
+.mid{
+	width:1018px;
+	height:920px;
+	margin:0px auto;
+	padding:0px;}
+.mid_01{
+	width:1018px;
+	height:180px;
+	float:left;
+	background:url(../images/zhuc_03.jpg) no-repeat;
+	}
+.mid_02{
+	width:1018px;
+	height:640px;
+	float:left;
+	background:url(../images/zhuc_04.jpg) no-repeat;}
+.mid_02_L{
+	width:230px;
+	height:640px;
+	float:left;
+	margin-left:10px;
+	display:inline;
+	}
+.mid_02mune{
+	width:198px;
+	height:70px;
+	float:left;
+	margin-top:10px;
+	margin-left:10px;
+	display:inline;
+	}
+.mid_02_pic01{
+	width:184px;
+	height:95px;
+	float:left;
+	margin-bottom:4px;
+	margin-left:20px;
+	margin-top:3px;
+	display:inline;
+	}
+.mid_02_pic02{
+	width:230px;
+	height:456px;
+	float:left;
+	}
+
+.mid_02_R{
+	width:750px;
+	height:640px;
+	float:left;
+	margin-left:25px;
+	display:inline;
+	}
+.mid_02_Rpic{
+	width:241px;
+	height:201px;
+	float:left;
+	margin-right:8px;
+	margin-top:12px;
+	display:inline;
+	}
+.R_pic01{
+	width:241px;
+	height:176px;
+	float:left;
+	position:relative;
+	}
+.R_pic01_bg{
+	width:236px;
+	height:25px;
+	float:left;
+	background:#000000;
+	color:#FFFFFF;
+	font-size:12px;
+	line-height:25px;
+	position:absolute;
+	left: 0px;
+	top: 151px;
+	filter: alpha(opacity=70);
+	opacity:0.7;
+	padding-left:5px;
+	}
+.R_wz{
+	width:241px;
+	height:25px;
+	float:left;
+	background:#FFFFFF;
+	text-align:center;
+	line-height:25px;
+	}
+.R_wz a{
+	color:#C21A4B;
+	font-weight:bold;
+	text-decoration:none;
+	}
+.R_wz a:hover{
+	color:#001845;
+	font-weight:bold;
+	text-decoration:underline;
+	}
+	
+	
+	
+.mid_btn{
+	width:1017px;
+	height:100px;
+	float:left;
+	}
+	
+	
+
+/*----------------------弹出窗 开始----------------------------*/
+#fullbg{
+background:#000;
+display:none;
+z-index:3;
+position:absolute;
+left:0px;
+top:0px;
+filter:Alpha(Opacity=70);
+/* IE */
+-moz-opacity:0.7; 
+/* Moz + FF */
+opacity: 0.7;
+}
+
+#dialog {
+position:absolute;
+width:501px;
+height:428px;
+background:url(../images/zhuc_09.jpg) no-repeat;
+display: none;
+z-index: 5;
+}
+#dialog_1{ width:501px; height:428px; float:left;}
+#dialog_1_title{ width:481px; height:25px; float:left;  padding:5px 10px 0px 10px; margin-top:10px; padding-right:20px; }
+#dialog_1_nr{ width:500px; height:320px; float:left; color:#202020; margin-top:40px; display:inline;}
+#dialog_1_nr a{
+	color:#202020;
+	text-decoration:none;
+	}
+#dialog_1_nr a:hover{
+	color:#FF0000;
+	text-decoration:underline;
+	}
+	
+
+/*----------------------弹出窗 结束----------------------------*/
+
+
+.input-list label{
+float:left;
+margin:0px;
+padding:0px;}
+.input-list dt{float:left;text-align:right;width:120px;padding-right:5px;margin-bottom:8px; line-height:25px;}
+.input-list dd{font-size:12px;float:left;width:350px;margin-bottom:8px;}
+
+.tips{font-size:12px;width:220px;margin-top:5px; float:left;}
+.auto-email {
+background: none repeat scroll 0 0 #FFFFFF;
+border: 1px solid #CCCCCC;
+display: none;
+font-size: 12px;
+float:left:	
+list-style: none outside none;
+position: absolute;
+top: 110px;
+width: 225px;
+}
+.auto-email a {
+cursor: pointer;
+display: block;
+padding: 4px;
+}
+.auto-email a:hover {
+background: none repeat scroll 0 0 #E8F8FF;
+}
+
+.label_hack{
+	*margin-top:-60px !important; 
+	margin-top:0px;}
+.dd_hack{
+	*margin-top:-35px !important; 
+	*margin-left:65px !important; 
+	margin-top:0px;
+	margin-left:0px;}
+
+
+	

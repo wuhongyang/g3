@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站页面底部信息管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">站页面底部信息管理</div>
+  <div class="header-button right">
+  {if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加</a>{/if}
+  </div>
+</div>
+
+<div style="padding:10px;background:#EEE;border:solid 1px #CCC;margin:12px;">
+  <form method="GET">
+  站id:&nbsp;&nbsp;<input type="text" name="group_id" value="{$_GET['group_id']}" style="height:20px;">
+  <input type="submit" value="搜索" style="height:24px; width:60px;">
+  </form>
+</div>
+  
+<table class="table-list main-width" id="table-list">
+  <tr>
+    <th>序号</th>
+    <th>站ID</th>
+    <th>站名称</th>
+    <th>域名</th>
+    <th>备案信息</th>
+    <th>修改时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $list $k $arr}
+  <tr>
+    <td>{echo $k+1}</td>
+    <td>{$arr['group_id']}</td>
+    <td>{$arr['name']}</td>
+    <td>{$arr['domain']}</td>
+    <td>{$arr['icp']}</td>
+    <td>{echo date('Y-m-d H:i',$arr['uptime'])}</td>
+    <td>
+    	{if $link_array[102]['url']}<a href="{$link_array[102]['url']}&id={$arr['id']}">修改</a>{/if}&nbsp;
+        {if $link_array[103]['url']}<a href="{$link_array[103]['url']}&id={$arr['id']}">同步</a>{/if}&nbsp;
+    </td>
+  </tr>
+  {/foreach}
+</table>
+<div class="main-width">{$p}</div>
+</body>
+</html>

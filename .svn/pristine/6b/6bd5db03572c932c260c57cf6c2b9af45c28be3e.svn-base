@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">游戏配置列表</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a class="add-button" href="{$link_array[101]['url']}">返回</a>{/if}</div>
+</div>
+<ul class="page-tab">
+    {if $link_array[106]['url']}<li><a href="{$link_array[106]['url']}&cmd=$cmd">游戏配置</a></li>{/if}
+    {if $link_array[107]['url']}<li><a class="active" href="{$link_array[107]['url']}&cmd={$cmd}">游戏系数</a></li>{/if}
+    {if $link_array[108]['url']}<li><a href="{$link_array[108]['url']}&cmd={$cmd}">房间授权列表</a></li>{/if}
+</ul>
+
+<form method="post" action="?module=modifyRateConfig" class="form">
+	<input type="hidden" name="cmd" value="{$cmd}" />
+    <p>
+    	<label>游戏系数配置：</label>
+        <input type="text" name="value" value="{$value}" />
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" value="保存配置" style="width:80px; height:30px;" />
+    </p>
+</form>
+
+<script type="text/javascript">
+function addConfig(){
+	var id = document.getElementById('table-list');
+	var newtr = id.insertRow(-1);
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	td1.innerHTML = '<input type="text" name="descr[]">';
+	td2.innerHTML = '<input type="text" name="key[]">';
+	td3.innerHTML = '<input type="text" name="value[]" style="width:50%"> <a href="#" onclick="delConfig(this)">删除</a>';
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+}
+function delConfig(obj){
+	obj = obj.parentNode.parentNode;
+	obj.parentNode.removeChild(obj);
+}
+</script>
+</body>
+</html>

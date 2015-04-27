@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>upcover</title>
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/resource/css/base-min.css');}" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/css/jquery.Jcrop.css');}" type="text/css" />
+</head>
+
+<body>
+<style type="text/css">
+body{font-size:12px;color:#666;}
+</style>
+<form id="upcover" method="post" enctype="multipart/form-data">
+<div id="uploadImg"><input type="file" id="file" size="5" name="cover" onChange="document.getElementById('upcover').submit()"><em>本地图片</em> </div>
+<!--<div class="upbtn"><label>本地图片</label><input type="file" name="cover" size="8" onChange="document.getElementById('upcover').submit()"></div>-->
+</form>
+<p style="margin-top:10px;"><img src="{if empty($filename)}{THEMES_URL}group_site/{$themes}/src/service/images/cover.png{else}{$filename}{/if}" id="cover_view" /></p>
+<form id="up" method="post" action="?module=upload" enctype="multipart/form-data">
+	<input type="hidden" name="room_cover" id="room_cover" />
+	<input type="hidden" name="room_cover_coords" id="room_cover_coords" />
+	<p align="center"><input type="button" class="upfile-button" value="上传" /> <input type="button" class="upfile-cancal" onClick="cancelCrop()" value="取消" /></p>
+</form>
+
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/js/jquery.Jcrop.js');}"></script>
+<script type="text/javascript">
+<!--{if !empty($filename)}-->
+/*参数对象*/
+var jcrop_api;
+var theme_url = '{THEMES_URL}';
+var coverobj = document.getElementById('room_cover');
+var coordsobj = document.getElementById('room_cover_coords');
+coverobj.value = '<!--{$filename}-->';
+coordsobj.value = '';
+
+/*初始化裁切工具*/
+window.onload = function(){
+	$('#cover_view').Jcrop(
+		{
+			setSelect:[48,31,284,208],
+			aspectRatio:4/3,
+			minSize:[80,60],
+			boxWidth:340,
+			boxHeight:240,
+			onSelect:setCoords
+		},
+
+		function(){
+		jcrop_api = this;
+	});
+
+	$('.upfile-button').click(function(){
+		var room_cover = $('#room_cover').val();
+		if(room_cover == ''){
+			return false;
+		}
+		$('#up').submit();
+	})
+}
+
+/*设置图像裁切坐标*/
+function setCoords(s){
+	coordsobj.value = '{"w":'+parseInt(s.w)+',"h":'+parseInt(s.h)+',"x":'+parseInt(s.x)+',"y":'+parseInt(s.y)+'}';
+	//console.log(s.x+'|'+s.y+'|'+s.x2+'|'+s.y2);
+}
+
+/*确定选择区域*/
+function confirmCrop(){
+	jcrop_api.disable();
+	jcrop_api.setOptions({allowResize:false,bgOpacity:.3});
+}
+
+/*设置可编辑*/
+function cancelCrop(){
+	$('.jcrop-holder').html('<img src="'+theme_url+'service/images/upcover.png" width="350">');
+}
+<!--{/if}-->
+
+var flag = '{$result["Flag"]}';
+if(flag == 100){
+	var i=parent.document.getElementById("img");i.innerHTML='<img style="margin:-25px 0 0 65px;" src="{php echo cdn_url(PIC_API_PATH."/p/".$result["File"]."/200/150.jpg");}">';
+	var modify=parent.document.getElementById("modify");
+	modify.click();
+	location.href="cover.php";
+	parent.document.getElementById("user_photo").value = '{$result["File"]}';
+}
+</script>
+
+</body>
+</html>

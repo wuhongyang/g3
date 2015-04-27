@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}">
+</script><script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+</style>
+</head>
+<body>
+<div id="dialog_content" style="display:none">
+		分类:&nbsp;&nbsp;<input id="cate_name" name="cate_name" type="text">
+</div>
+<div class="bodywrap">
+    {include file="header.html"}
+    <p>
+    <form method="get">
+    <input type="hidden" name="module" value="list">
+	充值用户：<input type="text" name="uin" value="{$_GET['uin']}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	订单状态：<select name="status">
+	<option value=-1>请选择</option>
+	<option value=0 {if isset($_GET['status']) and $_GET['status'] == 0}selected="selected"{/if}>未支付</option>
+	<option value=1 {if $_GET['status'] == 1}selected="selected"{/if}>支付成功</option>
+	<option value=2 {if $_GET['status'] == 2}selected="selected"{/if}>站内余额不足</option>
+	</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	充值方式：<select name="parent_type">
+	<option value=-1>请选择</option>
+	<option value=10094 {if $_GET['parent_type'] == 10094}selected="selected"{/if}>网银</option>
+	<option value=10095 {if $_GET['parent_type'] == 10095}selected="selected"{/if}>财付通</option>
+	<option value=10320 {if $_GET['parent_type'] == 10320}selected="selected"{/if}>宝付</option>
+	<option value=10064 {if $_GET['parent_type'] == 10064}selected="selected"{/if}>支付宝</option>
+	</select>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	日期：<input type="text" name="start_time"  readOnly="true" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" value="{if isset($_GET['start_time'])}{$_GET['start_time']}{else}{$start_time}{/if}" />&nbsp;&nbsp;
+	<input type="text" name="end_time"  readOnly="true" onfocus="WdatePicker({dateFmt:'yyyy-M-d H:mm:ss'})" value="{if isset($_GET['end_time'])}{$_GET['end_time']}{else}{$end_time}{/if}" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="submit" class="bluebtn2" value="查询" />
+	</form>
+    </p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="15%">订单号</th><th width="20%">充值用户</th><th width="15%">充值金额（元）</th><th width="10%">支付方式</th><th width="10%">订单状态</th><th width="15%">时间</th><th>操作</th>
+        </tr>
+        {foreach $list $one}
+        <tr>
+            <td>{$one['trade_id']}</td>
+            <td>{$one['nick']}({$one['uin']})</td>
+            <td>{$one['money']}</td>
+            <td>{if $one['parent_type']==10094}网银{elseif $one['parent_type']==10095}财付通{elseif $one['parent_type']==10064}支付宝{elseif $one['parent_type']==10320}储蓄卡充值{/if}</td>
+            <td>{if $one['status']==0}未支付{elseif $one['status']==1}支付成功{elseif $one['status']==2}站内余额不足{/if}</td>
+            <td>{eval echo date("Y-m-d H:i:s", $one['uptime'])}</td>
+            <td>
+            {if $balance>=$one['money']*$one['rebate']*10000}
+                {if $one['status']==2 || $one['status']==0}
+                <a redirect="?module=remedy&trade_id={$one['trade_id']}&{$get}" onclick="remedy(this);" href="#">补单</a>
+                {/if}
+            {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    <div style="text-align:center;margin-top:5px;">
+    {$page}
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?tu3fm3&skin=default')}"></script>
+<script type="text/javascript">
+function remedy(obj){
+    art.dialog({
+        content: '补单功能在充值功能异常时使用。使用前请先确认第三方支付平台有资金到账',
+        ok: function(){
+            window.location.href = $(obj).attr('redirect');
+        },
+        cancel: function(){
+            this.close();
+        },
+        lock: true,
+        width: 250,
+        icon: 'warning'
+    });
+}
+</script>
+</html>

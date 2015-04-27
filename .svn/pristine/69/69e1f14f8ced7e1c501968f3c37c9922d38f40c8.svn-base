@@ -1,0 +1,14 @@
+<div class="footer">
+    <p>
+        <a href="/about.html" target="_blank">关于我们</a>
+        <span>|</span>
+        <a href="/contactus.html" target="_blank">联系我们</a>
+        <span>|</span>
+        <a href="/agreement.html" target="_blank">用户协议</a>
+        <span>|</span>
+        <a href="/employ.html" target="_blank">高薪诚聘</a>
+        <span>|</span>
+        <a href="/custom.html" target="_blank">客服中心</a>
+    </p>
+    <p class="zhu">Copyright &copy; 2006-2013 vvku.com 版权所有 浙ICP备12027086号-1</p>
+</div>

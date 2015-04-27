@@ -1,0 +1,79 @@
+<div class="hd">
+    <div class="topnav">
+        <div class="clearfix">
+            <div class="topnav-left fll" id="J_head">
+	            欢迎来到VV酷社区！
+	            <a href="/passport/?account&index&url=/">登录</a>
+	            | <a href="/passport/">注册</a> | <a href="/rooms/shortcut.php">+桌面图标</a>
+	        </div>
+            <div class="topnav-right" id="right">
+                <div id="site-nav">
+                    <ul class="quick-menu">
+                        <li class="home"><a href="/">首页</a></li>
+                        <li class="mytaobao menu-item">
+                            <div class="menu">
+                                <a class="menu-hd gray" href="/service/profile.php" target="_top" rel="nofollow">个人中心<b></b> </a>
+    							
+                                <div class="menu-bd">
+	                                <div class="menu-bd-panel">
+	                                    <div>
+	                                        <a href="/service/pass_manager.php" rel="nofollow">通行证管理</a><br>
+	                                        <a href="/service/account.php" rel="nofollow">帐号管理</a><br>
+	                                        <a href="/service/role_select.php" rel="nofollow">渠道管理</a><br>
+	                                        <a href="/service/weibo.php" rel="nofollow">我的微博</a><br>
+	                                    </div>
+	                                </div>
+	                            </div>
+                            </div>
+                        </li>
+                        <li class="services menu-item last">
+                        </li>
+                        <li class="mytaobao menu-item">
+                            <div class="menu">
+                                <a class="menu-hd gray" href="/shop/index.php" target="_top" rel="nofollow">购物商城<b></b></a>
+    
+                                <div class="menu-bd">
+                                    <div class="menu-bd-panel">
+	                                    <div>
+	                                        <a href="/shop/index.php">充值V宝</a><br>
+	                                        <a href="/shop/buyluckstar.php">获取V豆</a><br>
+											<a href="/shop/buyprops.php">购买道具</a><br>
+	                                    </div>
+	                                </div>
+                                    <s class="r"></s>
+                                    <s class="rt"></s>
+                                    <s class="lt"></s>
+                                    <s class="b"></s>
+                                    <s class="b b2"></s>
+                                    <s class="rb"></s>
+                                    <s class="lb"></s>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="rank"><a href="/top.html" class="gray">&nbsp;排行 </a></li>
+	                    <li class="favorite"><a href="/feedback.html" class="gray">反馈</a></li>
+	                    <li class="help"><a href="/help/index.html" class="gray">帮助</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript">
+$.ajax({
+    url: '/rooms/ajax_info.php',
+    type: 'POST',
+    data: {"Tag":"GetLoginUser"},
+    success: function(data){
+        json = jQuery.parseJSON(data);
+        console.log(json);
+        if(json.Flag == 100){
+            //展示头部
+            var h_html = '欢迎来到VV酷社区！ <a class="yellow" href="/service/profile.php" style="color: #F0B45E;">' + json.Nick + '</a>  ';
+            h_html += '<a href="/service/loginout.php?back=/" class="gray">退出</a> | <a href="/rooms/shortcut.php">+桌面图标</a>';
+            $('#J_head').html(h_html);
+        }
+    }
+});
+</script>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>会员管理列表-查看/修改会员资料</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">查看会员资料</h3>
+    </div>
+    <div class="mgL20">
+        <ul class="formlist">
+            <li class="clearfix">
+                <label>昵称：</label>
+                <span>{$info['nick']}</span>
+            </li>
+            <li class="clearfix">
+                <label>性别：</label>
+                <span>{if $info['gender']==1}男{elseif $info['gender']==2}女{else}未知{/if}</span>
+            </li>
+            <li class="clearfix">
+                <label>真实姓名：</label>
+                <span>{echo empty($info['name']) ? '未填写' : $info['name']}</span>
+            </li>
+            <li class="clearfix">
+                <label>生日：</label>
+                <span>{$info['birthday']}</span>
+            </li>
+            <li class="clearfix">
+                <label>所在地区：</label>
+                <span>{$areaName}</span>
+            </li>
+            
+            <li class="clearfix">
+                <label>身高：</label>
+                <span>{echo empty($info['height']) ? '未填写' : $info['height']}</span>
+            </li>
+            <li class="clearfix">
+                <label>QQ：</label>
+                <span>{echo empty($info['qq']) ? '未填写' : $info['qq']}</span>
+            </li>
+            <li class="clearfix">
+                <label>手机：</label>
+                <span>{echo empty($info['phone']) ? '未填写' : $info['phone']}</span>
+            </li>
+            <li class="clearfix">
+                <label>自我介绍：</label>
+                <span>{echo empty($info['introduction']) ? '未填写' : $info['introduction']}</span>
+            </li>
+            <li class="clearfix" style="padding-left:150px;">
+                <input type="submit" class="bluebtn2" onclick="location.href='?module=vip_list'" value="返回"/>
+            </li>
+        </ul>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

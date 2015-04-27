@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+
+    <div>
+        <h3>会员列表</h3>
+    </div>
+    <form method="post" action="?module=vip_list" id="search_form" style="margin:20px 0;">
+        <span>用户ID：</span>
+        <input name="uin" id="uin" type="text" value="{$_POST['uin']}">
+        <span class="mgL20">所在地：</span>
+        <select name="province" id="province">
+            <option value="-1">请选择</option>
+            {foreach $provinces $key $val}
+            <option value="{$key}" {if $_POST['province']==$key}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+        <select name="city" id="city">
+            <option value="-1">请选择</option>
+        </select>
+        <input name="" type="submit" value="查询" class="normalbtn">
+    </form>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+      <tr>
+        <th>编号</th>
+        <th>用户ID</th>
+        <th>昵称</th>
+        <th>性别</th>
+        <th>所在地</th>
+        <th>真实姓名</th>
+        <th>手机号码</th>
+        <th>状态</th>
+        <th>注册时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $lists $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['uin']}</td>
+        <td>{$val['nick']}</td>
+        <td>{if $val['gender']==1}男{elseif $val['gender']==2}女{else}未知{/if}</td>
+        <td>{$val['province']} {$val['city']}</td>
+        <td>{$val['name']}</td>
+        <td>{$val['phone']}</td>
+        <td>{if $val['state']==1}正常{elseif $val['state'] ==0}冻结{/if}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+        <a href="?module=vip_info&Uin={$val['uin']}" class="ahover mgR10">查看</a>
+		{if $val['state']==1}
+		<a href="?module=vip_state&Uin={$val['uin']}" class="ahover mgR10" onclick="return confirm('是否确认要冻结此账号?')">冻结</a>
+		{elseif $val['state'] ==0}
+		<a href="?module=vip_state&Uin={$val['uin']}" class="ahover mgR10" onclick="return confirm('是否确认要解冻此账号?')">解冻</a>
+		{/if}
+		<a href="#" class="ahover mgR10 edit_pass" uin="{$val['uin']}">重置密码</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="page" id="lopage">
+        {$page}
+    </div>
+</div>
+<div id="dialog_content" style="display:none">
+	<table>
+		<tr>
+			<td>新密码：</td><td><input type="password" name="pass" id="pass" /></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td><td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>重复密码：</td><td><input type="password" name="repass" id="repass" /></td>
+		</tr>
+	</table>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+{if $_POST['province'] > 0}
+window.onload = function(){
+    _display_cities({$_POST['province']},{$_POST['city']});//默认选中省编号
+}
+{/if}
+$(function(){
+    $('#province').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+    $(".edit_pass").click(function(){
+    	var uin = $(this).attr("uin");
+    	$("#pass").val("");
+    	$("#repass").val("");
+    	var dlg=art.dialog({
+				title:"重置密码",
+				content: $("#dialog_content")[0],
+				lock: true,
+				button: [{
+		            name: '确定',
+		            callback: function () {
+		            	var pass = $("#pass").val();
+		            	var repass = $("#repass").val();
+		            	if(pass != repass){
+		            		alert("两次密码输入不一致");
+		            		return false;
+		            	}
+		            	$.post("vip.php?module=edit_pass", {"uin":uin, "pass":pass}, function(data){
+		            		var res = $.parseJSON(data);
+		            		if(res.Flag == 100){
+		            			alert(res.FlagString);
+			            		dlg.close();
+		            		}else{
+		            			alert(res.FlagString);
+		            			return false;
+		            		}
+		            	})
+		            	return false;
+		            },
+		            focus: true
+		        },{
+					name: '返回',
+		            callback: function () {
+		                this.close();
+		            }
+				}]
+			});
+    	return false;
+    })
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>手机卡充值</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+#unicom{display: none;}
+#telecom{display: none;}
+</style>
+</head>
+
+<body>
+
+{include file="header.html"}
+{include file="paykmoney/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<script>
+$(function(){
+	$("#form").submit(function(){
+		if($("#ba").val() < $("#total_vdian").html()){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+</script>
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+    	{include file="group_info.html"}
+        
+        <form method="post" action="?module=payment_save" class="form-charge" id="form">
+            <input type="hidden" name="pay_type" value="mobilecard">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+            <input type="hidden" name="roomid" value="{echo intval($roomid)}">
+
+        	{include file="user_info.html"}
+
+            <div class="rows">
+            	<label>充值卡类型：</label>
+                <select style="width:165px;" name="pay_id">
+                    <option value="1">神州行</option>
+                    <option value="2">联通卡</option>
+                    <option value="3">电信卡</option>
+                </select>
+            </div>
+            <div class="rows" id="charge_card">
+            	<label>充值卡面额：</label>
+                <select style="width:165px;" name="pay_expense" id="mobile">
+                    <option value="10">10元</option>
+                    <option value="20">20元</option>
+                    <option value="30">30元</option>
+                    <option value="50">50元</option>
+                    <option value="100" selected>100元</option>
+                    <option value="300">300元</option>
+                </select><select style="width:165px;" name="pay_expense" id="unicom" disabled="disabled">
+                    <option value="20">20元</option>
+                    <option value="30">30元</option>
+                    <option value="50">50元</option>
+                    <option value="100" selected>100元</option>
+                    <option value="300">300元</option>
+                </select><select style="width:165px;" name="pay_expense" id="telecom" disabled="disabled">
+                    <option value="50">50元</option>
+                    <option value="100" selected>100元</option>
+                </select>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <span class="totalMoney">
+                	<font color="14A3CD">共可获得</font> <font color="#FF0000" id="total_vdian">90</font> <font color="14A3CD">万金币</font>
+                    <font color="#999">(兑换比率：1元=9000 {$GroupData['currency_unit']})</font>
+                </span>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <button type="button" class="btn" id="J_post">立即充值</button>
+            </div>
+        </form>
+    </div>    
+</div>
+
+{include file="foot.html"}
+
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/modules/store/js/charge.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.mobilecard;
+}
+
+$('select[name="pay_id"]').change(function(){
+    var card_type = $(this).val();
+
+    var selects = $('#charge_card').find('select');
+    selects.hide();
+    selects.attr('disabled','disabled');
+    
+    if(card_type == 1){
+        $('#mobile').show();
+        $('#mobile').attr('disabled',false);
+    }else if(card_type == 2){
+        $('#unicom').show();
+        $('#unicom').attr('disabled',false);
+    }else if(card_type == 3){
+        $('#telecom').show();
+        $('#telecom').attr('disabled',false);
+    }
+});
+
+$('select[name="pay_expense"]').change(function(){
+    var money = $(this).val();
+    $('#total_vdian').html(money*getRebate()/10000);
+});
+</script>

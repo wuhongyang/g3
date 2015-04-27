@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="post" action="group.php?module=group_proxy_submit" onSubmit="return checkForm(this);">
+    <input type="hidden" name="Id" value="{$_GET['id']}" />
+    <input type="hidden" name="GroupId" value="{$userGroupInfo['groupid']}" />
+    <ul class="formlist" style="border-bottom:1px dashed #a5a5a5;padding:0 0 30px 150px;">
+    	<li class="clearfix"><label>签约类型：</label>
+    	 <select name="RoleId">
+    	 	<option value="-1">请选择</option>
+    	 	{foreach $roleList $val}
+    	 	<option value="{$val['id']}" scope="{$val['scope']}" {if $proxyInfo['RoleId'] == $val['id']}selected{/if}>{$val['name']}</option>
+    	 	{/foreach}
+    	 </select>
+        </li>
+        <li class="clearfix"><label>输入用户ID：</label><input type="text" name="Uin" value="{$proxyInfo['Uin']}" onBlur="checkUser(this.value);" /></li>
+        <li class="clearfix"><label>确认用户昵称：</label><span id="nick"></span></li>
+        <li class="clearfix"><label>选择绑定房间：</label>
+        <select name="RoomId" id="RoomId"></select>
+        </li>
+        <li class="clearfix" style="padding-left:150px;">
+            <input type="submit" class="bluebtn2" value="保存信息" /></a>
+            <a href="group.php?module=group_proxy" class="yellowbtn mgL10"><span>返回角色列表</span></a>
+        </li>
+    </ul>
+    </form>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+checkUser($('input[name="Uin"]').val());
+//changeRoomId($('input[name="RoleId"]').attr('scope'));
+//function changeRoomId(scope){
+	//if(scope=='1'){
+		//html='<option value="0" selected>所有房间</option>';
+		//$("#RoomId").html(html);
+	//}
+	//else{
+		//html='{foreach $roomList $key $val}<option value="{$val['id']}"{if $proxyInfo['room_id']==$val['id']} selected{/if}>{$val['name']}</option>{/foreach}';
+		//$("#RoomId").html(html);
+	//}
+//}
+$('[name=RoleId]').change(function(){
+	var scope = $(this).find("option:selected").attr('scope');
+	if(scope == "1"){
+		html='<option value="0" selected>所有房间</option>';
+		$("#RoomId").html(html);
+	}else{
+		html='{foreach $roomList $key $val}<option value="{$val['id']}"{if $proxyInfo['room_id']==$val['id']} selected="selected"{/if}>{$val['name']}</option>{/foreach}';
+		$("#RoomId").html(html);
+	}
+}).trigger("change");
+function checkUser(uin){
+	if(uin==''||uin=='0'){
+		return false;
+	}
+	var check=false;
+	$.ajax({
+		type:'GET',
+		url:'/shop/index.php',
+		dataType:'text',
+		async:false,
+		data:{
+			'module':'getUserInfo',
+			'uin':uin
+		},
+		success:function(data) {
+			var uid = data.split('|')[0];
+			var unick = data.split('|')[1];
+			if(uid == uin){
+				$('#nick').html(unick);
+				check=true;
+			}else{
+				$('#nick').html('');
+			}
+		}
+	});
+	return check;
+}
+function checkForm(form){
+	//var roleId=$('input[name="RoleId"]:checked').val();
+	var roleId = $('select[name=RoleId]').val();
+	if(!roleId){
+		alert('请选择签约类型');
+		return false;
+	}
+	if(form.Uin.value==''){
+		alert('用户ID不能为空');
+		return false;
+	}
+	if(!checkUser(form.Uin.value)){
+		alert('该用户不存在');
+		return false;
+	}
+	return true;
+}
+</script>
+</body>
+</html>

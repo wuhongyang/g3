@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/weibo.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap fans-wrap">
+    <div class="w980">
+    	{include file="topmenu.html"}
+        <div class="user-header clearfix">
+            <div class="user-left">
+                <div class="imgwrap"><a href="home.php?user={$user_info['Uin']}"><img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$user_info['Uin'].'/100/100.jpg');}" width="100" height="100" /></a></div>
+                <div class="user-info left">
+                    <h5>{$user_info['Nick']}({$user_info['Uin']})</h5>
+                    {if $rolesIcon}
+                    <div>
+                    {foreach $rolesIcon $key $val}
+                    	<img src="{$val}" />
+                    {/foreach}
+                    </div>
+                    {/if}
+                    <p><span id="focus"></span></p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="user-nav clearfix">
+                	<a href="home.php?user={$user_info['Uin']}">微博首页</a>
+                	<a href="home.php?module=following&user={$user_info['Uin']}">TA的关注</a>
+                	<a href="home.php?module=follower&user={$user_info['Uin']}">TA的粉丝</a>
+                </div>
+            </div>
+        </div>
+        <div class="fans-list">
+			<h1>{if $user['Uin']==$user_info['Uin']}我{else}TA{/if}的微博 {$countWeibo}</h1>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            {foreach $lists $list} {php $tid = $list['tid']; $tbody = ''; $source_uid = $list['tuid']}
+                <tr>
+                    <td width="50" valign="top" align="left"><a href="home.php?user={$list['tuid']}"><img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$list['tuid'].'/50/50.jpg');}" width="50" height="50" /></a></td>
+                    <td align="left" class="fans-info">
+                        <div class="user-weibo-rows">
+                            <div class="user-weibo-msg"><a href="home.php?user={$list['tuid']}">{$list['tuser']}</a>：{$list['tbody']}
+                            	<!--图片-->
+                                {if !empty($list['pic'])}
+                                <p class="tpic">
+                                    <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$list['pic'].'/120/0.jpg');}" lang="{php echo cdn_url(PIC_API_PATH.'/p/'.$list['pic'].'/420/0.jpg');}" onclick="thumb(this)" border="0" />
+                                </p>
+                                {/if}
+                                <!--音乐-->
+                                {if !empty($list['music'])}
+                                <p class="tmusic">
+                                <object type="application/x-shockwave-flash" data="{THEMES_URL}member/js/player/dewplayer.swf" width="200" height="20" id="dewplayer" name="dewplayer">
+                                <param name="movie" value="{THEMES_URL}member/js/player/dewplayer.swf" />
+                                <param name="flashvars" value="mp3={$list['music']}" />
+                                <param name="wmode" value="transparent" />
+                                </object>
+                            	</p>
+                                {/if}
+                                <!--视频-->
+                                {if !empty($list['video'])}<div class="tvideo" title="{$list['video']}"><embed src="{$list['video']}" quality="high" width="300" height="300" align="middle" allowScriptAccess="always" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed></div>{/if}
+                            </div>
+                            <!--转播内容-->
+                            {if !empty($list['source'])}
+                                {php $tsource = $list['source']; $tid = $tsource['tid']; $source_uid = $tsource['tuid'];}
+                                {if $tsource['flag'] > 0}
+                                    <div class="user-weibo-rows">
+                                        <div class="user-weibo-msg">
+                                            <a href="home.php?user={$tsource['tuid']}">{$tsource['tuser']}</a>：{$tsource['tbody']}
+                                            
+                                            <!--图片-->
+                                            {if !empty($tsource['pic'])}<p class="tpic">
+                                            <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$tsource['pic'].'/120/0.jpg');}" lang="{php echo cdn_url(PIC_API_PATH.'/p/'.$tsource['pic'].'/420/0.jpg');}" onclick="thumb(this)" border="0" />
+                                            </p>{/if}
+    
+                                             <!--音乐-->
+                                            {if !empty($tsource['music'])}<p class="tmusic">
+                                                <object type="application/x-shockwave-flash" data="{THEMES_URL}member/js/player/dewplayer.swf" width="200" height="20" id="dewplayer" name="dewplayer">
+                                                <param name="movie" value="{THEMES_URL}member/js/player/dewplayer.swf" />
+                                                <param name="flashvars" value="mp3={$tsource['music']}" />
+                                                <param name="wmode" value="transparent" />
+                                                </object>
+                                            </p>{/if}
+    
+                                            <!--视频-->
+                                            {if !empty($tsource['video'])}<div class="tvideo" title="{$tsource['video']}"><embed src="{$tsource['video']}" quality="high" width="300" height="300" align="middle" allowScriptAccess="always" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed></div>{/if}
+                                        </div>
+                                        <div class="weibo-info clearfix">
+                                            <div class="weibo-date left"><a href="javascript:;">{echo date('m月d日 H:i',$tsource['posttime'])}</a> <a href="javascript:;">{$client[$tsource['client']]}</a></div>
+                                            <span class="weibo-reply right"><a href="javascript:;" class="ahover">全部转播({$tsource['counts']})</a></span>
+                                        </div>
+                                    </div>
+                                {else}
+                                    <div class="ahover">原文已被删除！</div>
+                                {/if}
+                            {/if}
+                            <!--转播内容结束-->
+                            <p><a href="javascript:;">{echo date('m月d日 H:i',$list['posttime'])}</a> <a href="javascript:;">{$client[$list['client']]}</a></p>
+                        </div>
+                    </td>
+                    <td width="80" valign="bottom" align="right">
+                        <a href="javascript:;" onclick="initReInput('{$list['tid']}');" class="ahover">转播</a>
+                        {if $user['Uin']==$user_info['Uin']} 
+                        <span class="gray"> | </span>
+                        <a href="weibo.php?module=delete&tid={$list['tid']}" onclick="return confirm('确定删除？');"  class="ahover">删除</a>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                    <div id="relay-{$list['tid']}" style="display:none;">
+                        <form action="weibo.php?module=publish" class="relay-wbform" method="post">
+                            <p id="smileys-{$list['tid']}"></p>
+                            <input type="hidden" name="client" value="web" />
+                            <input type="hidden" name="source_uid" value="{$source_uid}" />
+                            <input type="hidden" name="source" value="{$tid}" />
+                           <div class="wbform-textarea">
+                                <textarea name="tbody" id="tbody-{$list['tid']}"></textarea>
+                           </div>
+                           <p align="right"><input type="submit" class="yellowbtn2" value="广播" /></p>
+                        </form>
+                    </div>
+                    </td>
+                </tr>
+                {/foreach}
+            </table>
+            <div id="lopage" class="pagenavi">{$page}</div>    
+        </div>
+    </div>    
+</div>
+{include file="foot.html"}
+<script type="text/javascript">var mysmile = "{THEMES_URL}group_site/{$themes}/src/";</script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/taobao.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/textNum_change.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/weibo.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/ajax.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/jquery.livequery.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/video.js');}"></script>
+<script type="text/javascript">
+{if $Uin!=$user['Uin']}
+var uin='{$Uin}';
+$(function(){
+	$.ajax({
+		url: '/rooms/ajax_info.php',
+		type: 'POST',
+		data: {Tag:"GetFollow",OtherUin:uin},
+		success: function(data){
+			var json = $.parseJSON(data);
+			if(json.Flag==100){
+				$('#focus').html('<a href="javascript:void(0);" id="J_cancelFocus" value="'+uin+'" class="yellowbtn"><span>取消关注</span></a>');
+			}
+			else{
+				$('#focus').html('<a href="javascript:void(0);" id="J_onFocus" value="'+uin+'" class="yellowbtn"><span>+关注</span></a>');
+			}
+		}
+	});
+	$('#J_onFocus').live("click",function(){
+		var that = this;
+		$.ajax({
+			url: '/rooms/ajax_info.php',
+			type: 'POST',
+			data: {Tag:"addFocus",Uin:uin},
+			success: function(data){
+				var json = jQuery.parseJSON(data);
+				if(json.Flag == 100){
+					$(that).html('<span>取消关注</span>');
+					$(that).attr('id','J_cancelFocus');
+				}
+				else{
+					alert(json.FlagString);
+					return;
+				}
+			}
+		});
+	});
+	
+	$('#J_cancelFocus').live('click', function(){
+		var that = this;
+		$.ajax({
+			url: '/rooms/ajax_info.php',
+			type: 'POST',
+			data: {Tag:"cancelFocus",Uin:uin},
+			success: function(data){
+				var json = jQuery.parseJSON(data);
+				if(json.Flag == 100){
+					$(that).html('<span>+关注</span>');
+					$(that).attr('id','J_onFocus');
+				}
+				else{
+					alert(json.FlagString);
+					return;
+				}
+			}
+		});
+	});
+});
+{/if}
+</script>
+</body>
+</html>

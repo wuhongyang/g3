@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">游戏配置列表</div>
+</div>
+
+<ul class="page-tab">
+	<li><a href="interact_manage.php">分站游戏列表</a></li>
+	<li><a href="interact_manage.php?module=interactConfig" class="active">游戏配置列表</a></li>
+</ul>
+
+<div class="page-tools main-width">
+	<form action="" method="post" name="myform">
+        关键词：<input type="text" name="name" id="name" value="{$_POST['name']}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;游戏ID：<input type="text" name="id" id="id" value="{$_POST['id']}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" id="module" value="interactConfig">
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>游戏名称</th>
+    <th>游戏ID</th>
+    <th>游戏类型</th>
+    <th>所属区域</th>
+    <th>游戏带入金额</th>
+    <th>游戏底分</th>
+    <th>游戏税率</th>
+    <th>机器人开关</th>
+    <th>机器人数量</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $list $arr}
+  <tr>
+  	<td>{$arr['interact_name']}</td>
+    <td>{$arr['id']}</td>
+    <td>{$game_array[$arr['category']]}/{$category_array[$arr['category']][$arr['category_id']]}</td>
+    <td><{foreach $area_arr["province"] $province}><{if $province['province_id']==$arr['province_id']}>$province['province_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["city"][$arr['province_id']] $city}><{if $city['city_id']==$arr['city_id']}>$city['city_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["area"][$arr['city_id']] $area}><{if $area['area_id']==$arr['area_id']}>$area['area_name']<{/if}><{/foreach}></td>
+    {php $config_array = unserialize($arr['value']);}
+	<td>{$config_array['GameCarryMoney']}</td> 
+    <td>{$config_array['GameLowScore']}</td>
+    <td>{$config_array['GameTax']}</td>
+    <td>{$config_array['RobotSwitch']}</td>
+    <td>{$config_array['RobotNum']}</td>
+    <td><{if $arr['interact_status']==1}>使用<{else}>不使用<{/if}></td>
+    <td>{if $link_array[106]['url']}<a href="{$link_array[106]['url']}&cmd={$arr['cmd']}">游戏配置</a>&nbsp;&nbsp;{/if}</td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+</body>
+</html>

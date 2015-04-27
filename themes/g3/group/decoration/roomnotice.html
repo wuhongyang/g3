@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.pop_div p{line-height: 26px;}
+#show_img{width: 275px;height: 108px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+	<h3>添加轮播图</h3>
+	
+    <form id="form" style="margin:20px 40px;">
+    	<h3>方式一：从本地上传</h3>
+        <ul class="formlist">
+            <li class="clearfix">
+                <label>图片说明：</label>
+                <input type="text" name="explain" size="40"><span class="gray">不能超过25个字。</span>
+            </li>
+            <li class="clearfix">
+                <label>图片链接：</label>
+                <input type="text" name="url" size="40"><span class="gray">例：http://www.baidu.com</span>
+            </li>
+            <li class="clearfix" id="up_carousel">
+                <label>上传图片：</label>
+                <iframe src="?module=up_carousel" class="fl" frameborder=0 width="250" height="26" scrolling="no"></iframe>
+                <span class="fl gray">*最佳尺寸：540*200,最多上传5幅图片</span>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <a class="bluebtn2" onclick="save();">添加</a>
+            </li>
+        </ul>
+    </form>
+
+    
+    <div class="clearfix" style="margin:20px 40px;">
+       <h3>方式二：使用活动图片</h3>
+       <div style="margin:10px 50px;"><a class="bluebtn" onclick="chooseActivity();"><span>选择活动图片</span></a></div>
+    </div>
+    
+    <div class="clearfix">
+    <h3>当前轮播图：</h3>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto" id="show_table">
+      <tr>
+        <th>序号</th>
+        <th>图片说明</th>
+        <th>图片链接</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $carouselList $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['explain']}</td>
+        <td>{$val['url']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a href="javascript:up({$val['id']});">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($carouselList)-1}
+                <a href="javascript:down({$val['id']});">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a href="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['image'].'/540/200.jpg');}" target="_blank">查看图片</a>
+            <a href="javascript:del('<{$val['id']}>');">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var activityList = $.parseJSON('{$actList}');
+var groupId = '{$groupId}';
+var server_name = '{$_SERVER["SERVER_NAME"]}';
+
+function del(id){
+	art.dialog({
+        content: '您确定要删除吗？',
+        ok: function(){
+            oper('carousel_del',{id:id},function(){
+                location.href = '?module=roomnotice';
+            });
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+function up(id){
+    oper('carousel_up',{id:id},function(){
+        location.href = '?module=roomnotice';
+    });
+}
+
+function down(id){
+    oper('carousel_down',{id:id},function(){
+        location.href = '?module=roomnotice';
+    });
+}
+
+function records(){
+    var nums = $('#show_table').find('tr').length;
+    if(nums >= 6){
+        _show_msg('最多上传5幅图片');
+        return false;
+    }
+    return true;
+}
+
+//选择活动图
+function chooseActivity(){
+    if(!records()){
+        return false;
+    }
+    var content = '<div class="pop_div">';
+    content += '<p><span>活动标题：</span><select name="act_image"><option value="-1">请选择</option>';
+    for(var i in activityList){
+        content += '<option value="'+activityList[i].image+'" id="'+activityList[i].id+'">'+activityList[i].name+'</option>';
+    }
+    content += '</select></p>';
+    content += '<p><span>活动页面：</span><span id="url"></span></p>';
+    content += '<p id="show_img"></p>';
+    content += '</div>'
+    art.dialog({
+        title: '选择活动图片',
+        content: content,
+        ok: function(){
+            var act_image = $('select[name="act_image"]').val();
+            if(act_image == '-1'){
+                _show_msg('请选择活动标题');
+                return false;
+            }
+            var explain = $('select[name="act_image"]').find('option:selected').html();
+            var url = $('#url').html();
+            show_infomation(act_image,explain,url);
+        },
+        width: 420,
+        height:180,
+        cancel: true,
+        lock: true
+    });
+}
+
+function save(){
+    //图片是否上传
+    var img = $('input[name="image"]').val();
+    if(!img || img.length!=32){
+        _show_msg('图片不可用，请先上传');
+        return false;
+    }
+    //图片说明
+    var explain = $('input[name="explain"]').val();
+    if(explain.length > 25){
+        _show_msg('图片说明不能超过25个字');
+        return false;
+    }
+    //图片链接
+    var url = $('input[name="url"]').val();
+    if(url != '' && !/^http:\/\//.test(url)){
+        _show_msg('图片链接必须以http://开头');
+        return false;
+    }
+
+    var data = $('#form').serialize();
+    $.ajax({
+        url: '?module=add_carousel',
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: data.FlagString,
+                    ok: function(){
+                        location.href = '?module=roomnotice';
+                    },
+                    lock: true,
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed'
+                });
+            }else{
+                 _show_msg(data.FlagString);
+            }
+        }
+    })
+}
+
+function show_img(md5){
+    //写隐域
+     var hidden = $('input[name="image"]');
+    if(hidden.length > 0){
+        hidden.val(md5);
+    }else{
+        var h = '<input type="hidden" name="image" value="'+md5+'">';
+        $('#form').append(h);
+    }
+    var html = '<li class="clearfix" id="show_carousel">';
+    html += '<label>&nbsp;</label>';
+    html += '<div class="fl"><img src="{php echo cdn_url(PIC_API_PATH."/p/'+md5+'/540/200.jpg");}" width="540" height="200"></div>';
+    html += '</li>';
+
+    //展示图片
+    $('#show_carousel').remove();
+    $('#up_carousel').after(html);
+}
+
+function show_infomation(md5,explain,url){
+    show_img(md5);
+    $('input[name="explain"]').val(explain);
+    $('input[name="url"]').val(url);
+}
+
+$(function(){
+    $(document).on('change', 'select[name="act_image"]', function(){
+        var act_image = $(this).val();
+        var id = $(this).find('option:selected').attr('id');
+        $('#url').html('http://'+server_name+'/active_'+id+'.html');
+        var img = '<img src="{php echo cdn_url(PIC_API_PATH."/p/'+act_image+'/270/100.jpg");}" width="270" height="100">';
+        $('#show_img').html(img);
+    });
+});
+</script>
+</html>

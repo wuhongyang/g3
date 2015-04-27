@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-站点风格</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+#banner-display div{width:80% !important;}
+#square{cursor:pointer;margin-left:20px;display:inline-block;height:20px;width:20px;border:1px solid #ddac3f;background-color:{echo empty($userGroupInfo['bgcolor']) ? '#ffffff' : $userGroupInfo['bgcolor']};}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    <form method="post" enctype="multipart/form-data">
+        <h1>站点风格</h1>
+        <ul class="formlist formlist5">
+            <li class="clearfix">
+                <label>
+                    <b>站点背景设置：</b>
+                    <img src="{php echo cdn_url(PIC_API_PATH.'/groupbg/'.$groupId.'/85/100.jpg');}" width="85" height="100" /> 
+                </label>
+                <div class="pd3">
+                    <div class="st"><b>默认背景模板：</b></div>
+                    <div class="imgwrap">
+                        <img src="/pic/group/bg1.png" width="85" height="100" class="bgimg">
+                        <input type="radio" name="groupbg" value="1" class="radios"><span>交友天地</span>
+                    </div>
+                    <div class="imgwrap">
+                        <img src="/pic/group/bg2.png" width="85" height="100" class="bgimg">
+                        <input type="radio" name="groupbg" value="2" class="radios"><span>美女主播</span>
+                    </div>
+                    <div class="imgwrap">
+                        <img src="/pic/group/bg3.png" width="85" height="100" class="bgimg">
+                        <input type="radio" name="groupbg" value="3" class="radios"><span>天籁之声</span>
+                    </div>
+                    <div class="st"><b>自定义背景：</b></div>
+                    <div>
+                        <div id="type-file-box">
+                            <input type="file" size="40" style="height:25px;" name="custom_bg" id="custom_bg">
+                        </div>
+                    </div>
+                    <div class="txt2">请上传2MB以内的jpg,png,gif格式的图片</div>
+                    <div class="st"><b>排列方式：</b></div>
+                    <div class="st">
+                        <input type="radio" name="bgalign" class="radios" value="1" {if $userGroupInfo['bgalign']==1}checked="checked"{/if}><span class="txt4">左上</span>
+                        <input type="radio" name="bgalign" class="radios" value="2" {if $userGroupInfo['bgalign']==2 || empty($userGroupInfo['bgalign'])}checked="checked"{/if}><span class="txt4">居中</span>
+                        <input type="radio" name="bgalign" class="radios" value="3" {if $userGroupInfo['bgalign']==3}checked="checked"{/if}><span class="txt4">右上</span>
+                    </div>
+                    <div class="st"><b>背景颜色：</b></div>
+                    <div class="st">
+                        <input type="text" name="bgcolor" style="padding-left:5px;" id="inputcolor" value="{echo empty($userGroupInfo['bgcolor']) ? '#ffffff' : $userGroupInfo['bgcolor']}">
+                        <em id="square" onclick="coloropen(event)"></em>
+                        <div id="colorpane" style="position:absolute;z-index:999;display:none; height:500px;"></div>
+                    </div>
+                </div>
+            </li>
+            <li class="clearfix" id="banner-display">
+                <label>
+                    <b>顶部通栏：</b>
+                    <img src="{php echo cdn_url(PIC_API_PATH.'/groupbanner/'.$groupId.'/96/25.jpg');}" width="96" height="25" />
+                </label>
+                <div>
+                    <div class="st"><b>默认顶部通栏：</b></div>
+                    <div style="width:192px !important;">
+                        <img src="/pic/group/banner1.png" width="192" height="50" class="bannerimg">
+                        <input type="radio" name="banner" value="1" class="radios"><span>交友天地</span>
+                    </div>
+                    <div style="width:192px !important;">
+                        <img src="/pic/group/banner2.png" width="192" height="50" class="bannerimg">
+                        <input type="radio" name="banner" value="2" class="radios"><span>美女主播</span>
+                    </div>
+                    <div style="width:192px !important;">
+                        <img src="/pic/group/banner3.png" width="192" height="50" class="bannerimg">
+                        <input type="radio" name="banner" value="3" class="radios"><span>天籁之声</span>
+                    </div>
+                    <div class="st"><b>自定义通栏：</b></div>
+                    <div>
+                        <div id="type-file-box">
+                            <input type="file" size="40" style="height:25px;" name="custom_banner" id="custom_banner">
+                        </div>
+                    </div>
+                    <div class="txt2">请上传2MB以内的jpg,png,gif格式的图片，最佳大小为960*250</div>
+                </div>
+            </li>
+            <li class="clearfix">
+                <label>&nbsp;</label>
+                <div>
+                    <input type="submit" value="保存" class="yellowbtn2">
+                </div>
+            </li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" language="javascript"> 
+
+$(function(){
+    //点击图片选中radio
+    $('.bgimg').click(function(){
+        $(this).siblings('input').attr('checked','checked');
+    });
+    $('.bannerimg').click(function(){
+        $(this).siblings('input').attr('checked','checked');
+    });
+});
+
+var ColorHex = ['00','33','66','99','CC','FF'];
+var SpColorHex = ['FF0000','00FF00','0000FF','FFFF00','00FFFF','FF00FF'];
+var current=null ;
+function initcolor(evt){ 
+    var colorTable='' ;
+    for (i=0;i<2;i++) { 
+        for (j=0;j<6;j++) { 
+            colorTable=colorTable+'<tr height=15>' ;
+            colorTable=colorTable+'<td width=15 style="background-color:#000000">' ;
+            if (i==0){ 
+                colorTable=colorTable+'<td width=15 style="cursor:pointer;background-color:#'+ColorHex[j]+ColorHex[j]+ColorHex[j]+'" onclick="doclick(this.style.backgroundColor)">';
+            }else{ 
+                colorTable=colorTable+'<td width=15 style="cursor:pointer;background-color:#'+SpColorHex[j]+'" onclick="doclick(this.style.backgroundColor)">';
+            } 
+            colorTable=colorTable+'<td width=15 style="background-color:#000000">' ;
+            for (k=0;k<3;k++){ 
+                for (l=0;l<6;l++){ 
+                    colorTable=colorTable+'<td width=15 style="cursor:pointer;background-color:#'+ColorHex[k+i*3]+ColorHex[l]+ColorHex[j]+'" onclick="doclick(this.style.backgroundColor)">' ;
+                } 
+            } 
+        } 
+    } 
+    colorTable='<table border="0" cellspacing="0" cellpadding="0" style="border:1px #000000 solid;border-bottom:none;border-collapse: collapse;width:100%;" bordercolor="000000">' 
+    +'<tr height=20><td colspan=21 bgcolor=#ffffff style="font:12px tahoma;padding-left:2px;">' 
+    +'<span style="float:left;color:#999999;"></span>' 
+    +'<span style="float:right;padding-right:3px;cursor:pointer;" onclick="colorclose()">×关闭</span>' 
+    +'</td></table>' 
+    +'<table border="1" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="000000" style="cursor:pointer;">' 
+    +colorTable+'</table>'; 
+    document.getElementById("colorpane").innerHTML=colorTable; 
+    //var current_x = document.getElementById("inputcolor").offsetLeft; 
+    //var current_y = document.getElementById("inputcolor").offsetTop; 
+    var current_x = $('#inputcolor').position().left;
+    var current_y = $('#inputcolor').position().top;
+    document.getElementById("colorpane").style.left = current_x-11 + "px"; 
+    document.getElementById("colorpane").style.top = current_y-1 + "px"; 
+} 
+function doclick(obj){ 
+    var color = obj;
+    if(/RGB.+/i.test(obj)){
+        color = RGBToHex(obj);
+    }
+    document.getElementById("inputcolor").value = color;
+    document.getElementById('square').style.backgroundColor = color;
+    document.getElementById("colorpane").style.display = "none"; 
+} 
+function colorclose(){ 
+    document.getElementById("colorpane").style.display = "none"; 
+} 
+function coloropen(){ 
+    document.getElementById("colorpane").style.display = ""; 
+} 
+
+function RGBToHex(rgb){ 
+   var regexp = /[0-9]{0,3}/g;  
+   var re = rgb.match(regexp);//利用正则表达式去掉多余的部分，将rgb中的数字提取
+   var hexColor = "#"; var hex = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];  
+   for (var i = 0; i < re.length; i++) {
+        var r = null, c = re[i], l = c; 
+        var hexAr = [];
+        while (c > 16){  
+              r = c % 16;  
+              c = (c / 16) >> 0; 
+              hexAr.push(hex[r]);  
+         } hexAr.push(hex[c]);
+         if(l < 16&&l != ""){        
+             hexAr.push(0)
+         }
+       hexColor += hexAr.reverse().join(''); 
+    }  
+   //alert(hexColor)  
+   return hexColor;  
+}
+window.onload = initcolor; 
+</script>

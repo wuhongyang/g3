@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-公告和帮助</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">公告列表</h3>
+    </div>
+    <div class="mgt10 clearfix">
+        <form method="get" style="width:80%;display:inline-block;">
+            <span>标题：</span><input type="text" name="title" value="{$_GET['title']}">&nbsp;&nbsp;&nbsp;
+            <span>分类：</span>
+            <select name="category" style="height:24px;">
+                <option value="-1">请选择</option>
+                {foreach $classify $key $val}
+                <option value="{$key}" {if $key==$_GET['category']}selected{/if}>{$val}</option>
+                {/foreach}
+            </select>
+            <input type="submit" class="normalbtn" value="查询">
+        </form>
+        <span class="fr"><a href="?module=info" class="bluebtn"><span>添加新公告</span></a></span>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+      <tr>
+        <th>编号</th>
+        <th>标题</th>
+        <th>分类</th>
+        <th>链接</th>
+        <th>修改时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $noticeList $key $val}
+      <tr>
+        <td>{echo $key+1;}</td>
+        <td>{$val['title']}</td>
+        <td>{$classify[$val['category']]}</td>
+        <td>{$val['url']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            <a class="ahover" href="?module=info&id={$val['id']}">编辑</a>
+            <a class="ahover" href="{$val['url']}" target="_blank">查看</a>
+            {if $val['is_default']!=1}
+                <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+            {else}
+                <span style="color:#999;">删除</span>
+            {/if}
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+
+function del(id){
+    if(id < 1){
+        return;
+    }
+    art.dialog({
+        title: '删除公告',
+        content: '你真的要删除吗？',
+        ok: function(){
+            $.ajax({
+                url: '?module=del',
+                type: 'POST',
+                data: {id:id},
+                dataType: 'JSON',
+                success: function(json){
+                    callback(json.Flag,json.FlagString);
+                }
+            });
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+</script>

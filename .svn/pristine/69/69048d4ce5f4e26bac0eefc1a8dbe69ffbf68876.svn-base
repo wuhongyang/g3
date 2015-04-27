@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>渠道管理</title>
+<script type="text/javascript">
+
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改渠道</div>
+    <div class="header-button right">{if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form action="{$link_array[106]['url']}" method="post" class="form">
+    <p>
+        <label>渠道商类型：</label>
+        <span>地域负责人</span>
+    </p>
+    <p id="J_p_c_a">
+    	<label>所属站点：</label>
+        <span>
+    		<select id="province" name="other[province]"><option value="-1">请选择</option></select>&nbsp;&nbsp;
+            <select id="city" name="other[city]"><option value="-1">城市</option></select>
+            <select id="area" name="other[area]"><option value="-1">区/县</option></select>
+        </span>
+    </p>
+    <p id="J_region">
+        <label>站点ID：</label>
+        <span></span>
+    </p>
+    <p>
+        <label>用户ID：</label>
+        <span>
+			<input type="text" name="uid" >
+		</span>
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="status" value="0" id="no" ><label for="no" style="padding:0 20px 0 5px; width:auto;">不启用</label>
+        <input type="radio" name="status" value="1" id="yes" ><label for="yes" style="padding-left:5px; width:auto;">启用</label>
+    </p> 
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+</center>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/partner.js"></script>
+<script type="text/javascript">
+var province_JSONDATA = eval('({$province_JSONDATA})');
+var city_JSONDATA =  eval('({$city_JSONDATA})');
+var area_JSONDATA = eval('({$area_JSONDATA})');
+$(function(){
+    //初始化开通城市
+	show_province("{$otherinfo['province']}");
+	show_city("{$otherinfo['province']}","{$otherinfo['city']}","{$otherinfo['area']}");
+	
+    //初始化站长ID
+    _ajax_get_station_head('{$info["region_id"]}');
+	
+});
+</script>
+</body>
+</html>

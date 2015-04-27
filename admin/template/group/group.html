@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站管理列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">站管理列表</div>
+    <div class="header-button right">
+        <a href="?module=info" class="add-button">开站</a>
+    </div>
+</div>
+
+<div class="page-tools main-width">
+    <form method="get" style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;">
+        <input type="hidden" name="module" value="{$_GET['module']}" />
+        <label>查询：</label>
+        <select name="type">
+            <option value="">请选择</option>
+            <option value="groupid" {if $_GET['type']=='groupid'}selected="selected"{/if}>站ID</option>
+            <option value="uin" {if $_GET['type']=='uin'}selected="selected"{/if}>站长ID</option>
+            <option value="name" {if $_GET['type']=='name'}selected="selected"{/if}>站名称</option>
+        </select>
+        <input type="text" name="q" value="{$_GET['q']}" /> &nbsp; &nbsp;
+        状态：
+        <select name="recommend">
+        	<option value="">请选择</option>
+            <option value="0" {if $_GET['recommend']==='0'}selected{/if}>未推荐</option>
+            <option value="1" {if $_GET['recommend']==='1'}selected{/if}>推荐</option>
+        </select> &nbsp; &nbsp;
+        是否启用:
+        <select name="is_use">
+            <option value="1" {if $_GET['is_use']==='1'}selected{/if}>使用</option>
+            <option value="0" {if $_GET['is_use']==='0'}selected{/if}>不使用</option>
+        </select> &nbsp; &nbsp;
+        <label>使用模板：</label>
+        <select name="tpl_id">
+            <option value="">请选择</option>
+            {foreach $template_arr $id $name}
+            <option {if $_GET['tpl_id'] == $id} selected="selected"{/if} value="{$id}">{$name}</option>
+            {/foreach}
+        </select>
+        &nbsp; &nbsp;
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+    <tr>
+    <th>站ID</th>
+    <th>站长ID</th>
+    <th>站名称</th>
+    <th>当前使用模板</th>
+    <th>开设时间</th>
+    <th>状态</th>
+    <th>是否使用</th>
+    <th>操作</th>
+    </tr>
+    {foreach $lists $list}
+    <tr>
+    <td>{$list['groupid']}</td>
+    <td>{$list['uin']}</td>
+    <td>{$list['name']}</td>
+    <td>{$template_arr[$list['module_id']]}</td>
+    <td>{echo date('Y-m-d H:i',$list['uptime'])}</td>
+    <td>{if $list['is_use']}是{else}否{/if}</td>
+    <td>{if empty($list['recommend'])}未推荐{else}推荐{/if}</td>
+    <td>
+    <!--{if $link_array['106']['url']}<a href="{$link_array['106']['url']}&group_id={$list['id']}">添加成员</a>{/if}
+    {if $link_array['105']['url']}<a href="{$link_array['105']['url']}&group_id={$list['id']}">查看成员</a>{/if}
+    {if $link_array['104']['url']}<a href="{$link_array['104']['url']}&del={$list['id']}" onClick="if(!confirm('确定删除?')) return false">删除</a>{/if}-->
+    {if $link_array['103']['url']}<a href="{$link_array['103']['url']}&edit={$list['id']}&is_use={$_GET['is_use']}">修改</a>{/if}
+	{if $link_array['103']['url']}<a href="?module=editGroup&recommend={$list['id']}">{if $list['recommend']==1}<font color="red">取消推荐</font>{else}设为推荐{/if}</a>{/if}
+    {if $link_array[110]['url']}<a href="{$link_array[110]['url']}&group_id={$list['groupid']}">游戏管理</a>{/if}
+    {if $link_array[111]['url']}<a href="{$link_array[111]['url']}&group_id={$list['groupid']}">游戏链接</a>{/if}
+    {if $link_array[113]['url']} <a href="{$link_array[113]['url']}&group_id={$list['groupid']}">体验账号配置</a>{/if}
+    {if $link_array[116]['url']}<a href="{$link_array[116]['url']}&group_id={$list['groupid']}">同步</a>{/if}
+    </td>
+    </tr>
+    {/foreach}
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

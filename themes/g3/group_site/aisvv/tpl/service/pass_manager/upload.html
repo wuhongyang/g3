@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>通行证管理-个人特长</title>
+    <link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+    <link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+    <link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+    <link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+    </head>
+    <body bgcolor="#F6F6F6" style="height: 150px;margin-top: -15px;">
+        <form method="post" enctype="multipart/form-data" id="upload_form">
+            <ul class="formlist" style="margin-top:0;">
+                <li>
+                    <div class="clearfix">
+                        <div id="type-file-box">
+                            <input type="hidden" name="up" value="1" />
+                            <input type="text" name="filename" id="textfield" readonly class="type-file-text" />
+                            <input type="button" name="button" id="button" value="添加照片" class="type-file-button" />
+                            <input name="fileField" type="file" class="type-file-file" id="fileField" size="40" onChange="read(this)" />
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <span class="txt2" style="margin-top:5px;">上传靓照会让更多招聘者关注您，照片大小不能大于2M，最多上传3张。</span>
+                    </div>
+                    <div class="clearfix">
+                        <a style="cursor:pointer;" onclick="javascript:upfile();" class="yellowbtn"><span>上&nbsp;&nbsp;传</span></a>
+                    </div>
+                </li>
+        </form>
+    </body>    
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript">
+function upfile(){
+    if($('input[name="filename"]').val() == ''){
+        return false;
+    }
+    $('#upload_form').submit();
+}
+
+var upfileInfo = '{$rst}';
+$(function(){
+    upfileInfo = $.parseJSON(upfileInfo);
+    if(upfileInfo){
+        if(upfileInfo.Flag == 100){
+            var imgs = $(window.parent.document).find('#J_display_photos').find('img');
+            var arr = [];
+            imgs.each(function(i){
+                if(/^.*default.*$/.test($(this).attr('src'))){
+                    arr.push(i);
+                }
+            });
+
+            if(arr.length <= 0){
+                parent.art.dialog({
+                    content: '最多只能上传三张图片',
+                    lock: true,
+                    esc: false,
+                    cancel: false,
+                    ok: true
+                });
+                return false;
+            }
+
+            var used = arr.shift();
+           
+            imgs.eq(used).attr('src','{php echo cdn_url(PIC_API_PATH."/p/'+upfileInfo.File+'/190/175.jpg");}');
+            imgs.eq(used).attr('title',upfileInfo.FileName);
+            imgs.eq(used).after('<a style="text-align:center; width:192px; font-size:10px;display:block" href="javascript:void(0);">删除</a>');
+            if($('#J_img_'+used).length > 0){
+                $('#J_img_'+used).val(upfileInfo.File);
+            }else{
+                $(window.parent.document).find('form').append('<input type="hidden" name="imgs[]" value="'+upfileInfo.File+'" id="J_img_'+used+'">');
+            }
+        }else{
+            alert(upfileInfo.FlagString);
+        }
+    }
+});
+
+//读取文件名
+function read(obj){
+    var value = obj.value;
+    var start = value.lastIndexOf('\\');
+    if(start == -1){
+        if(value.length > 16){
+            value = '...'+value.substr(value.length-16,value.length);
+        }
+    }else{
+        value = value.substr(start+1);
+    }
+    document.getElementById('textfield').value=value
+}
+</script>

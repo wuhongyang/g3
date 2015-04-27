@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<style>
+#type_div a{
+	border:1px solid #ccc;
+	padding:5px;
+	border-radius:10px;
+}
+#type_div a:hover{
+	background:#ccc;
+}
+.active{
+	background:#ccc;
+}
+</style>
+<script>
+
+var temp = decodeURI(location.search).substr(1).split("&");
+var get = {};
+for(i in temp){
+	var temp2 = temp[i].split("=");
+	get[temp2[0]] = temp2[1]; 
+}
+
+function add_input(arr){
+	var html = "";
+	for(i in arr){
+		html += arr[i]+'：<input class="inputs" name="search['+i+']" type="text" style="width:80px;">&nbsp;&nbsp;';
+	}
+	$("#input_span").html(html);
+}
+function add_input2(arr){
+	var html = "";
+	for(i in arr){
+		var value = "";
+		if(get["search["+i+"]"]){
+			value = get["search["+i+"]"];
+		}
+		html += arr[i]+'：<input class="inputs" name="search['+i+']" type="text" style="width:80px;" value='+value+'>&nbsp;&nbsp;';
+	}
+	$("#input_span").html(html);
+}
+$(function(){
+	var input = $.parseJSON('{$input_json}');
+	$(".inputs").live("keyup", function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	});
+	
+	$("#rule_id").change(function(){
+		add_input(input[$(this).val()]);
+	});
+	add_input2(input[$("#rule_id").val()]);
+})
+</script>
+</head>
+
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="get">
+    <div class="mgtb15 clearfix">
+        &nbsp;<span id="input_span"></span>
+        &nbsp;&nbsp;&nbsp;积分规则名称：
+        <select name="rule_id" id="rule_id">
+        {foreach $info['Rule'] $value $name}
+        <option value="{$value}" {if $_GET['rule_id'] == $value}selected="selected"{/if}>{$name}</option>
+        {/foreach}
+        </select>
+        <input type="hidden" name="type" value="{$_GET['type']}" />
+        <input name="" type="submit" class="normalbtn" value="查询">
+    </div>
+    <input type="hidden" name="module" value="integral_search" />
+    </form>
+    <div id="type_div">
+    <a href="?module=integral_search&type=1&rule_id={$_GET['rule_id']}" {if $_GET['type'] == 1 or !isset($_GET['type'])}class="active"{/if}>日汇总</a>
+    <a href="?module=integral_search&type=2&rule_id={$_GET['rule_id']}" {if $_GET['type'] == 2}class="active"{/if}>周汇总</a>
+    <a href="?module=integral_search&type=3&rule_id={$_GET['rule_id']}" {if $_GET['type'] == 3}class="active"{/if}>月汇总</a>
+    <a href="?module=integral_search&type=4&rule_id={$_GET['rule_id']}" {if $_GET['type'] == 4}class="active"{/if}>总汇总</a>
+    &nbsp;&nbsp;<span style="color:red">日期格式：日汇总（N年N月N日）,周汇总(N年N周),月汇总(N年N月)</span>
+    </div>
+    <br/>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>编号</th>
+            {if $_GET['type'] != 4}<th>日期</th>{/if}
+            {foreach $info['LabelName'][$info['RuleId']] $vv}
+              {if !is_array($vv)}<th>{$vv}</th> {/if}
+		        {/foreach}
+            <th>积分规则</th>
+            <th>汇总积分</th>
+          </tr>
+          {foreach $info['Data'] $k $one}
+          <tr>
+          	<td>{echo $k+1}</td>
+          	{if $_GET['type'] != 4}<td>{$one['Uptime']}</td>{/if}
+          	{foreach $info['LabelName'][$info['RuleId']] $v_k $v_v}
+              {if !is_array($v_v)}<td>{$one[$v_k]}</td>{/if}
+            {/foreach}
+          	<td>{$info['Rule'][$one['Ruleid']]}</td>
+          	<td>{$one['Weight']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$info['Page']}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

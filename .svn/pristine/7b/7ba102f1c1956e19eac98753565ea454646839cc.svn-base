@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>客服中心-vv酷网上互动娱乐商圈</title>
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/header.css">
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/neiye.css" />
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+<body>
+<!--header-->
+{include file="head.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="bd clearfix">
+        <div class="about-bd">
+            <div class="about-left">
+                <ul>
+                    <li><a href="/about.html">关于VV酷</a></li>
+                    <li><a href="/employ.html">高薪诚聘</a></li>
+                    <li><a href="/agreement.html">用户协议</a></li>
+                    <li><a href="/contactus.html">联系我们</a></li>
+                    <li class="active"><a href="/custom.html">客服中心</a></li>
+                </ul>
+            </div>
+            <div class="about-right">
+                <!--客服中心-->
+                <div class="wraps">
+                    <div class="title">
+                        <h5>客服中心</h5>
+                    </div>
+                    <div class="content">
+                        <p><span>客服电话：</span> 0571-89719238-803</p>
+						<p><span>传真电话：</span> 89719238-813</p>
+						<p><span>客服 Q Q：</span> 4006772115</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+    <!--bd-->
+</div>
+<!--bodywrap-->
+<div class="dashedline" style="height:3px;"></div>
+<!--footer-->
+{include file="footer.html"}
+<!--footer-->
+</body>
+</html>

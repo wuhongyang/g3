@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <form method="post" id="J_form">
+                <h1>绑定提现账户</h1>
+                <div class="box1">
+                    <p class="yellow"><span class="wximg"></span>温馨提示：请填写正确银行账户，以便兑换收入。</p>
+                </div>
+                <ul class="formlist">
+                    <li class="clearfix"><label><em class="yellow"> * </em>提现账户姓名：</label><span id="J_name">{$info['name']}</span></li>
+                    <li class="clearfix">
+                        <label><em class="yellow"> * </em>开户银行：</label>
+                        <select name="bank_name" style="width:200px;" class="mgt10">
+                        	<option value="-1">--请选择--</option>
+                            {foreach $banks $key $bank}
+                            <option value="{$key}" {if $info['bank_name']==$key}selected{/if}>{$bank}</option>
+                            {/foreach}
+                        </select>
+                    </li>
+                    <li class="clearfix">
+                        <label><em class="yellow"> * </em>银行卡号：</label>
+                        <input name="bank_id" type="text" value="{$info['bank_id']}"  class="input" style="width:255px;"/>
+                        <span class="gray fs12">请正确填写银行卡号，薪资将通过该账号进行计发。</span>
+                    </li>
+                    <li class="clearfix">
+                        <label><em class="yellow"> * </em>开户银行名称：</label>
+                        <textarea cols="35" rows="4" name="bank_address">{$info['bank_address']}</textarea>
+                        <span class="txt2" style="width:300px;">为了成功转账，请完善开户银行地址，否则会影响转账。如您不清楚开户地址，可拨打开户银行客服电话进行查询。</span>
+                    </li>
+                    <li class="clearfix"><label>&nbsp;</label><a style="cursor:pointer;" id="J_submit" class="yellowbtn"><span>保&nbsp;&nbsp;存</span></a></li>
+                </ul>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#J_submit').click(function(){
+        var bank_name = $('select[name="bank_name"]').val();
+        if(bank_name < 1){
+            _show_msg('请选择开户银行');
+            return false;
+        }
+        var bank_id = $('input[name="bank_id"]').val();
+        if(bank_id == ''){
+            _show_msg('银行卡号不能为空');
+            return false;
+        }
+        if(bank_id.length > 32){
+            _show_msg('银行卡号不能超过32位');
+            return false;
+        }
+        var bank_address = $('textarea[name="bank_address"]').val();
+        if(bank_address == ''){
+            _show_msg('开户银行名称不能为空');
+            return false;
+        }
+        if(bank_address.length > 100){
+            _show_msg('开户银行名称不能超过100个字符');
+            return false;
+        }
+        var name = $('#J_name').html();
+        if(name == ''){
+            art.dialog({
+                content: '提现账户姓名不能为空，请先身份认证',
+                lock: true,
+                esc: false,
+                cancel: false,
+                ok: function(){
+                    location.href='/service/safe_setting.php?module=idcard';
+                }
+            });
+            return false;
+        }
+        $('#J_form').submit();
+    });
+});
+</script>
+</body>
+</html>

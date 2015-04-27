@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>领取记录</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        {if $isDz==1 || in_array(10280,$permission)}
+        <a href="/group/role.php?module=info" class="bluebtn fr"><span>添加角色组</span></a>
+        {/if}
+    </div>
+	<form method="get" id="J_form">
+          <div>
+          	<input type="hidden" name="module" value="exchange_details" />
+          	<span >选择房间：</span>
+          	<select name="room_id" >
+          	<option value="">请选择</option>
+          	{foreach $res['Rooms'] $room_id $room_name}
+          	<option {if $_GET['room_id'] == $room_id}selected="selected"{/if} value="{$room_id}">{$room_name}({$room_id})</option>
+          	{/foreach}
+          	</select>
+              <span class="mgL20">起止时间：</span>
+              <input name="startDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{echo $_GET['startDate']?$_GET['startDate']:date("Y-m-1")}"> 
+              <span class="pre"> - </span>
+              <input name="endDate" type="text" style="width:80px;" onfocus="WdatePicker()" value="{echo $_GET['endDate']?$_GET['endDate']:date("Y-m-d")}">
+              <input name="" type="submit" class="normalbtn" value="筛选">
+          </div>
+      </form>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+          <tr>
+              <th width="25%">用户ID</th>
+              <th width="25%">房间ID</th>
+              <th width="25%">领取金额</th>
+              <th width="25%">领取时间</th>
+          </tr>
+          {foreach $res['Data'] $one}
+          <tr>
+          <td>{$one['UinId']}</td>
+          <td>{$one['ChannelId']}</td>
+          <td>{$one['Weight']}</td>
+          <td>{echo date("Y-m-d H:i:s", $one['Uptime'])}</td>
+          </tr>
+          {/foreach}
+        </table>
+        {$page}
+</div>
+{include file="foot.html"}
+</body>
+</html>

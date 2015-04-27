@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form action="?module=artist_tax_exchange_submit" method="post" id="form">
+        <input type="hidden" name="uin" value="{$userInfo['uin']}">
+        <ul class="formlist">
+        	<li class="clearfix">
+                <label>当前用户：</label>
+                {$userInfo['nick']}（{$userInfo['uin']}）
+            </li>
+            <li class="clearfix">
+                <label>当前税收余额：</label>
+                <span id="balance">{$userBalance}</span>
+            </li>
+            <li class="clearfix">
+                <label>兑换金额：</label>
+                <input name="kmoney" id="kmoney" type="text" class="mgL20">&nbsp;(只能输入整数)
+            </li>
+            <li class="clearfix">
+                <label>发放人民币：</label>
+                <input name="money" id="money" type="text" class="mgL20">&nbsp;元（仅做记录用,只能输入整数）
+            </li>
+            <li class="clearfix" style="margin-left:170px;"><a href="javascript:;" class="bluebtn" id="sbt"><span>兑换</span></a></li>
+        </ul>
+    </form>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#sbt').click(function(){
+		var balance = parseInt($('#balance').html(),10);
+		var kmoney = $('#kmoney').val();
+        var money = $('#money').val();
+		if(kmoney == ''){
+			_show_msg('请输入要兑换的金额');
+			return false;
+		}
+		if(!_is_integer(kmoney)){
+			_show_msg('兑换金额只能为整数');
+			return false;
+		}
+		kmoney = parseInt(kmoney, 10);
+		if(kmoney < 1){
+			_show_msg('兑换金额只能是大于0的整数');
+			return false;
+		}
+		if(kmoney > balance){
+			_show_msg('兑换金额不能大于税收余额');
+			return false;
+		}
+		if(money == ''){
+			_show_msg('请输入发放的人民币');
+			return false;
+		}
+		if(!_is_integer(money)){
+			_show_msg('发放人民币只能为整数');
+			return false;
+		}
+		money = parseInt(money, 10);
+		if(money < 1){
+			_show_msg('发放人民币只能是大于0的整数');
+			return false;
+		}
+		if(money>99999999){
+			_show_msg('发放人民币不能大于99999999');
+			return false;
+		}
+        var url = $('#form').attr('action');
+        var data = $('#form').serialize();
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            dataType: 'JSON',
+            success: function(data){
+                if(data.Flag == 100){
+                    var desc = '兑换成功';
+                    art.dialog({
+                        content: desc,
+                        lock: true,
+                        ok: function(){
+                            location.href='?module=artist_tax_exchange_history&uin={$userInfo["uin"]}';
+                        },
+                        cancel: false,
+                        esc: false,
+                        width:200
+                    });
+                }else{
+                    art.dialog({
+                        content: data.FlagString,
+                        lock: true,
+                        ok: true,
+                        time: 2
+                    });
+                }
+            }
+        });
+    });
+});
+</script>

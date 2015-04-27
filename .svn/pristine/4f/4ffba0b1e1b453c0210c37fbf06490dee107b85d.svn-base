@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-身份认证</title>
+<link href="{THEMES_URL}service/css/base.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/header.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/footer.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}service/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <form method="post" id="J_form">
+                <h1>身份认证</h1>
+                <div class="box1">
+                    {if empty($info['name']) || empty($info['idcard'])}
+                    <p class="yellow">您还未进行身份认证</p>
+                    {/if}
+                    <ul class="itemlist">
+                        <li class="st">身份认证是对您资料真实性进行的验证审核，以便建立完善可靠的信用基础。</li>
+                        <li class="st">身份认证将会在账号申诉时用，一旦提交就无法修改，请务必填写真实信息。</li>
+                    </ul>
+                </div>
+                {if empty($info['name']) || empty($info['idcard'])}
+                <h2>填写认证信息</h2>
+                {/if}
+                <ul class="formlist">
+                    <li class="clearfix">
+                        <label><em class="yellow"> * </em>真实姓名：</label>
+                        {if empty($info['name'])}
+                            <input name="name" type="text"  class="input"/>
+                            <span class="txt2">请务必填写您的真实姓名</span>
+                        {else}
+                            <span>{$info['name']}</span>
+                        {/if}
+                    </li>
+                    <li class="clearfix">
+                        <label><em class="yellow"> * </em>身份证号：</label>
+                        {if empty($info['idcard'])}
+                            <input name="idcard" type="text"  class="input"/><span class="txt2">填写您的15位18位身份证号</span>
+                        {else}
+                            <span>{$info['idcard']}</span>
+                        {/if}
+                    </li>
+                    {if empty($info['name']) || empty($info['idcard'])}
+                        <li class="clearfix">
+                            <label>&nbsp;</label>
+                            <a style="cursor:pointer;" id="J_submit" class="yellowbtn"><span>提交认证信息</span></a>
+                        </li>
+                    {/if}
+                </ul>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/id_card_utf.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript">
+var name_status = 0;
+var idcard_status = 0;
+$(function(){
+
+    $('#J_submit').click(function(){
+        var nObj = $('input[name="name"]');
+        if(nObj.length > 0){
+            var name = $('input[name="name"]').val();
+            if(name == ''){
+                _show_msg('真实姓名不能为空');
+                return false;
+            }
+        }
+        
+        var iObj = $('input[name="idcard"]');
+        if(iObj.length > 0){
+            var idcard = $('input[name="idcard"]').val();
+            if(idcard == ''){
+                _show_msg('身份证号不能为空');
+                return false;
+            }else if(!checkCard(idcard)){
+                _show_msg('请填写正确的身份证');
+                return false;
+            }
+        }
+        $('#J_form').submit();
+    });
+});
+</script>
+</body>
+</html>

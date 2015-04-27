@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>渠道代理账户管理</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">代理调剂账户查询</div>
+</div >
+<div class="page-tools main-width">
+<form style="padding:10px;background:#EEE;border:solid 1px #CCC;margin-bottom:5px;" name="myform" method="GET">
+用户ID：<input type="text" name="search[Uin]" value="{$data['Uin']}">&nbsp;&nbsp;&nbsp;&nbsp;
+时间段：<input type="text" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width:60" name="search[Start_date]" value="{$data['Start_date']}">&nbsp;&nbsp;至&nbsp;&nbsp;<input type="text" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" style="width:60" name="search[End_date]" value="{$data['End_date']}">&nbsp;&nbsp;&nbsp;&nbsp;
+行为类别：
+<select name="search[child_type]">
+	<option value="-1">所有行为</option>
+	{foreach $behaviorCat $key $val}
+	<option value="{$key}" {if $data['child_type']==$key}selected{/if}>{$val}</option>
+	{/foreach}
+</select>&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="submit" value=" 查 询 ">
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>用户ID</th>
+    <th>发生时间</th>
+    <th>行为类别</th>
+    <th>余额</th>
+    <th>资金权重</th>
+    <th>备注</th>
+  </tr>
+  {foreach $list $val}
+    <tr>
+    <td>{$val['uin']}</td>
+    <td>{php echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+    <td>{$behaviorCat[$val['child_type']]}</td>
+    <td>{$val['balance']}</td>
+    <td>{$val['trade_money']}</td>
+    <td>{$val['trade_desc']}</td>
+  </tr>
+  {/foreach}
+  </table>
+</body>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</html>

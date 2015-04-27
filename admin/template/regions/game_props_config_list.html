@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏道具</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">道具配置列表</div>
+  <div class="header-button right">{if $link_array[111]['url']}<a class="add-button" href="{$link_array[111]['url']}?tpl_id={$_GET['tpl_id']}">返回</a>{/if}</div>
+</div>
+
+<script>
+active_li = 7;
+</script>
+{include file="template/tpl_header.html"}
+
+<form method="post" action="?module=modifyConfig">
+	<input type="hidden" name="cmd" value="{$cmd}" />
+    <table class="table-list main-width" id="table-list">
+    	<tr>
+        	<td  style="text-align:right;" width="20%"><strong>游戏起止时间：</strong></td>
+            <td colspan="2" style="text-align:left;">
+            	<input type="text" style="width:150px;" class="Wdate" value="{$fixed_value['starttime']}" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" name="val[starttime]">&nbsp;&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;
+            	<input type="text" style="width:150px;" class="Wdate" value="{$fixed_value['endtime']}" onclick="WdatePicker({dateFmt:'HH:mm:ss'})" name="val[endtime]">
+            </td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;">
+            	<strong>人数上限：</strong>
+            </td>
+            <td colspan="2" style="text-align:left;"><input type="text" value="{$fixed_value['maxuser']}" name="val[maxuser]" /></td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;">
+            	<strong>系统占位人数：</strong>
+            </td>
+            <td colspan="2" style="text-align:left;"><input type="text" value="{$fixed_value['robotnum']}" name="val[robotnum]" /></td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;">
+            	<strong>参与次数上限：</strong>
+            </td>
+            <td colspan="2" style="text-align:left;"><input type="text" value="{$fixed_value['maxplay']}" name="val[maxplay]" /></td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;">
+            	<strong>资金赢取上限：</strong>
+            </td>
+            <td colspan="2" style="text-align:left;"><input type="text" value="{$fixed_value['maxmoney']}" name="val[maxmoney]" /></td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;">
+            	<strong>游戏税收比率：</strong>
+            </td>
+            <td colspan="2" style="text-align:left;"><input type="text" value="{$fixed_value['tax']}" name="val[tax]" /></td>
+        </tr>
+        <tr>
+        	<td style="text-align:right;"><strong>状态：</strong></td>
+            <td colspan="2" style="text-align:left;">
+            <input type="radio" name="status" value="1" {if $result['status']==1}checked{/if} />开启&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="status" value="0" {if isset($result['status']) && $result['status']==0}checked{/if} />关闭
+            </td>
+        </tr>
+        <tr>
+        <th>配置名</th>
+        <th>配置字段</th>
+        <th>配置值</th>
+      </tr>
+      {foreach $descr $key $val}
+      <tr>
+        <td><input type="text" name="descr[]" value="{$val}"></td>
+        <td><input type="text" name="key[]" value="{$key}"></td>
+        <td>
+        	<input type="text" name="value[]" value="{$value[$key]}" style="width:50%">&nbsp;&nbsp;
+            <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+<div style="margin:20px;"><a onclick="addConfig();" href="#">添加一项配置</a> &nbsp; <font color="#999999">* 为游戏添加一项配置参数</font></div>
+    <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+    <center><input type="submit" value="保存配置" style="width:80px; height:30px;" /></center>
+</form>
+
+<script type="text/javascript">
+function addConfig(){
+	var id = document.getElementById('table-list');
+	var newtr = id.insertRow(-1);
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	td1.innerHTML = '<input type="text" name="descr[]">';
+	td2.innerHTML = '<input type="text" name="key[]">';
+	td3.innerHTML = '<input type="text" name="value[]" style="width:50%"> <a href="#" onclick="delConfig(this)">删除</a>';
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+}
+function delConfig(obj){
+	obj = obj.parentNode.parentNode;
+	obj.parentNode.removeChild(obj);
+}
+</script>
+</body>
+</html>

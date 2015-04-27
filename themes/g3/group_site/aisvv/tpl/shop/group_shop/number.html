@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/reset.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/shop/css/shop.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--顶部banner-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" /></a>
+            {else}
+                <img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$categoryInfo['img_path'].'/0/0.jpg');}" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--官方销售靓号-->
+        <div class="shopwrap">
+            <h2>
+                <div class="shopnav">官方销售靓号</div>
+            </h2>
+            <div class="numhead clearfix">
+                <div class="numtype">
+                {foreach $numberCategory $val}
+                    <a href="/shop/shop.php?category_id={$categoryInfo['cate_id']}&num_cat_id={$val['cate_id']}" class="btn{if $val['cate_id']==$numCatId} btn-warning{else} btn-default{/if}">{$val['cate_name']}
+                    {if $val['words']}
+                    <span class="new">{$val['words']}</span></a>
+                    {/if}
+                    </a>
+                {/foreach}
+                </div>
+                <div class="numsearch">
+                    <form action="shop.php?category_id={$categoryInfo['cate_id']}" method="post" onSubmit="if(this.keywords.value==''||this.keywords.value=='搜索靓号'){alert('请输入靓号');return false;}">
+                        <input type="hidden" name="action" value="search">
+                        <input class="inputcs" type="text" name="keywords" value="搜索靓号" >
+                        <input type="submit" class="btn btncs" value="">
+                    </form>  
+                </div>
+            </div>
+            <ul class="numlist clearfix">
+            {foreach $numberList $val}
+                <li style="cursor:pointer;"{if in_array($val['name'],$numberSaleList)} class="sale"{else} onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$val['id']}&room_id={$room_id}';"{/if}>
+                    <p class="text-warning">{$val['name']}</p>
+                    <p>价格：{$val['price']}{$unit}</p>
+                    <div class="layer"></div>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".numlist li").hover(
+		function(){
+			$(this).children(".layer").show();
+		},
+		function(){
+			$(this).children(".layer").hide();	
+		});
+	$("input.inputcs").focus(
+		function(){
+			var txt_value=$(this).val();
+			if(txt_value==this.defaultValue){
+			  $(this).val("");
+			}
+	});
+	$("input.inputcs").blur(
+		function(){
+			var txt_value=$(this).val();
+			if(txt_value==""){
+			  $(this).val(this.defaultValue);
+			}
+	})
+})
+</script>
+</body>
+</html>

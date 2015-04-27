@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>礼物管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">礼物列表</div>
+  <div class="header-button right">
+  {if $link_array[114]['url']}<a class="add-button" href="{$link_array[114]['url']}?cate_id={$_GET['cate_id']}&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}">添加礼物</a>{/if}
+  <!--
+  {if $link_array[106]['url']}<a class="add-button" href="{$link_array[106]['url']}">礼物分类</a>{/if}
+  -->
+  </div>
+</div>
+
+<script>
+{if $_GET['is_tricky']}
+active_li = 10;
+{else}
+active_li = 5;
+{/if}
+</script>
+{include file="template/tpl_header.html"}
+<br />&nbsp;&nbsp;
+<script>
+$(function(){
+    $("#type_search").click(function(){
+        if($("#type").val() == 0){
+            location.href = "props_manage.php?tpl_id={$_GET['tpl_id']}";
+        }else if($("#type").val() == 1){
+            location.href = "props_manage.php?module=props_list&is_tricky=1&tpl_id={$_GET['tpl_id']}";
+        }else if($("#type").val() == 2){
+            location.href = "props_manage.php?module=props_list&is_tricky=2&tpl_id={$_GET['tpl_id']}";
+        }
+        return false;
+    })   
+})
+</script>
+选择类型:
+<select name="type" id="type">
+<option value="0">礼物</option>
+<option value="1" {if $_GET['is_tricky'] == 1}selected="selected"{/if}>整蛊</option>
+<option value="2" {if $_GET['is_tricky'] == 2}selected="selected"{/if}>沙发</option>
+</select>
+<input type="submit" id="type_search" value="搜索" /><br />
+
+<div class="page-tools main-width">
+	<form action="" method="get" name="myform">
+        科目：<select name="big_case_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+              <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+              <select name="parent_id" id="parent"><option value="0">请选择</option></select>
+        {if $_GET['is_tricky']}
+        <input type="hidden" name="is_tricky" value="1" />
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+        {else}
+        礼物类型：
+        <select name="cate_id">
+        <option value="-1">请选择</option>
+        {foreach $cate $one}
+        <option value="{$one['cate_id']}" {if $_GET['cate_id'] == $one['cate_id']}selected="selected"{/if}>{$one['cate_name']}</option>
+        {/foreach}
+        </select>&nbsp;&nbsp;&nbsp;&nbsp;     
+        {/if}
+        礼物类型：<select name="props_size" style="width:60px;"><option value="-1">&nbsp;&nbsp;无</option><option value="0" {if $_GET['props_size']=='0'}selected{/if}>&nbsp;&nbsp;小</option><option value="2" {if $_GET['props_size']=='2'}selected{/if}>&nbsp;&nbsp;大</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+         状态：<select name="props_status"><option value="-1">--请选择--</option><option value="1" {if $_GET['props_status']=='1'}selected{/if}>启用</option><option value="0" {if isset($_GET['props_status']) && $_GET['props_status']=='0'}selected{/if}>不启用</option></select>&nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="hidden" name="module" id="module" value="props_list">
+         <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>礼物名称</th>
+    <th>一级科目</th>
+    <th>二级科目</th>
+    <th>三级科目</th>
+    <th>礼物分类</th>
+    <th>礼物描述</th>
+    <th>礼物类型</th>
+    <th>礼物图标</th>
+    <th>状态</th>
+    <th>时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $props_arr $arr}
+  <tr>
+    <td>{$arr['props_name']}</td>
+    <td>{$arr['bigcase_name']}</td>
+    <td>{$arr['case_name']}</td> 
+    <td>{$arr['parent_name']}</td>
+    <td>{$arr['cate_name']}</td>
+    <td>{$arr['props_desc']}</td>
+    <td><{if $arr['props_size']==2}>大<{else}>小<{/if}></td>
+    <td>{if $arr['pic_id'] > 0}<a href="{$arr['swf_img_path']}" title="点击查看道具图标" target="_blank">查看道具图标</a>{else}<span style="color:#bbb">查看道具图标</span>{/if}</td> 
+    <td><{if $arr['props_status']==1}>启用<{else}>不启用<{/if}></td>
+    <td>{echo date('Y-m-d H:i:s',$arr['uptime'])}</td>
+    <td>
+    	{if $link_array[125]['url']}<a href="{$link_array[125]['url']}&id={$arr['id']}&type=up&cate_id={$_GET['cate_id']}&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}" title="上移">上移</a>&nbsp;&nbsp;{/if}
+        {if $link_array[125]['url']}<a href="{$link_array[125]['url']}&id={$arr['id']}&type=down&cate_id={$_GET['cate_id']}&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}" title="下移">下移</a>&nbsp;&nbsp;{/if}
+        {if $link_array[125]['url']}<a href="{$link_array[125]['url']}&id={$arr['id']}&type=top&cate_id={$_GET['cate_id']}&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}" title="置顶替">置顶</a>&nbsp;&nbsp;{/if}
+        {if $link_array[117]['url']}<a href="{$link_array[117]['url']}?id={$arr['id']}&cate_id={$_GET['cate_id']}&is_tricky={$_GET['is_tricky']}&tpl_id={$_GET['tpl_id']}" title="修改">修改信息</a>&nbsp;&nbsp;{/if}
+        <!--
+        {if $link_array[104]['url']}<a href="javascript:void(0);" onClick="props_del('<{$arr[id]}>');" title="删除">删除</a>{/if}&nbsp;
+        -->
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+<script type="text/javascript">
+function props_del(id){
+	if(confirm("高危操作，确定要删除吗？")){
+		window.location.href = "{$link_array[124]['url']}&id="+id;
+	}
+}
+
+getOptions("bigcase=1","bigcase","{$_GET['bigcase_id']}");
+{if !empty($_GET['bigcase_id'])}
+getOptions("case={$_GET['bigcase_id']}",'case',"{$_GET['case_id']}");
+{/if}
+{if !empty($_GET['case_id'])}
+getOptions("parent={$_GET['case_id']}",'parent',"{$_GET['parent_id']}");
+{/if}
+</script>
+</body>
+</html>

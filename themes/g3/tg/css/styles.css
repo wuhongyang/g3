@@ -1,0 +1,69 @@
+/* CSS Document */
+html, body, div, h1, h2, h3, h4, h5, h6, ul, ol, dl, li, dt, dd, p, blockquote, 
+pre, form, fieldset, table, th, td { margin: 0; padding: 0; }
+ul,li { list-style:none;}
+body{ margin:0px auto;padding:0px; font-size:12px;   font-family:"微软雅黑"; background:#A8009D;} 
+#box{ width:100%; height:894px; margin:0px auto; padding:0px; background:url(../images/pic_01.jpg) repeat-x;}
+
+.mid_zhuc{
+	width:951px;
+	height:894px;
+	margin:0px auto;
+	padding:0px;}
+.mid_zhuc01{
+	width:951px;
+	height:398px;
+	float:left;
+	background:url(../images/pic_02.jpg) no-repeat;}
+.mid_zhuc02{
+	width:951px;
+	height:337px;
+	float:left;
+	background:url(../images/pic_03.jpg) no-repeat;
+	color:#614810;
+	padding-top:60px;}
+.mid_zhuc02 a{
+	color:#614810;
+	text-decoration:none;}
+.mid_zhuc02 a:hover{
+	color:#614810;
+	text-decoration:underline;}
+	
+.input-list{ width:508px;height:332px; float:left;font-size:12px; padding-top:5px; padding-left:30px;}
+.input-list label{
+	float:left;
+	margin:0px;
+	padding:0px;}
+.input-list dt{float:left;text-align:right;width:120px;padding-right:5px;margin-bottom:8px; line-height:25px;}
+.input-list dd{font-size:12px;float:left;width:350px;margin-bottom:8px;}
+
+.tips{font-size:12px;width:220px;margin-top:5px; float:left;}
+.auto-email {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CCCCCC;
+    display: none;
+    font-size: 12px;
+	float:left:	
+    list-style: none outside none;
+    position: absolute;
+    top: 490px;
+    width: 225px;
+}
+.auto-email a {
+    cursor: pointer;
+    display: block;
+    padding: 4px;
+}
+.auto-email a:hover {
+    background: none repeat scroll 0 0 #E8F8FF;
+}
+
+.label_hack{
+	*margin-top:-57px !important; 
+	margin-top:0px;}
+.dd_hack{
+	*margin-top:-35px !important; 
+	*margin-left:65px !important; 
+	margin-top:0px;
+	margin-left:0px;}
+	

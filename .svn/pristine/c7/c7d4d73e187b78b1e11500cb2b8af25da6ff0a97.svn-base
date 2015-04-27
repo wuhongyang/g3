@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form p{margin-top: 10px;}
+.form .hide{display: none;}
+.form p span{margin-right:10px;}
+.form p span.w60{display: inline-block;width: 60px;text-align: right;}
+.form p span.warning{color:red;margin-left: 10px;}
+.form p .tp5{position: relative;top:5px;}
+.mgr20{margin-right: 20px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab" style="border-bottom:none;">
+        <span><strong>{$menuName} </strong>二级菜单设置</span>        
+        <a href="javascript:;" class="bluebtn fr" id="J_add"><span>添加</span></a>
+        <span class="mgr20 fr">&nbsp;</span>
+        <a href="/group/menu.php" class="bluebtn fr"><span>返回一级菜单</span></a>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt30">
+      <tr>
+        <th>编号</th>
+        <th>名称</th>
+        <th>图标</th>
+        <th width="150">链接地址</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $menuList $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['name']}</td>
+        <td>{if !empty($val['icon'])}<img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['icon'].'/26/26.jpg');}" width="26" height="26">{else}无{/if}</td>
+        <td width="150">{$val['url']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a href="javascript:up({$val['id']});">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($menuList)-1}
+                <a href="javascript:down({$val['id']});">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a href="javascript:editmenu({$val['id']});">编辑</a>
+            {if $val['status'] == 1}
+                <a href="javascript:setVisible({$val['id']});">不显示</a>
+            {else}
+                <a href="javascript:setVisible({$val['id']});">显示</a>
+            {/if}
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var super_id = '{$superId}';
+var groupGamesJSON = '{$groupGamesJSON}';
+groupGamesJSON = $.parseJSON(groupGamesJSON);
+
+String.prototype.trim = function(){
+    return this.replace(/(^\s*)|(\s*$)/g, ""); 
+}
+
+function getGeneralHtml(){
+    return '<span class="tp5 general"><input type="radio" name="icon" value="10114" class="radio"><em><img src="/pic/gameicon/10114.png"></em></span><span class="tp5 general"><input type="radio" name="icon" value="10110" class="radio"><em><img src="/pic/gameicon/10110.png"></em></span><span class="tp5 general"><input type="radio" name="icon" value="10109" class="radio"><em><img src="/pic/gameicon/10109.png"></em></span><span class="tp5 general"><input type="radio" name="icon" value="10237" class="radio"><em><img src="/pic/gameicon/10237.png"></em></span><span class="tp5 general"><input type="radio" name="icon" value="10240" class="radio"><em><img src="/pic/gameicon/10240.png"></em></span>';
+}
+$(function(){
+    $('#J_add').click(function(){
+        var content = '<form action="?module=sub_menu_add" method="post" id="add_menu_form" class="form" enctype="multipart/form-data" target="iframe">';
+        content += '<p><span>链接类型：</span><select name="link_type"><option value="-1">--请选择--</option><option value="1">房间游戏</option><option value="4">全站游戏</option><option value="2">客服QQ</option><option value="3">其他(通用)</option></select><span class="warning">*根据您要实现的功能选择对应的类型</span></p>';
+        content += '<p class="hide type" id="game"><span class="w60">游戏：</span><select name="game"><option value="-1">请选择</option>';
+        {foreach $games $game}
+            content += '<option value="{$game["id"]}">{$game["interact_name"]}</option>';
+        {/foreach} 
+        content += '</select> <span class="w60">房间号：</span><select name="room"><option value="-1">请选择</option>';
+		{foreach $roomList $val}
+            content += '<option value="{$val["id"]}">{$val["name"]}</option>';
+		{/foreach}
+        content += '</select></p>';
+        content += '<p class="hide type w60" id="group_game"><span class="w60">游戏：</span><select name="group_game"><option value="-1">请选择</option>';
+        {foreach $groupGames $key $val}
+        content += '<option value="{$key}">{$val["name"]}</option>';
+        {/foreach}
+        content += '</select></p>';
+        content += '<p><span class="w60">名称：</span><input type="text" name="name" size="30"></p>';
+        content += '<p class="hide type" id="qq"><span class="w60">客服QQ：</span><input type="text" name="qq" size="30"></p>';
+        content += '<p class="hide type w60" id="common"><span class="w60">链接：</span><input type="text" name="url" size="30"><span class="txt2">例：http://www.vvku.com</span></p>';
+        content += '<p><span>菜单图标：</span>';
+        content += getGeneralHtml();
+        content += '<span id="custom"><input type="radio" name="icon" value="0" class="radio tp5"><em>自定义</em></span><span><input type="radio" name="icon" value="-1" class="radio tp5"><em>无</em></span></p>';
+        content += '<p class="hide" id="hide"><span>上传图片：</span><input type="file" name="custom_icon"></p>';
+        content += '<iframe name="iframe" style="display:none;"></iframe>';
+        content += '<input type="hidden" name="super_id" value="'+super_id+'">';
+        content += '</form>';
+        art.dialog({
+            title: '添加二级菜单',
+            content: content,
+            ok: function(){
+                if(!checkParam()){
+                    return false;
+                }
+                var icon = $('input[name="icon"]:checked').val();
+                if(isNaN(icon)){
+                    _show_msg('请选择菜单图标');
+                    return false;
+                }else if(icon == '0'){
+                    if(!$('input[name="custom_icon"]').val()){
+                        _show_msg('请上传菜单图标');
+                        return false;
+                    }
+                }
+
+                $('#add_menu_form').submit();
+                return false;
+            },
+            cancel: function(){
+				location.href = '?module=sub_menu_list&super_id='+super_id;
+				return false;
+			},
+            lock: true
+        });
+    });
+
+    $(document).on('change', 'select[name="game"]',function(){
+        var game = $(this).val();
+        if(game < 1){
+            return ;
+        }
+        var type_char = $(this).find('option:selected').text();
+        $('input[name="name"]').val(type_char);
+    })
+    
+    $(document).on('change', 'select[name="link_type"]',function(){
+        var type = $(this).val();
+        $('.type').hide();
+        $('.group_games').remove();
+        $('.general').remove();
+        if(type == 1){
+            $('#game').show();
+            $('#custom').before(getGeneralHtml);
+        }else if(type == 2){
+            $('#qq').show();
+            $('#custom').before(getGeneralHtml);
+        }else if(type == 3){
+            $('#common').show();
+            $('#custom').before(getGeneralHtml);
+        }else if(type == 4){
+            $('#group_game').show();
+            var game_id = $('select[name="group_game"]').val();
+            if(game_id > 0){
+                var html = '<span class="tp5 group_games"><input type="radio" name="icon" value="'+game_id+'" class="radio" checked><em><img src="{php echo cdn_url(PIC_API_PATH."/p/'+groupGamesJSON[game_id].md5+'/0/0.jpg");}"></em></span>';
+                $('#custom').before(html);
+            }
+        }
+    });
+
+    $(document).on('click', 'input[type="radio"][name="icon"]', function(){
+        var icon = $(this).val();
+        if(icon == '0'){
+            $('#hide').show();
+        }else{
+            file = $('input[name="custom_icon"]')[0];
+            if(file.outerHTML){
+                file.outerHTML = file.outerHTML;
+            }else{
+                $('input[name="custom_icon"]').val('');
+            }
+            $('#hide').hide();
+        }
+    });
+
+    $(document).on('change', 'select[name="group_game"]', function(){
+        var game = $(this).val();
+        if(game < 1){
+            return ;
+        }
+        var type_char = $(this).find('option:selected').text();
+        $('input[name="name"]').val(type_char);
+        var html = '<span class="tp5 group_games"><input type="radio" name="icon" value="'+game+'" class="radio" checked><em><img src="{php echo cdn_url(PIC_API_PATH."/p/'+groupGamesJSON[game].md5+'/0/0.jpg");}"></em></span>';
+        $('.group_games').remove();
+        $('.general').remove();
+        $('#custom').before(html);
+    });
+});
+
+function setVisible(id){
+    $.ajax({
+        url: '?module=sub_menu_set_visible',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            var icon = 'succeed';
+            var ok = function(){
+                location.href = "?module=sub_menu_list&super_id="+super_id;
+            };
+            if(data.Flag != 100){
+                icon = 'warning';
+                ok = true;
+            }
+            art.dialog({
+                content: data.FlagString,
+                ok: ok,
+                cancel: false,
+                esc: false,
+                icon: icon
+            });
+        }
+    });
+}
+
+function up(id){
+    $.ajax({
+        url: '?module=sub_menu_up',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '上移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=sub_menu_list&super_id='+super_id;
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+
+function down(id){
+    $.ajax({
+        url: '?module=sub_menu_down',
+        type: 'POST',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: '下移成功',
+                    lock: true,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=sub_menu_list&super_id='+super_id;
+                    },
+                    cancel: false,
+                    esc: false
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    icon: 'error',
+                    lock: true,
+                    time: 2
+                });
+            }
+        }
+    });
+}
+
+function editmenu(id){
+    $.ajax({
+        url: '?module=menu_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(data){
+            if(!data.id){
+                return ;
+            }
+            var gameHide = '',
+                groupGameHide = '',
+                qqHide = '',
+                commonHide = '';
+            var qqValue = '',
+                commonValue = '';
+            var content = '<form action="?module=sub_menu_edit" method="post" id="edit_menu_form" class="form" enctype="multipart/form-data" target="iframe">';
+            content += '<p><span>链接类型：</span><select name="link_type"><option value="-1">--请选择--</option>';
+            if(data.other.link_type == 1){
+                content += '<option value="1" selected>房间游戏</option>';
+            }else{
+                content += '<option value="1">房间游戏</option>';
+                gameHide = 'hide';
+            }
+            if(data.other.link_type == 4){
+                content += '<option value="4" selected>全站游戏</option>';
+            }else{
+                content += '<option value="4">全站游戏</option>';
+                groupGameHide = 'hide';
+            }
+            if(data.other.link_type == 2){
+                content += '<option value="2" selected>客服QQ</option>';
+                qqValue = data.other.qq;
+            }else{
+                content += '<option value="2">客服QQ</option>';
+                qqHide = 'hide';
+            }
+            if(data.other.link_type == 3){
+                content += '<option value="3" selected>其他(通用)</option>';
+                commonValue = data.url;
+            }else{
+                content += '<option value="3">其他(通用)</option>';
+                commonHide = 'hide';
+            }
+            content += '</select><span class="warning">*根据您要实现的功能选择对应的类型</span></p>';
+            if(data.icon){
+                content += '<p><span>当前图标：</span><img src="{php echo cdn_url(PIC_API_PATH."/p/'+data.icon+'/26/26.jpg");}" width="26" height="26"></p>';
+            }
+            content += '<p class="'+gameHide+' type" id="game"><span class="w60">游戏：</span><select name="game"><option value="-1">请选择</option>';
+            {foreach $games $game}
+                if(data.other.link_type == 1){
+                    if(data.other.gameid == '{$game["id"]}'){
+                        content += '<option value="{$game["id"]}" selected>{$game["interact_name"]}</option>'; 
+                    }else{
+                        content += '<option value="{$game["id"]}">{$game["interact_name"]}</option>'; 
+                    }
+                }else{
+                   content += '<option value="{$game["id"]}">{$game["interact_name"]}</option>'; 
+                }
+            {/foreach} 
+            content += '</select> <span class="w60">房间号：</span><select name="room"><option value="-1">请选择</option>';
+            {foreach $roomList $val}
+                if(data.other.link_type == 1){
+                    if(data.other.roomid == '{$val["id"]}'){
+                        content += '<option value="{$val["id"]}" selected>{$val["name"]}</option>';
+                    }else{
+                        content += '<option value="{$val["id"]}">{$val["name"]}</option>';
+                    }
+                }else{
+                    content += '<option value="{$val["id"]}">{$val["name"]}</option>';
+                }
+            {/foreach}
+            content += '</select></p>';
+            content += '<p class="'+groupGameHide+' type" id="group_game"><span class="w60">游戏：</span><select name="group_game"><option value="-1">请选择</option>';
+            {foreach $groupGames $key $val}
+                if(data.other.gameid == '{$key}'){
+                    content += '<option value="{$key}" selected>{$val["name"]}</option>'; 
+                }else{
+                    content += '<option value="{$key}">{$val["name"]}</option>'; 
+                }
+            {/foreach}
+            content += '</select></p>';
+            content += '<p><span class="w60">名称：</span><input type="text" name="name" size="30" value="'+data.name+'"></p>';
+            content += '<p class="'+qqHide+' type" id="qq"><span class="w60">客服QQ：</span><input type="text" name="qq" size="30" value="'+qqValue+'"></p>';
+            content += '<p class="'+commonHide+' type w60" id="common"><span class="w60">链接：</span><input type="text" name="url" size="30" value="'+commonValue+'"><span class="txt2">例：http://www.vvku.com</span></p>';
+            content += '<p><span>菜单图标：</span>';
+            if(data.other.link_type == 4){
+                if(groupGamesJSON[data.other.gameid]){
+                    content += '<span class="tp5 group_games"><input type="radio" name="icon" value="'+data.other.gameid+'" class="radio"><em><img src="{php echo cdn_url(PIC_API_PATH."/p/'+groupGamesJSON[data.other.gameid].md5+'/0/0.jpg");}"></em></span>';
+                }
+            }else{
+                content += getGeneralHtml();
+            }
+            content += '<span id="custom"><input type="radio" name="icon" value="0" class="radio tp5"><em>自定义</em></span><span><input type="radio" name="icon" value="-1" class="radio tp5"><em>无</em></span></p>';
+            content += '<p class="hide" id="hide"><span>上传图片：</span><input type="file" name="custom_icon"></p>';
+            content += '<iframe name="iframe" style="display:none;"></iframe>';
+            content += '<input type="hidden" name="id" value="'+data.id+'">';
+            content += '<input type="hidden" name="current_icon" value="'+data.icon+'">';
+            content += '<input type="hidden" name="super_id" value="'+super_id+'">';
+            content += '</form>';
+            art.dialog({
+                title: '编辑二级菜单',
+                content: content,
+                ok: function(){
+                    if(!checkParam()){
+                        return false;
+                    }
+                    $('#edit_menu_form').submit();
+                    return false;
+                },
+                cancel: function(){
+					location.href = '?module=sub_menu_list&super_id='+super_id;
+					return false;
+				},
+                lock: true
+            });
+        }
+    });
+}
+
+function checkParam(){
+    var name = $('input[name="name"]').val();
+    name = name.trim();
+    if(name.length == 0){
+        _show_msg('名称不能为空');
+        return false;
+    }
+	if(name.length > 20){
+		_show_msg('名称不能超过20个字');
+		return false;
+	}
+    var link_type = $('select[name="link_type"]').val();
+    if(link_type == -1){
+        _show_msg('请选择链接类型');
+        return false;
+    }
+    if(link_type == 1){
+        if($('select[name="game"]').val() < 0){
+            _show_msg('请选择游戏');
+            return false;
+        }
+        if($('select[name="room"]').val() < 1){
+            _show_msg('请选择房间号');
+            return false;
+        }
+    }else if(link_type == 2){
+        var qq = $('input[name="qq"]').val();
+        if(!qq){
+            _show_msg('QQ号不能为空');
+            return false;
+        }
+        if(!/^[1-9]\d+$/.test(qq)){
+            _show_msg('请填写正确的QQ号');
+            return false;
+        }
+    }else{
+        var url = $('input[name="url"]').val();
+        if(url != '' && !/^http:\/\//.test(url)){
+            _show_msg('链接必须以http://开头');
+            return false;
+        }
+    }
+    return true;
+}
+
+//上传图片成功后回调
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=sub_menu_list&super_id='+super_id;
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+
+</script>

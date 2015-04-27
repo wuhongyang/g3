@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站内VIP成员申请</title>
+<link rel="stylesheet" href="{php echo cdn_url(THEMES_URL.'rooms/css/actapply.css');}"   type="text/css" >
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/base.css');}"   type="text/css" >
+<link rel="stylesheet" href="{php echo cdn_url(THEMES_URL.'rooms/css/style.css');}"   type="text/css" >
+</head>
+<body>
+{include file="../common/header.html"}
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <!-- 标题 -->
+    <h1><span class="red">申请成为站内VIP成员</span></h1> 
+    <!-- 申请步骤 -->
+    <div class="fengline1"></div>
+    <!-- 申请步骤表单 -->
+    <form method="post" action="?module=vip_update" id="vip_form" class="applyform clearfix">
+        <div class="formlist">
+            <label>站名称：</label>
+            <span>{$info['name']}</span>
+        </div>
+        <div class="formlist">
+            <label>站长：</label>
+            <span>{$info['Nick']}（{$info['groupid']}）</span>
+        </div>
+        <div class="formlist">
+            <label>申请账号：</label>
+            <span>{$Uin}（{$Nick}）</span>
+        </div>
+        <div class="formlist">
+            <label>常驻城市：</label>
+            <select name="province" id="province">
+                <option value="-1">请选择</option>
+                {foreach $provinces $key $val}
+                <option value="{$key}">{$val}</option>
+                {/foreach}
+            </select>
+            <select name="city" id="city">
+                <option value="-1">请选择</option>
+            </select>
+        </div>
+        <div class="formlist">
+            <label>真实姓名：</label>
+            <input name="name" id="name" type="text" value="" class="inputcs">
+        </div>
+        <div class="formlist">
+            <label>性别：</label>
+            <select name="sex" value="sex">
+            <option value="1">男</option>
+            <option value="2">女</option>
+            </select>
+        </div>
+        <div class="formlist">
+            <label>年龄：</label>
+            <input name="age" id="age" type="text" class="inputcs" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+        </div>
+        <div class="formlist">
+            <label>手机号码：</label>
+            <input name="phone" id="phone" type="text" class="inputcs" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+        </div>
+        <div class="formlist">
+            <label>QQ：</label>
+            <input name="qq" id="qq" type="text" class="inputcs" onkeyup="value=value.replace(/[^\d]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d.]/g,''))">
+        </div>
+        
+        <div class="formlist">
+            <input type="hidden" id="GroupId" name="GroupId" value="{$_GET['GroupId']}">
+			<input type="submit" class="submitbtn"  value="提交申请" style="margin-left:200px;"/>
+        </div>
+        <!-- 分割虚线 -->
+        <div class="formlist">
+            <div class="linebox"></div>
+        </div>
+    </form>  
+    <div class="btip">
+    	如有任何问题请随时咨询VV酷客服。
+        <a target="_blank" href=http://wpa.qq.com/msgrd?v=3&amp;uin=4006772115&amp;site=qq&amp;menu=yes><img border="0" src="http://wpa.qq.com/pa?p=1:4006772115:7" /></a>
+    </div>
+</div>    
+{include file="../common/footer.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#province').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+	
+    $('#vip_form').submit(function(){
+        var age = $('#age').val();
+        var phone = $('#phone').val();
+		if(age>100){
+			alert('请输入正确的年龄');
+			return false;
+		}
+		if(phone>0 && !_is_phone(phone)){
+			alert('请输入正确的手机号码');
+			return false;
+		}
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站logo上传</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body style="margin-top:5px;">
+	<form method="post" enctype="multipart/form-data" id="upload_form">
+		<input type="file" name="fileField">
+		<input type="submit" class="yellowbtn2" value="上传">
+		<span class="red" style="margin-left:20px;">*请上传2MB以内的jpg,png,gif格式的图片，推荐尺寸100*30</span>
+	</form>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript">
+var upfileInfo = '{$rst}';
+upfileInfo = $.parseJSON(upfileInfo);
+if(upfileInfo){
+    if(upfileInfo.Flag == 100){
+    	var hidden = $('#logo',window.parent.document);
+    	hidden.val(upfileInfo.File);
+
+    	var img = '<img src="{php echo cdn_url(PIC_API_PATH."/p/'+upfileInfo.File+'/100/30.jpg");}">'
+    	var logoObj = $('#logo-img',window.parent.document);
+    	var imgObj = logoObj.find('img');
+    	if(imgObj.length > 0){
+    		imgObj.remove();
+    	}
+    	logoObj.append(img);
+    }
+}
+</script>
+</body>
+</html>

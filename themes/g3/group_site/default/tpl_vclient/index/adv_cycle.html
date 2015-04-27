@@ -1,0 +1,11 @@
+<div id="slideBox" class="slideBox">
+      <ul class="items">
+      {if empty($carouselList)}
+      		<li><a href="/rooms/recruit.php" title="招募站长" target="_blank"><img src="/pic/group/default.jpg" alt="招募站长" title="招募站长" width="540" height="200"></a></li>
+      {else}
+      	{foreach $carouselList $val}
+            <li><a href="{if $val['url']!=''}{$val['url']}{else}javascript:void(0);{/if}" title="{if $val['explain']!=''}{$val['explain']}{else}v{/if}" target="_blank"><img src="{php echo PIC_API_PATH.'/p/'.$val['image'].'/540/200.jpg';}" alt="{$val['explain']}" title="{$val['explain']}" width="540" height="200"></a></li>
+      	{/foreach}
+      {/if}
+      </ul>
+</div>

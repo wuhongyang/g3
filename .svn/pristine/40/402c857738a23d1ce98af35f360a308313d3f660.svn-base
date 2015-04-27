@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>{$groupInfo['name']}——友情链接</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+<style type="text/css">
+/*友情链接*/
+.friend-main {
+	margin-left: 20px;
+	line-height: 24px;
+	width: 650px;
+	overflow: hidden;
+	margin-bottom:40px;
+}
+.friend-main dl dt{
+	color:{$styleInfo['main_text']};
+	font-size:16px;
+	line-height:100%;
+	height:20px;
+	padding-left:10px;
+	margin:10px 0;
+	border-left:2px solid {$styleInfo['main_text']};
+}
+.friend-main dl dd p{
+	float:left;
+	margin:10px;
+	width:130px;
+}
+.friend-main dl dd p img{
+	width:125px;
+	height:49px;
+	border:1px solid {$styleInfo['border']};
+}
+.friend-main dl dd p a{
+	color:{$styleInfo['main_text']};
+}
+.friend-side {
+	width: 250px;
+	padding-left:10px;
+	border-left:1px solid {$styleInfo['border']};
+}
+.friend-side h5{
+	color:{$styleInfo['main_text']};
+	font-size:16px;
+	line-height:100%;
+	height:20px;
+	padding-left:10px;
+	margin:25px 0 10px 0;
+}
+.friend-side p.qq{
+	text-indent:25px;
+	margin-bottom:30px;
+}
+.friend-side .require-list {
+}
+.friend-side .require-list li{
+	color: {$styleInfo['minor_text']};
+	line-height:30px;
+}
+</style>
+</head>
+<body class="diy-body">
+{include file="header.html"}
+
+<div class="container">
+	<div class="body clearfix">
+        <div class="friend-main pull-left">
+        {foreach $cateList $val}
+            <dl class="clearfix">
+                <dt>{$val['title']}</dt>
+            {foreach $val['link'] $val2}
+            	{if $val['type']=='img'}
+                <dd>
+                    <p><a href="{$val2['url']}" title="{$val2['name']}" target="_blank"><img src="{PIC_API_PATH}/p/{$val2['logo']}/270/100.jpg" width="125" height="49" title="{$val2['name']}" alt="{$val2['name']}"></a></p>
+                </dd>
+                {else}
+                <dd>
+                    <p><a href="{$val2['url']}" title="{$val2['name']}" target="_blank">{$val2['name']}</a></p>
+                </dd>
+                {/if}
+            {/foreach}
+            </dl>
+        {/foreach}
+        </div>
+        <div class="friend-side pull-left">
+            <h5>合作联系方式</h5>
+            <p class="qq">QQ:{$groupExtInfo['qq']['value']}</p>
+            <h5>链接要求</h5>
+            <ul class="require-list">
+                <li>拒绝色情、反动、有恶意代码、制作低劣，因作弊被惩罚的网站</li>
+                <li>百度快照收录正常，快照及时更新</li>
+                <li>拒绝下拉式菜单链接及js链接</li>
+                <li>交换网站要求行业相关或边界产品</li>
+                <li>友情链接网站之间有义务向对方报告链接失效、图片更新等问题，再解除友情链接之前亦应该通知对方</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{include file="footer.html"}
+</body>
+</html>

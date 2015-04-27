@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-推荐位设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.info p{line-height:30px;height: 30px;}
+.info p span{margin-right: 10px;text-align: right;}
+#notice{color:red;margin-left:10px;width:90px;display: inline-block;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">{$parent_name}</h3>
+        <div class="fr">
+            <a href="?module=recommend_sub_cat_show&parent_id={$pparent_id}" class="bluebtn"><span>返回</span></a>
+            <a class="bluebtn  mgL10" style="right:0;top:0;cursor:pointer;" id="add"><span>添加</span></a>
+        </div>
+    </div>
+    
+    
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="artist_table">
+      <tr>
+        <th>编号</th>
+        <th>用户ID</th>
+        <th>用户昵称</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $list $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['code']}</td>
+        <td>{$val['nick']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($list)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var phpVar = {
+    parent_id: '{$parent_id}',
+    type: '{$type}',
+    pparent_id: '{$pparent_id}'
+};
+
+$(function(){    
+    $('#add').click(function(){
+        var content = '<div class="info">';
+        content += '<p><span>会员ID：</span><input type="text" name="uin"><span id="notice"></span></p>';
+        content += '<p><span>会员昵称：</span><span id="nick"></span></p>';
+        content += '</div>';
+        art.dialog({
+            title: '添加推荐位',
+            content: content,
+            width: 350,
+            height: 80,
+            ok: function(){
+                var uin = $('input[name="uin"]').val();
+                if(uin == ''){
+                    $('#notice').html('会员ID不能为空');
+                    return false;
+                }
+                if(!/^\d+$/.test(uin)){
+                    $('#notice').html('会员ID错误');
+                    return false;
+                }
+                operate({code:uin,parent_id:phpVar.parent_id},'vip_recommend_add');
+            },
+            cancel: true,
+            lock: true
+        })
+    });
+    
+    $(document).on('keyup', 'input[name="uin"]', function(){
+        var uin = $(this).val();
+        uin = uin.replace(/[^\d]/g,'');
+        $(this).val(uin);
+    });
+    $(document).on('blur', 'input[name="uin"]', function(){
+        var uin = $(this).val();
+        if(uin == ''){
+            $('#notice').html('请输入会员ID')
+            return;
+        }
+        if(!/^\d+$/.test(uin)){
+            $('#notice').html('会员ID错误');
+            return;
+        }
+        $.ajax({
+            url: '?module=group_vip',
+            type: 'GET',
+            data: {uin:uin,timestamp:new Date().getTime()},
+            dataType: 'JSON',
+            success: function(json){
+                if(json.length <= 0){
+                    $('#notice').html('不是本站会员');
+                }else{
+                     $('#notice').html('');
+                    $('#nick').html(json.nick);
+                }
+            }
+        });
+    });
+});
+
+function order(id,type){
+    operate({id:id,type:type},'recommend_order')
+}
+
+function del(id){
+    art.dialog({
+        content: '您真的要删除该推荐位吗？',
+        ok: function(){
+            var module = 'recommend_del';
+            operate({id:id},module);
+        },
+        lock: true,
+        cancel: true,
+        icon: 'warning'
+    });
+}
+
+function operate(data,module){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: data.FlagString,
+                    ok: function(){
+                        location.href = '?module=recommend_show&parent_id='+phpVar.parent_id+'&pparent_id='+phpVar.pparent_id;
+                    },
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    ok: true,
+                    cancel: false,
+                    icon: 'error',
+                    lock: true
+                });
+            }
+        }
+    });
+}
+</script>

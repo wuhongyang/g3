@@ -1,0 +1,19 @@
+{include_php file="get_foot_info.php"}
+<div class="container" style="margin:0 auto;">
+    <div class="footer">
+    	<div><a href="#">关于我们</a> <a href="#">联系我们</a> <a href="#">产品与服务</a> <a href="/links.php">友情链接</a></div>
+        <div>{$icp_info}</div>
+        <div>平台支持：<a href="http://www.vvku.com" title="vvku">vvku</a></div>
+    </div>
+</div>
+<!--[if lte IE 7]>
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/ie.css');}" rel="stylesheet" type="text/css">
+<link href="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/css/bootstrap-ie6.css');}" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/bsie/js/bootstrap-ie.js');}"></script>
+<![endif]-->
+<!--<div style="display:none">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>-->

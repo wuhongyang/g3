@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>业务规则定义</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">业务规则定义</div>
+  <div class="header-button right">{if $link_array[146]['url']}<a href="{$link_array[146]['url']}&tpl_id={$_GET['search']['tpl_id']}" class="add-button">创建业务规则定义</a>{/if}</div>
+</div>
+
+<script>
+active_li = 1;
+</script>
+{include file="template/tpl_header.html"}
+
+<div class="page-tools main-width">
+	<form action="{$link_array[141]['url']}" method="get" name="myform" class="search-form">
+    	 关键字：<input type="text" size="26" name="search[name]" value="{$_GET['search']['name']}" />&nbsp;&nbsp;&nbsp;&nbsp;
+        状态：<select name="search[status]">
+        		<option value="-1">请选择</option>
+                <option value="1" {if $_GET['search']['status']==1}selected{/if}>启用</option>
+                <option value="0" {if isset($_GET['search']['status'])&&$_GET['search']['status']==0}selected{/if}>不启用</option>
+        	 </select>&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" value="list" />
+        <input type="hidden" name="search[tpl_id]" value="{$_GET['search']['tpl_id']}" />
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>创建时间</th>
+    <th>规则名称</th>
+    <th>规则描述</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $ruleDefineList $k $arr}
+  <tr>
+    <td>{echo $arr['id']}</td>
+    <td>{echo date('Y-m-d',$arr['uptime'])}</td>
+    <td>{$arr['name']}</td>
+    <td>{$arr['desc']}</td>
+    <td>{if $arr['status']==1}启用{else}不启用{/if}</td>
+    <td>
+    	{if $link_array[149]['url']}<a href="{$link_array[149]['url']}&id={$arr['id']}&tpl_id={$_GET['search']['tpl_id']}">查看/修改</a>{/if}&nbsp;
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+
+<script language="javascript">
+function getSync(){
+	if(!confirm("确定要进行同步吗?")){
+		return false;
+	}
+	new Ajax().ajaxRequest('','?module=sync','','post',true,
+		function callBack(result){
+			var rst = eval('('+result.responseText+')');
+			alert(rst.FlagString);
+		}
+	);
+}
+</script>
+</body>
+</html>

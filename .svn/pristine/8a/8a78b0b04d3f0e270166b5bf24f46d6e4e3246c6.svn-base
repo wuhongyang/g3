@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VV酷网上娱乐商圈_免费视频聊天网站_同城聊天室_在线多人视频聊天_美女真人视频聊天</title>  
+<meta name="keywords" content="免费聊天室,免费聊天网页,视频聊天室,在线视频聊天,视频聊天网站,美女视频, 美女直播,多人视频聊天,真人视频聊天,在线聊天室,vv酷,网上娱乐商圈" /> 
+<meta name="description" content="VV酷(www.vvku.com)是免费的视频聊天网站,免费提供同城视频聊天,多人视频在线K歌,美女主播为您带来精彩表演,真人的视频聊天室，同时支持视频游戏，VV酷为您打造全新的网上娱乐商圈。"/>
+<link type="text/css" rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/base.css');}" />
+<link type="text/css" rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/index.css');}">
+<link type="text/css" rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/footer.css');}">
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+</head>
+
+<body>
+{include file="head.html"}
+<div class="bodywrap">
+    <div class="bd clearfix">
+        <div class="slidebar fl">
+            <!--区块一 当前在线用户-->
+            <div class="bar-online">
+                <h3 class="title-online">当前在线玩家共有</h3>
+                <p class="bar-online-count">{$curTotalUser}</p>
+                <p><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$site['header_url'].'/0/0.jpg');}" width="88" height="63"></p>
+            </div>
+            <!--区块二 我的脚印-->
+            <div class="bar-myhistory" id="J_foot_block">
+                <h3 class="title">
+                    <div class="bar-title">我的脚印</div>
+                </h3>
+                <div class="caicai">
+                    <p>您还未有房间访问记录，</p>
+                    <p>快去踩踩吧！</p>
+                </div>
+            </div>
+            <!--区块三 站点导航-->
+            <div class="bar-channel clearfix">
+                <h2 class="title">
+                    <div class="bar-title">频道分类</div>
+                </h2>
+                {foreach $rooms_case['rooms_case'] $parent}
+                <dl>
+                    <dt><span class="dtname">{$parent['name']}</span><span class="dtnum">{$parent['curuser']}</span></dt>
+                    {foreach $parent['child_menu'] $child}
+                      {php $param = json_encode(array('sortID'=>$child['id'],'region_id'=>$site['region_id']))}
+                      <dd>
+                          <a class="clearfix" href="javascript:;" onclick="ajaxList('{echo urlencode($param)}')">
+                              <span class="itemname">{$child['name']}</span>
+                              <span class="itemnum">{$child['curuser']}</span>
+                          </a>
+                      </dd>
+
+                    {/foreach}
+                </dl>
+                {/foreach}       
+            </div>
+            {if $site['region_id'] > 0 && !empty($interact_arr)}
+            <!--游戏活动-->
+			<div class="hd-game">
+				<h2 class="title">
+					<div class="bar-title">互动游戏</div>
+				</h2>
+				<ul class="game-list">
+                	{foreach $interact_arr $interact}
+                    {php $param = json_encode(array('Gameid'=>$interact['parent_id']))}
+					<li><a href="#" onclick="ajaxList('{echo urlencode($param)}')"><img src="/pic/gameicon/{$interact['parent_id']}.png" width="26" height="26" />{$interact['interact_name']}</a></li>
+                    {/foreach}
+			   </ul>
+			</div>
+            {/if}
+            <!--帮助中心-->
+			<div class="help-center">
+				<h2 class="title">
+					<div class="bar-title">帮助中心<a href="/help/index.html" class="more" target="_blank">更多</a></div>
+				</h2>
+				<ul class="help-list">
+					{foreach $help $row}
+					<li><a href="/help/{$row['id']}.html" target="_blank">{$row['title']}</a></li>
+					{/foreach}
+			   </ul>
+			</div>
+            <!--客服热线-->
+            <div class="bar-service">
+                <h3 class="title">
+                    <div class="bar-title">客服专区</div>
+                </h3>
+                <ul class="bar-service-list">
+                    <li class="kefumm">
+                        <p>打造全新娱乐互动社区我们热忱为您服务</p>
+                    </li>
+                  <li><a href="/v/10000" target="_blank" class="kefu-btn">进入客服房间</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="middleright">
+            <div class="main fl">
+                {include file="cycleimg.html"}
+                <div class="main-navsite clearfix">
+                    {include file="hot_rooms.html"}
+                </div>
+            </div>
+            <div class="rightbox fr">
+                <!--登陆-->
+                {include file="login.html"}
+				<div class="ranklist">
+                {include file="rooms-rank.html"}
+				</div>
+            </div>
+        </div>
+    </div>
+    <div class="dashedline" style="height:3px;"></div>
+</div>
+<div style="clear:both;"></div>
+{include file="foot.html"}
+</body>
+</html>

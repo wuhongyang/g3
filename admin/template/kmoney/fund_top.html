@@ -1,0 +1,5 @@
+<ul class="page-tab">
+	{foreach $config_array[$database] $key $arr}
+	<li width="100px"><a href="fund_system.php?database={$database}&table={$key}" {if $key==$table}class="active"{/if}>{$arr['table_name']}</a></li>
+	{/foreach}
+</ul>

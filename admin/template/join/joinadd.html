@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>室主艺人资料</title>
+<script type="text/javascript" src="template/js/global.js"></script>
+<script type="text/javascript" src="./template/js/jquery.min.js"></script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">{$role_type[$joinuser['role_type']]}资料查看</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="?module=add_act" method="post" onSubmit="return checkParam();" class="form" id="form">
+    <div style="font-size:18px;font-weight:bold;margin-left:20px;">申请信息：</div>
+	<p>
+        <label>申请ID：</label>
+        <span><input type="text" name="apply[uin]" id="uin" /></span>
+    </p>
+	<p>
+        <label>常驻城市：</label>
+        <span>
+        <!-- 仿选择框开始 -->
+        <select name="apply[province]" onchange="__display_cities(this.value);">
+            <option value="-1">请选择</option>
+            {foreach $provinces $key $val}
+            <option value="{$key}" >{$val}</option>
+            {/foreach}
+        </select>
+        <select name="apply[city]" id="city2">
+            <option value="-1">请选择</option>
+        </select>
+        <!-- 仿选择框结束 --> 
+        </span>
+    </p>
+	<p>
+        <label>真实姓名：</label>
+        <span><input name="apply[name]" id="name" type="text" /></span>
+    </p>
+	<p>
+        <label>身份证：</label>
+        <span><input name="apply[idcard]" id="idcard" type="text" /></span>
+    </p>
+    <p>
+        <label>QQ号：</label>
+        <span><input name="apply[qq]" id="qq" type="text" /></span>
+    </p>
+    <p style="display:none;" id="J_message">
+        <label>短信：</label>
+        <textarea name="message" rows="5" cols="38" style="color:#999;padding:4px 6px;"></textarea>
+    </p>
+    <div id="J_last_operation">
+        <div style="font-size:18px;font-weight:bold;margin-left:20px;">后续操作：</div>
+        <p>
+            <label>分配站点：</label>
+            <span>
+                <select name="province" id="province">
+                    <option value="-1">--请选择--</option>
+                    {foreach $openProvince $val}
+                    <option value="{$val['province_id']}">{$val['province_name']}</option>
+                    {/foreach}
+                </select>
+                <select name="city" id="city">
+                    <option value="-1">--请选择--</option>
+                </select>
+                <select name="area" id="area">
+                    <option value="-1">--请选择--</option>
+                </select>
+            </span>
+        </p>
+        <p id="J_region">
+            <label>站点ID：</label>
+            <span>{$region_id}</span>
+        </p>
+        <p>
+            <label>地域负责人ID：</label>
+            <span id="J_station_head_span"></span>
+        </p>
+    </div>
+    <p>
+        <label></label>
+        <input type="button" class="submit" id="J_submit" value="保存信息" />
+    </p>
+</form>
+</center>
+<script type="text/javascript" src="template/js/id_card.js"></script>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/partner.js"></script>
+<script type="text/javascript">
+var city_JSONDATA = '{$city_JSONDATA}';
+city_JSONDATA = $.parseJSON(city_JSONDATA);
+var area_JSONDATA = '{$area_JSONDATA}';
+area_JSONDATA = $.parseJSON(area_JSONDATA);
+$(function(){
+    //短信提醒
+    $('input[name="msg_tip"]').click(function(){
+        _show_msg();
+    });
+
+    //提交
+    $('#J_submit').click(function(){
+		var uin = $('#uin').val();
+		if(uin == '' || !isInteger(uin)){
+			alert('申请ID必须为数字');
+			return false;
+		}
+		var city2 = $('#city2').val();
+		if(city2 == -1){
+			alert('请选择常驻城市');
+			return false;
+		}
+		var name = $('#name').val();
+		if(name == ''){
+			alert('请填写真实姓名');
+			return false;
+		}
+		if(name.length > 20){
+			alert('真实姓名不能超过20个字');
+			return false;
+		}
+		var idcard = $('#idcard').val();
+		if(!checkCard(idcard)){
+			alert('身份证号码格式有误');
+			return false;
+		}
+		var qq = $('#qq').val();
+		if(qq == '' || !isInteger(qq)){
+			alert('qq号码必须为数字');
+			return false;
+		}
+		var city = $('#city').val();
+		if(city == -1){
+			alert('请选择分配站点');
+			return false;
+		}
+        $('#form').submit();
+    })
+});
+
+function _show_msg(){
+    var tipStatus = $('input[name="msg_tip"]:checked').val();
+    if(tipStatus == 1){
+        content = '恭喜，您申请的VV酷站长身份已审核通过，请登录vv酷完善资料。';
+        $('textarea[name="message"]').val(content);
+        $('#J_message').show()
+    }else{
+        $('#J_message').hide();
+    }
+}
+function __display_cities(province_id){
+	if(province_id=='-1'){
+		var html = '<option value="-1">请选择</option>';
+		$('#city2').html(html);
+		return;
+	}
+	$.ajax({
+		url: '/rooms/ajax_info.php',
+		type: 'POST',
+		data: {Tag:'getCities',province_id:province_id},
+		success: function(data){
+			var html = '<option value="-1">请选择</option>';
+			var json = jQuery.parseJSON(data);
+			for(var i in json){
+				html += '<option value="' + json[i].city_id + '">' + json[i].city_name + '</option>';
+			}
+			$('#city2').html(html);
+		}
+	});
+}
+
+</script>
+</body>
+</html>

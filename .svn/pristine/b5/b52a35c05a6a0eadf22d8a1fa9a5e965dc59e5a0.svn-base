@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>数据摘要 </title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<style>
+	li{
+		padding:0px;
+		margin:0px;
+		line-height:60px;
+		height:60px;
+		list-style:none;
+    		color: #3399FF;
+    		font-family: 宋体;
+    		font-size: 16px;
+    		font-style: normal;
+    		font-weight: bold;
+    		text-decoration: none;
+	}
+	.zdy{
+		color:red;
+		font-size:16px;
+	}
+</style>
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">数据摘要</div>
+</div>
+
+<div class="body">
+	<div class="content">
+		<li>欢迎 &nbsp;&nbsp;&nbsp; <span class = 'zdy'>{$users['Login']}</span>&nbsp;&nbsp;&nbsp;登录VV酷后台管理系统</li>	
+		<li>本次登录IP:&nbsp;&nbsp;{$ip}&nbsp;&nbsp;&nbsp;&nbsp;{$address['province']}   <span>{$address['city']}</span></li>	
+		<li>本地登录时间:&nbsp;&nbsp;{$date}</li>	
+		<li>本社区已有&nbsp;<span class = 'zdy'>{$count['count']}</span>&nbsp;名注册用户</li>	
+    	</div>
+</div>
+</body>
+</html>
+
+

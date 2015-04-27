@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--套餐列表-->
+        <div class="shopwrap">
+            <h2>
+                <div class="shopnav">{$categoryInfo['cate_name']}购买</div>
+            </h2>
+            <div class="flow clearfix">
+                <ul class="nav nav-pills">
+                    <li class="lis disable"><span class="num num-disable">1</span><span class="text">选择购买商品</span></li>
+                    <li class="jian yellow">&nbsp;</li>
+                    <li class="lis active"><span class="num num-active">2</span><span class="text">填写购买信息</span></li>
+                    <li class="jian yellow">&nbsp;</li>
+                    <li class="lis gray"><span class="num num-gray">3</span><span class="text">购买成功</span></li>
+                </ul>
+            </div>
+            <div class="buyform">
+            <form class="form-horizontal" id="buy-form">
+                <div class="control-group">
+                    <label class="control-label">账号：</label>
+                    <div class="controls">
+                        <span id="uin">{$user['Uin']}</span>
+                        <a href="javascript:;" class="btn btn-link" id="for-friend">给好友购买</a>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">昵称：</label>
+                    <div class="controls">
+                         <span id="nick">{$user['Nick']}</span>
+                        <span class="icon-success mgl10" id="checkFriend"></span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">您的金币余额：</label>
+                    <div class="controls">
+                        <span>{$money} {$unit}</span>
+                		<a href="index.php?group_id={$GroupData['groupid']}" class="btn btn-link" target="_blank">充值</a>
+                    </div>
+                </div>
+                <div class="buyformline"></div>
+                <div class="control-group" style="margin-top:40px;">
+                    <label class="control-label">{if $categoryInfo['cate_id']==4}靓号ID{else}购买商品{/if}：</label>
+                    <div class="controls">
+                        <span>
+                        {if $categoryInfo['cate_id']==4}
+                        	{$goodsInfo['name']}
+                        {else}	
+                            {if $goodsInfo['commodity_id']}
+                            	{$goodsInfo['commodity_name']}
+                            {else}
+                            	{$goodsInfo['package_name']}
+                            {/if}
+                        {/if}
+                        </span>
+                    </div>
+                </div>
+                {if $commodityInfo['scope'] == 2}
+                    {if $room_id > 0}
+                    <div class="control-group">
+                        <label class="control-label">所属房间：</label>
+                        <div class="controls">
+                            <input type="hidden" name="roomid" value="{$room_id}">
+                            <span>{$rooms[$room_id]}({$room_id})</span>
+                        </div>
+                    </div>
+                    {else}
+                    <div class="control-group">
+                        <label class="control-label">选择房间：</label>
+                        <div class="controls">
+                            <select name="roomid">
+                                <option value="-1">请选择</option>
+                                {foreach $rooms $key $val}
+                                <option value="{$key}">{echo $val.'('.$key.')'}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    {/if}
+                {/if}
+                <div class="control-group">
+                    <label class="control-label">商品价格：</label>
+                    <div class="controls">
+                        <span>{$goodsInfo['price']} {$unit}</span>
+                    </div>
+                </div>
+                {if $categoryInfo['cate_id']!=4}        
+                <div class="control-group">
+                    <label class="control-label">购买数量：</label>
+                    <div class="controls">
+                        <div class="input-append">
+                            <button type="button" class="btn add-on add" id="minus">-</button>
+                            <input class="inputcs" id="appendedPrependedInput" type="text" value="1" name="num">
+                            <button type="button" class="btn add-on del" id="plus">+</button>
+                        </div>                
+                    </div>
+                </div>
+                {if $goodsInfo['duration']>0}
+                <div class="control-group">
+                    <label class="control-label">有效期：</label>
+                    <div class="controls">      
+                        <span id="total-days">{$goodsInfo['duration']}</span>天
+                    </div>
+                </div>
+                {/if}
+                {/if}
+                <div class="control-group">
+                    <label class="control-label">共需：</label>
+                    <div class="controls">
+                        <span class="text-waring" id="all-money">{$goodsInfo['price']}</span> {$unit}
+                    </div>
+                </div>
+                {if $goodsInfo['is_gift']==1}
+                <div class="control-group">
+                    <label class="control-label"><font color="#CC0000">赠品：</font></label>
+                    <div class="controls">
+                        <span><font color="#0066CC">{$giftInfo['commodity_name']}</font>&nbsp;{if $giftInfo['duration']}<span id="gift">{$giftInfo['duration']}</span>天{else}<span id="gift">1</span>个{/if}</span>
+                    </div>
+                </div>
+                {/if}
+                <div class="control-group">
+                    <span class="control-label">&nbsp;</span>
+                    <div class="controls">
+                        <a href="javascript:post();" role="button" class="btn btn-danger btn-lg{if $money < $goodsInfo['price']} disabled{/if}" id="buy">购买</a>
+                    </div>
+                </div>
+            </form>    
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+var phpVar = {
+    uin: '{$user["Uin"]}',
+    nick: '{$user["Nick"]}',
+    price: '{$goodsInfo["price"]}',
+    money: '{$money}',
+    days: '{$goodsInfo["duration"]}',
+    tip: '{$commodityInfo["tip"]}',
+	goods_id: '{$goodsInfo["id"]}',
+	category_id: '{$category_id}',
+	room_id: '{$room_id}',
+	gift_total: $('#gift').html()
+}
+$(function(){
+    $('#for-friend').click(function() {
+        var obj = $('#uin');
+        if(obj.find('input').length > 0){
+            obj.html(phpVar.uin);
+            $('#nick').html(phpVar.nick);
+            $(this).html('给好友购买');
+        }else{
+            var input = '<input type="text" name="uin">';
+            obj.html(input);
+            $('#nick').html('&nbsp;');
+			$('#checkFriend').removeClass('icon-success');
+            $(this).html('给自己购买');
+        }
+    });
+
+    $(document).on('blur', 'input[name="uin"]', function(){
+        var uin = $(this).val();
+        if(!_is_integer(uin)){
+            return ;
+        }
+        $.ajax({
+            type:'GET',
+            url:'/shop/index.php?module=getUserInfo',
+            dataType:'text',
+            async:true,
+            data:{uin:uin,timestamp:new Date().getTime()},
+            success:function (data) {
+                var uid = data.split('|')[0];
+                var nick = data.split('|')[1];
+                if(uid == uin){
+                    $('#nick').html(nick);
+					$('#checkFriend').removeClass('icon-error');
+					$('#checkFriend').addClass('icon-success');
+                }else{
+                    $('#nick').html('&nbsp;');
+					$('#checkFriend').removeClass('icon-success');
+					$('#checkFriend').addClass('icon-error');
+                }
+            }
+        });
+    });
+
+    new Commodity();
+});
+
+function Commodity(){
+    this.dom = $('input[name="num"]');
+    this.num = parseInt(this.dom.val(), 10);
+    that = this;
+    $('#plus').click(function(event) {
+        that.plus().show();
+    });
+    $('#minus').click(function(){
+        that.minus().show();
+    });
+    this.dom.keyup(function(){
+        var allDigitalPattern = /[^\d]/g;
+        var num = $(this).val().replace(allDigitalPattern,'');
+        that.num = parseInt(num, 10);
+        that.show();
+    });
+}
+Commodity.prototype = {
+    //商品数减少
+    minus: function(){
+        this.num = this.num - 1;
+        return this;
+    },
+    //商品数增加
+    plus: function(){
+        this.num = this.num + 1;
+        return this;
+    },
+    //各种显示
+    show: function(){
+        this.showNum();
+        this.allMoney();
+        if(phpVar.days > 0){
+            this.totalDays();
+        }
+		this.totalGift();
+        this.btn();
+    },
+    //所有钱
+    allMoney: function(){
+        this.allmoney = parseInt(phpVar.price, 10) * this.num;
+        $('#all-money').html(this.allmoney);
+    },
+    //展示商品数量
+    showNum: function(){
+        this.num = this.num > 1 ? this.num : 1;
+        this.dom.val(this.num);
+    },
+    totalDays: function(){
+        var days = parseInt(phpVar.days, 10) * this.num;
+        $('#total-days').html(days);
+    },
+	totalGift: function(){
+		if(document.getElementById('gift')){
+        	var total = phpVar.gift_total * this.num;
+        	$('#gift').html(total);
+		}
+    },	
+    //购买按钮状态
+    btn: function(){
+        if(this.affordable()){
+            $('#buy').removeClass('disabled');
+        }else{
+            if(!$('#buy').hasClass('disabled')){
+                $('#buy').addClass('disabled');
+            }
+        }
+    },
+    //能否支付购买数量
+    affordable: function(){
+        if(parseInt(phpVar.money, 10) >= this.allmoney){
+            return true;
+        }
+        return false;
+    }
+}
+
+function post(){
+    //钱是否够
+    if($('#buy').hasClass('disabled')){
+        //提示钱不够
+        _show_msg('余额不足，无法购买');
+        return;
+    }
+    //UIN是否正确
+    var nick = $('#nick').html();
+    if(!nick||nick=='&nbsp;'){
+        //提示UIN错误
+        _show_msg('请填写正确的用户ID');
+        return;
+    }
+    var roomidObj = $('select[name="roomid"]');
+    if(roomidObj.length > 0){
+        var roomid = roomidObj.val();
+        if(roomid < 1){
+            _show_msg('请选择房间');
+            return;
+        }
+    }
+    $.ajax({
+        url: '?module=buy&goods_id='+phpVar.goods_id+'&category_id='+phpVar.category_id,
+        type: 'POST',
+        data: $('#buy-form').serialize(),
+        success: function(data){
+            var json = $.parseJSON(data);
+            if(json.Flag == 100){
+                var url = '?module=success&category_id='+phpVar.category_id+'&room_id='+phpVar.room_id+'&info='+data;
+                location.href = url;
+            }else if(json.Flag == 500){
+                _show_msg(phpVar.tip);
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+</script>
+</body>
+</html>

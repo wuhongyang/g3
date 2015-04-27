@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>注册</title>
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<style type="text/css">
+.reg-wrap{width:980px;height:826px;margin:0 auto;background:url("{STATIC_API_PATH}/frontend/modules/tg/img/reg-form-bg.png") no-repeat top;}
+#regForm{padding-top:470px;width:600px;margin-left:-25px;}
+#regForm .control-group{margin-bottom:10px;}
+</style>
+</head>
+<body style="height:100%;background:url(/frontend/modules/tg/img/reg-body-bg.jpg) repeat-x top center #A8009D;">
+<div class="reg-wrap">
+<form id="regForm" method="post" action="index.php" class="form-horizontal">
+  <div class="control-group"> 
+    <!-- Text input-->
+    <label class="control-label">邮箱地址</label>
+    <div class="controls">
+       <input type="text" name="username" id="Email" placeholder="name@domain.com" class="input-xlarge" autocomplete="off" check-type="username mail">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">性别</label>
+    <div class="controls"> 
+      <!-- Inline Radios -->
+      <label class="radio inline"><input type="radio" style="display:inline;width:25px;" value="男" name="gender" checked="checked">男</label>
+      <label class="radio inline"><input type="radio" style="display:inline;width:25px;" value="女" name="gender">女 </label>
+    </div>
+  </div>
+  <div class="control-group"> 
+    <!-- Text input-->
+    <label class="control-label">昵称</label>
+    <div class="controls">
+      <input type="text" name="nick" placeholder="昵称" class="input-xlarge" check-type="required">
+    </div>
+  </div>
+  <div class="control-group"> 
+    <!-- Text input-->
+    <label class="control-label">密码</label>
+    <div class="controls">
+      <input type="password" name="password" placeholder="至少6位" id="password" class="input-xlarge" check-type="password">
+    </div>
+  </div>
+  <div class="control-group"> 
+    <!-- Text input-->
+    <label class="control-label">重复密码</label>
+    <div class="controls">
+      <input type="password" placeholder="再次输入密码" class="input-xlarge" check-type="repassword">
+    </div>
+  </div>
+  <div class="control-group"> 
+    <!-- Appended input-->
+    <label class="control-label">验证码</label>
+    <div class="controls">
+      <div class="input-append">
+        <input style="width:190px;" name="checkcode" placeholder="验证码" type="text" check-type="required">
+        <img src="checkcode.php" width="78" height="28" style="border:solid 1px #CCC;border-left:none;border-radius:0px 4px 4px 0px;width:78px;height:28px;" onclick="this.src='checkcode.php?'+Math.random()" title="看不清? 请点击"/>
+      </div>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label"></label>
+    <!-- Button -->
+    <div class="controls">
+      <button type="submit" class="btn btn-success">立即注册</button>
+    </div>
+  </div>
+    <input type="hidden" id="fromname" name="fromname" value="{$_GET['from']}">
+    <input type="hidden" id="fromuid" name="fromuid" value="{$_GET['uid']}">
+    <input type="hidden" id="referer" name="referer" value="{$_SERVER['HTTP_REFERER']}">
+    <input type="hidden" id="FileName" name="FileName" value="{$_SERVER['PHP_SELF']}">
+</form>
+</div>
+
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/validate/bootstrap-validation.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/passport/username.js"></script>
+<script type="text/javascript">
+$(function(){$('#regForm').validation();});
+</script>
+
+<!--[if lte IE 6]>
+<link href="{STATIC_API_PATH}/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="{STATIC_API_PATH}/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+<!--[if lte IE 7]>
+<link href="{STATIC_API_PATH}/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="{STATIC_API_PATH}/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+
+<div style="display:none">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+</html>
+

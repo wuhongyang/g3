@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>网银充值</title>
+<link href="{STATIC_API_PATH}/frontend/modules/passport/css/topnav-min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="{STATIC_API_PATH}/frontend/modules/store/css/layout.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+{include file="header.html"}
+{include file="paykmoney/warning.html"}
+<input type="hidden" id="ba" name="ba" value="{$balance}" />
+<script>
+$(function(){
+	$("#form").submit(function(){
+		if(parseFloat($("#ba").val()) < parseFloat($("#total_vdian").html())){
+			art.dialog({
+				lock:true,
+				content:$("#warning")[0],
+				title:"充值失败",
+				ok:function(){
+					this.close();
+				}
+			})
+			return false;	
+		}
+	})
+})
+</script>
+<div class="body container clean">
+    {include file="left.html"}
+    
+    <div class="body-main">
+    	{include file="group_info.html"}
+        <form method="post" action="?module=payment_save" class="form-charge" id="form">
+            <input type="hidden" name="pay_type" value="CHINABANK">
+            <input type="hidden" name="GroupId" value="{$groupId}">
+
+        	{include file="user_info.html"}
+
+            <div class="rows clean">
+            	<div class="left"><label>充值金额：</label><input type="text" name="pay_expense" id="money" value="100" /></div>
+            	<div class="left" id="otherSumBox">
+                	<a href="#" class="other-sum" title="其他金额"><b class="icon-arrow-down"></b></a>
+                    <ul class="other-sum-list">
+                    	<li><a href="javascript:;">10</a></li>
+                        <li><a href="javascript:;">100</a></li>
+                        <li><a href="javascript:;">1000</a></li>
+                        <li><a href="javascript:;">10000</a></li>
+                        <li><a href="javascript:;">100000</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <span class="totalMoney">
+                	<font color="14A3CD">共可获得</font> <font color="#FF0000" id="total_vdian">100</font> <font color="14A3CD">万金币</font>
+                    <font color="#999">(兑换比率：1元=1万 {$GroupData['currency_unit']})</font>
+                </span>
+            </div>
+            <div class="rows">
+            	<label></label>
+                <button type="button" class="btn" id="J_recharge">立即充值</button>
+            </div>
+        </form>
+    </div>    
+</div>
+
+{include file="foot.html"}
+
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/modules/store/js/charge.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<!--[if lte IE 6]>
+<link href="{STATIC_API_PATH}/frontend/modules/dianpu/css/store_ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+</body>
+</html>
+<script type="text/javascript">
+function getRebate(){
+    var rebate = $.parseJSON('{$rebate}');
+    return rebate.index;
+}
+</script>

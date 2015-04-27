@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>kms_usercreate</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">新建权限用户</div>
+  <div class="header-button right"><a href="?module=user_list" class="add-button">返回</a></div>
+</div>
+<form name="myform" onsubmit='javascript:return user_create();' class="form">
+<p>
+	<label>通行证ID：</label>
+	<input type="text" name="passid" id="passid" value="{$list_array['userinfo']['passid']}" {if $list_array['userinfo']['passid'] > 0} readonly {/if} maxlength="20" style="width:150"> &nbsp;<font color="red">*&nbsp;&nbsp;</font>
+</p>
+<p>
+	<label>姓名：</label>
+	<input type="text" name="passname" id="passname" value="{$list_array['userinfo']['passname']}" maxlength="20" style="width:150"> &nbsp;<font color="red">*&nbsp;&nbsp;</font>
+</p>
+<p>
+	<label>权限组：</label>
+	<select name="cluster_id" id="cluster_id" onChange="getSelect('module=gruop_select&cid='+this.value,'level.php','group_id','groupSelect');"><option value="0">请选择</option>{foreach $list_array['cluster_name'] $arr}<option value="{$arr['id']}" {if $arr['id'] == $list_array['userinfo']['cid']}selected{/if}>{$arr['cluster_name']}</option>{/foreach}</select> &nbsp;<span id='groupSelect'><select name="group_id" id="group_id"><option value="0">请选择</option></select></span>
+</p>
+<p>
+	<label>是否启用：</label>
+	<input name="user_status" id="user_status" value="1" {if $list_array['userinfo']['status'] == 1} checked="checked" {/if} type="radio">启用&nbsp;
+	<input name="user_status" id="user_status" value="0" {if $list_array['userinfo']['status'] == 0} checked="checked" {/if} type="radio">不启用&nbsp;
+</p>
+<p>
+	<label></label>
+	<input type="submit" name="btnSubmit" value=" 开 始 创 建 >>> " style="width:140;height:32">&nbsp;<input type="hidden" id="pid" name="pid" value="<{$Pid}>">
+</p>
+</form>
+</center>
+<script language="javascript">
+{if !empty($list_array['userinfo']['cid'])}
+getSelect('module=gruop_select&cid={$list_array['userinfo']['cid']}','level.php','group_id','groupSelect','{$list_array['userinfo']['gid']}')
+{/if}
+</script>
+</body>
+</html>

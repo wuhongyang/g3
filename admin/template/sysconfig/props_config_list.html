@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>礼物配置管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">礼物配置列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a class="add-button" href="{$link_array[102]['url']}">添加礼物配置</a>{/if}</div>
+</div>
+
+<div class="page-tools main-width">
+	<form action="" method="post" name="myform">
+         三级科目类别名称<input type="text" name="parent_name" value="{$_POST['parent_name']}" id="parent_name" style="width:100px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;
+         状态：<select name="status" id="status">
+                <option value="-1">---请选择---</option>
+                <{foreach $status_arr $k $v}>
+                <option value="<{$k}>" {if isset($_POST['status']) && $_POST['status']==$k}selected{/if}><{$v}></option>
+                <{/foreach}>
+             </select>&nbsp;&nbsp;&nbsp;&nbsp;
+         价格区间：<input type="text" name="lower" value="{$_POST['lower']}" />&nbsp;--&nbsp;<input type="text" name="upper" value="{$_POST['upper']}" />&nbsp;&nbsp;&nbsp;&nbsp;
+         <input type="hidden" name="module" id="module" value="propsConfigList">
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>三级科目类别</th>
+    <th>创建时间</th>
+    <th>价格</th>
+    <th>税收占比</th>
+    <th>接收人占比</th>
+    <th>状态</th>
+    <th>操作</th>
+  </tr>
+  {foreach $result $arr}
+  <tr>
+    <td>{$arr['id']}</td>
+    <td>{$arr['parent_name']}</td>
+    <td>{$arr['uptime']}</td>
+    <td>{$arr['props_money']}</td> 
+    <td>{$arr['tax_percent']}</td>
+    <td>{$arr['receive_percent']}</td>
+    <td>{if $arr['status']=='1'}启用{else}不启用{/if}</td>
+    <td>
+    	{if $link_array[103]['url']}<a href="{$link_array[103]['url']}?id={$arr['id']}" title="修改">修改信息</a>{/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+
+</body>
+</html>

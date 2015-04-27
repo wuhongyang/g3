@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-滚动消息模块设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.info{width:350px;}
+.info .mgl{margin-left: 80px;color:#666;}
+.info p span{margin-right: 10px;text-align: right;display: inline-block;width:70px;}
+.info .hide{display: none;}
+#notice{margin-left: 80px;margin-bottom: 10px;}
+#show_adv_pic{margin-top: 10px;margin-left:10px;}
+.message_info div{line-height: 34px;}
+.message_info div .desc{width:100px;display:inline-block;text-align:right;}
+.mgl30{margin-left: 30px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <span class="fr"><a href="javascript:add();" class="bluebtn"><span>添加</span></a></span>
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10">
+      <tr>
+        <th>编号</th>
+        <th>内容</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $messageList $key $val}
+      <tr>
+        <td>{echo $key+1;}</td>
+        <td>{$val['content']}</td>
+        <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($messageList)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:edit({$val['id']});">编辑</a>
+            <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="mgt20 message_info">
+        <div>
+            <span class="desc">标题栏名称：</span>
+            <input type="text" name="title" value="{$messageInfo['title']}">
+        </div>
+        <div>
+            <span class="desc">状态：</span>
+            <span><input type="radio" name="status" value="1" {if $messageInfo['status']==1}checked{/if}>启用</span>
+            <span class="mgl30"><input type="radio" name="status" value="0" {if $messageInfo['status']!=1}checked{/if}>关闭</span>
+        </div>
+        <div>
+            <span class="desc">&nbsp;</span>
+            <input type="button" class="bluebtn2" value="保存" onclick="save_title()" />
+        </div>
+        
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+$(function(){
+    $(document).on('focus', 'textarea[name="content"]', function(){
+        $('#notice').html('&nbsp;');
+    });
+});
+function add(){
+    var content = getHtml();
+    art.dialog({
+        content: content,
+        lock: true,
+        ok: function(){
+            var module = 'message_add';
+            var content = $('textarea[name="content"]').val();
+            if(content == ''){
+                $('#notice').html('内容不能为空');
+                return false;
+            }
+            if(content.length > 40){
+                $('#notice').html('内容不能超过40个字符');
+                return false;
+            }
+            operate(module,{content:content});
+        },
+        cancel: true
+    });
+}
+
+function edit(id){
+    $.ajax({
+        url: '?module=message_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.id != id){
+                _show_msg('非法参数');
+                return false;
+            }
+            var content = getHtml(json);
+            art.dialog({
+                content: content,
+                lock: true,
+                ok: function(){
+                    var module = 'message_edit';
+                    var content = $('textarea[name="content"]').val();
+                    if(content == ''){
+                        $('#notice').html('内容不能为空');
+                        return false;
+                    }
+                    if(content.length > 40){
+                        $('#notice').html('内容不能超过40个字符');
+                        return false;
+                    }
+                    operate(module,{id:id,content:content});
+                }
+            });
+        }
+    });
+}
+
+function del(id){
+    art.dialog({
+        content: '您真的要删除该推荐位吗？',
+        ok: function(){
+            var module = 'message_del';
+            operate(module,{id:id});
+        },
+        lock: true,
+        cancel: true,
+        icon: 'warning'
+    });
+}
+
+function visible(id){
+    var module = 'visible';
+    operate(module,{id:id});
+}
+
+function order(id,type){
+    var module = 'order';
+    operate(module,{id:id,type:type});
+}
+
+function getHtml(json){
+    json = json || {};
+    var content = '<div class="info">';
+    content += '<p class="notice" id="notice">&nbsp;</p>'
+    content += '<p><span>内容：</span><textarea name="content" rows="5" cols="35">';
+    if(json.content){
+        content += json.content;
+    }
+    content += '</textarea></p>';
+    content += '</div>';
+    return content;
+}
+
+function save_title(){
+    var status = $('input[name="status"]:checked').val();
+    var title = $('input[name="title"]').val();
+    if(status == 1){
+        if(title == ''){
+            _show_msg('标题栏名称不能为空');
+            return false;
+        }
+        if(title.length > 6){
+             _show_msg('标题栏名称不能超过6个字符');
+             return false;
+        }
+    }
+    var module = 'title_save';
+    operate(module,{title:title,status:status});
+}
+
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(data){
+            if(data.Flag == 100){
+                art.dialog({
+                    content: data.FlagString,
+                    ok: function(){
+                        location.href = '?module=message_list';
+                    },
+                    cancel: false,
+                    esc: false,
+                    icon: 'succeed',
+                    lock: true
+                });
+            }else{
+                art.dialog({
+                    content: data.FlagString,
+                    ok: true,
+                    cancel: false,
+                    icon: 'error',
+                    lock: true
+                });
+            }
+        }
+    });
+}
+</script>

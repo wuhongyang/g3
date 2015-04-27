@@ -1,0 +1,24 @@
+{if !empty($menuList)}
+{foreach $menuList $val}
+<dl>
+	<dt class="arrow arrow_up"><i class="menu_icon"><img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val['icon'].'/22/22.jpg');}" width="14" height="14"></i>{$val['name']}</dt>
+	<ul>
+		{if !empty($val['child'])}
+		{foreach $val['child'] $val2}
+		<li>
+			<a {if $val2['url']!=''} href="/create_url.php?url={echo base64_encode($val2['url']);}" target="_blank"{else} href="javascript:void(0);"{/if} title="{$val2['name']}">
+				{if !empty($val2['icon'])}
+						<img width="22" height="22" src="{php echo cdn_url(PIC_API_PATH.'/p/'.$val2['icon'].'/22/22.jpg');}" class="pull-left">
+				{/if}
+				{php echo str_cut_out($val2['name']);}	
+			</a>
+		</li>
+		{/foreach}
+		{/if}		
+	</ul>
+</dl>
+{/foreach}
+{/if}
+
+ 
+ 

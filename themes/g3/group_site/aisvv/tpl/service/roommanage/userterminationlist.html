@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+            	<h1>签约房间</h1>
+                <div class="box1">
+                    <span class="yellow"><span class="tanhao"></span>在评价期（与站解约后的30天）内，可以对该站进行评价。</span>
+                </div>
+                <p class="border3 relative mgt20"><span class="yellow fs16 bold">查看解约历史</span><a href="room_channel_user.php?module=user_signed_list" class="ar ahover">返回已签约房间></a></p>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgtb15">
+                  <tr>
+                    <th>解约用户ID</th>
+                    <th>解约房间ID</th>
+                    <th>解约类型</th>
+                    <th>所属站</th>
+                    <th>解约时间</th>
+                    <th>操作</th>
+                  </tr>
+                  {foreach $signedList['recordsList'] $val}
+                  <tr>
+                    <td>{$val['uin']}</td>
+                    <td>{$val['room_id']}</td>
+                    <td>{if $val['channel_type']==9}室主{elseif $val['channel_type']==15}艺人{/if}</td>
+                    <td>{$val['group_id']}</td>
+                    <td>{php echo date('Y-m-d H:i',$val['times']);}</td>
+                    <td>--</td>
+                  </tr>
+                  {/foreach}
+                  <tr>
+                  	<td colspan="6">{$signedList['page']}</td>
+                  </tr>
+                </table>
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

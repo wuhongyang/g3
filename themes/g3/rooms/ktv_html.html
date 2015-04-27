@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/messenger/messenger.js"></script>
+    <script type="text/javascript">
+		var htmlvars = {};
+		$(function(){
+			var height = document.documentElement.clientHeight;
+			$("body").height(height);
+			$.ajax({
+				url: '/rooms/ajax_info.php',
+				type: 'POST',
+				async:false,
+				data: {Tag:"GetRoomLoginUser","GroupId":"{$room_info['group']}"},
+				dataType:'JSON',
+				success: function(data){
+					htmlvars = {"roombg":"{php echo cdn_url(PIC_API_PATH.'/roombg/'.$_GET['roomid'].'/0/0.jpg') }","bgalign":"{$room_info['bgalign']}","uin":data.Uin,"sessionkey":data.Token,"url":"ws://{$room_info['host']}:{$room_info['port']}/client","roomid":"{$_GET['roomid']}","Ip":"{$ip}","GroupId":"{$room_info['group']}","play_media":{$room_info['play_media_conf']},"admin_media":{$room_info['admin_media_conf']},"p2p_media":{$room_info['p2p_media_conf']},"roomurl":"{php echo cdn_url(PIC_API_PATH.'/roomid/'.$_GET['roomid'].'/0/0.jpg') }","roomname":"{$room_info['name']}"};
+				},
+				error: function(){
+					//alert('房间信息获取失败');
+					//window.location.href="/";
+				}
+			});
+        });
+    </script>
+</head>
+<body style="height:100%;margin:0px;overflow-y: hidden">
+	<iframe id="home" frameborder="0" src="#" height="100%" width="100%" scrolling="no">
+    </iframe>
+	<script type="text/javascript">
+		var messenger = new Messenger('parent'),home = document.getElementById('home');
+		messenger.listen(function(msg){
+			messenger.targets["home"].send(JSON.stringify(htmlvars));
+		});
+		messenger.addTarget(home.contentWindow,'home');
+		home.src = "http://htmlktv.vvku.com/{$_SERVER["HOSTNAME"]}/{$room_info['template_ui']}/home.html";
+	</script>
+</body>
+</html>

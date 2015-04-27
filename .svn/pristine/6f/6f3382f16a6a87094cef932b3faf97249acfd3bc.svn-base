@@ -1,0 +1,521 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>房间UI方案管理</title>
+<style type="text/css">
+#playVideo,#adminVideo,#p2pVideo{display:none;line-height:28px;}
+#playVideo label,#adminVideo label,#p2pVideo label{display:inline-block;width:100px;text-align:right;}
+.form div ul{display:none;line-height:30px;}
+#playVideo p,#adminVideo p,#p2pVideo p{display:inline-block;width:220px;}
+.propslist li span{display:inline-block;width:160px;text-align:left;}
+.propslist li a{display:inline-block;padding:0 5px;}
+#thumb{position:absolute;left:420px;top:20px;}
+.gifts{width:120px;}
+button{line-height:16px;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" method="post" enctype="multipart/form-data" class="form">
+    <input type="hidden" name="id" value="{$edit['id']}">
+    <div>
+    	<label>方案名称：</label>
+    	<input type="text" name="name" value="{$edit['name']}">
+    </div>
+    <div>
+    	<label>房间UI版本：</label>
+        <select name="ui_id" onchange="showthumb(this)">
+        	<option value="0">请选择</option>
+        	{foreach $rooms_ui $item}
+            <option title="{$item['pics']}" value="{$item['id']}" {if $edit['ui_id']==$item['id']}{php $curpic = $item['pics']}selected="selected"{/if}>{$item['name']}</option>
+            {/foreach}
+        </select>
+    </div>
+    <div>
+    	<label id="playTitle">表演麦流媒体配置：</label>
+    	<button onclick="art.dialog({id:1,content:document.getElementById('playVideo'),follow:this,title:document.getElementById('playTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        <div id="playVideo">
+        	<div>
+                <p><label>视频编码：</label><select name="play_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['play_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频编码：</label><select name="play_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+            <div>
+                <p><label>视频尺寸：</label><select name="play_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['play_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频尺寸：</label><select name="play_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>视频帧率：</label><input type="text" name="play_media_conf[videofps]" size="4" value="{$edit['play_media_conf']['videofps']}" /> fps</p>
+                <p><label>高清视频帧率：</label><input type="text" name="play_media_conf[highquality_videofps]" size="4" value="{$edit['play_media_conf']['highquality_videofps']}" /> fps</p>
+            </div>
+        	<div>
+                <p><label>视频码率：</label><input type="text" name="play_media_conf[videokbps]" size="4" value="{$edit['play_media_conf']['videokbps']}" /> kbps</p>
+                <p><label>高清视频码率：</label><input type="text" name="play_media_conf[highquality_videokbps]" size="4" value="{$edit['play_media_conf']['highquality_videokbps']}" /> kbps</p>
+            </div>
+        	<div>
+                <p><label>音频编码：</label><select name="play_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['play_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清音频编码：</label><select name="play_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>音频采样率：</label><select name="play_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['play_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+                <p><label>高清音频采样率：</label><select name="play_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['play_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>音频码率：</label><input type="text" name="play_media_conf[audiokbps]" size="4" value="{$edit['play_media_conf']['audiokbps']}" /> kbps</p>
+                <p><label>高清音频码率：</label><input type="text" name="play_media_conf[highquality_audiokbps]" size="4" value="{$edit['play_media_conf']['highquality_audiokbps']}" /> kbps</p>
+            </div>
+       		<div>
+                <p><label>播放缓冲时间：</label><input type="text" name="play_media_conf[buffertime]" size="4" value="{$edit['play_media_conf']['buffertime']}" /> ms</p>
+            </div>
+        </div>
+    </div>
+    <div>
+    	<label id="adminTitle">管理麦流媒体配置：</label>
+    	<button onclick="art.dialog({id:2,content:document.getElementById('adminVideo'),follow:this,title:document.getElementById('adminTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        <div id="adminVideo">
+        	<div>
+                <p><label>视频编码：</label><select name="admin_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['admin_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频编码：</label><select name="admin_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+            <div>
+                <p><label>视频尺寸：</label><select name="admin_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['admin_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频尺寸：</label><select name="admin_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>视频帧率：</label><input type="text" name="admin_media_conf[videofps]" size="4" value="{$edit['admin_media_conf']['videofps']}" /> fps</p>
+                <p><label>高清视频帧率：</label><input type="text" name="admin_media_conf[highquality_videofps]" size="4" value="{$edit['admin_media_conf']['highquality_videofps']}" /> fps</p>
+            </div>
+        	<div>
+                <p><label>视频码率：</label><input type="text" name="admin_media_conf[videokbps]" size="4" value="{$edit['admin_media_conf']['videokbps']}" /> kbps</p>
+                <p><label>高清视频码率：</label><input type="text" name="admin_media_conf[highquality_videokbps]" size="4" value="{$edit['admin_media_conf']['highquality_videokbps']}" /> kbps</p>
+            </div>
+            <div>
+                <p><label>音频编码：</label><select name="admin_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['admin_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清音频编码：</label><select name="admin_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>音频采样率：</label><select name="admin_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['admin_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+                <p><label>高清音频采样率：</label><select name="admin_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['admin_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>音频码率：</label><input type="text" name="admin_media_conf[audiokbps]" size="4" value="{$edit['admin_media_conf']['audiokbps']}" /> kbps</p>
+                <p><label>高清音频码率：</label><input type="text" name="admin_media_conf[highquality_audiokbps]" size="4" value="{$edit['admin_media_conf']['highquality_audiokbps']}" /> kbps</p>
+            </div>
+       		<div>
+                <p><label>播放缓冲时间：</label><input type="text" name="admin_media_conf[buffertime]" size="4" value="{$edit['admin_media_conf']['buffertime']}" /> ms</p>
+            </div>
+        </div>
+    </div>
+    <div>
+    	<label id="p2pTitle">P2P流媒体配置：</label>
+    	<button onclick="art.dialog({id:3,content:document.getElementById('p2pVideo'),follow:this,title:document.getElementById('p2pTitle').innerHTML,ok:function(){return true;}});" type="button">配置参数</button>
+        <div id="p2pVideo">
+        	<div>
+                <p><label>视频编码：</label><select name="p2p_media_conf[videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频编码：</label><select name="p2p_media_conf[highquality_videocode]">{foreach $videocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_videocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+            <div>
+                <p><label>视频尺寸：</label><select name="p2p_media_conf[videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['p2p_media_conf']['videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清视频尺寸：</label><select name="p2p_media_conf[highquality_videosize]">{foreach $videosize $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_videosize']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>视频帧率：</label><input type="text" name="p2p_media_conf[videofps]" size="4" value="{$edit['p2p_media_conf']['videofps']}" /> fps</p>
+                <p><label>高清视频帧率：</label><input type="text" name="p2p_media_conf[highquality_videofps]" size="4" value="{$edit['p2p_media_conf']['highquality_videofps']}" /> fps</p>
+            </div>
+        	<div>
+                <p><label>视频码率：</label><input type="text" name="p2p_media_conf[videokbps]" size="4" value="{$edit['p2p_media_conf']['videokbps']}" /> kbps</p>
+                <p><label>高清视频码率：</label><input type="text" name="p2p_media_conf[highquality_videokbps]" size="4" value="{$edit['p2p_media_conf']['highquality_videokbps']}" /> kbps</p>
+            </div>
+            <div>
+                <p><label>音频编码：</label><select name="p2p_media_conf[audiocode]">{foreach $audiocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+                <p><label>高清音频编码：</label><select name="p2p_media_conf[highquality_audiocode]">{foreach $highquality_audiocode $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_audiocode']==$val}selected{/if}>{$val}</option>{/foreach}</select></p>
+            </div>
+        	<div>
+                <p><label>音频采样率：</label><select name="p2p_media_conf[audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['p2p_media_conf']['audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+                <p><label>高清音频采样率：</label><select name="p2p_media_conf[highquality_audiohz]">{foreach $audiohz $val}<option value="{$val}" {if $edit['p2p_media_conf']['highquality_audiohz']==$val}selected{/if}>{$val} Hz</option>{/foreach}</select></p>
+                <p></div>
+        	<div>
+                <p><label>音频码率：</label><input type="text" name="p2p_media_conf[audiokbps]" size="4" value="{$edit['p2p_media_conf']['audiokbps']}" /> kbps</p>
+                <p><label>高清音频码率：</label><input type="text" name="p2p_media_conf[highquality_audiokbps]" size="4" value="{$edit['p2p_media_conf']['highquality_audiokbps']}" /> kbps</p>
+            </div>
+       		<div>
+                <p><label>播放缓冲时间：</label><input type="text" name="p2p_media_conf[buffertime]" size="4" value="{$edit['p2p_media_conf']['buffertime']}" /> ms</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="giftlist">
+    	<label>礼物道具：</label>
+    	<button id="add_gift_div">添加礼物分类</button>
+    	{foreach $edit['gifts'] $key $one}
+    	<div class="giftlist move_able" style="clear:both">
+    		<div style="width:124px;float:left">&nbsp;</div>
+	    	<input type="hidden" name="gifts[]" value="{$one['ids']}"/>
+			分类名称:<input type="text" name="gift_cate_name[]" value="{$one['cate_name']}" />
+			<select class="gift_cate">
+				<option value="-1">请选择</option>
+				{foreach $gifts $gift}
+				<option value="{$gift['cate_id']}">{$gift['cate_name']}</option>
+				{/foreach}
+			</select>
+			<select class="gifts">
+				<option class='none' value="-1">请选择</option>
+			</select>
+			<button class="add" type="button">添加</button> 
+			<button class="add_all" type="button">添加全部</button> 
+			<a href="javascript:;" onclick="listmgrobj(this, 'giftlist')">管理 (<span>{eval echo count($one['gift_id'])}</span>)</a>
+			<a href="#" class="del_gift_div">删除分类</a>
+			<ul class="propslist giftlist">
+				{foreach $edit['gift_name'][$key] $k $item}
+				<li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+				{/foreach}
+			</ul>
+			&nbsp;&nbsp;
+	   		<a href="#" class="cate_up">&nbsp;↑&nbsp;</a>
+			<a href="#" class="cate_down">&nbsp;↓&nbsp;</a>
+		</div>
+    	{/foreach}
+    </div>
+    <div id="expressionlist" style="clear:both">
+    	<label>表情管理：</label>
+        <input type="hidden" name="expression" value="{$edit['expression']}" />
+        <select>
+        	<option value="-1">请选择</option>
+            {foreach $expression $one}
+        	<option value="{$one['cate_id']}">{$one['cate_name']}</option>
+            {/foreach}
+        </select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('expressionlist')">管理 (<span>{echo count($edit['expression_name'])}</span>)</a>
+        <ul class="propslist expressionlist">
+        	{foreach $edit['expression_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div id="stamplist">
+    	<label>印章管理：</label>
+        <input type="hidden" name="stamp" value="{$edit['stamp']}" />
+        <select>
+        	<option value="-1">请选择</option>
+            {foreach $stamp $one}
+        	<option value="{$one['parent_id']}">{$one['name']}</option>
+            {/foreach}
+        </select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('stamplist')">管理 (<span>{echo count($edit['stamp_name'])}</span>)</a>
+        <ul class="propslist stamplist">
+        	{foreach $edit['stamp_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    
+    <div id="funclist">
+    	<label>功能道具：</label>
+        <input type="hidden" name="func_props" value="{$edit['func_props']}" />
+        <select>
+        	<option value="-1">请选择</option>
+            {foreach $func_props $gift}
+        	<option value="{$gift['id']}">{$gift['props_name']}</option>
+            {/foreach}
+        </select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('funclist')">管理 (<span>{echo count($edit['func_name'])}</span>)</a>
+        <ul class="propslist funclist">
+        	{foreach $edit['func_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div id="gamelist">
+    	<label>游戏道具：</label>
+        <input type="hidden" name="game_props" value="{$edit['game_props']}" />
+        
+        <select>
+        	<option value="-1">请选择</option>
+            {foreach $game_props $gift}
+        	<option value="{$gift['id']}">{$gift['props_name']}</option>
+            {/foreach}
+        </select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('gamelist')">管理 (<span>{echo count($edit['game_name'])}</span>)</a>
+    	<ul class="propslist gamelist">
+        	{foreach $edit['game_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div id="flashgames">
+    	<label>互动游戏：</label>
+        <input type="hidden" name="flash_games" value="{$edit['flash_games']}" />
+        <select>
+        	<option value="-1">请选择</option>
+            {foreach $flash_games $gift}
+        	<option value="{$gift['id']}">{$gift['interact_name']}</option>
+            {/foreach}
+        </select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('flashgames')">管理 (<span>{echo count($edit['flash_name'])}</span>)</a>
+        <ul class="propslist flashgames">
+        	{foreach $edit['flash_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div id="tricky">
+    	<label>整蛊道具：</label>
+        <input type="hidden" name="tricky" value="{$edit['tricky']}" />
+        <select class="gift_cate">
+			<option value="-1">请选择</option>
+			{foreach $gifts $gift}
+			<option value="{$gift['cate_id']}">{$gift['cate_name']}</option>
+			{/foreach}
+		</select>
+		<select class="gifts">
+			<option class='none' value="-1">请选择</option>
+		</select>
+    	<button class="add" type="button">添加</button> <a href="javascript:;" onclick="listmgr('tricky')">管理 (<span>{echo count($edit['tricky_name'])}</span>)</a>
+        <ul class="propslist tricky">
+            {foreach $edit['tricky_name'] $k $item}
+            <li title="{$k}"><span>{$item}</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>
+            {/foreach}
+        </ul>
+    </div>
+    <div>
+    	<label>页面宽：</label>
+    	<input type="text" name="width" value="{$edit['width']}">
+    </div>
+    <div>
+    	<label>页面高：</label>
+    	<input type="text" name="height" value="{$edit['height']}">
+    </div>
+    <div>
+    	<label>开放给站点：</label>
+    	<textarea style="width:200px;height:100px;" name="group_ids">{$edit['group_ids']}</textarea>
+    	<span style="color:red">多个站id之间用逗号隔开，逗号必须半角逗号(英文输入法的逗号)</span>
+    </div>
+    <div>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </div>
+</form>
+<div id="gift_html" style="display:none">
+	<div class="giftlist move_able" style="clear:both">
+		<div style="width:124px;float:left">&nbsp;</div>
+    	<input type="hidden" name="gifts[]" />
+		分类名称:<input type="text" name="gift_cate_name[]" />
+		<select class="gift_cate">
+			<option value="-1">请选择</option>
+			{foreach $gifts $gift}
+			<option value="{$gift['cate_id']}">{$gift['cate_name']}</option>
+			{/foreach}
+		</select>
+		<select class="gifts">
+			<option class='none' value="-1">请选择</option>
+			{foreach $gifts $gift}
+				{foreach $gift['gifts'] $one}
+					<option class='cate_{$gift['cate_id']} gifts_option' value="{$one['id']}">{$one['props_name']}</option>
+				{/foreach}	
+			{/foreach}
+		</select>
+		<button class="add" type="button">添加</button> 
+		<button class="add_all" type="button">添加全部</button> 
+		<a href="javascript:;" onclick="listmgrobj(this, 'giftlist')">管理 (<span>0</span>)</a>
+		<a href="#" class="del_gift_div">删除分类</a>
+		<ul class="propslist giftlist">
+		</ul>
+		&nbsp;&nbsp;
+   		<a href="#" class="cate_up">&nbsp;↑&nbsp;</a>
+		<a href="#" class="cate_down">&nbsp;↓&nbsp;</a>
+	</div>
+</div>
+<div id="gifts_hidden" style="display:none">
+{foreach $gifts $gift}
+	<select id='cate_{$gift['cate_id']}'>
+		<option value='-1'>请选择</option>
+		{foreach $gift['gifts'] $o}
+			<option value="{$o['id']}">{$o['props_name']}</option>
+		{/foreach}	
+	</select>
+{/foreach}
+</div>
+<div id="thumb">{if $edit && $curpic}<img src="{php echo cdn_url(PIC_API_PATH.'/p/'.$curpic.'/0/0.jpg')}" width="350" height="227" />{/if}</div>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/plugin/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+function showthumb(obj){
+	var pic = $(obj).find('option:selected').attr('title');
+	$('#thumb').html('<img src="{php echo cdn_url(PIC_API_PATH."/p/'+pic+'/0/0.jpg") }" width="350" height="227" />');
+}
+
+function listmgr(id){
+	art.dialog({
+        id:'"'+id+'"',
+		content:document.getElementById(id).getElementsByTagName('ul')[0],
+		title:$('#'+id).children('label').html()+'管理',
+		ok:function(){
+			var sortids = [];
+			$('.'+id).find('li').each(function(){
+				sortids.push($(this).attr('title'));
+			});
+			$('#'+id).children('a').children('span').html(sortids.length);
+			$('#'+id).children('input').val(sortids.join());
+		}
+	})
+}
+
+function listmgrobj(obj, classname){
+	var obj = $(obj);
+	var ul = obj.parent().find("ul."+classname);
+	art.dialog({
+		lock:true,
+		content:ul[0],
+		title:obj.parent().parent().children('label').html()+'管理',
+		ok:function(){
+			var sortids = [];
+			ul.find("li").each(function(){
+				sortids.push($(this).attr('title'));
+			});
+			obj.parent().children('a').children('span').html(sortids.length);
+			$(obj).parent().children('input:hidden').val(sortids.join());
+			//$(obj.parent().children('input')[0]).val(sortids.join());
+		}
+	})
+}
+
+function up(obj){
+	var curindex = $(obj).parent().index();
+	if(curindex == 0) return false;
+	toindex = curindex - 1;
+	var toli = $(obj).parents('ul').find('li:eq('+toindex+')');
+	toli.before($(obj).parents('ul').find('li:eq('+curindex+')'));
+	
+}
+function down(obj){
+	var curindex = $(obj).parent().index();
+	if(curindex == $(obj).parents('ul').find('li').length-1) return false;
+	toindex = curindex + 1;
+	var toli = $(obj).parents('ul').find('li:eq('+toindex+')');
+	toli.after($(obj).parents('ul').find('li:eq('+curindex+')'));
+	
+}
+function del(obj){
+	$(obj).parent().remove();
+}
+$(function(){
+	var add_all = false;
+	var exist = 0;
+	$(document).on("change", ".gift_cate", function(){
+		if($(this).val() != -1){
+			$($(this).next(".gifts")[0]).html($("#gifts_hidden").find("#cate_"+$(this).val()).html());
+		}
+	})
+	
+	$(document).on("click", ".add_all", function(){
+		var select = $(this).siblings('select');
+		var cate_id = $(select[0]).val();
+		if(cate_id == -1){
+			alert("请选择分类");
+			return false;
+		}
+		select = $(select[select.length-1]);
+		var options = select.children("option");
+		var length = options.length;
+		add_all = true;
+		exist = 0;
+		var name;
+		var val;
+		for(i=0;i<length;i++){
+			name = $(options[i]).html();
+			val = $(options[i]).attr("value");
+			if(val != -1)
+				$(this).siblings('button.add').trigger("click", [name, val]);
+		}
+		
+		if(exist != 0){
+			alert("添加成功，其中有"+exist+"个已经存在");
+		}else{
+			alert("添加成功");
+		}
+		
+		add_all = false;
+		return false;
+	})
+	
+	$(document).on("click", ".add", function(e, name, val){
+		if(!add_all){
+			var select = $(this).siblings('select');
+			if($(this).siblings('select').length > 1){
+				select = $(select[select.length-1]);
+			}
+			var name = select.find('option:selected').text();
+			var propid = select.val();
+			if(propid < 1){
+				alert('请选择道具');
+				return false;
+			}
+		}else{
+			var name = name;
+			var propid = val;
+		}
+		var input = $(this).siblings('input');
+		if(input.length > 1){
+			input = $(input[0]);
+		}
+		var ipt = input;
+		var iptval = [];
+		if(ipt.val()) iptval = ipt.val().split(',');
+		for(var i in iptval){
+			if(iptval[i] == propid){
+				if(!add_all){
+					alert(name+'道具已存在');	
+				}else{
+					exist++;
+				}
+				return false;
+			}
+		}
+		iptval.push(propid);
+		iptvallen = iptval.length;
+		iptval = iptval.join();
+		ipt.val(iptval);
+		$(this).siblings('a').children('span').html(iptvallen);
+		$(this).siblings('ul').append('<li title="'+propid+'"><span>'+name+'</span><a href="javascript:;" onclick="up(this)">↑</a><a href="javascript:;" onclick="down(this)">↓</a><a href="javascript:;" onclick="del(this)">X</a></li>');
+	})
+	
+	$(document).on("click", ".del_gift_div", function(){
+		$(this).parent().remove();
+	})
+	var gift_html = $("#gift_html").html();
+	var btn = $("#add_gift_div");
+	$("#add_gift_div").click(function(){
+		btn.after(gift_html);
+		return false;
+	})
+	if($("div.giftlist").length == 1)
+		$("#add_gift_div").trigger("click");
+	
+	$(".cate_up").live("click", function(){
+		var div = $(this).parent();
+		var no = $(".move_able").index(div);
+		if(no > 0){
+			var ex_div = $($(".move_able")[no-1]);
+			ex_div.before(div);
+		}else{
+			alert("无法移动");
+		}
+		return false;
+	})
+	$(".cate_down").live("click", function(){
+		var div = $(this).parent();
+		var no = $(".move_able").index(div);
+		if(no < $(".move_able").length-2){
+			var ex_div = $($(".move_able")[no+1]);
+			ex_div.after(div);
+		}else{
+			alert("无法移动");
+		}
+		return false;
+	})
+})
+</script>
+</body>
+</html>

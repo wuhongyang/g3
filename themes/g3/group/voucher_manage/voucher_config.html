@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+
+<div id="ab" style="display:none">
+<form method="post">
+<input type="hidden" name="btype" value="ab">
+<input type="hidden" name="ab_bigcase_id" value="">
+<input type="hidden" name="ab_case_id" value="">
+<input type="hidden" name="ab_parent_id" value="">
+<table>
+<tr>
+<td>站预存账户余额:</td><td><span id="balance" style="color:#ff9955">{$v_balance}</span> 金币</td>
+</tr>
+<tr>
+<td>输入补充金额(金币):</td><td><input id="ab_value" type="text" name="ab_value"> <input id="ab_submit" style="display:none" type="submit"></td>
+</tr>
+<tr>
+<td colspan="2"><p style="color:red">注：补充金额须大于该业务“基础值”</p></td>
+</tr>
+</table>
+</form>
+</div>
+
+<div id="gb" style="display:none">
+<form method="post">
+<input type="hidden" name="btype" value="gb">
+<input type="hidden" name="gb_bigcase_id" value="">
+<input type="hidden" name="gb_case_id" value="">
+<input type="hidden" name="gb_parent_id" value="">
+<input id="gb_submit" style="display:none" type="submit">
+</form>
+</div>
+
+<div class="bodywrap">
+    {include file="header.html"}
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt20">
+      <tr>
+        <th>科目名称</th>
+        <th>当前余额</th>
+        <th>备注</th>
+        <th>状态</th>
+        <th>资金操作</th>
+        <th>操作</th>
+      </tr>
+      {foreach $list $one}
+      <tr>
+        <td>{$one['parent_name']}</td>
+        <td><span class="yellow">{$one['balance']}</span></td>
+        <td>最小值：{$one['min']}<span class="mgL20">基础值：{$one['need']}</span></td>
+        <td>
+        {if $one['turn']==1}
+        <span style="color:green">已开启</span>
+        {else}
+        <span style="color:#666">已关闭</span>
+        {/if}
+        </td>
+        <td>
+        <button class="add_balance yellowbtn2">补充余额</button>
+        <button class="get_balance {if $one['turn']!=1}bluebtn2{/if}" {if $one['turn']==1}disabled="disabled"{/if}>提取余额</button>
+        </td>
+        <td>
+        <input type="hidden" name="add_value" value="{if ($one['balance']<$one['need'])}{$one['need']-$one['balance']}{else}{$one['need']}{/if}">
+        <input type="hidden" name="need" value="{$one['need']}">
+        <form method="post">
+        <input type="hidden" name="balance" value="{$one['balance']}">
+        <input type="hidden" name="bigcase_id" value="{$one['bigcase_id']}">
+        <input type="hidden" name="case_id" value="{$one['case_id']}">
+        <input type="hidden" name="parent_id" value="{$one['parent_id']}">
+        {if $one['turn']==1}
+            {if $one['allow_close'] == 1}
+            <input type="hidden" name="turn" value="off">
+            <input type="submit" value="关闭"  class="graybtn2">
+            {/if}
+            &nbsp;
+        {else}
+            <input type="hidden" name="turn" value="on">
+            <input type="submit" value="开启" class="greenbtn2">
+        {/if}
+        </form>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="page" id="lopage">{$page}</div>
+    <div class="mgt20">
+        <h3 class="gray">配置说明：</h3>
+        <p class="gray lineh26">1、选择开启业务可开启站下属房间内的相关游戏及道具功能；当业务余额库金额小于等于最小值时，则从站金币预存账户余 额中扣除同基础值相等的金额，并补足到业务余额库中；</p>
+        <p class="gray lineh26">2、当站金币预存账户余额不足补充时，则自动关闭该业务；</p>
+        <p class="gray lineh26">3、当业务处于关闭状态时，则站下属房间的业务也相应关闭；</p>
+        <p class="gray lineh26">4、如果站金币预存账户余额小于该业务的基础值，则不能开启该业务。</p>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">
+$(function(){
+	$("input[name=ab_value]").keyup(function(){
+		var value = Math.abs(parseInt($(this).val()));
+		if(value){
+			$(this).val(value);
+		}else{
+			$(this).val("");
+		}
+	});
+	$(".get_balance").each(function(i){
+		$(this).click(function(){
+			$("input[name=gb_balance]").val($($("input[name=balance]")[i]).val());
+			$("input[name=gb_bigcase_id]").val($($("input[name=bigcase_id]")[i]).val());
+			$("input[name=gb_case_id]").val($($("input[name=case_id]")[i]).val());
+			$("input[name=gb_parent_id]").val($($("input[name=parent_id]")[i]).val());
+			$("#gb_submit").trigger("click");
+		})
+	});
+	
+	$(".add_balance").each(function(i){
+		$(this).click(function(){
+			$("input[name=turn]").val();
+			$("input[name=ab_balance]").val($($("input[name=balance]")[i]).val());
+			$("input[name=ab_bigcase_id]").val($($("input[name=bigcase_id]")[i]).val());
+			$("input[name=ab_case_id]").val($($("input[name=case_id]")[i]).val());
+			$("input[name=ab_parent_id]").val($($("input[name=parent_id]")[i]).val());
+			$("input[name=ab_value]").val($($("input[name=add_value]")[i]).val());
+			art.dialog({
+				title: "补充余额",
+				ok: function(){
+					if(parseInt($("#balance").html()) < parseInt($("input[name=ab_value]").val())){
+						alert("余额不足");
+						return false;
+					}else if(parseInt($("input[name=ab_value]").val()) == 0 || $("input[name=ab_value]").val() == ""){
+						alert("不能为空或者为0");
+						return false;
+					}else if(parseInt($($("input[name=need]")[i]).val()) > parseInt($("input[name=ab_value]").val())){
+						alert("补充金额须大于该业务基础值");
+						return false;
+					}else{
+						$("#ab_submit").trigger("click");
+					}
+				},
+		        content: $("#ab")[0],
+		        lock: true
+		    });
+		})
+	})
+})
+</script>
+</body>
+</html>

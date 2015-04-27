@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的商品-靓号</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="account/tool.html"}
+            <div class="rightdiv">
+                <h1>靓号</h1>
+                <div class="clearfix">
+                    <div class="daojuList mgt20">
+                        <ul>
+							{if !$special_nums}
+							<li style="color:#888">您未购买靓号，请去<a href="/shop/shop.php?category_id=4">商城</a>购买。</li>
+							{else}
+							<!--<form method="get" id="J_form">
+                        		<input type="hidden" name='module' value='special_num'>
+	                        	<div class="boxdate flowhide mgt10">
+	                           		<span class="mgL20">靓号：</span>
+	                           		<input type="text" value="{$_GET['special_num']}" name="special_num"/>
+	                            	<input name="" type="submit" class="normalbtn" value="筛选">
+	                        	</div>
+                    		</form>-->
+                    		<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss mgt10">
+	                        	<tr>
+	                            	<th>靓号</th>
+	                            	<th>操作</th>
+	                            </tr>
+	                        {foreach $special_nums $val}
+	                            <tr>
+	                            	<td>{$val['liang_id']}</td>
+	                            	<td>
+	                            		{if $val['other_id'] > 0 }正在使用{else}
+	                            		<a onclick="set_use({$val['liang_id']});" style="cursor:pointer;">启用</a>
+	                            		&nbsp;&nbsp
+	                            		<a onclick="gift_num({$val['liang_id']})" style="cursor:pointer;">赠送</a>
+	                            		{/if}
+	                            	</td>
+	                        	</tr>
+	                        {/foreach}
+                   			 </table>
+                   			 <br/>
+                   			 {$page}
+                        	{/if}                           
+                        </ul>
+                    </div>                    
+                </div>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+<script type="text/javascript">
+function set_use(liang_id){
+	dlg=art.dialog({
+		title:"",
+		content: "您确定要启用靓号 "+liang_id+" 吗",
+		lock: true,
+		button: [{
+            name: '确定',
+            callback: function () {
+            	$.post("/service/account.php?module=special_num_use", {"liang_id":liang_id}, function(data){
+            		var json = eval("("+data+")");	
+            		alert(json.FlagString);
+            		if(json.Flag == 100){
+            			dlg.close();
+            			location.reload();
+            		}
+            	})
+            	return false;
+            },
+            focus: true
+        },{
+			name: '取消',
+            callback: function () {
+                this.close();
+            }
+		}]
+	});
+}
+
+function gift_num(liang_id){
+	var html = '<table width="100%" border="0" cellspacing="0" cellpadding="0" style="line-height:25px;">\
+				<tr>\
+				<td>赠送的靓号：</td>\
+				<td>'+liang_id+'</td>\
+				</tr>\
+				<tr>\
+				<td>对方用户码：</td>\
+				<td><input type="text" name="uin"/></td>\
+				</tr>\
+				<tr>\
+				<td>对方昵称：</td>\
+				<td><span id="nick"></span></td>\
+				</tr>\
+				<tr><td colspan="2"><font color="red">注：赠送出去的靓号无法收回</font></td></tr>';
+	dlg=art.dialog({
+		title:"",
+		content: html,
+		lock: true,
+		button: [{
+            name: '确定',
+            callback: function () {
+            	$.post("/service/account.php?module=gift_num", {"special_num":liang_id,"uin":$('input[name="uin"]').val()}, function(data){
+            		var json = eval("("+data+")");	
+            		alert(json.FlagString);
+            		if(json.Flag == 100){
+            			dlg.close();
+            			location.reload();
+            		}
+            	})
+            	return false;
+            },
+            focus: true
+        },{
+			name: '取消',
+            callback: function () {
+                this.close();
+            }
+		}]
+	});
+}
+$('input[name="uin"]').live("blur", function(){
+	 var uin = $(this).val();
+	    if(!uin || !/^\d+$/.test(uin)){
+	        return ;
+	    }
+	    $.ajax({
+	        url: '/group/ajax_info.php?Tag=userinfo',
+	        type: 'GET',
+	        data: {uin:uin},
+	        dataType: 'JSON',
+	        success: function(json){
+	            if(json.Flag == 100){
+	                $('#nick').html(json.Nick);
+	            }else{
+	                html = '<span style="color:red">' + json.FlagString + '</span>';
+	                $('#nick').html(html);
+	            }
+	        }
+	    });
+})
+</script>
+</body>
+</html>

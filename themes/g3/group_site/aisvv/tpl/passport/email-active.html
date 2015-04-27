@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱激活</title>
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/modules/passport/css/layout.css');?>" rel="stylesheet" type="text/css" />
+<link href="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/bootstrap/css/bootstrap.min.css');?>" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container login-hd">
+  <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <div class="register-bd">
+        <h2><div class="flow-secondstep"></div></h2>
+        <div class="imgwrap">
+            <img src="<?php echo STATIC_API_PATH ?>/frontend/modules/passport/img/headimg.png" width="131" height="216">
+        </div>
+        <p class="p1">
+            <span class="mail"></span>激活邮件已发送至您的邮箱：<spn style="color:#005580;"><?php echo $data['username']; ?></span>
+        </p>
+        <div style="margin-left:350px;margin-top:30px;">
+            <button class="btn btn-large btn-success" type="button" onclick="reg.goLoginMail('<?php echo $data['username'];?>')">去邮箱激活</button>
+        </div>
+        <div class="info">
+            <h5>没有收到邮件怎么办？</h5>
+            <div class="info-left">
+                <p>1、看看是否在邮箱的广告邮件、垃圾邮件中</p>
+                <p>3、邮箱写错了，<a href="/passport/?user_email">点击这里</a>重新注册</p>
+            </div>
+            <div  class="info-right">
+                <p>2、确认没收到，<a href="javascript:void(0);" id="J_resend">点击这里</a>重新发送一封激活邮件</p>
+                <p>4、依然收不到，<a href="/passport/?user_phone">点击这里</a>使用手机号码注册</p>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include "new-footer.html"; ?>
+
+<form method="post" style="display:none" id="resend" action="/passport/?user_email">
+    <input type="hidden" name="resend" value="1" />
+    <?php foreach($data as $k=>$v): ?>
+    <input type="hidden" name="<?php echo $k ?>" value="<?php echo $v ?>" />
+    <?php endforeach; ?>
+</form>
+<script language="javascript" src="<?php echo cdn_url(THEMES_URL.'passport/js/global.js');?>"></script>
+<script type="text/javascript" src="<?php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');?>"></script>
+</body>
+</html>
+<script type="text/javascript">
+$('#J_resend').bind('click',sendRegMail);
+function sendRegMail(){
+    $('#J_resend').unbind('click');
+    var data = $('#resend').serialize();
+    $.ajax({
+        url: $('#resend').attr('action'),
+        type: 'POST',
+        data: data,
+        success: function(data){
+            if(data == 1){
+                alert('发送成功');
+                setTimeout(function(){
+                    $('#J_resend').bind('click',sendRegMail);
+                },10000);
+            }else{
+                alert('发送失败，请重试或更换邮箱！');
+                $('#J_resend').bind('click',sendRegMail);
+            }
+        }
+    })
+}
+</script>

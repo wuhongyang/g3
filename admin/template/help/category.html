@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分类列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">分类列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加分类</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">分类列表</a></li>{/if}
+	{if $link_array[105]['url']}<li><a href="{$link_array[105]['url']}">内容</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+
+</div>
+<table class="table-list main-width" >
+	<tr>
+		<th>编号</th>
+		<th>分类名称</th>
+		<th>创建时间</th>
+        <th>状态</th>
+		<th>操作</th>
+	</tr>
+	{foreach $lists $arr}
+	<tr>
+		<td height="25">{$arr['id']}</td>
+		<td height="25">{$arr['name']}</td>
+		<td height="25">{echo date('Y-m-d H:i:s',$arr['create_time'])}</td>
+        <td height="25">{if $arr['status']==1}启用{else}不启用{/if}</td>
+	    <td height="25">
+        	<{if $link_array[102]['url']}><a href="{$link_array[105]['url']}&id={$arr['id']}">查看</a><{/if}>
+            <{if $link_array[103]['url']}><a href="{$link_array[103]['url']}&id={$arr['id']}">编辑</a><{/if}>
+            <!--<{if $link_array[103]['url']}><a href="{$link_array[104]['url']}&id={$arr['id']}" onClick="if(!confirm('删除分类将导致分类下的内容消失，确认删除分类？')) return false;">删除</a><{/if}>-->
+        </td>
+	</tr>
+	{/foreach}
+</table>
+</body>
+</html>

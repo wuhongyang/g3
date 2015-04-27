@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>艺人税收查看</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <form method="get">
+        <div class="mgtb15 clearfix">
+            &nbsp;艺人：<select name="uin">
+            				<option value="">所有艺人</option>
+                            {foreach $artistList $val}
+                            <option value="{$val['uid']}" {if $_GET['uin']==$val['uid']}selected{/if}>{$val['nick']}({$val['uid']})</option>
+                            {/foreach}
+                        </select>&nbsp;&nbsp;&nbsp;&nbsp;
+            选择时间：<input name="stime" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$info['stime']}"> 至 
+            <input name="etime" type="text" style="width:80px;" onfocus="WdatePicker()" value="{$info['etime']}">
+            <input type="hidden" name="module" value="artist_tax_exchange_history" />
+            <input name="" type="submit" class="normalbtn" value="查询">
+        </div>
+    </form>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+            <tr>
+                <th>艺人ID</th>
+                <th>兑换积分</th>
+                <th>兑换类型</th>
+                <th>兑换金额</th>
+                <th>兑换时间</th>
+            </tr>
+            {foreach $list $key $val}
+            <tr>
+                <td>{$val['UinId']}</td>
+                <td>{$val['Weight']}</td>
+                <td>{if $val['ChildId']==103}人民币{else}金币{/if}</td>
+                <td>{if $val['ChildId']==103}{$val['RMBWeight']}元{else}{$val['Weight']}金币{/if}</td>
+                <td>{echo date('Y-m-d H:i',$val['Uptime'])}</td>
+            </tr>
+            {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>                
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

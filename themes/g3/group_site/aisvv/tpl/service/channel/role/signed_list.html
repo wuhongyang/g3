@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="content">
+            {include file="channelleftmenu.html"}
+            <div class="rightdiv">
+                <p class="weltit border2">欢迎进入渠道管理</p>
+                <p class="fs14 mgtb15">您的账号：{$Uin}，有<span class="yellow">{$partnerTotal}</span>个渠道身份，分别是：</p>
+                <ul class="formlist formlist4">
+                {foreach $partnerList $val}
+                	{if $val['type']==8}
+                    <li class="clearfix border2">
+                        <span class="mgL20">站长：</span><span class="mglr20">|</span><span class="mgR20">站ID（{$val['room_id']}）</span>
+                        <a href="/group/index.php" class="yellowbtn" target="_blank"><span>登陆站管理后台></span></a>
+                    </li>
+                    {elseif $val['type']==9}
+                    {if $val['room_id']>0}
+                    <li class="clearfix border2">
+                        <span class="mgL20">室主：</span><span class="mglr20">|</span><span class="mgR20">签约房间（{$val['room_id']}），所属站（{$val['up_uid']}）</span>
+                        {if $val['room_status']>0}
+                        <a href="roommanage.php?roomid={$val['room_id']}" class="greenbtn mglr20"><span>查看房间概况</span></a>
+                        <a href="/v/{$val['room_id']}" class="greenbtn mglr20" target="_blank"><span>进入房间</span></a>
+						{else}
+                        <a href="javascript:void(0);" class="graybtn mglr20"><span>该房间已被冻结</span></a>
+                        {/if}
+                    </li>
+                    {else}
+                    <li class="clearfix border2">
+                        <span class="mgL20">室主：</span><span class="mglr20">|</span>
+                        <div class="mglr20 fl" style="width:345px;">
+                            <p class="yellow">您还未签约房间，不能正常兑换收入</p>
+                            <p>若无目标签约房间，请联系官方人员，推荐签约房间。</p>
+                        </div>
+                    </li>
+                    {/if}
+                    {elseif $val['type']==15}
+                    {if $val['room_id']>0}
+                    <li class="clearfix border2">
+                        <span class="mgL20">艺人：</span><span class="mglr20">|</span><span class="mgR20">签约房间（{$val['room_id']}），所属站（{$val['up_uid']}）</span> 
+						<a href="/v/{$val['room_id']}" class="greenbtn mglr20" target="_blank"><span>进入房间</span></a>
+					</li>
+                    {else}
+                    <li class="clearfix border2">
+                        <span class="mgL20">艺人：</span><span class="mglr20">|</span>
+                        <div class="mglr20 fl" style="width:345px;">
+                            <p class="yellow">您还未签约房间，不能正常兑换收入</p>
+                            <p>若无目标签约房间，请联系官方人员，推荐签约房间。</p>
+                        </div>
+                    </li>
+                    {/if}
+                    {elseif $val['type']==16}
+                    <li class="clearfix">
+                        <span class="mgL20">代理：</span><span class="mglr20">|</span>
+                        <a href="agent_region.php" class="greenbtn"><span>进入代理专区</span></a>  
+                    </li>
+                    {/if}
+                {/foreach}
+                </ul>
+                {if $apply}
+                <p class="mgL10 mgt20 fs14" style="color:#C33">您已申请了站长，目前正处于审核期，我们会在1-2个工作日内以手机短信方式提醒您审核结果。</p>
+                {/if}
+            </div>
+    	</div>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

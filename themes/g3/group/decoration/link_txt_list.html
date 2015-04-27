@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-友情链接</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.table{border:solid 1px #CCC;text-align:center;}
+.table td{padding:10px;}
+.table th{padding:10px;background:#DDD;text-align:center;}
+td{
+	padding:5px;
+}
+
+.form p{margin-top: 10px;}
+.form p span{margin-right:10px;}
+.form p .tp5 input{position: relative;top:5px;}
+</style>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script>
+function add(){
+    var content = getHtml();
+    art.dialog({
+    	title: '文字链接添加',
+        content: content,
+        lock: true,
+        ok: function(){
+        	var title = $.trim($('input[name=name]').val());
+        	if(!title){
+        		alert("网站名称不能为空");
+        		return false;
+        	}else if(title.length > 9){
+        		alert("网站名称不能超过9个字");
+                return false;
+            }
+        	var url = $.trim($('input[name=url]').val());
+        	if(!CheckUrl(url)){
+        		alert("请输入正确的网址");
+        		return false;
+        	}
+        	var order = $.trim($('input[name=order]').val());
+        	if(!CheckNum(order)){
+        		alert("排序只能为小于1000的正整数");
+        		return false;
+        	}
+        	$('#form').submit();
+            return false;
+        },
+        cancel: true
+    });
+}
+
+function edit(id){
+	$.ajax({
+        url: '?module=link_info',
+        type: 'GET',
+        data: {id:id},
+        dataType: 'JSON',
+        success: function(json){
+        	if(json.id == id){
+                var content = getHtml(id,json.name,json.url,json.order);
+                art.dialog({
+                    content: content,
+                    lock: true,
+                    ok: function(){
+                    	var title = $.trim($('input[name=name]').val());
+                    	if(!title){
+                    		alert("网站名称不能为空");
+                    		return false;
+                    	}else if(title.length > 9){
+                    		alert("网站名称不能超过9个字");
+                            return false;
+                        }
+                    	var url = $.trim($('input[name=url]').val());
+                    	if(!CheckUrl(url)){
+                    		alert("请输入正确的网址");
+                    		return false;
+                    	}
+                    	var order = $.trim($('input[name=order]').val());
+                    	if(!CheckNum(order)){
+                    		alert("排序只能为小于1000的正整数");
+                    		return false;
+                    	}
+                    	$('#form').submit();
+                        return false;
+                    },
+                    cancel: true
+                });
+            }
+        }
+    });
+}
+
+function del(id){
+	art.dialog({
+    	title: '文字链接删除',
+        content: '确定要删除吗？',
+        lock: true,
+        ok: function(){
+        	$.ajax({
+                url: '?module=link_del',
+                type: 'GET',
+                data: {id:id},
+                dataType: 'JSON',
+                success: function(json){
+                	if(json.Flag == 100){
+                        art.dialog({
+                            content: json.FlagString,
+                            ok: function(){
+                                location.href = '?module=link_list&type=txt';
+                            },
+                            lock: true,
+                            cancel: false,
+                            esc: false,
+                            icon: 'succeed'
+                        });
+                    }else{
+                         _show_msg(json.FlagString);
+                    }
+                }
+            });
+            return false;
+        },
+        cancel: true
+    });
+}
+
+function getHtml(id,name,url,order){
+	name = name || '';
+	url = url || 'http://';
+	order = order || '';
+	var action = (id > 0) ? 'link_edit' : 'link_add';
+
+    var content = '<form class="form" action="?module=' + action + '" method="post" id="form" enctype="multipart/form-data" target="iframe">';
+    content += '<input type="hidden" name="type" value="txt">';
+    if(id > 0){
+        content += '<input type="hidden" name="id" value="'+id+'">';
+    }
+    content += '<table>\
+    			<tr><td>网站名称：</td><td><input type="text" name="name" value="'+name+'"/></td></tr>\
+    			<tr><td>网 址：</td><td><input type="text" name="url" value="'+url+'"/><br/><font color="red">如：http:\/\/www.vvku.com</font></td></tr>\
+    			<tr><td>排 序：</td><td><input type="text" name="order" value="'+order+'"/></td></tr>\
+    			</table>';
+    content += '</form>';
+    content += '<iframe name="iframe" style="display:none;"></iframe>';
+    return content;
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=link_list&type=txt';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+
+function CheckUrl(str) {
+	var strRegex = "(?:http|https|ftp|mms|rtsp)://(&(?=amp;)|[A-Za-z0-9\./=\?%_~@&#:;\+\-])+";
+	var re=new RegExp(strRegex);
+	if (!re.test(str)) {
+		return false;
+	}
+	return true;
+} 
+
+function CheckNum(str) {
+	var strRegex = "^[0-9]*[1-9][0-9]*$";
+	var re=new RegExp(strRegex);
+	if (!re.test(str)) {
+		return false;
+	}else{
+		if(parseInt(str) >= 1000){
+			return false;
+		}
+	}
+	return true;
+} 
+</script>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <a onclick="add()" class="bluebtn2" style="float:right;margin-left:10px;">添加</a>
+   	<p>文字链接列表</p>
+    <br/>
+    <table class="tablecss" border="1" width="100%">
+        <tr>
+        <th width="20%">网站名称</th><th width="15%">排序</th><th width="15%">操作</th>
+        </tr>
+        {if $list}
+        {foreach $list $val}
+        <tr>
+        	<td>{$val['name']}</td>
+        	<td>{$val['order']}</td>
+        	<td>
+        		<a style="cursor:pointer;" class="ahover" onclick="edit({$val['id']});">修改</a>&nbsp;&nbsp;
+        		<a style="cursor:pointer;" class="ahover" onclick="del({$val['id']})">删除</a>
+        	</td>
+        </tr>
+        {/foreach}
+        <tr>
+        	<td colspan="3">{$page}</td>
+     	</tr>
+    </table>
+        {else}
+        <tr><td colspan="3">暂无内容</td></tr>
+        {/if}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>

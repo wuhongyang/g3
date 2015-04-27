@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品方案管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div class="header clean">
+  <div class="header-title left">添加/修改商品方案</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<form method="post" class="form" action="{if empty($info)}?module=add{else}?module=edit{/if}" onSubmit="return checkParam();">
+    {if $info}<input type="hidden" name="id" value="{$info['id']}">{/if}
+    <p>
+        <label>方案名称：</label>
+        <input type="text" name="name" id="name" value="{$info['name']}" />
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="status" value="1" {if $info['status'] == 1} checked="checked" {/if}/> 是 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="status" value="0" {if $info['status'] == 0} checked="checked" {/if}/> 否
+    </p>
+    <p>
+    	<label>商品</label>
+    	<select name="commodity_cate">
+    		<option value="-1">请选择</option>
+            {foreach $commodity_category $val}
+            <option value="{$val['id']}">{$val['name']}</option>
+            {/foreach}
+    	</select>
+        <select name="commodity">
+            <option value="-1">请选择</option>
+        </select>
+        <input type="button" value="添加" name="add">
+    </p>
+    <div id="display-scheme">
+        {foreach $commodities $key $commodity}
+            {foreach $commodity $val}
+            <p>
+                <label>&nbsp;</label>
+                <label style="text-align:left;">{$val['commodity_name']}</label>
+                <span style="text-align:left;cursor:pointer;" class="del">X</span>
+                <input type="hidden" name="commodities[{$key}][]" value="{$val['commodity_id']}">
+            </p>
+            {/foreach}
+        {/foreach}
+    </div>	
+    <p>
+    	<label>&nbsp;</label>
+    	<input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<script type="text/javascript">
+var already = [];
+{foreach $commodities $key $commodity}
+    {foreach $commodity $val}
+        already.push('{$val["commodity_id"]}');
+    {/foreach}    
+{/foreach}
+$(function(){
+    $('select[name="commodity_cate"]').change(function(){
+        var category = $(this).val();
+        var html = '<option value="-1">请选择</option>';
+        $.ajax({
+            url: 'commodity.php?module=get_by_category',
+            type: 'GET',
+            data: {category:category,timestamp:new Date().getTime()},
+            success: function(data){
+                data = $.parseJSON(data);
+                if(data.length > 0){
+                    for(var i in data){
+                        html += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+                    }
+                }
+                $('select[name="commodity"]').html(html);
+            }
+        });
+    });  
+
+    $('input[name="add"]').click(function(){
+        var commodity_category = $('select[name="commodity_cate"]').val();
+        var commodity = $('select[name="commodity"]').val();
+        if(commodity == -1){
+            alert('请先选择商品');
+            return;
+        }
+        //是否已经添加过
+        var len = already.length;
+        for(var i=0; i<len; i++){
+            if(commodity == already[i]){
+                alert('已添加过该商品');
+                return;
+            }
+        }
+        already.push(commodity);
+
+        var categoryText = $('select[name="commodity_cate"]').find('option:selected').text();
+        var commodityText = $('select[name="commodity"]').find('option:selected').text();
+        var html = '<p><label>&nbsp;</label>';
+        html += '<label style="text-align:left;">' + commodityText + '</label>';
+        html += '<span style="text-align:left;cursor:pointer;" class="del">X</span>';
+        html += '<input type="hidden" name="commodities[' + commodity_category + '][]" value="' + commodity + '">';
+        html += '</p>';
+        $('#display-scheme').append(html);
+    });
+
+    $(".del").live('click', function(){
+        var commodity = $(this).parents('p').find('input[type="hidden"]').val();
+        //删除数组中的元素
+        for (var i = 0, len = already.length; i < len; i++) {
+            if(commodity == already[i]){
+                already.splice(i,1);
+                break;
+            }
+        }
+
+        $(this).parents('p').remove();
+    });
+});
+
+function checkParam(){
+    var name = $('input[name="name"]').val();
+    if(name.trim().isEmpty()){
+        alert('请填写方案名称');
+        return false;
+    }
+    var commodity_len = already.length;
+    if(commodity_len < 1){
+        alert('请先添加商品');
+        return false;
+    }
+    return true;
+}
+
+</script>
+</body>
+</html>

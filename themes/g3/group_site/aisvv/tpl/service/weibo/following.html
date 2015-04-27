@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/weibo.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap fans-wrap">
+    <div class="w980">
+        {include file="topmenu.html"}
+        <div class="user-header clearfix">
+            <div class="user-left">
+                <div class="imgwrap"><a href="home.php?user={$user_info['Uin']}"><img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$user_info['Uin'].'/100/100.jpg');}" width="100" height="100" /></a></div>
+                <div class="user-info left">
+                    <h5>{$user_info['Nick']}({$user_info['Uin']})</h5>
+                    {if $rolesIcon}
+                    <div>
+                    {foreach $rolesIcon $key $val}
+                    	<img src="{$val}" />
+                    {/foreach}
+                    </div>
+                    {/if}
+                    <p><span id="focus"></span></p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="user-nav clearfix">
+                    <a href="home.php?user={$user_info['Uin']}">微博首页</a>
+                    <a href="home.php?module=following&user={$user_info['Uin']}">TA的关注</a>
+                    <a href="home.php?module=follower&user={$user_info['Uin']}">TA的粉丝</a>
+                </div>
+            </div>
+        </div>
+        <div class="fans-list">
+            <h1>{$user_info['Nick']} 已关注 {$countFans} 人</h1>
+            <table width="100%" cellspacing="0" cellpadding="0" border="0">
+            {foreach $lists $list}
+                <tr>
+                    <td width="50" valign="top" align="left"><a href="home.php?user={$list['Uin']}"><img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$list['Uin'].'/50/50.jpg');}" width="50" height="50" /></a></td>
+                    <td align="left" class="fans-info">
+                        <h3><span class="nick{if $list['Gender']=='2'} icon-woman{/if}"></span>{$list['Nick']}</h3>
+                        <p>用户码：{$list['Uin']}</p>
+                    </td>
+                    <td width="80" valign="middle" align="right">{if $user_info['Uin'] == $user['Uin']}<a href="weibo.php?module=movefollow&uin={$list['Uin']}" onclick="return confirm('确证取消关注吗？');" class="ahover">取消关注</a>{/if}</td>
+                </tr>
+				{/foreach}
+            </table>
+            <div id="lopage" class="pagenavi">{$page}</div>    
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript">var mysmile = "{THEMES_URL}group_site/{$themes}/src/";</script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/taobao.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/textNum_change.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/weibo.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/ajax.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/jquery.livequery.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/video.js');}"></script>
+<script type="text/javascript">
+{if $Uin!=$user['Uin']}
+var uin='{$Uin}';
+$(function(){
+	$.ajax({
+		url: '/rooms/ajax_info.php',
+		type: 'POST',
+		data: {Tag:"GetFollow",OtherUin:uin},
+		success: function(data){
+			var json = $.parseJSON(data);
+			if(json.Flag==100){
+				$('#focus').html('<a href="javascript:void(0);" id="J_cancelFocus" value="'+uin+'" class="yellowbtn"><span>取消关注</span></a>');
+			}
+			else{
+				$('#focus').html('<a href="javascript:void(0);" id="J_onFocus" value="'+uin+'" class="yellowbtn"><span>+关注</span></a>');
+			}
+		}
+	});
+	$('#J_onFocus').live("click",function(){
+		var that = this;
+		$.ajax({
+			url: '/rooms/ajax_info.php',
+			type: 'POST',
+			data: {Tag:"addFocus",Uin:uin},
+			success: function(data){
+				var json = jQuery.parseJSON(data);
+				if(json.Flag == 100){
+					$(that).html('<span>取消关注</span>');
+					$(that).attr('id','J_cancelFocus');
+				}
+				else{
+					alert(json.FlagString);
+					return;
+				}
+			}
+		});
+	});
+	
+	$('#J_cancelFocus').live('click', function(){
+		var that = this;
+		$.ajax({
+			url: '/rooms/ajax_info.php',
+			type: 'POST',
+			data: {Tag:"cancelFocus",Uin:uin},
+			success: function(data){
+				var json = jQuery.parseJSON(data);
+				if(json.Flag == 100){
+					$(that).html('<span>+关注</span>');
+					$(that).attr('id','J_onFocus');
+				}
+				else{
+					alert(json.FlagString);
+					return;
+				}
+			}
+		});
+	});
+});
+{/if}
+</script>
+</body>
+</html>

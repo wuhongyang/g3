@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>礼物分类添加</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	var form = $("#form");
+	$("#submit").click(function(){
+		var form_data = form.serializeArray();
+		$.post("/admin/props_manage.php?module=add_cate_submit", form_data, function(data){
+			var data = eval('('+data+')');
+			alert(data.FlagString)
+			if(data.Flag == 100){
+				location.href="{$link_array[131]['url']}&tpl_id={$_GET['tpl_id']}";
+			}
+		})
+		return false;
+	})
+})
+</script>
+<style>
+	td{
+		padding:10px;
+	}
+</style>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">礼物分类列表</div>
+  <div class="header-button right">
+  {if $link_array[131]['url']}<a class="add-button" href="{$link_array[131]['url']}&tpl_id={$_GET['tpl_id']}">返回</a>{/if}
+  </div>
+</div>
+
+<script>
+active_li = 5;
+</script>
+{include file="template/tpl_header.html"}
+
+<br/>
+<form id="form">
+<table width="100%">
+	<tr>
+		<td width="20%" align="right">礼物分类名称：</td><td><input type="text" name="cate_name" value="{$one['cate_name']}" /></td>
+	</tr>
+	<tr>
+		<td align="right">是否启用：</td><td><input type="radio" value="1" {if !isset($one['status']) or $one['status'] == 1}checked="checked"{/if} name="status" />启用&nbsp;&nbsp;<input type="radio" value="0" name="status" {if $one['status'] === '0'}checked="checked"{/if}/>不启用</td>
+	</tr>
+	<tr>
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+		<td align="right">&nbsp;</td><td><button id="submit">保存信息</button></td>
+	</tr>
+	{if $one}
+		<input type="hidden" name="cate_id" value="{$one['cate_id']}" />
+	{/if}
+</table>
+</form>
+
+</body>
+</html>

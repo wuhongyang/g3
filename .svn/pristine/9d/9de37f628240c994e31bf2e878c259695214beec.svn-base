@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>合作商管理</title>
+<script type="text/javascript">
+function checkParam(){
+	var name = document.getElementById("name");
+	if(name.value=='' || name.value==undefined){
+		alert("请填写名称");
+		return false;
+	}
+	
+	var card_id = document.getElementById("card_id");
+	if(card_id.value=='' || card_id.value==undefined){
+		alert("请填写证件号码");
+		return false;
+	}
+	
+	var typeObj = document.getElementById("type");
+	var type = parseInt(typeObj.options[typeObj.selectedIndex].value);
+	var obj = document.getElementById("business_id");
+	var business_id = obj.value;
+	if(type===0 && (business_id==''||business_id==undefined)){
+		alert("请填写工商登记号");
+		return false;
+	}
+	
+	var bank_id = document.getElementById("bank_id");
+	if(bank_id.value=='' || bank_id.value==undefined){
+		alert("请填写银行账号");
+		return false;
+	}
+	
+	var mobile = document.getElementById("mobile");
+	if(mobile.value=='' || mobile.value==undefined || !isMobile(mobile.value)){
+		alert("请填写手机号码");
+		return false;
+	}
+	
+	var phone = document.getElementById("phone");
+	if(phone.value!='' && !isPhone(phone.value)){
+		alert("请正确填写电话号码");
+		return false;
+	}
+	
+	var fax = document.getElementById("fax");
+	if(fax.value!='' && !isPhone(fax.value)){
+		alert("请正确填写传真号码");
+		return false;
+	}
+	
+	var pObj = document.getElementById("province");
+	var province = parseInt(pObj.options[pObj.selectedIndex].value);
+	var cObj = document.getElementById("city");
+	var city = parseInt(cObj.options[cObj.selectedIndex].value);
+	var address = document.getElementById("address");
+	if(province===-1 || city===-1 || (address.value==''||address.value==undefined)){
+		alert("请填写通信地址");
+		return false;
+	}
+	
+	var zip_code = document.getElementById("zip_code");
+	if(zip_code.value=='' || zip_code.value==undefined){
+		alert("请填写正确的邮政编码");
+		return false;
+	}
+	return true;
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改合作商</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" action="{if $info}?module=partnerUpdate{else}?module=partnerAdd{/if}" method="post" onSubmit="return checkParam();" class="form">
+    <input type="hidden" name="id" value="<{$info['id']}>" />
+    <input type="hidden" name="info[city_name]" id="city_name" value="{$info['city_name']}" />
+    <p>
+        <label>类型：</label>
+        <select name="info[type]" id="type">
+            {foreach $types $k $v}
+            <option value="{$k}"{if $k==$info['type']}selected{/if}>{$v}</option>
+            {/foreach}
+        </select>
+        &nbsp;&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+        <label>名称：</label>
+        <input type="text" name="info[name]" id="name" value="{$info['name']}" size="32" />
+        &nbsp;&nbsp;<font color="red">*</font>
+        <span style="color:red; margin-left:30px;">公司填写公司名称，个人填写真实姓名；</span>
+    </p>
+    <p>
+        <label>证件类型：</label>
+        <select name="info[card_type]">
+            {foreach $cards $k $v}
+            <option value="{$k}" {if $k==$info['card_type']}selected{/if}>{$v}</option>
+            {/foreach}
+        </select>
+        &nbsp;&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+        <label>证件号码：</label>
+        <input type="text" name="info[card_id]" id="card_id" value="<{$info['card_id']}>" size="32" />
+        &nbsp;&nbsp;<font color="red">*</font>
+        <span style="color:red; margin-left:30px;">对应证件类型；</span>
+    </p>
+    <p>
+        <label>工商登记号：</label>
+        <input type="text" name="info[business_id]" id="business_id" value="<{$info['business_id']}>" size="32" />
+        &nbsp;&nbsp;<font color="red">*</font>
+        <span style="color:red; margin-left:30px;">如是公司，必须填写；</span>
+    </p>
+    <p>
+        <label>银行账号：</label>
+        <select name="info[bank_name]">
+            {foreach $banks $v}
+            <option value="{$v}" {if $info['bank_name']==$v}selected{/if}>{$v}</option>
+            {/foreach}
+        </select>
+        <div style="margin:-10px 0 4px 121px;"><input type="text" name="info[bank_id]" id="bank_id" value="{$info['bank_id']}" size="32" />&nbsp;&nbsp;<font color="red">*</font></div>
+    </p>
+    <p>
+        <label>手机：</label>
+        <input type="text" name="info[mobile]" id="mobile" value="<{$info['mobile']}>" size="32" /> &nbsp;&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+        <label>固定电话：</label>
+        <input type="text" name="info[phone]" id="phone" value="<{$info['phone']}>" size="32" />
+    </p>
+    <p>
+        <label>传真：</label>
+        <input type="text" name="info[fax]" id="fax" value="{$info['fax']}" size="32" />
+    </p>
+    <p>
+        <label>Q Q：</label>
+        <input type="text" name="info[qq]" id="qq" value="{$info['qq']}" size="32" />
+    </p>
+    <p>
+        <label>通信地址：</label>
+        <select name="info[province]" id="province" onChange="show_city(this.value)"><option value="-1">省份</option></select>&nbsp;
+        <select name="info[city]" id="city" onChange="getCityName();"><option value="-1">城市</option></select>
+        <div style="margin:-10px 0 4px 121px;"><input type="text" name="info[address]" id="address" value="{$info['address']}" alt="地址" size="32" /> &nbsp;&nbsp;<font color="red">*</font></div>
+    </p>
+    <p>
+        <label>邮政编码：</label>
+        <input type="text" name="info[zip_code]" id="zip_code" value="{$info['zip_code']}" size="32" /> &nbsp;&nbsp;<font color="red">*</font>
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="info[status]" value="0" id="no" {if $info['flag']!=1}checked{/if}><label for="no" style="padding:0 20px 0 5px; width:auto;">不启用</label>
+        <input type="radio" name="info[status]" value="1" id="yes" {if $info['flag']==1}checked{/if}><label for="yes" style="padding-left:5px; width:auto;">启用</label>
+    </p>
+    <p>
+        <label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+show_province('{$info["province_id"]}');//显示联动数据
+{if $info}
+show_city('{$info["province_id"]}','{$info["city_id"]}');
+{/if}
+
+function getCityName(){
+	var pobj = document.getElementById("province");
+	var province_name = pobj.options[pobj.selectedIndex].innerHTML;
+	var cobj = document.getElementById("city");
+	var city_name = cobj.options[cobj.selectedIndex].innerHTML;
+	document.getElementById("city_name").value = province_name + ' ' + city_name;
+}
+</script>
+</body>
+</html>

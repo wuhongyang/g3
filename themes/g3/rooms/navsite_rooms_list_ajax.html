@@ -1,0 +1,71 @@
+<div>	
+    <div class="clearfix other">
+    	<h2 class="ajax-search-list">房间搜索</h2>
+    	{if !empty($roomsListbyRoom)}
+	    	{foreach $roomsListbyRoom $rooms}
+	     	<dl style="margin-right:30px;">
+				<dt class="cover-other">
+					<img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$rooms['description']}">
+					{if $rooms['hasplay'] > 0}
+					<span class="zb">直播中</span>
+					{/if}
+					<span class="rs">{$rooms['curuser']}人正在观看</span>
+					<div class="othermask">
+						<a href="http://{$rooms['group']}.'.'.{$_SERVER['HTTP_HOST']}/v/{$rooms['id']}" class="piclink" target="_blank">
+							<img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$rooms['description']}">
+						</a>
+						{if $rooms['hasplay'] > 0}
+						<span class="zhibo">直播中</span>
+						{/if}
+						<span class="renshu">{$rooms['curuser']}人正在观看</span>
+						<h5>{$rooms['name']}</h5>
+						<p>
+							<em>({$rooms['id']})</em>
+							<!--<a class="zhan" href="/city/{$rooms['region_id']}" target="_blank">{$rooms['region_name']}站</a>-->
+						</p>
+					</div>
+	            </dt>
+	            <dd><span class="room-name">{$rooms['name']}</span></dd>
+	     	</dl>
+	     	{/foreach}
+     	{else}
+			<h2 class="ajax-search-notfound">找不到房间哦！</h2>
+		{/if}
+	</div>
+	<div class="clearfix other">
+		{if $request['sortID'] < 1}
+			<h2 class="ajax-search-list">艺人搜索</h2>
+			{if !empty($roomsListbyArt)}
+				{foreach $roomsListbyArt $rooms}
+		     	<dl>
+		         	<dt class="cover-other">  
+						<img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$rooms['description']}">
+						{if $rooms['hasplay'] > 0}
+						<span class="zb">直播中</span>
+						{/if}
+						<span class="rs">{$rooms['curuser']}人正在观看</span>
+						<div class="othermask">
+							<a href="http://{$rooms['group']}.'.'.{$_SERVER['HTTP_HOST']}/v/{$rooms['id']}" target="_blank" class="piclink">
+								<img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$room['id'].'/150/110.jpg');}" width="150" height="110" alt="{$rooms['description']}">
+							</a>
+							{if $rooms['hasplay'] > 0}
+							<span class="zhibo">直播中</span>
+							{/if}
+							<span class="renshu">{$rooms['curuser']}人正在观看</span>
+							<h5>{$rooms['name']}</h5>
+							<p>
+								<em>({$rooms['id']})</em>
+								<!--<a class="zhan" href="/city/{$rooms['region_id']}" target="_blank">{$rooms['region_name']}站</a>-->
+							</p>
+						</div>
+		            </dt>
+		            <dd><span class="room-name">{$rooms['name']}</span></dd>
+		     	</dl>
+		     	{/foreach}
+			{else}
+				<h2  class="ajax-search-notfound">找不到艺人哦！</h2>
+			{/if}
+		{/if}
+	</div>
+</div>
+<script type="text/javascript" src="{STATIC_API_PATH}/static/js/rooms.js"></script>

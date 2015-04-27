@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>添加编辑勋章</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加编辑勋章</div>
+  <div class="header-button right">{if $link_array[104]['url']}<a href="{$link_array[104]['url']}" class="add-button">添加勋章</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">分类列表</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}" class="active">勋章列表</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width"></div>
+
+<form method="post" class="form">
+	<input type="hidden" name="id" value="{$edit['id']}" />
+	<p>
+		<label>勋章名称：</label>
+		<input type="text" name="name" value="{$edit['name']}" size="40" />
+	</p>
+	<p>
+		<label>勋章类别：</label>
+		<select name="typeid">
+			{foreach $medaltype $key $val}
+			<option value="{$key}" {if $key == $edit['typeid']}selected{/if}>{$val}</option>
+			{/foreach}
+		</select>
+	</p>
+	<p>
+		<label>勋章效果：</label>
+		<input type="text" name="descr1" value="{$edit['descr1']}" size="40" />
+	</p>
+	<p>
+		<label>获得条件：</label>
+		<input type="text" name="descr2" value="{$edit['descr2']}" size="40" />
+	</p>
+	<p>
+		<label>勋章图标：</label>
+        <span id="swf_review">
+            <select name="icontype" id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="iconid" id="pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('pic','swf','swf_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+        </span>
+	</p>
+	<p>
+		<label>用户列表显示：</label>
+		<input type="radio" name="listshow" value="1" {if $edit['listshow'] == 1}checked="checked"{/if} /> 显示
+		<input type="radio" name="listshow" value="0" {if $edit['listshow'] == 0}checked="checked"{/if}/> 不显示
+	</p>
+	<p>
+		<label>状态：</label>
+		<input type="radio" name="status" value="1" {if $edit['status'] == 1}checked="checked"{/if} /> 启用
+		<input type="radio" name="status" value="0" {if $edit['status'] == 0}checked="checked"{/if}/> 不启用
+	</p>
+	<p>
+		<label></label>
+		<input type="submit" value="提交" class="submit" />
+	</p>
+</form>
+
+<script type="text/javascript" src="/admin/template/js/ajax.fun.js?v1.00"></script>
+<script type="text/javascript" src="/admin/template/js/global.js?v1.00"></script>
+
+<script type="text/javascript">
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+//gif图
+showCategory("category","<{$edit['icontype']}>");
+<{if $edit['icontype']!='' && $edit['icontype']!=-1}>
+showPic("pic","$edit['icontype']",'<{$edit["iconid"]}>');
+<{/if}>
+
+//pic:图片所在select的id
+//pic_show:创建样式id
+//show_area:显示位置
+function showPicture(pic_select_id,pic_show,show_area){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById(pic_show);
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById(show_area);
+			var div = document.createElement("div");
+			div.id = pic_show;
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }');
+		}
+	}
+}
+</script>
+</body>
+</html>

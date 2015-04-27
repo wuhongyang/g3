@@ -1,0 +1,4 @@
+Sitemap:http://www.vvku.com/sitemap.xml
+
+User-agent: *
+Disallow: /admin/

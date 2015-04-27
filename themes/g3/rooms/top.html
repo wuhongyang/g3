@@ -1,0 +1,928 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>排行榜</title>
+    <link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/rank-min.css">
+    <link rel="stylesheet" href="{STATIC_API_PATH}/resource/css/footer-min.css">
+</head>
+
+<body>
+<div class="container">
+<!--top-->
+<div class="hd">
+    <div class="topnav">
+        <div class="clearfix">
+            <div class="topnav-left fll" id="J_head">
+                欢迎来到VV酷社区！
+                {if $user_login['Flag']==100}
+                <a class="yellow" href="/service/profile.php">{$user_login['Nick']}</a> &nbsp; <!--中文全角空格两个--><a
+                    href="/service/loginout.php" class="gray">退出</a>
+                {else}
+                <a href="/passport/?account&index&url=/top.html">登录</a>
+                | <a href="/passport/">注册</a>
+                {/if} | <a href="/rooms/shortcut.php" class="gray">+桌面图标</a>
+            </div>
+            <div class="topnav-right">
+                <div id="site-nav">
+                    <ul class="quick-menu">
+                        <li class="home"><a href="/">首页</a></li>
+                        <li class="mytaobao">
+                            <div class="menu">
+                                <a class="menu-hd gray" href="/service/profile.php">个人中心<b></b> </a>
+
+                                <div class="menu-bd">
+                                    <div class="menu-bd-panel">
+                                        <div>
+                                            <a href="/service/weibo.php" rel="nofollow">微博首页</a><br>
+                                            <a href="/service/pass_manager.php" rel="nofollow">通行证管理</a><br>
+                                            <a href="/service/account.php" rel="nofollow">账户管理</a><br>
+                                            <a href="/service/role_select.php" rel="nofollow">渠道管理</a><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+						<!-- <li class="home"><a href="/service/group.php">站管理</a></li>-->
+                        <li class="rank"><a href="/top.html" class="gray">&nbsp;排行 </a></li>
+                        <li class="favorite"><a href="/feedback.html" class="gray">反馈</a></li>
+                        <li class="help"><a href="/help/index.html" class="gray">帮助</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--bd-->
+
+<div class="bd clearfix">
+
+<div class="sub-nav">
+    <a href="top.html" class="black">排行榜</a> &gt;&gt; {$site['city_name']}
+</div>
+
+<!--财富排行-->
+{if empty($site['region_id'])}
+<div class="box-ranktwo">
+
+<div class="box-rank fll">
+    <div class="box-rank-send"></div>
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top3">
+            {if isset($moneyRankCurmonth10[0])}
+			<li class="clearfix lione">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankCurmonth10[0]['UinId']}" target="_blank">{$moneyRankCurmonth10[0]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankCurmonth10[0]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankCurmonth10[0]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankCurmonth10[1])}
+            <li class="clearfix litwo">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankCurmonth10[1]['UinId']}" target="_blank">{$moneyRankCurmonth10[1]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankCurmonth10[1]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankCurmonth10[1]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankCurmonth10[2])}
+            <li class="clearfix lithree">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankCurmonth10[2]['UinId']}" target="_blank">{$moneyRankCurmonth10[2]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankCurmonth10[2]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankCurmonth10[2]['Weight']}</span>
+            </li>
+			{/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+			{php unset($moneyRankCurmonth10[0],$moneyRankCurmonth10[1],$moneyRankCurmonth10[2])}
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankCurmonth10 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top3">
+            {if isset($moneyRankUpmonth10[0])}
+			<li class="clearfix lione">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpmonth10[0]['UinId']}" target="_blank">{$moneyRankUpmonth10[0]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpmonth10[0]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpmonth10[0]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankUpmonth10[1])}
+            <li class="clearfix litwo">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpmonth10[1]['UinId']}" target="_blank">{$moneyRankUpmonth10[1]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpmonth10[1]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpmonth10[1]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankUpmonth10[2])}
+            <li class="clearfix lithree">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpmonth10[2]['UinId']}" target="_blank">{$moneyRankUpmonth10[2]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpmonth10[2]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpmonth10[2]['Weight']}</span>
+            </li>
+			{/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+			{php unset($moneyRankUpmonth10[0],$moneyRankUpmonth10[1],$moneyRankUpmonth10[2])}
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankUpmonth10 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top3">
+            {if isset($moneyRankUpweek10[0])}
+			<li class="clearfix lione">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpweek10[0]['UinId']}" target="_blank">{$moneyRankUpweek10[0]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpweek10[0]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpweek10[0]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankUpweek10[1])}
+            <li class="clearfix litwo">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpweek10[1]['UinId']}" target="_blank">{$moneyRankUpweek10[1]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpweek10[1]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpweek10[1]['Weight']}</span>
+            </li>
+			{/if}
+			 {if isset($moneyRankUpweek10[2])}
+            <li class="clearfix lithree">
+                <span class="w120 fll"><a href="/service/home.php?user={$moneyRankUpweek10[2]['UinId']}" target="_blank">{$moneyRankUpweek10[2]['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$moneyRankUpweek10[2]['Level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$moneyRankUpweek10[2]['Weight']}</span>
+            </li>
+			{/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+			{php unset($moneyRankUpweek10[0],$moneyRankUpweek10[1],$moneyRankUpweek10[2])}
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankUpweek10 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+    </div>
+    <a class="lefttab1 tab selected">周榜</a>
+    <a class="lefttab2 tab">月榜</a>
+    <a class="lefttab3 tab">总榜</a>
+</div>
+
+<div class="box-rank fll ml8">
+    <div class="box-rank-receive"></div>
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankCurmonth20 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+				<span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankUpmonth20 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+				<span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">积分(万)</li>
+        </ul>
+        <ul class="top4-10">
+			{foreach $moneyRankUpweek20 $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+				<span class="w120 fll"><a href="/service/home.php?user={$val['UinId']}" target="_blank">{$val['Nick']}</a></span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_money_level/{$val['Level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$val['Weight']}</span>
+            </li>
+			{/foreach}
+        </ul>
+        <!--<div class="clearfix">
+            <a href="#" class="more pink flr">更多</a>
+        </div>-->
+
+    </div>
+</div>
+</div>
+{/if}
+<!--财富排行-->
+
+<!--房间排行-->
+<div class="box-rank fll">
+    <div class="box-rank-room"></div>
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用户</li>
+            <li class="num fll">人气值(万)</li>
+        </ul>
+        <ul class="room">
+            {if isset($roomweek['Room'][0])}
+            <li class="clearfix lione">
+                <span class="fll roomname"><a href="/v/{$roomweek['Room'][0]['uin']}" title="{$roomweek['Room'][0]['uin']}" target="_blank">{$roomweek['RoomInfo'][$roomweek['Room'][0]['uin']]}</a></span>
+                <span class="dou red flr">{$roomweek['Room'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomweek['Room'][1])}
+            <li class="clearfix litwo">
+                <span class="fll roomname"><a href="/v/{$roomweek['Room'][1]['uin']}" title="{$roomweek['Room'][1]['uin']}" target="_blank">{$roomweek['RoomInfo'][$roomweek['Room'][1]['uin']]}</a></span>
+                <span class="dou red flr">{$roomweek['Room'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomweek['Room'][2])}
+            <li class="clearfix lithree">
+                <span class="fll roomname"><a href="/v/{$roomweek['Room'][2]['uin']}" title="{$roomweek['Room'][2]['uin']}" target="_blank">{$roomweek['RoomInfo'][$roomweek['Room'][2]['uin']]}</a></span>
+                <span class="dou red flr">{$roomweek['Room'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($roomweek['Room'][0],$roomweek['Room'][1],$roomweek['Room'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $roomweek['Room'] $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll roomname"><a href="/v/{$val['uin']}" title="{$val['uin']}" target="_blank">{$roomweek['RoomInfo'][$val['uin']]}</a></span>
+                <span class="dou flr">{$val['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($roomweek['Room']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Room/week/{$rankweek}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用户</li>
+            <li class="num fll">人气值(万)</li>
+        </ul>
+        <ul class="room">
+            {if isset($roomupweek['Room'][0])}
+            <li class="clearfix lione">
+                <span class="fll roomname"><a href="/v/{$roomupweek['Room'][0]['uin']}" title="{$roomupweek['Room'][0]['uin']}" target="_blank">{$roomupweek['RoomInfo'][$roomupweek['Room'][0]['uin']]}</a></span>
+                <span class="dou red flr">{$roomupweek['Room'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomupweek['Room'][1])}
+            <li class="clearfix litwo">
+                <span class="fll roomname"><a href="/v/{$roomupweek['Room'][1]['uin']}" title="{$roomupweek['Room'][1]['uin']}" target="_blank">{$roomupweek['RoomInfo'][$roomupweek['Room'][1]['uin']]}</a></span>
+                <span class="dou red flr">{$roomupweek['Room'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomupweek['Room'][2])}
+            <li class="clearfix lithree">
+                <span class="fll roomname"><a href="/v/{$roomupweek['Room'][2]['uin']}" title="{$roomupweek['Room'][2]['uin']}" target="_blank">{$roomupweek['RoomInfo'][$roomupweek['Room'][2]['uin']]}</a></span>
+                <span class="dou red flr">{$roomupweek['Room'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($roomupweek['Room'][0],$roomupweek['Room'][1],$roomupweek['Room'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $roomupweek['Room'] $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll roomname"><a href="/v/{$val['uin']}" title="{$val['uin']}" target="_blank">{$roomupweek['RoomInfo'][$val['uin']]}</a></span>
+                <span class="dou flr">{$val['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($roomupweek['Room']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Room/week/{$rankupweek}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用户</li>
+            <li class="num fll">人气值(万)</li>
+        </ul>
+        <ul class="room">
+            {if isset($roommonth['Room'][0])}
+            <li class="clearfix lione">
+                <span class="fll roomname"><a href="/v/{$roommonth['Room'][0]['uin']}" title="{$roommonth['Room'][0]['uin']}" target="_blank">{$roommonth['RoomInfo'][$roommonth['Room'][0]['uin']]}</a></span>
+                <span class="dou red flr">{$roommonth['Room'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roommonth['Room'][1])}
+            <li class="clearfix litwo">
+                <span class="fll roomname"><a href="/v/{$roommonth['Room'][1]['uin']}" title="{$roommonth['Room'][1]['uin']}" target="_blank">{$roommonth['RoomInfo'][$roommonth['Room'][1]['uin']]}</a></span>
+                <span class="dou red flr">{$roommonth['Room'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roommonth['Room'][2])}
+            <li class="clearfix lithree">
+                <span class="fll roomname"><a href="/v/{$roommonth['Room'][2]['uin']}" title="{$roommonth['Room'][2]['uin']}" target="_blank">{$roommonth['RoomInfo'][$roommonth['Room'][2]['uin']]}</a></span>
+                <span class="dou red flr">{$roommonth['Room'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($roommonth['Room'][0],$roommonth['Room'][1],$roommonth['Room'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $roommonth['Room'] $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll roomname"><a href="/v/{$val['uin']}" title="{$val['uin']}" target="_blank">{$roommonth['RoomInfo'][$val['uin']]}</a></span>
+                <span class="dou flr">{$val['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($roommonth['Room']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Room/month/{$rankmonth}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname fll">用户</li>
+            <li class="num fll">人气值(万)</li>
+        </ul>
+        <ul class="room">
+            {if isset($roomtotal['Room'][0])}
+            <li class="clearfix lione">
+                <span class="fll roomname"><a href="/v/{$roomtotal['Room'][0]['uin']}" title="{$roomtotal['Room'][0]['uin']}" target="_blank">{$roomtotal['RoomInfo'][$roomtotal['Room'][0]['uin']]}</a></span>
+                <span class="dou red flr">{$roomtotal['Room'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomtotal['Room'][1])}
+            <li class="clearfix litwo">
+                <span class="fll roomname"><a href="/v/{$roomtotal['Room'][1]['uin']}" title="{$roomtotal['Room'][1]['uin']}" target="_blank">{$roomtotal['RoomInfo'][$roomtotal['Room'][1]['uin']]}</a></span>
+                <span class="dou red flr">{$roomtotal['Room'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($roomtotal['Room'][2])}
+            <li class="clearfix lithree">
+                <span class="fll roomname"><a href="/v/{$roomtotal['Room'][2]['uin']}" title="{$roomtotal['Room'][2]['uin']}" target="_blank">{$roomtotal['RoomInfo'][$roomtotal['Room'][2]['uin']]}</a></span>
+                <span class="dou red flr">{$roomtotal['Room'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($roomtotal['Room'][0],$roomtotal['Room'][1],$roomtotal['Room'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $roomtotal['Room'] $key $val}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll roomname"><a href="/v/{$val['uin']}" title="{$val['uin']}" target="_blank">{$roomtotal['RoomInfo'][$val['uin']]}</a></span>
+                <span class="dou flr">{$val['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($roomtotal['Room']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Room/total/0/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <a class="lefttab1 selected tab">本周</a>
+    <a class="lefttab2 tab">上周</a>
+    <a class="lefttab3 tab">月榜</a>
+    <a class="lefttab4 tab">总榜</a>
+</div>
+<!--房间排行-->
+
+<!--艺人排行-->
+<div class="box-rank fll ml8">
+    <div class="box-rank-singer"></div>
+    <div class="box-rank-list">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">人气值(万)</li>
+        </ul>
+        <ul class="singer top3">
+            {if isset($artistweek['Artist'][0])}
+            <li class="clearfix lione">
+                <span class="fll">
+                	{if $artistweek['Artist'][0]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistweek['Artist'][0]['roomid']}" target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][0]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistweek['Artist'][0]['uin']}" title="{$artistweek['Artist'][0]['uin']}"
+                           target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][0]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+				<span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistweek['Artist'][0]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistweek['Artist'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistweek['Artist'][1])}
+            <li class="clearfix litwo">
+                <span class="fll">
+                	{if $artistweek['Artist'][1]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistweek['Artist'][1]['roomid']}" target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][1]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistweek['Artist'][1]['uin']}" title="{$artistweek['Artist'][1]['uin']}"
+                           target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][1]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistweek['Artist'][1]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistweek['Artist'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistweek['Artist'][2])}
+            <li class="clearfix lithree">
+                <span class="fll">
+                	{if $artistweek['Artist'][2]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistweek['Artist'][2]['roomid']}" target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][2]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistweek['Artist'][2]['uin']}" title="{$artistweek['Artist'][2]['uin']}"
+                           target="_blank">{$artistweek['ArtistInfo'][$artistweek['Artist'][2]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistweek['Artist'][2]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistweek['Artist'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($artistweek['Artist'][0],$artistweek['Artist'][1],$artistweek['Artist'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $artistweek['Artist'] $key $singer_rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+                	{if $singer_rank['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$singer_rank['roomid']}" target="_blank">{$artistweek['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$singer_rank['uin']}" title="{$singer_rank['uin']}"
+                           target="_blank">{$artistweek['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$singer_rank['level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$singer_rank['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($artistweek['Artist']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Artist/week/{$rankweek}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">人气值(万)</li>
+        </ul>
+        <ul class="singer top3">
+            {if isset($artistupweek['Artist'][0])}
+            <li class="clearfix lione">
+                <span class="fll">
+                	{if $artistupweek['Artist'][0]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistupweek['Artist'][0]['roomid']}" target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][0]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistupweek['Artist'][0]['uin']}" title="{$artistupweek['Artist'][0]['uin']}"
+                           target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][0]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+				<span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistupweek['Artist'][0]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistupweek['Artist'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistupweek['Artist'][1])}
+            <li class="clearfix litwo">
+                <span class="fll">
+                	{if $artistupweek['Artist'][1]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistupweek['Artist'][1]['roomid']}" target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][1]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistupweek['Artist'][1]['uin']}" title="{$artistupweek['Artist'][1]['uin']}"
+                           target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][1]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistupweek['Artist'][1]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistupweek['Artist'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistupweek['Artist'][2])}
+            <li class="clearfix lithree">
+                <span class="fll">
+                	{if $artistupweek['Artist'][2]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistupweek['Artist'][2]['roomid']}" target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][2]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistupweek['Artist'][2]['uin']}" title="{$artistupweek['Artist'][2]['uin']}"
+                           target="_blank">{$artistupweek['ArtistInfo'][$artistupweek['Artist'][2]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistupweek['Artist'][2]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistupweek['Artist'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($artistupweek['Artist'][0],$artistupweek['Artist'][1],$artistupweek['Artist'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $artistupweek['Artist'] $key $singer_rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+                	{if $singer_rank['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$singer_rank['roomid']}" target="_blank">{$artistupweek['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$singer_rank['uin']}" title="{$singer_rank['uin']}"
+                           target="_blank">{$artistupweek['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$singer_rank['level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$singer_rank['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($artistupweek['Artist']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Artist/week/{$rankupweek}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">人气值(万)</li>
+        </ul>
+        <ul class="singer top3">
+            {if isset($artistmonth['Artist'][0])}
+            <li class="clearfix lione">
+                <span class="fll">
+                	{if $artistmonth['Artist'][0]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistmonth['Artist'][0]['roomid']}" target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][0]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistmonth['Artist'][0]['uin']}" title="{$artistmonth['Artist'][0]['uin']}"
+                           target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][0]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+				<span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistmonth['Artist'][0]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistmonth['Artist'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistmonth['Artist'][1])}
+            <li class="clearfix litwo">
+                <span class="fll">
+                	{if $artistmonth['Artist'][1]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistmonth['Artist'][1]['roomid']}" target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][1]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistmonth['Artist'][1]['uin']}" title="{$artistmonth['Artist'][1]['uin']}"
+                           target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][1]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistmonth['Artist'][1]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistmonth['Artist'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artistmonth['Artist'][2])}
+            <li class="clearfix lithree">
+                <span class="fll">
+                	{if $artistmonth['Artist'][2]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artistmonth['Artist'][2]['roomid']}" target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][2]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artistmonth['Artist'][2]['uin']}" title="{$artistmonth['Artist'][2]['uin']}"
+                           target="_blank">{$artistmonth['ArtistInfo'][$artistmonth['Artist'][2]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artistmonth['Artist'][2]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artistmonth['Artist'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($artistmonth['Artist'][0],$artistmonth['Artist'][1],$artistmonth['Artist'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $artistmonth['Artist'] $key $singer_rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+                	{if $singer_rank['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$singer_rank['roomid']}" target="_blank">{$artistmonth['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$singer_rank['uin']}" title="{$singer_rank['uin']}"
+                           target="_blank">{$artistmonth['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$singer_rank['level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$singer_rank['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($artistmonth['Artist']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Artist/month/{$rankmonth}/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <div class="box-rank-list none">
+        <ul class="info clearfix">
+            <li class="ranknum fll">排名</li>
+            <li class="uname2 fll">用户</li>
+            <li class="grade fll">等级</li>
+            <li class="num flr">人气值(万)</li>
+        </ul>
+        <ul class="singer top3">
+            {if isset($artisttotal['Artist'][0])}
+            <li class="clearfix lione">
+                <span class="fll">
+                	{if $artisttotal['Artist'][0]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artisttotal['Artist'][0]['roomid']}" target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][0]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artisttotal['Artist'][0]['uin']}" title="{$artisttotal['Artist'][0]['uin']}"
+                           target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][0]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+				<span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artisttotal['Artist'][0]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artisttotal['Artist'][0]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artisttotal['Artist'][1])}
+            <li class="clearfix litwo">
+                <span class="fll">
+                	{if $artisttotal['Artist'][1]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artisttotal['Artist'][1]['roomid']}" target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][1]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artisttotal['Artist'][1]['uin']}" title="{$artisttotal['Artist'][1]['uin']}"
+                           target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][1]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artisttotal['Artist'][1]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artisttotal['Artist'][1]['money']}</span>
+            </li>
+            {/if}
+            {if isset($artisttotal['Artist'][2])}
+            <li class="clearfix lithree">
+                <span class="fll">
+                	{if $artisttotal['Artist'][2]['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$artisttotal['Artist'][2]['roomid']}" target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][2]['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$artisttotal['Artist'][2]['uin']}" title="{$artisttotal['Artist'][2]['uin']}"
+                           target="_blank">{$artisttotal['ArtistInfo'][$artisttotal['Artist'][2]['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$artisttotal['Artist'][2]['level']}.png" width="18" height="18"></span>
+                <span class="dou red flr">{$artisttotal['Artist'][2]['money']}</span>
+            </li>
+            {/if}
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            {php unset($artisttotal['Artist'][0],$artisttotal['Artist'][1],$artisttotal['Artist'][2])}
+        </ul>
+        <ul class="top4-10">
+            {foreach $artisttotal['Artist'] $key $singer_rank}
+            <li class="clearfix">
+                <span class="topn fll">{echo $key+1}</span>
+                <span class="fll">
+                	{if $singer_rank['online'] > 0}
+                    	<span class="room-online" title="在线"></span>
+                        <a href="/v/{$singer_rank['roomid']}" target="_blank">{$artisttotal['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {else}
+                    	<span class="room-offline" title="离线"></span>
+                        <a href="/service/home.php?user={$singer_rank['uin']}" title="{$singer_rank['uin']}"
+                           target="_blank">{$artisttotal['ArtistInfo'][$singer_rank['uin']]}&nbsp;</a>
+                    {/if}
+                </span>
+                <span class="grade fll"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$singer_rank['level']}.png" width="18" height="18"></span>
+                <span class="dou flr">{$singer_rank['money']}</span>
+            </li>
+            {/foreach}
+        </ul>
+        {if count($artisttotal['Artist']) >= 7}
+        <div class="clearfix">
+            <a href="/rank/Artist/total/0/{$site['region_id']}.html" class="more pink flr">更多</a>
+        </div>
+        {/if}
+    </div>
+    <a class="lefttab1 selected tab">本周</a>
+    <a class="lefttab2 tab">上周</a>
+    <a class="lefttab3 tab">月榜</a>
+    <a class="lefttab4 tab">总榜</a>
+</div>
+<!--艺人排行-->
+
+</div>
+</div>
+{include file="footer.html"} 
+<script language="javascript" src="{STATIC_API_PATH}/frontend/base/citys/city_select.js"></script>
+<script language="javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	var menus = $('#site-nav').find('.menu');
+	//判断是否为IE6
+	if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) {
+				$(this).find('.menu-hd').addClass('ie6hd topnav-cur');
+		menus.each(function () {
+			$(this).mouseover(function () {
+				$(this).find('.menu-hd').find('b').addClass('ie6b');
+				$(this).find('.menu-bd').show();
+			});
+			$(this).mouseout(function () {
+				$(this).find('.menu-hd').removeClass('ie6hd topnav-cur');
+				$(this).find('.menu-hd').find('b').removeClass('ie6b');
+				$(this).find('.menu-bd').hide();
+			});
+		});
+	}
+	var boxs = $('.box-rank');
+	boxs.each(function () {
+		var tabs = $(this).find('.tab');
+		tabs.each(function (index) {
+			$(this).click(function () {
+				var conts = $(this).parent().find('.box-rank-list');
+				conts.each(function () {
+					$(this).addClass('none');
+				});
+				tabs.each(function () {
+					$(this).removeClass('selected');
+				});
+				conts.eq(index).removeClass('none');
+				$(this).addClass('selected');
+			});
+		});
+	});
+	
+	var boxs = $('.box-ranktwo');
+	boxs.each(function () {
+		var tabs = $(this).find('.tab');
+		tabs.each(function (index) {
+			$(this).click(function () {
+				var conts = $(this).parent().parent().find('.box-rank-list');
+				conts.each(function () {
+					$(this).addClass('none');
+				});
+				tabs.each(function () {
+					$(this).removeClass('selected');
+				});
+				conts.eq(index).removeClass('none');
+				conts.eq(index+3).removeClass('none');
+				$(this).addClass('selected');
+			});
+		});
+	});
+	
+});
+
+var citys = {$citys};
+var province_JSONDATA = citys.province;
+var city_JSONDATA = citys.city;
+var area_JSONDATA = citys.area;
+show_province();//显示联动数据
+
+function goToCitySite() {
+	var city = document.getElementById('area').value;
+	if (city < 0) city = document.getElementById('city').value;
+	if (city > -1) location.href = "top/" + city + '.html';
+}
+
+$.ajax({
+	url: '/rooms/ajax_info.php',
+	type: 'POST',
+	data: {"Tag":"GetLoginUser"},
+	success: function(data){
+		json = jQuery.parseJSON(data);
+		if(json.Flag == 100){
+			//展示头部
+			var h_html = '欢迎来到VV酷社区！ <a class="yellow" href="/service/index.php" style="color: #F0B45E;">' + json.Nick + '</a>  ';
+			h_html += '<a href="/service/loginout.php?back=/" class="gray">退出</a> | <a href="/rooms/shortcut.php">+桌面图标</a>';
+			$('#J_head').html(h_html);
+		}
+	}
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>商城</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style-min.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+	
+	<!--主体-->
+    <div class="bd clearfix" id="bd-daoju">
+        <ul class="step-list clearfix">
+            <li>选择购买会员</li>
+            <li>填写购买信息</li>
+            <li>确认购买信息</li>
+            <li class="active">购买成功</li>
+        </ul>
+        <div class="step4">
+            <div class="tipbox">
+                <div class="tip-title3">购买失败</div>
+                <div class="tip-cont">
+                    <div class="tip-cont-item1">
+                        <!--为自己充值成功--> 您的账号<!--为他人充值成个-->/你为账号 <a href="/service/weibo.php" class="blue2 bold">{$other_uin}</a> 购买 {$vip['name']} 失败
+                    </div>
+                    <div class="tip-cont-item2">
+                        <p><span class="gray2">商品名称：</span>{$vip['name']}</p>
+                        <p><span class="gray2">时　　限：</span>{echo $vip['expire']*$buynum}天</p>
+                        <p><span class="gray2">到期时间：</span>{$expireDay}</p>
+                        <p><span class="gray2">购买价格：</span><span class="red">{echo $vip['price']*$buynum}</span>v宝</p>
+                        <p><span class="gray2">可用V宝余额：</span><span class="red">{$wealth}</span>v宝</p>
+
+                        <p class="red">失败原因：{$result['FlagString']}</p>
+                    </div>
+                    <div class="tip-cont-item3">
+                        <a href="buyluckstar.php" class="btn btn-goon">继续购物</a>　<!--全角空格--><a href="http://wpa.qq.com/msgrd?V=1&Uin=4006772115&Site=客服QQ号&Menu=yes">联系客服</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+	{include file="footer.html"}
+</div>
+</body>
+</html>
+
+
+
+

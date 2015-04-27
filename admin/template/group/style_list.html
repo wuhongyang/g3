@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>站点风格列表</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">站点风格列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a href="{$link_array[102]['url']}" class="add-button">添加</a>{/if}</div>
+</div>
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}" class="active">站点风格列表</a></li>{/if}
+	{if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}">站点风格模板</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width"></div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>站ID</th>
+    <th>站名称</th>
+    <th>已选风格</th>
+    <th>修改时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $lists $k $arr}
+  <tr>
+    <td>{echo $k+1}</td>
+    <td>{$arr['group_id']}</td>
+    <td>{$arr['group_name']}</td>
+    <td>{$arr['style_name']}</td>
+    <td>{$arr['uptime']}</td>
+    <td>
+    	{if $link_array[102]['url']}<a href="{$link_array[102]['url']}&group_id={$arr['group_id']}">修改</a>&nbsp;{/if}
+        <a href="/zhan/{$arr['group_id']}" target="_blank">查看</a>
+    </td>
+  </tr>
+  {/foreach}
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

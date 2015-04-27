@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-站点风格</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group/css/footer.css');}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+h1{font-size:12px;font-weight:bold;position:relative;margin-bottom:20px;text-indent:10px;}
+.nowstyle{position:relative;padding:0 0 20px 0;border-bottom:1px dashed #d2d2d2;margin-bottom:20px;height:230px;}
+.nowstyle .imgwrap{width:202px;height:222px;position:absolute;top:0;left:10px;}
+.nowstyle .info{padding-left:220px;line-height:20px;}
+p{margin-top:10px;}
+.styletab{position:absolute;right:0;top:0;}
+.styletab a{display:inline-block;width:45px;height:22px;line-height:22px;font-weight:normal;text-align:center;}
+.styletab a:hover{background:#7493c2;color:#fff;}
+.recomstyle{width:100%;overflow:hidden;}
+.recomstyle ul {padding:10px;}
+.recomstyle ul li{float:left;width:160px;margin:0 30px 30px 0;position:relative;}
+.recomstyle .mask{border:1px solid #df662f;display:none;position:absolute;top:-4px;left:-4px;padding:3px;}
+.recomstyle .mask .use{width:46px;height:22px;display:block;line-height:22px;text-align:center;background:#e06730;color:#fff;position:absolute;left:117px;top:105px;}
+.btncs{width:100px;height:22px;text-align:center;background:#d5e4f9;color:#41659f;border:1px solid #9ab3dc;margin-top:10px;cursor:pointer;}
+.btncs2{width:60px;background:#eeeeee;color:#525252;border:1px solid #9ab3dc;}
+.btncs3{width:60px;background:#41659f;color:#fff;border:0;}
+.bt5{position:relative;bottom:-5px;margin-right:5px;}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <h1>页面大背景图</h1>
+    <div class="nowstyle">
+        <img src="../images/160100.jpg" width="160" height="100" class="imgwrap">
+        <div class="info">
+            <p><input name="" type="checkbox" value="" class="bt5"><label>使用背景图</label></p>
+            <p>
+                显示：
+                <input name="name1" type="radio" value="" class="bt5"><label>平铺</label>
+                <input name="name1" type="radio" value="" class="bt5"><label>不平铺</label>
+            </p>
+            <p>
+                对齐：
+                <input name="name2" type="radio" value="" class="bt5"><label>居左</label>
+                <input name="name2" type="radio" value="" class="bt5"><label>居中</label>
+                <input name="name2" type="radio" value="" class="bt5"><label>居右</label>
+            </p>
+            <p class="mgL20">
+                <input name="" type="button" value="重新选择" class="btncs">
+                <input name="" type="button" value="删除图片" class="btncs btncs2">
+            </p>
+            <p class="gray mgL20">支持不超过2M的jpg、gif、png图片上传。</p>
+        </div>
+    </div>
+    <h1><span>顶部通栏</span></h1>
+    <div class="recomstyle">
+        <div><img src="../images/610130.jpg" width="610" height="130"></div>
+        <p><input name="" type="checkbox" value="" class="bt5"><label>使用顶部通栏</label></p>
+        <p class="mgL20">
+            <input name="" type="button" value="重新选择" class="btncs">
+            <input name="" type="button" value="删除图片" class="btncs btncs2">
+        </p>
+        <p class="gray mgL20">需上传960px宽度以上的图片（高度不能超过500px），支持不超过2M的jpg、png图片上传。</p>
+    </div>
+        <p style="padding-left:200px;"><input name="" type="button" value="保存" class="btncs btncs3"></p>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/jquery-1.8.0.min.js');}"></script>
+<script type="text/javascript">
+ $(function(){
+    $(".recompic").hover(
+      function(){$(this).children(".mask").show()},
+      function(){$(this).children(".mask").hide()}
+    )
+  })
+</script>
+</body>
+</html>

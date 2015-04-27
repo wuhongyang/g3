@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-通行证管理</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <form name="" method="">
+                <h1>通行证管理</h1>
+                <h3>您的通行证资料<span class="gray fs12">&nbsp;&nbsp;（开通时间：{echo date('Y年m月d日',$info['uptime']);}）</span></h3>
+                <ul class="formlist w450">
+                    <li class="clearfix mg0">
+                        <label>用户名：</label>
+                        {if empty($info['username'])}
+                            <span class="gray">您还未绑定用户名</span>
+                        {else}
+                            <span>{$info['username']}</span>
+                        {/if}
+                    </li>
+                    <li class="clearfix mg0">
+                        <label>绑定邮箱：</label>
+                        {if empty($info['email'])}
+                            <span class="gray">您还未绑定邮箱</span>
+                        {else}
+                            <span>{$info['email']}</span>
+                        {/if}
+                    </li>
+                    <li class="clearfix mg0">
+                        <label>绑定手机：</label>
+                        {if empty($info['phone'])}
+                            <span class="gray">您还未绑定手机</span>
+                        {else}
+                            <span>{echo substr_replace($info['phone'],'****',4,4);}</span>
+                        {/if}
+                    </li>
+                    <li class="clearfix mg0">
+                        <label>身份证：</label>
+                        {if empty($info['idcard'])}
+                            <span class="gray">您还未身份认证</span>
+                        {else}
+                            <span>{echo substr_replace($info['idcard'],'********',6,8);}</span>
+                        {/if}
+                    </li>
+                    <li class="clearfix mg0">
+                        <label>上次登录：</label>
+                        <span>{echo date('Y-m-d H:i:s',$info['load_time']);}</span>
+                    </li>
+                </ul>
+                <div class="border1"></div>
+                <h3>您的安全服务</h3>
+                <ul class="formlist formlist2">
+                    <li class="clearfix border2">
+                    	<span>登录密码：</span>
+                        <span class="txt4"><span class="img2"></span>已设置</span>
+                        <span class="gray txt3">登录密码是登录您通行证的唯一密码，请务必保管好！</span>
+                        <a href="safe_setting.php?module=password" class="ahover arT5">修改密码</a>
+                    </li>
+                    <li class="clearfix border2">
+                    	<span>邮箱绑定：</span>
+                        <span class="txt4">
+                            <span class="{if !empty($info['email'])}img2{else}img3{/if}"></span>
+                            {if !empty($info['email'])}已{else}未{/if}绑定
+                        </span>
+                        <span class="gray txt3">绑定邮箱，可方便您找回密码，提高账户安全。</span>
+                        <a href="safe_setting.php?module=email" class="ahover arT5">{if !empty($info['email'])}修改{else}绑定{/if}邮箱</a>
+                    </li>
+                    <li class="clearfix border2">
+                    	<span>手机绑定：</span>
+                        <span class="txt4">
+                            <span class="{if !empty($info['phone'])}img2{else}img3{/if}"></span>
+                            {if !empty($info['phone'])}已{else}未{/if}绑定
+                        </span>
+                        <span class="gray txt3">绑定手机，即可享受更多手机服务，如找回密码等，有效地保障账户安全！</span>
+                        <a href="safe_setting.php?module=phone" class="ahover arT5">{if !empty($info['phone'])}修改{else}绑定{/if}手机</a>
+                    </li>
+                    <li class="clearfix border2">
+                    	<span>身份认证：</span>
+                        <span class="txt4">
+                            <span class="{if !empty($info['idcard'])}img2{else}img3{/if}"></span>
+                            {if !empty($info['idcard'])}已{else}未{/if}完成
+                        </span>
+                        <span class="gray txt3">用于提升账号的安全性和信任级别。</span>
+                        <a href="safe_setting.php?module=idcard" class="ahover arT5">{if empty($info['idcard'])}身份认证{/if}</a>
+                    </li>
+                </ul>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+</body>
+</html>

@@ -1,0 +1,11 @@
+<div id="topmenu">
+    <ul>
+        <li><a href="/service/profile.php" {if strstr($_SERVER['SCRIPT_NAME'], 'profile')!=false}class="hover"{/if}>个人主页</a></li>
+        <li><a href="/service/pass_manager.php" {if strstr($_SERVER['SCRIPT_NAME'], 'pass_manager')!=false || strstr($_SERVER['SCRIPT_NAME'], 'safe_setting')!=false}class="hover"{/if}>通行证管理</a></li>
+        <li><a href="/service/account.php" {if strstr($_SERVER['SCRIPT_NAME'], 'account')!=false&&strstr($_SERVER['SCRIPT_NAME'], 'proxy_remit_account')==false}class="hover"{/if}>账号管理</a></li>
+        <li><a href="/service/role_select.php"{if $serviceType=='role_select'||$serviceType=='room_channel_user'||$serviceType=='manage_imformation'||$serviceType=='agent_region'||$serviceType=='shop'||$serviceType=='proxy_remit_account'} class="hover"{/if}>渠道管理</a></li>
+        <li><a href="/service/roommanage.php"{if $serviceType=='room_manage'} class="hover"{/if}>房间管理</a></li>
+        <li><a href="/service/weibo.php"{if $serviceType=='weibo'} class="hover"{/if}>我的微博</a></li>
+        {if $isArtist}<li><a href="/service/artist_tax.php" {if $serviceType=='artist_tax'}class="hover"{/if}>艺人税收</a></li>{/if}
+    </ul>
+</div>

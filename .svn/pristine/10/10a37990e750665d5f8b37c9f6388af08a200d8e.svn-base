@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>数据导出</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	function ajax_table(cur_name){
+		if(key == 0){
+			var post_data = {"new_file":1, "table":cur_name};	
+		}else{
+			var post_data = {"table":cur_name};
+		}
+		$.post("data_export.php", post_data, function(data){
+			var data = $.parseJSON(data);
+			if(data.Flag == 100){
+				$("#warning").show().html("正在导出..."+key+"/"+table_length);
+				ajax_next_table();
+			}else{
+				$("#export").attr("disabled", false);
+				$("#warning").show().html(data.FlagString);
+			}
+		})
+	}
+	function ajax_next_table(){
+		if(key >= table_length){
+			$("#export").attr("disabled", false);
+			$.post("data_export.php", {"end":1}, function(data){
+				var data = $.parseJSON(data);
+				$("#warning").show().html("导出完成,文件<a style='color:red' id='download' href='data_export.php?module=download'>下载</a>,校验码为:"+data.MD5);
+				location.href="data_export.php?module=download";
+			});
+			return;
+		}
+		ajax_table(table_name[key]);
+		key++;
+	}
+	table_name = [];
+	table_length = 0;
+	key = 0;
+	var form = $("#form");
+	var cbs = $(".table_checkbox");
+	$("#export").click(function(){
+		table_name = [];
+		key = 0;
+		cbs.each(function(){
+			if($(this).attr("checked")){
+				table_name.push($(this).val());
+			}
+		});
+		table_length = table_name.length;
+		$(this).attr("disabled", true);
+		$("#warning").show().html("正在导出...0/"+table_length);
+		ajax_next_table();
+		return false;
+	})
+	$("#select_all").click(function(){
+		if($(this).attr('checked')){
+			var checked = true;	
+		}else{
+			var checked = false;
+		}
+		cbs.each(function(){
+			$(this).attr('checked', checked);
+		})
+	})
+	$("#clear").click(function(){
+		if(confirm("如果有人正在导出，会导致导出数据错误，是否继续?")){
+			$.post("data_export.php", {"force":1}, function(data){
+				var data = $.parseJSON(data);
+				alert(data.FlagString);
+			});
+		}
+	})
+})
+</script>
+<style>
+td{
+	padding:5px;
+}
+</style>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">数据导出</div>
+</div>
+<br/>
+<div style="width:800px;margin:0 auto">
+<input type="checkbox" id="select_all" style="margin-left:5px;" />全选
+<br/><br/>
+<table width="100%">
+	{foreach $config_array $k $v}
+	{if $k%5 == 0}
+	<tr>
+	{/if}
+	<td><input type="checkbox" class="table_checkbox" name="tables[]" value="{$v['value']}" />{$v['name']}</td>
+	{if $k%5 == 4}
+	</tr>
+	{/if}
+	{/foreach}
+</table>
+<br/>
+<button id="export">导出</button>&nbsp;&nbsp;&nbsp;&nbsp;<button id="clear">强制清空</button>
+<div id="warning" style="display:none;width:100%;margin:0 auto;text-align:center;border:1px dotted black;line-height:50px;font-size:16px;"></div>
+<p align="center" style="color:red">下载文件正确的格式是只有在底部才有一个/*md5:...*/，与校验码一致才是正确的</p>
+</div>
+</body>
+</html>

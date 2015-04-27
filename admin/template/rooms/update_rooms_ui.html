@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>道具模块管理</title>
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform" method="post" enctype="multipart/form-data" class="form" onSubmit="return checkParam();">
+    <input type="hidden" name="id" value="{$edit['id']}">
+    <p>
+    	<label>界面名称：</label>
+    	<input type="text" name="name" value="{$edit['name']}">
+    </p>
+    <p>
+        <ul>
+            <li><label>启动界面皮肤：</label><input type="text" name="start_skin" value="{$edit['start_skin']}" size="80"></li>
+            <li><label>房间界面皮肤：</label><input type="text" name="room_skin" value="{$edit['room_skin']}" size="80"></li>
+            <li><label>房间布局文件：</label><input type="text" name="layout_file" value="{$edit['layout_file']}" size="80"></li>
+        </ul>
+    </p>
+    <!--<p>
+        <ul>
+            <li><label>启动界面皮肤：</label>{ROOMUI_API_PATH}/<span id="idStart">{$edit['files']}</span>_start.swf</li>
+            <li><label>房间界面皮肤：</label>{ROOMUI_API_PATH}/<span id="idSkin">{$edit['files']}</span>_skin.swf</li>
+            <li><label>房间布局文件：</label>{ROOMUI_API_PATH}/<span id="idLayout">{$edit['files']}</span>_layout.xml</li>
+        </ul>
+    </p>-->
+    <p>
+        <label>缩略图：</label>
+        <span id="gif_review">
+            <select name="pics[cat_id]" id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="pics[pic_id]" id="pic"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('pic','show_gif','gif_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+         </span>
+    </p>
+    <p>
+    	<label>状态：</label>
+    	<input type="radio" name="status" value="1" {if $edit['status'] == 1}checked{/if}> 启用
+        <input type="radio" name="status" value="0" {if $edit['status'] == 0}checked{/if}> 未启用
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+$('#idFile').on('keyup change',function(){
+    var value = $(this).val();
+    $('#idStart').html(value);
+    $('#idSkin').html(value);
+    $('#idLayout').html(value);
+})
+
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+
+//gif图
+showCategory("category","{$edit['pics']['cat_id']}");
+{if $edit['pics']['cat_id']!='' && $edit['pics']['cat_id']!=-1}
+showPic("pic","{$edit['pics']['cat_id']}","{$edit['pics']['pic_id']}");
+{/if}
+
+function checkParam(){
+    var name = $('input[name="name"]').val();
+    if(name.trim().isEmpty()){
+        alert('界面名称不能为空');
+        return false;
+    }
+
+    var start_skin = $('input[name="start_skin"]').val();
+    if(start_skin.trim().isEmpty()){
+        alert('启动界面皮肤不能为空');
+        return false;
+    }
+
+    var room_skin = $('input[name="room_skin"]').val();
+    if(room_skin.trim().isEmpty()){
+        alert('房间界面皮肤不能为空');
+        return false;
+    }
+
+    var layout_file = $('input[name="layout_file"]').val();
+    if(layout_file.trim().isEmpty()){
+        alert('房间布局文件不能为空');
+        return false;
+    }
+    return true;
+}
+
+function showPicture(pic_select_id,pic_show,show_area){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById(pic_show);
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById(show_area);
+			var div = document.createElement("div");
+			div.id = pic_show;
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+</script>
+</body>
+</html>

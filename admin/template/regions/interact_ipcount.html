@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">游戏IP局数日统计</div>
+</div>
+
+<div class="page-tools main-width">
+	<form action="" method="get" name="myform">
+        日期：<input type="text" name="starttime" value="{$_GET['starttime']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d'})" />
+		至 <input type="text" name="endtime" value="{$_GET['endtime']}" onfocus="WdatePicker({dateFmt:'yyyy-M-d'})" />
+        <input type="hidden" name="module" value="{$_GET['module']}" />
+        <input type="submit" value="查询" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>编号</th>
+    <th>日期</th>
+    <th>总人数</th>
+    <th>满20局人数</th>
+    <th>IP数</th>
+    <th>满20局IP数</th>
+    </tr>
+  {foreach $lists $key $arr}
+  <tr>
+	<td>{echo $key+1}</td>
+  	<td>{$arr['Date']}</td>
+    <td>{$arr['TotalUin']}</td>
+    <td>{$arr['MeetUin']}</td>
+    <td>{$arr['TotalIp']}</td>
+	<td>{$arr['MeetIp']}</td>
+  </tr>
+  {/foreach}
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

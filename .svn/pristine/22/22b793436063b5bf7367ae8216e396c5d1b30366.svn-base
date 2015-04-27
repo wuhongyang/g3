@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>分站游戏道具</title>
+<script type="text/javascript">
+function checkParam(){
+	var propsName = document.getElementById("props_name").value;
+	if(isEmpty(propsName)){
+		alert('道具名称不能为空！');
+		return false;
+	}
+	var pObj = document.getElementById("province");
+	var pIndex = pObj.selectedIndex;
+	var province = pObj.options[pIndex].value;
+	var cObj = document.getElementById("city");
+	var cIndex = cObj.selectedIndex;
+	var city = cObj.options[cIndex].value;
+	if(province==-1 || city==-1){
+		alert("请正确选择所属区域");
+		return false;
+	}
+	
+	var cmdPath = document.getElementById("cmd_path").value;
+	if(isEmpty(cmdPath)){
+		alert("扩展模块路径不能为空");
+		return false;
+	}
+	
+	var bcObj = document.getElementById("bigcase");
+	var bigCaseId = bcObj.options[bcObj.selectedIndex].value;
+	var caseObj = document.getElementById("case");
+	var caseId = caseObj.options[caseObj.selectedIndex].value;
+	var parentObj = document.getElementById("parent");
+	var parentId = parentObj.options[parentObj.selectedIndex].value;
+	if(bigCaseId==0 || caseId==0 || parentId==0){
+		alert("请正确选择所属科目");
+		return false;
+	}
+	/*
+	var propsMoney = document.getElementById("props_money").value;
+	if(!isInteger(propsMoney)){
+		alert("价格只能为整数！");
+		return false;
+	}*/
+	
+	var picObj = document.getElementById("pic");
+	var picId = picObj.options[picObj.selectedIndex].value;
+	if(picId==-1 || picId==-2 || !picId){
+		alert('请正确选择道具图标');
+		return false;
+	}
+	
+	var percentage = parseFloat(document.getElementById("percentage").value);
+	if(percentage>1 || percentage<0){
+		alert("资金分成必须在0到1之间");
+		return false;
+	}
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改游戏道具</div>
+    <div class="header-button right">{if $link_array[111]['url']}<a href="{$link_array[111]['url']}?tpl_id={$_GET['tpl_id']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<script>
+active_li = 7;
+</script>
+{include file="template/tpl_header.html"}
+
+<form name="myform" action="{$url}" method="post" onSubmit="return checkParam();" class="form">
+    <{if $info}><input type="hidden" name="id" value="<{$info['id']}>"><{/if}>
+    <p>
+        <label>科目联动菜单：</label>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent" onChange="getCmdPath('cmd_path')"><option value="0">请选择</option></select>
+    </p>
+    <p>
+    	<label>扩展模块CMD：</label>
+        <input type="text" name="cmd" value="{$info['cmd']}" id="cmd" size="32" />
+    </p>
+    <p>
+        <label>游戏道具名称：</label>
+        <input type="text" name="props_name" id="props_name" value="<{$info['props_name']}>" size="32" />
+    </p>
+    <p>
+        <label>扩展模块路径：</label>
+        <input type="text" name="cmd_path" id="cmd_path" value="<{$info['cmd_path']}>" size="32" />
+    </p>
+    <p>
+        <label>游戏道具描述：</label>
+        <input type="text" name="props_desc" id="props_desc" value="<{$info['props_desc']}>" size="32" />
+    </p>
+    <p>
+        <label>游戏道具展现轨迹：</label>
+        <select name="props_size">
+        {foreach $size_arr $key $value}
+        <option value="{$key}"{if $key == $info['props_size']} selected="selected"{/if}>{$value}</option>
+        {/foreach}
+        </select>
+    </p>   
+    <p>
+        <label>游戏道具图标：</label>
+        <span id="review">
+            <select name="category" id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="pic" id="pic" onchange="writePropsIco();"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture();" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+            <input type="hidden" name="props_ico" id="props_ico" value="{$info['props_ico']}" />
+        </span>
+    </p>
+    <p>
+        <label>状态：</label>
+        {foreach $status_arr $key $arr}
+        <input type="radio" name="props_status" value="{$key}" {if $key == $info['props_status']}checked="checked"{/if}>{$arr}&nbsp;&nbsp;&nbsp;&nbsp;
+        {/foreach}
+    </p>  
+    <p>
+        <label></label>
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+        <input type="submit" class="submit" value="保存信息" />
+    </p>  
+</form>
+<script type="text/javascript">
+//科目联动
+getOptions("bigcase=1","bigcase","{$info['big_case_id']}");
+{if !empty($info['big_case_id'])}
+getOptions("case={$info['big_case_id']}",'case',"{$info['case_id']}");
+{/if}
+{if !empty($info['case_id'])}
+getOptions("parent={$info['case_id']}",'parent',"{$info['parent_id']}");
+{/if}
+
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+showCategory("category","<{$info['cat_id']}>");
+<{if $info['cat_id']!='' && $info['cat_id']!=-1}>
+showPic("pic","$info['cat_id']",'<{$info["pic_id"]}>');
+<{/if}>
+
+function showPicture(){
+	var picObj = document.getElementById("pic");
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById("pic-show");
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById("review");
+			var div = document.createElement("div");
+			div.id = 'pic-show';
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+
+function writePropsIco(){
+	var picObj = document.getElementById("pic");
+	var val = picObj.options[picObj.selectedIndex].value;
+	for(var i in pic){
+		if(pic[i].id == val)
+			document.getElementById("props_ico").value = 'p/' + pic[i].img_path + '/0/0.jpg';
+	}
+}
+
+//得到扩展模块路径
+$(function(){
+	$("#parent").change(function(){
+		var bigcase_id = $("#bigcase").find("option:selected").val();
+		var case_id = $("#case").find("option:selected").val();
+		var parent_id = $("#parent").find("option:selected").val();
+		$.ajax({
+			url: 'props_manage.php?module=ajax&bigcase_id='+bigcase_id+'&case_id='+case_id+'&parent_id='+parent_id,
+			type: 'GET',
+			success: function(data){
+				var cmd = $.parseJSON(data).FlashCMD;
+				var cmd_path = $.parseJSON(data).CmdPath;
+				var obj = $("#cmd");
+				var pathObj = $("#cmd_path");
+				obj.val('');
+				pathObj.val('');
+				if(cmd!=undefined && cmd!=''){
+					obj.val(cmd);
+				}
+				if(cmd_path!=undefined && cmd_path!=''){
+					pathObj.val(cmd_path);
+				}
+			}
+		});	
+	});
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/number.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/kcost.js"></script>
+<title>科目账户余额库存支</title>
+<script>
+function checkRate(num)   
+{   
+     var re = /^[1-9]+[0-9]*]*$/;
+     if (!re.test(num))   
+     {
+        return false;   
+     }else{
+	 	return true;
+	 }
+}  
+
+	$(function(){
+		var s_bigcase = $("#bigcase");
+    	var s_case = $("#case");
+    	var s_parent = $("#parent")
+		var s_child = $("#child");
+    	var MoneyWeight = $("#MoneyWeight");
+    	
+    	s_bigcase.change(function(){
+    		getOptions('case='+$(this).attr('value'),'case');
+    		clears('parent');
+    		clears('parent');
+    	})
+    	
+    	s_case.change(function(){
+    		getOptions('parent='+$(this).attr('value'),'parent');
+    		clears('parent');
+    	})
+		
+    	s_parent.change(function(){
+			getCmdPath('cmd_path');
+    //		getOptions('child='+$(this).attr('value'),'child');
+    	})
+
+    	s_child.change(function(){
+    //		getCmdPath('cmd_path');
+    	})
+    	
+    	$("#form").submit(function(){
+    		var child_id = s_child.attr("value");
+    		var MoneyValue = MoneyWeight.attr("value");
+    		if($("#Desc").val() == ""){
+				alert("请填写备注");
+				return false;
+			}
+			if(child_id!=0 && MoneyValue>0 && MoneyValue<=100000000 && !checkRate(MoneyValue%10000)){
+    			return true;
+    		}
+    		alert("没有选择科目或金额不符合范围");
+    		return false;
+    	})
+		//科目联动
+		getOptions("bigcase=1","bigcase");
+	})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">科目账户余额库存支</div>
+</div >
+{include "kcost/tab.html"}
+<form method="post" class="form" action="" id="form">
+<p>
+	<label>成本中心余额：</label>
+	<span id="last_balance">{echo $balance}</span>
+</p>
+<p>
+    <label>科目联动菜单：</label>
+    <select name="bigcase_id" id="bigcase"><option value="0">请选择</option></select> &nbsp;
+    <select name="case_id" id="case"><option value="0">请选择</option></select> &nbsp;
+    <select name="parent_id" id="parent"><option value="0">请选择</option></select> &nbsp;
+    <select name="child_id" id="child">
+	<option value="0">请选择</option>
+	<option value="902">科目余额库-成本中心划入V豆</option>
+	<option value="903">科目余额库-V豆划回成本中心</option>
+	</select> &nbsp;        
+</p>
+<p>
+	<label>充值金额：</label>
+	<input type="text" name="MoneyWeight" id="MoneyWeight" size="32" value="" />
+    &nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>一次性最大充值金额为1亿，必须为10000的整数倍；</font>
+	<p>
+		<label>备注：</label>
+		<input type="text" name="Desc" size="32" value="" id="Desc" />
+	</p>
+	<p style="margin-left:125px;color:blue" name="string" id="string">零</p>
+</p>
+<p>
+	<label></label>
+	<input type="submit" class="submit" value="保存信息" />
+    <input type="reset" class="reset" value="重置" />
+</p>
+</form>
+</body>
+</html>

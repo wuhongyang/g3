@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>道具模块管理</title>
+<script type="text/javascript">
+function checkParam(){
+	var tax_percent = parseInt(document.getElementById('tax_percent').value);
+	var receive_percent = parseInt(document.getElementById('receive_percent').value);
+	if(isNaN(tax_percent)){
+		alert('税收分成占比必须为数字');
+		return false;
+	}
+	if(isNaN(receive_percent)){
+		alert('接收方占比必须为数字');
+		return false;
+	}
+	if(tax_percent+receive_percent != 100){
+		alert('税收分成占比与接收方占比之和必须为100');
+		return false;
+	}
+	return true;
+}
+window.onload =function(){
+	var tax_percent_obj = document.getElementById('tax_percent');
+	tax_percent_obj.onkeyup = function(e){
+		var keyCode = e.keyCode;
+		if(!(keyCode == 46 || keyCode == 8 || (keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))){
+			setTimeout(function(){
+				var newstr = tax_percent_obj.value.substr(0,tax_percent_obj.value.length-1);
+				tax_percent_obj.value = newstr;
+			},0);
+		}
+	}
+	
+	var receive_percent_obj = document.getElementById('receive_percent');
+	receive_percent_obj.onkeyup = function(e){
+		var keyCode = e.keyCode;
+		if(!(keyCode == 46 || keyCode == 8 || (keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105))){
+			setTimeout(function(){
+				var newstr = receive_percent_obj.value.substr(0,receive_percent_obj.value.length-1);
+				receive_percent_obj.value = newstr;
+			},0);
+		}
+	}
+}
+</script>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">添加/修改礼物配置</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form name="myform"  method="post" action="{$url}" class="form" onsubmit="return checkParam();">
+	<{if $info}><input type="hidden" name="id" value="{$id}"><{/if}>
+	<p>
+    	<label>科目选择：</label>
+        <select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="0">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent" onChange="getCmdPath('cmd_path')"><option value="0">请选择</option></select>
+    </p>
+    <p>
+    	<label>价格（虚拟币）：</label>
+        <input type="text" name="props_money" id="props_money" value="{$info['props_money']}" size="30" />
+    </p>
+    <p>
+    	<label>税收分成占比：</label>
+        <input type="text" name="tax_percent" id="tax_percent" value="{$info['tax_percent']}" size="30" />&nbsp;%
+    </p>
+    <p>
+    	<label>接收方占比：</label>
+        <input type="text" name="receive_percent" id="receive_percent" value="{$info['receive_percent']}" size="30" />&nbsp;%
+    </p>
+    <p>
+    	<label>艺人渠道税收：</label>
+        <label style="width:auto;"><input type="radio" name="actor_tax" value="1" {if $info['actor_tax'] == 1}checked{/if}/>&nbsp;启用</label>&nbsp;
+        <label style="width:auto;"><input type="radio" name="actor_tax" value="0" {if $info['actor_tax'] == 0}checked{/if}/>&nbsp;不启用</label>
+    </p>
+    <p>
+    	<label>是否启用：</label>
+        <input type="radio" name="status" id="open" value="1" {if $info['status'] == 1}checked{/if} />&nbsp;<label for="open" style="width:auto;">启用</label>
+        &nbsp;<input type="radio" name="status" id="close" value="0" {if $info['status'] == 0}checked{/if} />&nbsp;<label for="close" style="width:auto;">不启用</label>
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+getOptions("bigcase=1","bigcase","{$info['bigcase_id']}");
+{if !empty($info['bigcase_id'])}
+getOptions("case={$info['bigcase_id']}",'case',"{$info['case_id']}");
+{/if}
+{if !empty($info['case_id'])}
+getOptions("parent={$info['case_id']}",'parent',"{$info['parent_id']}");
+{/if}
+</script>
+</body>
+</html>

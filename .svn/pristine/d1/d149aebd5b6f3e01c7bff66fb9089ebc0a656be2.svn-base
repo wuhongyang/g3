@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>划出资金</title>
+<style>
+.warning{color:red;margin-left:20px;}
+</style>
+<script type="text/javascript">
+$(function(){
+	$('#btn').click(function(){
+		var uin = $('#uin').val();
+		if(uin=='' || isNaN(uin)){
+			alert('划出代理用户ID必须为数字');
+			return false;
+		}
+		var reuin = $('#confirm_uin').val();
+		if(reuin != uin){
+			alert('代理用户ID不一致');
+			return false;
+		}
+		var money = $('#money').val();
+		if(money=='' || isNaN(money)){
+			alert('请正确填写划入金额');
+			return false;
+		}
+		var remark = $('#remark').val();
+		remark = remark.replace(/(^\s*)|(\s*$)/g, "");
+		if(remark == ''){
+			alert('备注不能为空');
+			return false;
+		}
+		$('#form').submit();
+	});
+});
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">代理调剂账户管理</div>
+</div >
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a {if $module=='safeguard'}class="active"{/if} href="{$link_array[101]['url']}">最低保障金</a></li>{/if}
+	{if $link_array[102]['url']}<li><a {if $module=='in'}class="active"{/if} href="{$link_array[102]['url']}">划入资金</a></li>{/if}
+	{if $link_array[103]['url']}<li><a {if $module=='out'}class="active"{/if} href="{$link_array[103]['url']}">划出资金</a></li>{/if}
+</ul>
+<form method="post" class="form" id="form">
+	<p>
+		<label>划出代理用户ID：</label>
+		<span><input type="text" name="Uin" id="uin"></span>
+	</p>
+	<p>
+		<label>确认代理用户ID：</label>
+		<span><input type="text" name="Confirm_uin" id="confirm_uin"></span>
+	</p>
+	<p>
+		<label>划出金额：</label>
+		<span>
+			<input type="text" name="TradeMoney" id="money"><span class="warning">注：请务必认真核对该代理的汇款金额。</span>
+		</span>
+	</p>
+	<p>
+		<label>划出备注：</label>
+		<span><input type="text" name="TradeDesc" id="remark"></span>
+	</p>
+	<p>
+		<label>&nbsp;</label>
+		<span><input type="button" value="确认划出" id="btn"></span>
+	</p>
+</form>
+</body>
+</html>

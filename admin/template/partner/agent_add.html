@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/p/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<style>
+.waring{color:red;margin-left:20px;}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>添加代理</title>
+<script type="text/javascript">
+$(function(){
+	$('#sbt').click(function(){
+		var uin = $('input[name="uin"]').val();
+		if(uin=='' || isNaN(uin)){
+			alert('用户ID必须为数字');
+			return false;
+		}
+		var reUin = $('input[name="confirm_uin"]').val();
+		if(reUin!=uin){
+			alert('请确保两次输入的用户ID一致');
+			return false;
+		}
+		$('#form').submit();
+	});
+});
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">添加代理</div>
+</div >
+<br/>
+<form action="?module=agentAdd" method="post" class="form" id="form">
+	<p>
+		<label>输入用户ID：</label>
+		<span>
+			<input type="text" name="uin"><span class="waring">请确保该用户已汇款最低保障金</span>
+		</span>
+	</p>
+	<p>
+		<label>确认用户ID：</label>
+		<span><input type="text" name="confirm_uin"></span>
+	</p>
+	<p>
+		<label>&nbsp;</label>
+		<span><input type="button" id="sbt" value="确认添加"></span>
+	</p>
+</form>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="header clean">
+  <div class="header-title left">添加/修改商品</div>
+  <div class="header-button right">{if $link_array[140]['url']}<a href="{$link_array[140]['url']}&tpl_id={$_GET['tpl_id']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<script>
+active_li = 3;
+</script>
+{include file="template/tpl_header.html"}
+
+<form method="post" class="form" action="{if empty($edit)}?module=add{else}?module=edit{/if}" onSubmit="return checkParam();">
+	{if $edit}
+	<input type="hidden" name="id" value="{$edit['id']}">
+	{/if}
+    <p>
+		<label>选择科目：</label>
+		<select name="bigcase_id" id="bigcase" onChange="getOptions('case='+this.value,'case');clears('parent');"><option value="-1">请选择</option></select> &nbsp;
+        <select name="case_id" id="case" onChange="getOptions('parent='+this.value,'parent');"><option value="-1">请选择</option></select> &nbsp;
+        <select name="parent_id" id="parent"><option value="-1">请选择</option></select>
+    </p>
+    <p>
+        <label>商品名称：</label>
+        <input type="text" name="name" id="name" value="{$edit['name']}" />
+    </p>
+    <p>
+    	<label>商品类别：</label>
+    	<select name="category">
+    		<option value="-1">请选择</option>
+    		{foreach $commodity_category  $val}
+    		<option value="{$val['id']}" {if $edit['category']==$val['id']}selected{/if}>{$val['name']}</option>
+    		{/foreach}
+    	</select>
+    </p>	
+    <p>
+        <label>商品描述：</label>
+        <textarea name="desc" rows="2" cols="26">{$edit['desc']}</textarea>
+    </p>
+    <p>
+    	<label>角色绑定</label>
+    	<select name="role_id">
+    		<option value="-1">请选择</option>
+    		{foreach $roleList $val}
+    		<option value="{$val['id']}" {if $edit['role_id']==$val['id']}selected{/if}>{$val['name']}</option>
+    		{/foreach}
+    	</select>
+    </p>
+    <p>
+        <label>商品作用域：</label>
+        <select name="scope">
+            <option value="1" {if $edit['scope'] == 1}selected{/if}>站</option>
+            <option value="2" {if $edit['scope'] == 2}selected{/if}>房间</option>
+        </select>
+    </p>
+    <p>
+        <label>库存类型：</label>
+        <input type="radio" name="type" value="1" {if $edit['type'] == 1} checked="checked" {/if}/> 时效类 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="type" value="2" {if $edit['type'] == 2} checked="checked" {/if}/> 库存类
+    </p>
+    <p id="expire" {if $edit['type'] != 1}style="display:none;"{/if}>
+        <label>使用时限：</label>
+        <input type="text" name="expire" value="{$edit['expire']}"> 天
+        <span class="waring">(道具的有效使用时间)</span>
+    </p>
+    <p>
+        <label>价格：</label>
+        <input name="price" type="text" id="price" value="{$edit['price']}" />
+        <span class="waring">(只能是数字)</span>
+    </p>	
+    <p>
+        <label>商品图片：</label>
+        <span id="gif_review">
+        	<input type="hidden" name="pic_url" id="pic_url" value="{$edit['pic_url']}" />
+            <select name="pic_category" id="category" onChange="showPic('pic',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="pic" id="pic" onchange="inputPic()"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('pic','show_gif','gif_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('pic')" value="查看原图" style="width:87px;" />
+         </span>
+    </p>
+    <p>
+        <label>Flash动画：</label>
+        <span id="swf_review">
+        	<input type="hidden" name="swf_url" id="swf_url" value="{$edit['swf_url']}" />
+            <select name="swf_category" id="swf_category" onChange="showPic('swf',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="swf" id="swf" onchange="inputSwf()"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('swf','show_swf','swf_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('swf')" value="查看原图" style="width:87px;" />
+         </span>
+    </p>
+    <p>
+        <label>房内显示图片：</label>
+        <span id="room_image_review">
+            <input type="hidden" name="room_image_url" id="room_image_url" value="{$edit['room_image_url']}" />
+            <select name="room_image_category" id="room_image_category" onChange="showPic('room_image',this.value);"><option value="-1">请选择图片分类</option></select>&nbsp;&nbsp;
+            <select name="room_image" id="room_image" onchange="inputRoomImage()"><option value="-1">请选择图片</option></select>&nbsp;&nbsp;
+            <input type="button" onClick="showPicture('room_image','show_room_image','room_image_review');" value="图片预览" style="width:87px;">
+            <input type="button" onclick="showOriginal('room_image')" value="查看原图" style="width:87px;" />
+         </span>
+    </p>
+    <p>
+        <label>权限提示：</label>
+        <input type="text" name="tip" size="30" value="{$edit['tip']}">
+        <span class="waring">( 权限类商品需要设置 )</span>
+    </p>
+    <p id="gift_commodity">
+        <label>赠送商品：</label>
+        <input type="radio" name="is_gift" value="1" {if $edit['is_gift'] == 1} checked="checked" {/if}/> 是 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="is_gift" value="0" {if $edit['is_gift'] != 1} checked="checked" {/if}/> 否
+    </p>
+    <p>
+        <label>是否启用：</label>
+        <input type="radio" name="status" value="1" {if $edit['status'] == 1} checked="checked" {/if}/> 是 &nbsp; &nbsp; &nbsp;
+        <input type="radio" name="status" value="0" {if $edit['status'] == 0} checked="checked" {/if}/> 否
+    </p>
+    
+    <p>
+    	<label>&nbsp;</label>
+        <input type="hidden" name="tpl_id" value="{$_GET['tpl_id']}" />
+    	<input type="submit" class="submit" value="保存信息" />
+    </p>
+
+</form>
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+
+<script type="text/javascript">
+function in_array(elem,arr){
+    arr = arr || [];
+    var len = arr.length;
+    for(var i=0; i<len; i++){
+        if(elem == arr[i]){
+            return true;
+        }
+    }
+    return false;
+}
+
+$(function(){
+    //展现赠送商品
+
+    $('input[name="type"]').click(function(){
+        var type = $(this).val();
+        if(type == 1){
+            $('#expire').show();
+        }else{
+            $('#expire').hide();
+        }
+    });
+
+    $('input[name="is_gift"]').click(function(){
+        var is_gift = $(this).val();
+        if(is_gift == 1){
+            $('.commodities').show();
+        }else{
+            $('.commodities').hide();
+        }
+    });
+});
+//科目联动
+getOptions("bigcase=10005","bigcase","{$edit['bigcase_id']}");
+getOptions("case={$edit['bigcase_id']}",'case',"{$edit['case_id']}");
+getOptions("parent={$edit['case_id']}",'parent',"{$edit['parent_id']}");
+
+
+//图片和分类联动
+var cat = '<{$cat}>';
+cat = eval('(' + cat + ')');
+var pic = '<{$pic}>';
+pic = eval('(' + pic + ')');
+
+//gif图
+showCategory("category","<{$edit['pic_category']}>");
+<{if $edit['pic_category'] !='' && $edit['pic_category'] != -1}>
+showPic("pic","<{$edit['pic_category']}>",'<{$edit["pic"]}>');
+<{/if}>
+
+//swf图
+showCategory("swf_category","<{$edit['swf_category']}>");
+<{if $edit['swf_category'] !='' && $edit['swf_category'] != -1}>
+showPic("swf","<{$edit['swf_category']}>",'<{$edit["swf"]}>');
+<{/if}>
+
+showCategory('room_image_category',"<{$edit['room_image_category']}>");
+<{if $edit['room_image_category'] !='' && $edit['room_image_category'] != -1}>
+showPic("room_image","<{$edit['room_image_category']}>",'<{$edit["room_image"]}>');
+<{/if}>
+
+//pic:图片所在select的id
+//pic_show:创建样式id
+//show_area:显示位置
+function showPicture(pic_select_id,pic_show,show_area){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	var obj = document.getElementById(pic_show);
+	if(val == -1){
+		if(obj)
+			obj.parentNode.removeChild(obj);
+		alert("没有可以预览的图片");
+		return false;
+	}
+	if(obj)
+		obj.parentNode.removeChild(obj);
+	for(var k in pic){
+		if(pic[k].id == val){
+			var review = document.getElementById(show_area);
+			var div = document.createElement("div");
+			div.id = pic_show;
+			div.style.marginLeft = '120px';
+			div.innerHTML = '<object width="100" height="100" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param value="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }" name="movie"><param value="high" name="quality"><embed width="100" height="100" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/100/100.jpg") }"></object>';
+			review.insertBefore(div,null);
+			//window.location.href = "{PIC_API_PATH}/p/" + pic[k].img_path + "/0/0.jpg";
+		}
+	}
+}
+//将图片路径写入hidden
+function inputPic(){
+	var catObj = document.getElementById('category');
+	var catVal = catObj.options[catObj.selectedIndex].value;
+	var picObj = document.getElementById('pic');
+	var picVal = picObj.options[picObj.selectedIndex].value;
+	for(var p in pic){
+		if(pic[p].id==picVal && pic[p].cat_id==catVal){
+			document.getElementById('pic_url').value = 'p/' + pic[p].img_path + '/0/0.jpg';
+		}
+	}
+}
+
+//将图片路径写入hidden
+function inputSwf(){
+	var catObj = document.getElementById('swf_category');
+	var catVal = catObj.options[catObj.selectedIndex].value;
+	var picObj = document.getElementById('swf');
+	var picVal = picObj.options[picObj.selectedIndex].value;
+	for(var p in pic){
+		if(pic[p].id==picVal && pic[p].cat_id==catVal){
+			document.getElementById('swf_url').value = 'p/' + pic[p].img_path + '/0/0.jpg';
+		}
+	}
+}
+
+function showOriginal(pic_select_id){
+	var picObj = document.getElementById(pic_select_id);
+	var val = picObj.options[picObj.selectedIndex].value;
+	
+	if(val == -1){
+		alert("没有可以查看的图片");
+		return false;
+	}
+	
+	for(var k in pic){
+		if(pic[k].id == val){
+			window.open('{php echo cdn_url(PIC_API_PATH."/p/'+pic[k].img_path+'/0/0.jpg") }');
+		}
+	}
+}
+
+function checkParam(){
+    var type = $('input[name="type"]:checked').val();
+    if(type == 1){
+        var expire = $('input[name="expire"]').val();
+        if(!expire.isNumber()){
+            alert('使用时限只能为整数');
+            return false;
+        }
+    }
+    var price = $('input[name="price"]').val();
+    if(!price.isNumber()){
+        alert('价格只能为整数');
+        return false;
+    }
+    return true;
+}
+</script>
+</body>
+</html>

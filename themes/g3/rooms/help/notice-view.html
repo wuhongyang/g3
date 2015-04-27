@@ -1,0 +1,82 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$viewdata['title']}</title>
+<meta name="keywords" content="vv酷,网上娱乐商圈,在线聊天,视频聊天,视频聊天网站" />
+<meta name="description" content="{echo mb_substr($description,0,70,'utf-8').$descTail;}" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="{STATIC_API_PATH}/frontend/modules/rooms/css/help.css" />
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+
+<body style="background:#FFF">
+
+{include file="head.html"} 
+
+<div class="bodywrap">
+    <div class="news clearfix">
+        <div class="news-title">您所在的位置是：<a href="/">首页</a> &gt; <a href="/notice/index.html">新闻公告</a>&gt; 正文</div>
+        <div class="news-bd">
+            <div class="news-left">
+                <div class="newcont-tit">
+                    <h1>{$viewdata['title']}</h1>
+                </div>
+                <div class="newcont-hd">
+                    <div class="newcont-date">{echo date('Y年m月d日',$viewdata['update_time'])}</div>
+                    <div class="newcont-share">
+                        <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare">
+                            <span class="bds_more">分享到：</span>
+                            <a class="bds_qzone"></a>
+                            <a class="bds_tsina"></a>
+                            <a class="bds_tqq"></a>
+                            <a class="bds_renren"></a>
+                            <a class="bds_t163"></a>
+                        </div>
+						<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6626917" ></script> 
+                        <script type="text/javascript" id="bdshell_js"></script> 
+                        <script type="text/javascript">
+							document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+                        </script> 
+                    </div>
+                </div>
+                <div class="newcont-bd">{$viewdata['content']}</div>
+                <div class="list_page">
+                    <div class="list_page_01">
+                        <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float:right">
+                            <span class="bds_more">分享到：</span>
+                            <a class="bds_qzone"></a>
+                            <a class="bds_tsina"></a>
+                            <a class="bds_tqq"></a>
+                            <a class="bds_renren"></a>
+                            <a class="bds_t163"></a>
+                        </div>
+						<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=6626917" ></script> 
+                        <script type="text/javascript" id="bdshell_js"></script> 
+                        <script type="text/javascript">
+							document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000);
+                        </script> 
+                    </div>
+                    <div class="list_page_02">
+                        <span style="float:left;">上一篇：<a href="notice/{$prev['id']}.html">{$prev['title']}</a></span>
+                        <span style="float:right;">下一篇：<a href="notice/{$next['id']}.html">{$next['title']}</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="news-right">
+                <div class="news-img">
+                    <a href="/rooms/recruit.php" target="_blank"><img src="{STATIC_API_PATH}/static/images/pic_04.jpg" width="240" height="300" border="0" /></a>
+                </div>
+                <div class="news-img">
+                    <a href="/rooms/activity.php" target="_blank"><img src="{STATIC_API_PATH}/static/images/pic_05.jpg" width="240" height="300" border="0" /></a>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+{include file="foot.html"}
+
+</body>
+</html>

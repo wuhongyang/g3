@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css?a="123" ');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="artist_manage/tool.html"}
+            <div class="rightdiv">
+				<table width="600" border="0" cellspacing="0" cellpadding="0" class="auto mgt50 box6">
+                  <tr>
+                    <td align="right" width="150" height="40"><label class="mgR10 lineh30">娃娃数目：</label></td>
+                    <td>{echo empty($data['info']['Doll'])? 0:$data['info']['Doll']}</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="40" valign="center"><label class="mgR10">皇后数目：</label></td>
+                    <td>{echo empty($data['info']['Empress'])? 0:$data['info']['Empress']}</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="40" valign="center"><label class="mgR10">合计娃娃总数：</label></td>
+                    <td>{php echo $data['info']['Doll']+$data['info']['Empress']*5}</td>
+                  </tr>
+                  <tr>
+                    <td align="right" height="40" valign="center"><label class="mgR10">房间在线时长：</label></td>
+                    <td>{$data['info']['OnlineTime']}小时</td>
+                  </tr>
+                  <tr>
+                    <td align="right"><label class="mgR10">温馨提示：</label></td>
+                    <td height="100">
+                    	<p class="mgt10 red">1.数据统计可能存在误差，未经审核，仅供参考。</p>
+                    	<p class="mgt10 red">2.个人资料审核未通过，则娃娃不生效，不予计算工资。</p>
+                    	<p class="mgt10 red">3.每周二开始可以查看在麦数据，统计时间为每周一至当前日期的前一天。</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td height="50"><a href="/service/artist_manage.php?module=doll" class="yellowbtn2 w60">返回</a></td>
+                  </tr>
+                </table>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/date/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/account.js');}"></script>
+</body>
+</html>

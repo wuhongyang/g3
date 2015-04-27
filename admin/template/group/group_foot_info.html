@@ -1,0 +1,276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>站页面底部信息管理</title>
+<style type="text/css">
+.note{color:red;margin-left:10px;}
+.room_interface{margin-left: 122px;}
+.room_interface:hover{background-color: #74C354; width:320px;}
+.ktv_module{margin-left: 122px;}
+.ktv_module:hover{background-color: #74C354; width:320px;}
+.del_ktv_module{display: inline-block; cursor: pointer;}
+</style>
+</head>
+<body>
+<div class="header clean">
+    <div class="header-title left">站页面底部信息添加/修改</div>
+    <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+<form method="post" class="form" action="?module=save">
+    <input type="hidden" name="id" value="{$id}" />
+	<p>
+    	<label>站ID：</label>
+        <input type="text" name="group_id" value="{$info['group_id']}" {if $id > 0}disabled{/if} />
+    </p>
+    <p>
+        <label>站名称：</label>
+        <span id="group_name">{$info['name']}</span>
+    </p>
+    <p>
+        <label>域名：</label>
+        <input type="text" name="domain" value="{$info['domain']}" />
+    </p>
+    <p>
+        <label>ICP备案：</label>
+        <input type="text" name="icp" value="{$info['icp']}" />
+    </p>
+    <p>
+        <label>底部备案信息：</label>
+        <input type="text" name="icp_info" value="{$info['icp_info']}" />
+    </p>
+    <p>
+        <label>模板选择：</label>
+        <select name="template">
+            <option value="-1">请选择</option>
+            {foreach $group_sites $val}
+            <option value="{$val}" {if $info['template']==$val}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+    </p>
+    <p>
+        <label>版本选择：</label>
+        <select name="version">
+            <option value="-1">请选择</option>
+            {foreach $versions $val}
+            <option value="{$val}" {if $info['version']==$val}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+        <input type="button" value=" 同 步 " onclick="sync(1);"/>
+    </p>
+    <p>
+        <label>KTV模板选择：</label>
+        <select name="ktv_template">
+            <option value="-1">请选择</option>
+            {foreach $ktv_list $val}
+            <option value="{$val}" {if $info['ktv_template']==$val}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+        <input type="button" value="添加" onclick="javascript:add_ktv_module();">
+    </p>
+    <p id="ktv_template_wrap">
+        <label>版本选择：</label>
+        <select name="ktv_version">
+            <option value="-1">请选择</option>
+            {foreach $ktv_versions $val}
+            <option value="{$val}" {if $info['ktv_version']==$val}selected{/if}>{$val}</option>
+            {/foreach}
+        </select>
+        <input type="button" value=" 同 步 " onclick="sync(2);"/>
+            {foreach $ktv_templates $val}
+            <div class="ktv_module">
+                <input type="hidden" name="ktv_templates[]" value="{$val}">
+                <span class="w300">{$val}</span>
+                <span class="del_ktv_module">X</span>
+            </div>
+            {/foreach}
+    </p>
+    <table class="table-list main-width" id="table-list">
+    	<tr>
+    		<th>配置名</th><th>配置字段</th><th>配置值</th>
+    	</tr>
+    	{foreach $ext $key $val}
+     <tr>
+        <td><input type="text" name="descr[]" value="{$val['descr']}"/></td>
+        <td><input type="text" name="key[]" value="{$key}" style="width:50%"/></td>
+        <td>
+        	<input type="text" name="value[]" value="{$val['value']}" style="width:50%"/>&nbsp;&nbsp;
+            <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+<div style="margin:20px;"><a onclick="addConfig();" href="javascript:void(0);">添加一项配置</a> &nbsp; <font color="#999999">* 为API添加一项配置参数</font></div>
+    <p>
+        <label>&nbsp;</label>
+        <input type="submit" value=" 保 存 " />
+    </p>
+</form>
+<script type="text/javascript" src="template/js/prototype.js"></script>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+var ktv_module_json = '{$info['ktv_template']}';
+ktv_module_json = $.parseJSON(ktv_module_json);
+var ktv_module_array = [];
+for(var i in ktv_module_json){
+    ktv_module_array.push(ktv_module_json[i])
+}
+$(function(){
+    $('input[name="group_id"]').blur(function(){
+        var group_id = $(this).val();
+        if(group_id == ''){
+            return false;
+        }
+        $.ajax({
+            url: 'group.php?module=groupInfo',
+            type: 'GET',
+            data: {group_id:group_id,timestamp:new Date().getTime()},
+            success: function(json){
+                json = $.parseJSON(json);
+                $('#group_name').html(json.name);
+            }
+        });
+    });
+    $('input[name="group_id"]').keyup(function(){
+        var group_id = $(this).val();
+        group_id = group_id.replace(/[^\d]/g,'');
+        $(this).val(group_id);
+    });
+
+    $('select[name="template"]').change(function(){
+        var options = '<option value="-1">请选择</option>';
+        $('select[name="version"]').html(options);
+        var template = $(this).val();
+        if(template === "-1"){
+            return ;
+        }
+        $.ajax({
+            url: '?module=get_version',
+            type: 'GET',
+            data: {template:template,timestamp:new Date().getTime(),type:1},
+            success: function(data){
+                var json = $.parseJSON(data);
+                if(json.length < 1){
+                    return ;
+                }
+                for(var i = 0, len = json.length; i < len; i++){
+                    options += '<option value="' + json[i] + '">' + json[i] + '</option>';
+                }
+                $('select[name="version"]').html(options);
+            }
+        });
+    });
+
+    $('select[name="ktv_template"]').change(function(){
+        var options = '<option value="-1">请选择</option>';
+        $('select[name="ktv_version"]').html(options);
+        var template = $(this).val();
+        if(template === "-1"){
+            return ;
+        }
+        $.ajax({
+            url: '?module=get_version',
+            type: 'GET',
+            data: {template:template,timestamp:new Date().getTime(),type:2},
+            success: function(data){
+                var json = $.parseJSON(data);
+                if(json.length < 1){
+                    return ;
+                }
+                for(var i = 0, len = json.length; i < len; i++){
+                    options += '<option value="' + json[i] + '">' + json[i] + '</option>';
+                }
+                $('select[name="ktv_version"]').html(options);
+            }
+        });
+    });
+
+    //KTV模板删除
+    $(document).on('click', '.del_ktv_module', function() {
+        var odiv = $(this).parents('.ktv_module');
+        var index = ktv_module_array.index(odiv.find('input').val());
+        if(index !== false){
+            ktv_module_array.remove(index);
+        }
+        odiv.remove();
+    });
+});
+
+function add_ktv_module(){
+    var ktv_template_id = $('select[name="ktv_template"]').val();
+    var ktv_template_name = $('select[name="ktv_template"]').find('option:selected').text();
+
+    if(ktv_template_id == -1){
+        alert('请选择要添加的KTV模板');
+        return ;
+    }
+
+    //是否已存在
+    if(ktv_module_array.index(ktv_template_id) !== false){
+        alert('不能重复添加KTV模板');
+        return ;
+    }
+    ktv_module_array.push(ktv_template_id);
+    
+    var html = '<div class="ktv_module"> \
+                <input type="hidden" name="ktv_templates[]" value="' + ktv_template_id + '"> \
+                <span class="w300">' + ktv_template_name + '</span> \
+                <span class="del_ktv_module">X</span> \
+            </div>';
+    $('#ktv_template_wrap').append(html);
+}
+
+function sync(type){
+    if(type==1){
+		var template = $('select[name="template"]').val();
+		var version = $('select[name="version"]').val();
+    }else if(type==2){
+		var template = $('select[name="ktv_template"]').val();
+		var version = $('select[name="ktv_version"]').val();
+	}
+    if(template == -1){
+        alert('请选择模板');
+        return;
+    }
+    if(template == 'default' && type==1){
+        alert('默认模板无需同步');
+        return;
+    }
+    if(version == -1){
+        alert('请选择版本');
+        return;
+    }
+    $.ajax({
+        url: '?module=sync',
+        type: 'POST',
+        data: {template:template,version:version,type:type},
+        success: function(data){
+            var json = $.parseJSON(data);
+			if(json.Flag == '100'){
+                alert('同步成功');
+            }else{
+                alert('同步失败');
+            }
+        }
+    });
+}
+function addConfig(){
+	var id = document.getElementById('table-list');
+	var newtr = id.insertRow(-1);
+	var td1   = document.createElement("td");
+	var td2   = document.createElement("td");
+	var td3   = document.createElement("td");
+	td1.innerHTML = '<input type="text" name="descr[]">';
+	td2.innerHTML = '<input type="text" name="key[]" style="width:50%">';
+	td3.innerHTML = '<input type="text" name="value[]" style="width:50%"> <a href="javascript:void(0);" onclick="delConfig(this)">删除</a>';
+	newtr.appendChild(td1);
+	newtr.appendChild(td2);
+	newtr.appendChild(td3);
+}
+function delConfig(obj){
+	obj = obj.parentNode.parentNode;
+	obj.parentNode.removeChild(obj);
+}
+</script>
+</body>
+</html>

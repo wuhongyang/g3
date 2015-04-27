@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{if $type == 1}站长{else}艺人/室主{/if}申请确认</title>
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/rooms/css/actapply.css');}">
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/static/css/base.css');}">
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/modules/rooms/css/style.css');}">
+<style type="text/css">
+select{background-color: #ffffff;border: 1px solid #cccccc;}
+.red{color:red;font-weight:bold;margin:0 5px;}
+</style>
+</head>
+<body>
+
+{include file="../common/header.html"}
+
+<div class="main_apply">
+    <div class="lapel"></div>
+    <!-- 标题 -->
+    <h1 id="a"><span class="red">{if $type == 1}站长{else}艺人/室主{/if}</span>申请</h1> 
+    <!-- 申请步骤 -->
+    <div class="fengline1"></div>
+    <div class="htip" style="height:70px;font-weight:bold;"> 请再次确认您的申请信息，带有“ <span class="red">*</span>”图标的信息一旦提交则无法修改，如信息有误将可能对后续结款等都带来诸多不便。</div>
+    <!-- 申请步骤表单 -->
+    <form action="?module=apply" method="post" class="applyform clearfix" id="form_apply">
+    	<input type="hidden" name="type" value="{$type}">
+    	<input type="hidden" name="province" value="{$province}">
+    	<input type="hidden" name="city" value="{$city}">
+        <div class="formlist">
+            <label>申请账号：</label>
+            <span>{$nick}({$uin})</span>
+        </div>
+		<div class="formlist">
+			<label>申请角色：</label>
+			<span>{$typename[$type]}</span>
+		</div>
+        <div class="formlist">
+            <label><span class="red">*</span>常驻地址：</label>
+            <span>{$pName}-{$cName}</span>        
+        </div>
+        <div class="formlist">
+            <label for="name"><span class="red">*</span>真实姓名：</label>
+            <span>{$userinfo['name']}</span>
+        </div>
+        <div class="formlist" >
+            <label for="telphone"><span class="red">*</span>手机号码：</label>
+            <span>{$userinfo['phone']}</span>
+        </div>
+		<div class="formlist">
+			<label>QQ：</label>
+			<span>{$userinfo['qq']}</span>
+		</div>
+		<div class="formlist">
+            <div style="padding-left:200px;">
+                <input type="checkbox" name="confirm" value="1" id="check" class="checkcs" checked="checked"/>
+                <span>我已确认站协议</span>
+				<p class="tanhao" id="warning">请先同意站协议</p>
+            </div>           
+		</div>		
+        <div class="formlist">
+			<label>&nbsp;</label>
+			<input type="button" class="submitbtn" value="确认提交" id="btn_apply"/>
+			<a href="?module=info&type={$type}" id="redo" style="margin-top:25px;">重新修改申请信息</a>
+        </div>
+    </form>  
+</div>    
+
+</body>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/js/common.js"></script>
+<script type="text/javascript" src="{STATIC_API_PATH}/resource/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+(function(){
+	var curCityId = '{$curCityId}';
+	curCityId = parseInt(curCityId,10);
+	var cityId = '{$city}';
+	cityId = parseInt(cityId,10);
+	var pName = '{$pName}';
+	var cName = '{$cName}';
+	var ipCity = '{$ipCity}';
+	var type = '{$type}';
+	var phoneLocation = '{$location}';
+
+	var post = function(){
+		$.ajax({
+			url: '?module=apply',
+			type: 'POST',
+			data: $('#form_apply').serialize(),
+			success: function(data){
+				data = $.parseJSON(data);
+				//关闭对话框
+				var list = art.dialog.list;
+				for (var i in list) {
+					list[i].close();
+				};
+	
+				if(data.Flag == 100){
+					var content = '<div style="line-height:180%;">';
+					if($type == 1){
+						content += '<p style="font-size:18px;font-weight:bold;margin-bottom:10px;">您的申请已成功提交！</p>';
+						content += '<p>我们会在1-2个工作日内进行审核，并且会以手机短信方式提醒您审核结果，同时请您留意官网首页的审核通知。</p>';
+					}else if($type == 2){
+						content += '<p style="font-size:18px;font-weight:bold;margin-bottom:10px;">您的艺人申请已成功提交！</p>';
+						content += '<p>恭喜您成为艺人，您需要签约房间后才能正常兑换演艺收入。</p>';
+						content += '<p style="color:#993333;">请联系官方人员，推荐签约房间。';
+						content += '</p>';
+					}else if($type == 3){
+						content += '<p style="font-size:18px;font-weight:bold;margin-bottom:10px;">您的室主申请已成功提交！</p>';
+						content += '<p>恭喜您成为室主，您需要签约房间后才能正常兑换收入。</p>';
+						content += '<p style="color:#993333;">请联系官方人员，推荐签约房间。';
+						content += '</p>';
+					}
+					content += '</div>';
+					art.dialog({
+						content: content,
+						icon: 'succeed',
+						ok: function(){
+							location.href = '/';
+						},
+						okVal: '知道了',
+						width: 360,
+						lock: true,
+						cancel: false,
+						esc: false
+					});
+				}else{
+					art.dialog({
+						content: '失败原因：'+data.FlagString,
+						icon: 'error',
+						ok: true,
+						okVal: '确定',
+						lock: true,
+						cancel: false
+					});
+				}
+			}
+		});
+	}
+	$(function(){
+		$('#check').click(function(){
+			if($(this).attr("checked")){
+				$('#warning').hide();
+			}else{
+				$('#warning').show();
+			}
+		})
+		$('#btn_apply').click(function(){
+			//是否选择站协议
+			if(!$('#check').attr("checked")){
+				return false;
+			}
+			if(curCityId != cityId || ipCity.indexOf(phoneLocation)==-1){
+				var url = $('#redo').attr('href');
+				var content = '<div style="line-height:200%">';
+				content += '<p>您选择的常驻城市为：'+pName+' '+cName+'，</p>';
+				content += '<p>您的IP地址属于'+ipCity+'，您的手机归属地为 '+phoneLocation+'</p>';
+				if(type == 1){
+					content += '<p>正确选择常驻城市，有利于为您提供更精确的地域化产品，以及今后指派本地化的支持团队。</p>';
+					content += '<div style="color:#fff;background-color:#F66F6F;padding-left:5px;line-height:160%;margin:10px 0;">倡导站诚信运营，不诚信行为将有可能导致经营处罚甚至冻结站。</div>';
+				}else if($type == 2){
+					content += '<p>正确选择常驻城市，将会有助于我们给你推荐更多展现才艺的机会。</p>';
+				}else if($type == 3){
+					content += '<p>正确选择常驻城市，将会有助于我们给你推荐更多地域化的艺人。</p>';
+				}
+				content += '<p style="margin:10px 0;"><a href="' + url + '" style="text-decoration: underline;">重新选择常驻地址</a></p>';
+				content += '<p><input type="button" id="btn_confirm_apply" value="确认常驻地址，提交审核" style="height:40px;padding:3px 10px;"></p>';
+				content += '<a style="margin-top:20px;border-top:1px solid #999;color:#999;display:block;" href="/help/index.html" target="_blank">常驻地址为何如此重要</a>'
+				content += '</div>';
+				art.dialog({
+					id: 'J_apply_dialog',
+					content: content,
+					lock: true,
+					width: 370
+				});
+				return false;
+			}
+			post();
+		});
+		$(document).on('click', '#btn_confirm_apply', function(){
+			post();
+		});
+	});
+})();
+</script>
+</html>

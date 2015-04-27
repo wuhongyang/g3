@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>VV酷网上娱乐商圈_免费视频聊天网站_同城聊天室_在线多人视频聊天_美女真人视频聊天</title>  
+<meta name="keywords" content="免费聊天室,免费聊天网页,视频聊天室,在线视频聊天,视频聊天网站,美女视频, 美女直播,多人视频聊天,真人视频聊天,在线聊天室,vv酷,网上娱乐商圈" /> 
+<meta name="description" content="VV酷(www.vvku.com)是免费的视频聊天网站,免费提供同城视频聊天,多人视频在线K歌,美女主播为您带来精彩表演,真人的视频聊天室，同时支持视频游戏，VV酷为您打造全新的网上娱乐商圈。"/>
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/base.css" />
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/index.css">
+<link type="text/css" rel="stylesheet" href="{STATIC_API_PATH}/static/css/footer.css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+</head>
+
+<body>
+{include file="head.html"}
+<div class="bodywrap">
+    <div class="bd clearfix">
+        <div class="slidebar fl">
+            <!--游戏活动-->
+			<div class="hd-game">
+				<h2 class="title">
+					<div class="bar-title">互动游戏</div>
+				</h2>
+				<ul class="game-list">
+                	{foreach $interact_arr $interact}
+                    {php $param = json_encode(array('Gameid'=>$interact['parent_id']))}
+					<li><a href="#" onclick="ajaxList('{echo urlencode($param)}')"><img src="/pic/gameicon/{$interact['parent_id']}.png" width="26" height="26" />{$interact['interact_name']}</a></li>
+                    {/foreach}
+			   </ul>
+			</div>
+        </div>
+        <div class="middleright">
+            <div class="main fl">
+                {include file="cycleimg.html"}
+                <div class="main-navsite clearfix">
+
+
+<div class="room-navsite" id="search-result">
+	<h2 class="title">
+		<div class="bar-title">人气游戏房间</div>
+	</h2>
+	{if !empty($top2)}
+	<div class="top clearfix">
+		{foreach $top2 $key $room}
+			{if !empty($room)}
+			<dl class="{if $key==1}fr{else}fl{/if}">
+				<dt class="cover-top"> 
+					<div class="jianpic"></div>
+					<img src="{PIC_API_PATH}/roomid/{$room['id']}/260/190.jpg" width="260" height="190" alt="{$room['description']}">
+					<span class="b">{$room['name']}<i>({$room['id']})</i> <em>{$room['curuser']}人</em></span>
+					<div class="topmask">
+						<a href="http://{$_SERVER['HTTP_HOST']}/v/{$room['id']}?Type=Game" target="_blank">
+							<img src="{PIC_API_PATH}/roomid/{$room['id']}/260/190.jpg" width="260" height="190" alt="{$room['description']}">
+						</a>
+						<div>
+							<h5>{$room['name']}<span>({$room['id']})</span></h5>
+							<p>{$room['description']}</p>
+						</div>
+					</div>
+					
+				</dt>	
+			</dl>
+			{/if}
+		{/foreach}
+	</div>
+	{/if}
+	<div style="clear:both;"></div>
+	{if !empty($rooms_list)}
+	<div class="clearfix other"> 
+		{foreach $rooms_list $room}
+		<dl>
+			<dt class="cover-other"> 
+				<img src="{PIC_API_PATH}/roomid/{$room['id']}/150/110.jpg" width="150" height="110" alt="{$room['description']}" class="img">
+				{if $room['hasplay'] > 0}
+				<span class="zb">直播中</span>
+				{/if}
+				<span class="rs">{$room['curuser']}人正在观看</span>
+				<div class="othermask">
+					<a href="http://{$_SERVER['HTTP_HOST']}/v/{$room['id']}?Type=Game" target="_blank" class="piclink">
+						<img src="{PIC_API_PATH}/roomid/{$room['id']}/150/110.jpg" width="150" height="110" alt="{$room['description']}">
+					</a>
+					{if $room['hasplay'] > 0}
+					<span class="zhibo">直播中</span>
+					{/if}
+					<span class="renshu">{$room['curuser']}人正在观看</span>
+					<h5>{$room['name']}</h5>
+					<p><em>({$room['id']})</em></p>
+				</div>
+			</dt>
+			<dd><span class="room-name">{$room['name']}</span></dd>
+		</dl>
+		{/foreach}
+	</div>
+	{/if}
+</div>  
+
+
+				
+				
+                </div>
+            </div>
+            <div class="rightbox fr">
+                <!--登陆-->
+                {include file="login.html"}
+				<div class="ranklist">
+  
+					<div class="ranklist-hddt tabswitch">
+						<h2 class="title clearfix">
+							<div class="bar-title">活动动态<!--<a href="#" class="more">更多</a>--></div>
+						</h2>
+						<ul class="ranklist-items">
+							{foreach $notice $row}
+							<li><a>{$row['content']}</a></li>
+							{/foreach}
+						 </ul>
+					</div>
+  
+
+				</div>
+            </div>
+        </div>
+    </div>
+    <div class="dashedline" style="height:3px;"></div>
+</div>
+<div style="clear:both;"></div>
+{include file="foot.html"}
+</body>
+</html>

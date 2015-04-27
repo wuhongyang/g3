@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-推荐位设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.info p{line-height:30px;}
+.info p span{margin-right: 10px;text-align: right;}
+.info p select{height: 25px; width: 131px;}
+.info p select option{font-size: 14px;}
+.info p input.checkbox{position: relative;top:5px;}
+.info p.hide{display: none;}
+.info p label{margin-right: 20px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <h3 class="fl">{$parentInfo['name']}</h3>
+        <div class="fr">
+            <a href="/group/recommend.php?module=recommend_cat_list" class="bluebtn"><span>返回</span></a>
+            <a href="javascript:add();" class="bluebtn mgL10" style="right:0;top:10px;"><span>添加</span></a>
+        </div>
+    </div>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20" id="table">
+      <tr>
+        <th>序号</th>
+        <th>标题名称</th>
+        <th>读取方式</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $list $key $val}
+      <tr>
+        <td>{echo $key+1}</td>
+        <td>{$val['name']}</td>
+        <td>{echo $val['mode']==2 ? '自定义' : '全部'}</td>
+        <td>{echo date('Y-m-d H:i',$val['uptime']);}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">左移</a>
+            {else}
+                <span style="color:#999;">左移</span>
+            {/if}
+            {if $key != count($list)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">右移</a>
+            {else}
+                <span style="color:#999;">右移</span>
+            {/if}
+            <a class="ahover" href="javascript:edit({$val['id']});">编辑</a>
+            {if $val['mode'] == 2}
+            <a class="ahover" href="?module=recommend_show&parent_id={$val['id']}&pparent_id={$parent_id}">查看</a>
+            {else}
+            <span style="color:#999;">查看</span>
+            {/if}
+            <a class="ahover" href="javascript:del({$val['id']});">删除</a>
+            <a class="ahover" href="javascript:visible({$val['id']});">{if $val['status'] == 1}不显示{else}显示{/if}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+var phpVar = {
+    parent_id: '{$parentInfo["id"]}',
+    type: '{$parentInfo["type"]}'
+}
+function getHtml(info){
+    info = info || {};
+    var modeData = ["请选择","读取全部","自定义"];
+    var is_recommend_checked = (info.is_recommend > 0) ? 'checked' : '';
+    var is_live_checked = (info.is_live > 0) ? 'checked' : '';
+    var name = info.name || '';
+    var content = '<form id="form">';
+        if(info.id){
+            content += '<input type="hidden" name="id" value="' + info.id + '">';
+        }
+        content += '<input type="hidden" name="parent_id" value="' + phpVar.parent_id + '">';
+        content += '<div class="info">';
+            content += '<p><span>标题名称：</span><input type="text" name="name" value="' + name + '"><span class="notice" id="name_notice"></span></p>';
+            content += '<p>';
+                content += '<span>读取方式：</span>';
+                content += '<select name="mode">';
+                    for(var j in modeData){
+                        if(j == info.mode){
+                            content += '<option value="' + j + '" selected>' + modeData[j] + '</option>';
+                        }else{
+                            content += '<option value="' + j + '">' + modeData[j] + '</option>';
+                        }
+                    }
+                content += '</select>';
+                content += '<span class="notice" id="mode_notice"></span>';
+            content += '</p>';
+            content += '<p>';
+                content += '<span>显示区域：</span>';
+                content += '<label><input type="checkbox" name="is_recommend" value="1" class="checkbox" ' + is_recommend_checked + '>&nbsp;推荐位</label>';
+                content += '<label><input type="checkbox" name="is_live" value="1" class="checkbox" ' + is_live_checked + '>&nbsp;直播墙</label>';
+            content += '</p>';
+            content += '<p id="hide">';
+                content += '<span>显示行数：</span>';
+                content += '<select name="row">';  
+                    content += '<option value="-1">请选择</option>';
+                for(var i=1; i<16; i++){
+                    if(info.row == i){
+                        content += '<option value="' + i + '" selected>' + i + '行</option>';
+                    }else{
+                        content += '<option value="' + i + '">' + i + '行</option>';
+                    }                    
+                }
+                content += '</select>';
+                content += '<span class="notice" id="row_notice"></span>';
+            content += '</p>';
+        content += '</div>';
+    content += '</form>';
+    return content;
+}
+
+function add(){
+    var content = getHtml();
+    art.dialog({
+        content: content,
+        ok: function(){
+            var module = 'recommend_sub_cat_artist_add';
+            var name = $('input[name="name"]').val();
+            if(!check_name(name)){
+                return false;
+            }
+            var mode = $('select[name="mode"]').val();
+            if(!check_mode(mode)){
+                return false;
+            }
+            var row = 0;
+            row = $('select[name="row"]').val();
+            if(!check_row(row)){
+                return false;
+            }
+            var picObj = $('input[name="pic"]:checked');
+            var pic = 0;
+            if(picObj.length > 0){
+                pic = picObj.val();
+                if(!check_pic(pic)){
+                    return false;
+                }
+            }
+            //data = {name:name,mode:mode,row:row,parent_id:phpVar.parent_id,pic:pic};
+            var data = $('#form').serialize();
+            operate(module,data)
+        },
+        cancel: true,
+        lock: true
+    });
+}
+
+function check_name(name){
+    if(name == ''){
+        $('#name_notice').html('标题不能为空');
+        return false;
+    }
+    if(name.length > 5){
+        $('#name_notice').html('标题不能超过5个字');
+        return false;
+    }
+    return true;
+}
+
+function check_mode(mode){
+    if(mode <= 0){
+        $('#mode_notice').html('请选择读取方式');
+        return false;
+    }
+    return true;
+}
+
+function check_row(row){
+    if(row < 0){
+        $('#row_notice').html('请选择显示行数');
+        return false;
+    }
+    return true;
+}
+function check_pic(pic){
+    if(pic != 1 && pic != 2){
+        $('#pic_notice').html('图片大小');
+        return false;
+    }
+    return true;
+}
+
+function order(id,type){
+    module = 'recommend_sub_cat_order';
+    operate(module,{id:id,type:type,parent_id:phpVar.parent_id});
+}
+
+function edit(id){
+    $.ajax({
+        url: '?module=recommend_sub_cat_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.id < 1){
+                return;
+            }
+            content = getHtml(json);
+            art.dialog({
+                content: content,
+                ok: function(){
+                    var module = 'recommend_sub_cat_artist_edit';
+                    var name = $('input[name="name"]').val();
+                    if(!check_name(name)){
+                        return false;
+                    }
+                    var mode = $('select[name="mode"]').val();
+                    if(!check_mode(mode)){
+                        return false;
+                    }
+                    var row = 0;
+                    row = $('select[name="row"]').val();
+                    if(!check_row(row)){
+                        return false;
+                    }
+                    var picObj = $('input[name="pic"]');
+                    var pic = 0;
+                    if(picObj.length > 0){
+                        pic = $('input[name="pic"]:checked').val();
+                        if(!check_pic(pic)){
+                            return false;
+                        }
+                    }
+                    //data = {name:name,mode:mode,row:row,parent_id:phpVar.parent_id,id:json.id,pic:pic};
+                     var data = $('#form').serialize();
+                    operate(module,data);
+                },
+                cancel: true,
+                lock: true
+            })
+        }
+    });
+}
+
+function del(id){
+    art.dialog({
+        content: '删除操作将导致该分类下的子类全部删除，您真的要删除吗？',
+        width: 300,
+        ok: function(){
+            var module = 'recommend_sub_cat_del';
+            operate(module,{id:id});
+        },
+        cancel: true,
+        lock: true,
+        icon: 'warning'
+    });
+}
+
+function visible(id){
+    module = 'recommend_sub_cat_visible';
+    operate(module,{id:id});
+}
+
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(json){
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=recommend_sub_cat_show&parent_id='+phpVar.parent_id;
+                    },
+                    esc: false,
+                    cancel: false,
+                    lock: true,
+                    time: 2
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }
+        }
+    });
+}
+</script>

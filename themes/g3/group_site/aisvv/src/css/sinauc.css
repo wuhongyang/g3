@@ -1,0 +1,55 @@
+@charset "utf-8";
+/* CSS Document */
+/* 基本 */
+body,textarea,input,select,option {font-size:12px;color:#333;font-family:'Microsoft Yahei',Tahoma,Arial,sans-serif;}
+h1,h2,h3,h4,h5,h6 {font-size:100%;}
+body,h1,h2,h3,h4,h5,h6,blockquote,ol,ul,dl,dd,p,textarea,input,select,option,form {margin:0;}
+ol,ul,textarea,input,option,th,td {padding:0;}
+table {border-collapse:collapse;}
+li {list-style-type:none;}
+.clears:before,.clears:after {content:'';display:table;}
+.clears:after {clear:both;}
+.clears {*zoom:1;}
+.clear {clear:both;height:0;overflow:hidden;}
+a {text-decoration:none;color:#333;cursor: pointer;}
+a,textarea,input,select {outline:none}
+textarea {overflow:auto;resize:none;}
+.img img {display:block;}
+a img {border:none;}
+.z_index{position:fixed;_position:absolute;z-index:999;display:none;}
+.pr {position:relative;}
+.pa {position:absolute;}
+.fl {float:left;}
+.fr {float:right;}
+.undis{display:none;}
+i,var{font-style:normal;}
+/* 主要 */
+.fs24{font-size:24px;line-height:100%;}
+.fs18{font-size:18px;line-height:100%;}
+.nav-part{width:100%;height:55px;background:url("../img/ucimg/navbg.png");}
+.nav-box{width:1000px;margin:0 auto;}
+.nav-box .logo{display:block;width:134px;height:45px;margin-top:5px;background:url("../img/ucimg/logo.png") no-repeat;}
+.nav-list{padding-top:15px;}
+.nav-list a{font-size:18px;line-height:20px;color:#343434;margin-left:50px;}
+.nav-list a:hover{color:#1c8cda;}
+.banner-part{width:100%;height:450px;background:url("../img/ucimg/banner.jpg") no-repeat center center;}
+.banner-box{width:1000px;margin:0 auto;position:relative;}
+.banner-detail{position:absolute;top:80px;right:0;width:290px;}
+.banner-detail p{color:#fff;margin-top:15px;}
+.banner-detail a.download{display:block;text-indent:-9999em;overflow:hidden;width:251px;height:48px;margin:20px 0;background:url("../img/ucimg/download.png") no-repeat 0 0;}
+.banner-detail a.download:hover{background:url("../img/ucimg/download2.png") no-repeat 0 0;}
+.banner-detail .rolls h5{color:#fff;font-size:14px;line-height:24px;}
+.banner-detail .scrolltext-wrap {height: 100px;margin: 10px auto 10px;width: 260px;overflow: hidden;position: relative;margin-left: 0;}
+.banner-detail .scrolltext-wrap ul li a{color:#fff;font-size:12px;line-height:24px;height:24px;width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;}
+.step-part{width:100%;height:55px;background:url("../img/ucimg/stepbg.png") repeat-x;}
+.step-box{width:1000px;height:55px;margin:0 auto;background:url("../img/ucimg/step.jpg") no-repeat center center;}
+.product-part{width:100%;}
+.product-box{width:1000px;height:220px;margin:30px auto 0;border-bottom:1px solid #e3e3e3;}
+.product-box ul li{float:left;width:155px;margin-left:40px;display:inline;position:relative;}
+.product-box ul li p{text-align:center;color:#535353;font-size:14px;}
+.product-box ul li .popbox{width:200px;height:75px;position:absolute;bottom:150px;left:-30px;z-index:100;display:none;}
+.product-box ul li .popbox .box-tp{width:200px;height:12px;background:url("../img/ucimg/popbox.png") no-repeat 0 0;}
+.product-box ul li .popbox .box-md{width:200px;background:url("../img/ucimg/popbox-md.png") repeat-y;}
+.product-box ul li .popbox .box-bt{width:200px;height:18px;background:url("../img/ucimg/popbox.png") no-repeat 0 bottom;}
+.product-box ul li .popbox p{color:#fff;font-size:12px;text-align:left;line-height:20px;margin:0 12px;}
+.footer-part p{text-align:center;color:#a0a0a0;font-size:12px;margin-top:15px;}

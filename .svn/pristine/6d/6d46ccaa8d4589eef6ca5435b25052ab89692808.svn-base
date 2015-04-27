@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物商城——{$categoryInfo['cate_name']}</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/shop/css/shop.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="../header_group_site.html"}
+<div class="container">
+    <!--头部LOGO和菜单-->
+    {include file="top_menu.html"}
+    <!--中间内容部分-->
+    <div class="clearfix">
+        <!--顶部banner-->
+        {if $categoryInfo['img_path']}
+        <div class="sitebanner">
+            {if $categoryInfo['img_src']}
+            	<a href="{$categoryInfo['img_src']}" target="_blank"><img src="{PIC_API_PATH}/p/{$categoryInfo['img_path']}/0/0.jpg" width="960" height="230" /></a>
+            {else}
+                <img src="{PIC_API_PATH}/p/{$categoryInfo['img_path']}/0/0.jpg" width="960" height="230" />
+            {/if}
+        </div>
+        {/if}
+        <!--官方销售靓号-->
+        <div class="shopwrap">
+            <h2>
+                <div class="shopnav">官方销售靓号</div>
+            </h2>
+            <div class="numhead clearfix">
+                <div class="numsearch">
+                    <form action="shop.php?category_id={$categoryInfo['cate_id']}" method="post" onSubmit="if(this.keywords.value==''){alert('请输入靓号');return false;}">
+                        <input type="hidden" name="action" value="search">
+                        <input class="inputcs" type="text" name="keywords" value="{$_POST['keywords']}" >
+                        <input type="submit" class="btn btncs" value="">
+                    </form>
+                </div>
+            </div>
+          	<h4>搜索结果</h4>
+            {if $numberStatus['Status']==3}
+      		<ul class="numlist clearfix">
+                <li class="clearfix" style="cursor:pointer;" onClick="window.location='shop.php?module=info&category_id={$category_id}&goods_id={$numberStatus['NumInfo']['id']}&room_id={$room_id}';">
+                    <p class="text-warning">{$_POST['keywords']}</p>
+                    <p>价格：{$val['price']}{$unit}</p>
+                    <div class="layer"></div>
+                </li>
+            </ul>
+            {elseif $numberStatus['Status']==1}
+            <ul class="numlist clearfix">
+                <li class="warn">
+                    <div>
+                        <p class="text-danger"><i class="tanhao"></i>该靓号未上架，您可以联系客服进行购买</p>
+                        <p><a target="_blank" href=http://wpa.qq.com/msgrd?v=3&amp;uin={$serviceQq}&amp;site=qq&amp;menu=yes><img border="0" src="{STATIC_API_PATH}/static/images/qqtalk.png" width="79" height="20" /></a></p>
+                    </div>
+                </li>
+            </ul>
+            {elseif $numberStatus['Status']==2}
+      		<ul class="numlist clearfix">
+                <li class="sale">
+                    <p class="text-warning">{$_POST['keywords']}</p>
+                    <p>价格：{$val['price']}{$unit}</p>
+                    <div class="layer"></div>
+                </li>
+            </ul>
+            {/if}
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".numlist li").hover(
+		function(){
+			$(this).children(".layer").show();
+		},
+		function(){
+			$(this).children(".layer").hide();	
+		});
+	$("input.inputcs").focus(
+		function(){
+			var txt_value=$(this).val();
+			if(txt_value==this.defaultValue){
+			  $(this).val("");
+			}
+	});
+	$("input.inputcs").blur(
+		function(){
+			var txt_value=$(this).val();
+			if(txt_value==""){
+			  $(this).val(this.defaultValue);
+			}
+	})
+})
+</script>
+
+</body>
+</html>

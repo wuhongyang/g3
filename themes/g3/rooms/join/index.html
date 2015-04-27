@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>申请站长艺人</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/actapply-min.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css">
+</head>
+<body>
+{include file="../common/header.html"}
+<div class="search-wrap">
+  <div id="top" class="hd-sub clearfix">
+      <div class="logo fl">
+          <a class="fl logo-pic" href="/">VV酷视频聊天</a>
+                  <div class="dhz"></div>
+              </div>
+      <div class="search fr">
+          <form onsubmit="return search();" action="javascript:void(0);">
+              <input type="hidden" id="search_type" value="1" name="search_type">
+              <input type="text" id="keyword" name="keyword" class="search-text">
+              <input type="submit" id="J_search" value="搜索" class="search-submit">
+          </form>
+          <ul id="J_search_type" class="search-type">
+              <li>搜房间</li>
+              <li style="display: none;" class="li2">搜艺人</li>
+          </ul>
+          <div class="search-type-bg"></div>
+      </div>
+  </div>
+</div>
+
+<div class="sheet_content">
+  <div class="roomhost_apply clearfix">
+      <div class="roomhost_text">
+         <p class="big">你想创业么？</p>
+         <p>只要你有团队或者你想组建团队</p>
+         <p>高薪职业就在这里！</p>
+         <p>零成本，高回报，高收入！</p>
+         <p>我希望成就每个创业者的高薪梦想！</p>
+      </div>
+      <div class="roomhost_button">
+         <h1>站长</h1>
+         <p><a href="/rooms/join.php?module=info&type=1" class="jiamen_btn">立即加入</a>
+      </div>
+  </div>
+  
+  <div class="roomhost_box">
+      <div class="lapel"></div> 
+      
+      <h4>申请要求</h4>
+  <ul class="yaoqiu clearfix">
+        <li>
+         <h5><span class="one"></span>            想赚钱</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img1.png" width="106" height="132"></div>
+        </li>
+        <li>
+          <h5><span class="two"></span>              想创业</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img2.png" width="106" height="132"></div>
+        </li>
+        <li>
+          <h5><span class="three"></span>有想法，敢创新，爱拼搏</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img3.png" width="106" height="132"></div>
+        </li>
+      </ul>
+      
+      <h4>站长申请流程</h4>
+  <ul class="liucheng clearfix">
+        <li class="one">
+         申请资料填写
+        </li>
+        <li class="two">
+         VV酷对提交的资料认证审核
+        </li>
+        <li class="three">
+        成为站长
+        </li>
+      </ul>
+  </div>
+  
+  <div class="actor_apply">
+  <a href="/rooms/join.php?module=info&type=2" class="apply_btn">立即申请</a>
+  </div>
+ 
+  <div class="actor_box ">
+      
+      <h4>申请要求</h4>
+  <ul class="yaoqiu clearfix">
+        <li>
+         <h5><span class="one"></span>站长推荐</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img4.png" width="175" height="137"></div>
+        </li>
+        <li>
+          <h5><span class="two"></span>具有娱乐精神</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img5.png" width="280" height="144"></div>
+        </li>
+        <li>
+          <h5><span class="three"></span>相关硬件设备</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img6.png" width="251" height="140"></div>
+        </li>
+        <li>
+          <h5><span class="four"></span>网络稳定</h5>
+         <div class="img"><img src="{STATIC_API_PATH}/frontend/modules/rooms/img/join_img7.png" width="229" height="175"></div>
+        </li>
+      </ul>
+      
+      <h4>艺人申请流程</h4>
+         <ul class="liucheng clearfix">
+           <li style="width:250px;">寻找站长推荐确认绑定房间</li>
+           <li style="width:190px;">点击“联系招募人员”</li>
+           <li style="width:170px;">运营人员进行面试</li>
+           <li style="width:280px;">点击链接填写申请资料<span style="font-size:12px;">（面试成功）</span></li>
+           <li style="width:180px;">资料申核</li>
+           <li style="width:150px;">成为艺人</li>
+        </ul>
+      
+  </div>
+</div>
+
+{include file="./footer.html"}
+<div style="display:none;">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+</html>

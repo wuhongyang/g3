@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>常规科目配置</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-button right">{if $link_array[101]['url']}<a href="{$link_array[101]['url']}" class="add-button">返回</a>{/if}</div>
+</div>
+
+<form method="post" id="ddParent" class="form" action="{$url}">
+    {if $info}<input type="hidden" name="id" value="{$id}" />{/if}
+    <p>
+        <label>科目类别名称：</label>
+        <input type="text" name="child_name" size="32" value="{$info['child_name']}" />
+    </p>
+    <p>
+        <label>类别描述：</label>
+        <textarea name="child_desc" rows="2" cols="26">{$info['child_desc']}</textarea>
+    </p>
+    <p>
+        <label>是否绑定资金操作：</label>
+        <input type="radio" name="bind_fund" value="1" {if $info['bind_fund']==1}checked{/if} /> 是  &nbsp; &nbsp; <input  type="radio" name="bind_fund" value="0" {if $info['bind_fund']==0}checked{/if} /> 否
+    </p>
+    <p>
+        <label>资金类型：</label>
+        <select name="fund_type">
+            <option value="0">请选择</option>
+            <option value="1" {if $info['fund_type']==1}selected{/if}>现金币</option>
+            <option value="2" {if $info['fund_type']==2}selected{/if}>虚拟币</option>
+            <option value="3" {if $info['fund_type']==3}selected{/if}>V点</option>
+            <option value="4" {if $edit['fund_type']==4}selected{/if}>用户礼金</option>
+            <option value="5" {if $edit['fund_type']==5}selected{/if}>室主礼金</option>
+        </select>
+        <font color="red">（没有绑定资金操作时，此项设置无效）</font>
+    </p>
+    <p>
+        <label>借贷标示：</label>
+        <select name="trade_type">
+            <option value="0">请选择</option>
+            <option value="1" {if $info['trade_type']==1}selected{/if}>存入</option>
+            <option value="2" {if $info['trade_type']==2}selected{/if}>支出</option>
+        </select>
+        <font color="red">（请先设置允许透支后，在填写透支金额）</font>
+    </p>
+    <p>
+        <label>资金收支类型：</label>
+        
+        <select name="is_income_pay">
+            <option value="0">请选择</option>
+            <option value="3" {if $info['is_income_pay']==3}selected{/if}>平台净收支</option>
+            <option value="4" {if $info['is_income_pay']==4}selected{/if}>账户净收支</option>
+            <option value="5" {if $info['is_income_pay']==5}selected{/if}>账户内收支</option>
+            <option value="6" {if $info['is_income_pay']==6}selected{/if}>调账收支</option>
+        </select>
+        <font color="red">（用户之间的资金往来不属于净收支）</font>
+    </p>
+    <p>
+        <label>资金交易属性：</label>
+        <select name="trade_property">
+            <option value="0">请选择</option>
+            <!--<option value="1" {if $info['trade_property']==1}selected{/if}>用户交易</option>-->
+            <!--<option value="2" {if $info['trade_property']==2}selected{/if}>科目交易</option>-->
+            <option value="3" {if $info['trade_property']==3}selected{/if}>科目交易</option>
+            <option value="4" {if $info['trade_property']==4}selected{/if}>税金交易</option>
+            <option value="5" {if $info['trade_property']==5}selected{/if}>用户交易</option>
+        </select>
+        <font color="red">（选择3级业务科目余额库与其他资金库之间的交易形态）</font>
+    </p>
+    <p>
+        <label>是否权限控制：</label>
+        <input type="radio" name="is_power" value="1" {if $info['is_power']==1}checked{/if} /> 是  &nbsp; &nbsp; <input  type="radio" name="is_power" value="0" {if $info['is_power']==0}checked{/if} /> 否
+        <font color="red">（关联用户的使用权限的功能科目）</font>
+    </p>
+    <p>
+        <label>是否记录行为日志：</label>
+        <input type="radio" name="is_log" value="1" {if $info['is_log']==1}checked{/if} /> 是  &nbsp; &nbsp; <input  type="radio" name="is_log" value="0" {if $info['is_log']==0}checked{/if} /> 否
+    </p>
+    <p>
+        <label>是否登录授权：</label>
+        <input type="radio" name="is_auth" value="1" {if $info['is_auth']==1}checked{/if} /> 是  &nbsp; &nbsp; <input  type="radio" name="is_auth" value="0" {if $info['is_auth']==0}checked{/if} /> 否
+    </p>
+    <p>
+        <label>关联四级科目ID</label>
+        <input type="text" name="bind_child" size="32" value="{$info['bind_child']}" />
+    </p>
+    <p>
+        <label>是否使用：</label>
+        <select name="child_status">
+            <option value="1">启用</option>
+            <option value="0" {if $info['child_status']==0}selected{/if}>不启用</option>
+        </select>
+    </p>
+    <p>
+    	<label></label>
+        <input type="submit" class="submit" value="保存信息" />
+        <input type="reset" class="reset" value="取消" />
+    </p>
+</form>
+
+</body>
+</html>

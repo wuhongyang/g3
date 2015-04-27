@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>用户详细信息</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">用户详细信息</div>
+</div>
+
+<table class="table-list main-widtd" id="table-list" width="80%" style="margin:20px auto">
+   <tr>
+   	<th colspan="2">用户详细信息[<a style="color:red" href="usermanage.php?module=usermanage&data_group_id={$_GET['data_group_id']}">返回</a>]</th>
+   </tr>
+   <tr>
+    <td width="50%">通行证邮箱：</td><td>{$info['Email']}</td>
+   </tr>
+   <tr>
+    <td>通行证手机：</td><td>{$info['Phone']}</td>
+   </tr>
+   <tr>
+      <td colspan="2"><a href="passport.php?module=passInfo&id={$info['ID']}" style="color:#0066CC;">[ 查看通行证资料 ]</a></td>
+   </tr>
+   <tr>    
+	<td>账号ID：</td><td>{$info['uin']}</td>
+   </tr>
+   <tr>
+    <td>账号昵称：</td><td>{$info['nick']}</td>
+   </tr>
+   <tr>
+    <td>性别：</td><td>{$info['sex']}</td>
+   </tr>
+   <tr>	
+	<td>好友数：</td><td>0</td>
+   </tr>
+   <tr>	
+	<td>是否绑定</td><td>{echo $info['is_use']==1 ? '已绑定' : '未绑定';}</td>
+   </tr>
+</table>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>体验账号配置》编辑</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	var account_html = '<tr><td>添加账号：</td><td><input class="number" type="text" name="accounts[]" /></td><td>对应房间:</td><td><input class="number" type="text" name="room_ids[]" />&nbsp;&nbsp;<a class="del" href="#">删除</a></td></tr>';
+	$("#add_more").click(function(){
+		$(this).parent().parent().before(account_html);
+		return false;
+	})
+	$(".del").live("click", function(){
+		$(this).parent().parent().remove();
+		return false;
+	})
+	$("#form").submit(function(){
+		$.post($(this).attr("action"), $(this).serialize(), function(data){
+			var data = $.parseJSON(data);
+			alert(data.FlagString);
+			if(data.Flag == 100){
+				location.href = $("#form").attr("to");
+			}
+		});
+		return false;
+	})
+	$(".number").keyup(function(){
+		var val = parseInt($(this).val());
+		if(val){
+			$(this).val(val);	
+		}else{
+			$(this).val("");
+		}
+	})
+})
+</script>
+<style>
+table{margin:20px;}
+td{padding:10px;}
+</style>
+<body>
+<div class="header clean">
+  <div class="header-title left">体验账号配置》编辑</div>
+  {if $link_array[113]['url']}<div class="header-button right"><a href="{$link_array[113]['url']}&group_id={$_GET['group_id']}" class="add-button">返回</a></div>{/if}
+</div>
+
+<form id="form" method="post" action="group.php?module=practice_account_edit_submit&group_id={$_GET['group_id']}" to="group.php?module=practice_account_list&group_id={$_GET['group_id']}">
+<table>
+	<input type="hidden" name="id" value="{$detail['id']}" />
+	<tr>
+		<td>体验角色：</td><td><input type="text" name="role_name" value="{$detail['role_name']}" /></td><td>&nbsp;</td><td>&nbsp;</td>
+	</tr>
+	{if $detail['account_details']}
+	{foreach $detail['account_details'] $one}
+	<tr>
+		<td>添加账号：</td><td><input type="text" name="accounts[]" value="{$one['login']}" /></td><td>对应房间:</td><td><input type="text" class="number" name="room_ids[]" value={$one['room_id']} /></td>
+	</tr>
+	{/foreach}
+	{else}
+	<tr>
+		<td>添加账号：</td><td><input type="text" name="accounts[]" /></td><td>对应房间:</td><td><input type="text" class="number" name="room_ids[]" /></td>
+	</tr>
+	{/if}
+	<tr>
+		<td colspan="4"><a id="add_more" href="#">继续添加</a></td>
+	</tr>
+	<tr>
+		<td colspan="4"><input type="submit" value="保存" />&nbsp;&nbsp;<span style="color:red">未填写房间id会自动以0填补，账号请添加通行证账号，不要添加用户ID。请确保添加账号密码为123456</span></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

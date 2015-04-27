@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.html"}
+<div class="bodywrap">
+    <div class="w980">
+    {if $isGroupManger}
+        {include file="grouptopmenu.html"}
+    {else}
+    	{include file="topmenu.html"}
+    {/if}
+        <div class="content">
+            <div class="roomMwrap">
+            	{include file="roommanage/roomleftmenu.html"}
+                <div class="roomMright">
+ 				<div class="tabletab">
+                    <ul>
+                        <li><a href="/service/roommanage.php?module=doll&type=1" {if $type=='1'} class="hover"{/if}>日汇总</a></li>
+                        <li><a href="/service/roommanage.php?module=doll&type=2" {if $type=='2'} class="hover"{/if}>周汇总</a></li>
+                        <li><a href="/service/roommanage.php?module=doll&type=3" {if $type=='3'} class="hover"{/if}>月汇总</a></li>
+                    </ul>
+                </div>				
+				<div class="tablewrap" style="border:0">
+					<form method="get" id="form">
+					<input type="hidden" name="type" value="{$data['type']}" />
+					<input type="hidden" name="module" value="doll" />
+					<div class="mgt10 clearfix">
+						<span class="fl lineh30">艺人ID：</span>
+						<input type="text" class="input-text2 w60 fl" name="artistId" value="" onkeyup="value=value.replace(/[^\d]/g,'')" onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))">
+						{if $data['type']==1}
+						<span class="mgL20 fl lineh30">选择时间：</span>						
+						<input name="time" type="text" class="input-text2 w80 fl" style="width:80px;" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="{$data['time']}"> 
+						{/if}
+						<input name="" type="submit" class="normalbtn fl" value="查询" style="width:50px;" onclick="return checkvalid();">						
+					</div>
+					</form>
+					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt20">
+					  <tr>
+						<th>艺人ID</th>
+						<th>所属房间</th>
+						<th>约定底薪</th>
+						<th>娃娃</th>
+						<th>皇后</th>
+						<th>娃娃总数</th>
+                        <th>总价值</th>
+						<th>时间</th>
+					  </tr>
+					  {foreach $data['list'] $key $val}
+					  <tr>
+						<td>{$val['UinId']}</td>
+						<td>{$val['ChannelUin']}</td>
+						<td>{echo empty($val['Salary'])? 0:$val['Salary']}</td>
+						<td>{echo empty($val['Doll']) ? 0 : $val['Doll']}</td>
+						<td>{echo empty($val['Empress'])? 0 : $val['Empress']}</td>
+						<td>{php echo $val['Doll']+$val['Empress']*5}</td>
+						<td>{php echo $val['Salary']+$val['Doll']*13+$val['Empress']*5*13}</td>
+						<td>{$val['Uptime']}</td>
+					  </tr>
+					  {/foreach}
+					</table>
+					<div class="page" id="lopage">
+						{$data['page']}
+					</div>    						
+				</div>  
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/js/date/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

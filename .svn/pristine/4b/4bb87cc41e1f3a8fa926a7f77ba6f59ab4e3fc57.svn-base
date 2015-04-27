@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>{php echo $notice['title'].'_'.$groupInfo['name'];}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="Keywords" content="{php echo str_replace(' ',',',$notice['keywords']);}" />
+<meta name="Description" content="{php echo mb_substr(preg_replace("'([\r\n])[\s]+'","",strip_tags($notice['content'])),0,100,'UTF-8');}" />
+<link href="{STATIC_API_PATH}/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="{THEMES_URL}group_site/default/src/css/layout.css" rel="stylesheet" type="text/css">
+{include file="body_style.html"}
+</head>
+<body class="diy-body">
+{include file="header_group_site.html"}
+<div class="container">
+    {if $styleInfo['banner_status']}
+    <div class="top-bg"><img src="{PIC_API_PATH}/groupbanner/{$groupId}/960/0.jpg" width="960" /></div>
+    {/if}
+</div>
+
+<div class="container">
+    <div class="clearfix zhengwen">
+        <h1><a href="/"><i class="home-icon home"></i>返回首页</a></h1>
+        <div class="content">
+            <h5>{$notice['title']}</h5>
+            <p>{$notice['content']}</p>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+</head>
+<body>
+<table class="table-list main-width">
+	<tr>
+		<th>站点</th>
+		<th>操作</th>
+	</tr>
+	{foreach $group_list['Data'] $key $group}
+	<tr>
+		<td>{$group['name']}（{$group['groupid']}）</td>
+		<td>
+		{if $__ADMIN_CURGROUP['groupid'] != $group['groupid']}
+		<a href="javascript:groupCutover('{$group['groupid']}','{$group['name']}','{$__ADMIN_CURGROUP['groupid']}');" title="切换">切换</a>
+		{else}
+		<span>使用中</span>
+		{/if}
+		</td>
+	</tr>
+	{/foreach}
+</table>
+</body>
+</html>

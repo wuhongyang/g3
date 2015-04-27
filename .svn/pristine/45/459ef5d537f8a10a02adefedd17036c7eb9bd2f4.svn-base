@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="tabletab">
+        <ul>
+            <li><a href="?module=voucher_balance">用户余额表</a></li>
+            <li><a href="?module=voucher_running" class="hover">资金流水表</a></li>
+            <li><a href="?module=voucher_parent">金币净平衡表</a></li>
+        </ul>
+    </div>
+    <div class="tablewrap">
+        <form action="?module=voucher_running" id="payment-form" method="get">
+        <div class="mgb10">
+            <span>资金操作选择：</span>
+            <select name="bigcase_id">
+                <option value="-1">请选择</option>
+            </select>
+            <select name="case_id"><option value="-1">请选择</option></select>
+            <select name="parent_id"><option value="-1">请选择</option></select>
+        </div>
+        <div class="mgb10">
+            <span>用户ID：</span>
+            <input name="Uin" id="Uin" type="text" value="{$_GET['Uin']}">
+            <span class="mgL20">日期：</span>
+            <input realvalue="" name="startDate" id="startDate" value="{$StartDate}" onfocus="WdatePicker({startDate:'%y-%M-%d 00:00:00',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" style="width: 150px;" type="text">至 <input realvalue="" name="endDate" id="endDate" value="{$EndDate}" onfocus="WdatePicker({startDate:'%y-%M-%d 23:59:59',dateFmt:'yyyy-MM-dd HH:mm:ss',alwaysUseStartDate:true})" style="width: 150px;" type="text">
+            <input name="" type="submit" value="查询" class="normalbtn">
+            <input name="module" type="hidden" value="voucher_running" class="normalbtn">
+        </div>
+        </form>
+        <p class="lineh30">发生金额（存入）合计：<span class="yellow mgR10">{echo (int)$deposit_total}</span> 发生金额（支出）合计：<span class="yellow">{echo (int)$pay_total}</span></p>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>流水编号</th>
+            <th>用户ID</th>
+            <th>发生时间</th>
+            <!--<th>业务余额库</th>-->
+            <th>借贷</th>
+            <th>发生金额</th>
+            <!--<th>业务余额库余额</th>-->
+            <th>用户余额</th>
+            <th>备注</th>
+          </tr>
+          {foreach $lists $key $val}
+          <tr>
+            <td>{echo $val['id']}</td>
+            <td>{$val['uin']}</td>
+            <td>{echo date('Y-m-d H:i:s',$val['uptime'])}</td>
+            <!--<td>{$val['parent_name']}</td>-->
+            <td>{if $val['trade_type'] ==1}支出{else}存入{/if}</td>
+            <td>{$val['trade_money']}</td>
+            <!--<td>{$val['parent_balance']}</td>-->
+            <td>{$val['last_balance']}</td>
+            <td>{$val['trade_desc']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">
+            {$page}
+        </div>
+    </div>
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+<script type="text/javascript">
+function CCS(bigcase_id,case_id,parent_id,has_bigcaseData){
+    this.bigcase_id = bigcase_id;
+    this.case_id = case_id;
+    this.parent_id = parent_id;
+    this.has_bigcaseData = has_bigcaseData || false;
+    var that = this;
+
+    var bigcaseObj = $('select[name="bigcase_id"]');
+    bigcaseObj.change(function(){
+        var id = $(this).val();
+        that.clean('parent_id');
+        if(id > 0){
+            that.getCase(id);
+        }else{
+            that.clean('case_id');
+        }
+    });
+
+    var caseObj = $('select[name="case_id"]');
+    caseObj.change(function(){
+        var id = $(this).val();
+        that.clean('parent_id');
+        if(id > 0){
+            that.getParent(id);
+        }
+    });
+}
+CCS.prototype = {
+    init: function(){
+        this.getBigCase();
+
+        if(this.case_id){
+            this.getCase(this.bigcase_id);
+        }
+        if(this.parent_id){
+            this.getParent(this.case_id);
+        }
+    },
+    clean: function(dom_name){
+        $('select[name="' + dom_name + '"]').html('<option value="-1">请选择</option>');
+    },
+    display: function(dom,data,selected){
+        var obj = $('select[name="' + dom + '"]');
+        var option = '<option value="-1">请选择</option>';
+        for(var i in data){
+            if(selected == data[i].id){
+                option += '<option value="' + data[i].id + '" selected>' + data[i].name + '</option>';
+            }else{
+                option += '<option value="' + data[i].id + '">' + data[i].name + '</option>';
+            }
+        }
+        obj.html(option);
+    },
+    getCcsData: function(param,callback){
+        var _this = this;
+        $.ajax({
+            url: 'common_ajax.php',
+            type: 'GET',
+            data: 'module=ccs&timestamp=' + new Date().getTime() + '&' + param,
+            dataType: 'JSON',
+            success: function(json){
+                if(typeof _this[callback] == 'function'){
+                    _this[callback](json);
+                }
+            }
+        });
+    },
+    getBigCase: function(){
+        if(this.has_bigcaseData === true){
+            this.display('bigcase_id',bigcaseData,this.bigcase_id);
+        }else{
+            this.getCcsData('','bigCaseCallback');
+        }
+    },
+    bigCaseCallback: function(json){
+        this.display('bigcase_id', json, this.bigcase_id);
+    },
+    getCase: function(bigcase_id){
+        this.getCcsData('bigcase_id='+bigcase_id,'caseCallback');
+    },
+    caseCallback: function(json){
+        this.display('case_id', json, this.case_id);
+    },
+    getParent: function(case_id){
+        this.getCcsData('case_id='+case_id,'parentCallback');
+    },
+    parentCallback: function(json){
+        this.display('parent_id', json, this.parent_id);
+    }
+}
+
+var bigcaseData = [{id:10001,name:'娱乐房间'},{id:10005,name:'商城'},{id:10006,name:'站管理系统'}];
+//var bigcaseData = [{id:10006,name:'站管理系统'}];
+var b_id = '{$_GET["bigcase_id"]}';
+var c_id = '{$_GET["case_id"]}';
+var p_id = '{$_GET["parent_id"]}';
+var ccs = new CCS(b_id,c_id,p_id,true);
+ccs.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>upcover</title>
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/resource/css/base-min.css');}" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/css/jquery.Jcrop.css');}" type="text/css" />
+<link rel="stylesheet" href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" type="text/css" />
+</head>
+<body>
+<style type="text/css">
+body{font-size:12px;color:#666;}
+</style>
+<form id="upcover" method="post" enctype="multipart/form-data" style="position:relative;">
+<div id="uploadImg" onClick="document.getElementById('file').click();"><em>本地图片</em></div><input type="file" id="file" size="5" name="cover" onChange="document.getElementById('upcover').submit()">
+<span class="gray pd5">（为了更好地呈现在首页，建议房间封面图片不配留白）</span>
+<!--<div class="upbtn"><label>本地图片</label><input type="file" name="cover" size="8" onChange="document.getElementById('upcover').submit()"></div>-->
+</form>
+<p style="margin-top:10px;"><img src="{if empty($filename)}{THEMES_URL}group/images/upcover.jpg{else}{$filename}{/if}" id="cover_view" /></p>
+<p><a href="javascript:cancelCrop();" class="graybtn" style="margin-left:100px;margin-top:10px;"><span>取消</span></a></p>
+
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/base/jquery/jquery.min.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/jcrop/js/jquery.Jcrop.js');}"></script>
+<script type="text/javascript">
+<!--{if !empty($filename)}-->
+
+/*参数对象*/
+var jcrop_api;
+var coverobj = parent.document.getElementById('room_cover');
+var coordsobj = parent.document.getElementById('room_cover_coords');
+coverobj.value = '<!--{$filename}-->';
+coordsobj.value = '';
+
+/*初始化裁切工具*/
+window.onload = function(){
+	//$.Jcrop('#cover_view');
+	$('#cover_view').Jcrop(
+		{
+			setSelect:[10,0,330,240],
+			aspectRatio:4/3,
+			minSize:[80,60],
+			boxWidth:340,
+			boxHeight:240,
+			onSelect:setCoords
+		},
+
+		function(){
+		jcrop_api = this;
+	});
+}
+
+/*设置图像裁切坐标*/
+function setCoords(s){
+	coordsobj.value = '{"w":'+parseInt(s.w)+',"h":'+parseInt(s.h)+',"x":'+parseInt(s.x)+',"y":'+parseInt(s.y)+'}';
+	//console.log(s.x+'|'+s.y+'|'+s.x2+'|'+s.y2);
+}
+
+/*确定选择区域*/
+function confirmCrop(){
+	jcrop_api.disable();
+	jcrop_api.setOptions({allowResize:false,bgOpacity:.3});
+}
+
+/*设置可编辑*/
+function cancelCrop(){
+	coverobj.value = '';
+	coordsobj.value = '';
+	location.href=location.href;
+}
+<!--{/if}-->
+</script>
+
+</body>
+</html>

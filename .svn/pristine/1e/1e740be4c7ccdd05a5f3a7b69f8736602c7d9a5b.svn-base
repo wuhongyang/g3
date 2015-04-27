@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>主页装修-推荐位设置</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<style type="text/css">
+.form p{margin-top: 10px;}
+.form .hide{display: none;}
+.form p span{margin-right:10px;}
+.form p .tp5 input{position: relative;top:5px;}
+</style>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgt10 clearfix">
+        <div class="fr">
+            <a href="javascript:add();" class="bluebtn mgL10" style="right:0;top:10px;"><span>添加</span></a>
+        </div>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto mgt10" id="room_table">
+      <tr>
+        <th>推荐名称</th>
+        <th>推荐类别</th>
+        <th>添加时间</th>
+        <th>操作</th>
+      </tr>
+      {foreach $list $key $val}
+      <tr>
+        <td>{$val['name']}</td>
+        <td>{$type[$val['type']]}</td>
+        <td>{echo date('Y-m-d H:i',$val['uptime']);}</td>
+        <td>
+            {if $key != 0}
+                <a class="ahover" href="javascript:order({$val['id']},1);">上移</a>
+            {else}
+                <span style="color:#999;">上移</span>
+            {/if}
+            {if $key != count($list)-1}
+                <a class="ahover" href="javascript:order({$val['id']},2);">下移</a>
+            {else}
+                <span style="color:#999;">下移</span>
+            {/if}
+            <a class="ahover" href="javascript:edit({$val['id']});">编辑</a>
+            <a class="ahover" href="?module=recommend_sub_cat_show&parent_id={$val['id']}">查看</a>
+            <a class="ahover" href="javascript:visible({$val['id']});">{if $val['status'] == 1}不显示{else}显示{/if}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </table>
+</div>
+{include file="foot.html"}
+</body>
+</html>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript">
+function order(id,type){
+    var module = 'recommend_cat_order';
+    operate(module,{id:id,type:type});
+}
+
+function visible(id){
+    var module = 'recommend_cat_visible';
+    operate(module,{id:id});
+}
+
+function add(){
+    var content = getHtml();
+    art.dialog({
+        content: content,
+        lock: true,
+        ok: function(){
+            var name = $('input[name="name"]').val();
+            if(!checkName(name)){
+                return false;
+            }
+            var type = $('select[name="type"]').val();
+            if(!checkType(type)){
+                return false;
+            }
+            //var module = 'recommend_cat_add';
+            //operate(module,{name:name,type:type});
+            $('#form').submit();
+            return false;
+        },
+        cancel: true
+    });
+}
+
+function edit(id){
+    $.ajax({
+        url: '?module=recommend_cat_info',
+        type: 'GET',
+        data: {id:id,timestamp:new Date().getTime()},
+        dataType: 'JSON',
+        success: function(json){
+            if(json.id == id){
+                var content = getHtml(id,json.name,json.type,json.icon);
+                art.dialog({
+                    content: content,
+                    lock: true,
+                    ok: function(){
+                        var name = $('input[name="name"]').val();
+                        if(!checkName(name)){
+                            return false;
+                        }
+                        var type = $('select[name="type"]').val();
+                        if(!checkType(type)){
+                            return false;
+                        }
+                        //var module = 'recommend_cat_edit';
+                        //operate(module,{id:id,name:name,type:type});
+                        $('#form').submit();
+                        return false;
+                    },
+                    cancel: true
+                });
+            }
+        }
+    });
+}
+
+function getHtml(id,name,type,icon){
+    name = name || '';
+    type = type || -1;
+    icon = icon || '';
+    var none_selected = 'checked';
+    var custom_selected = '';
+    if(icon){
+        custom_selected = 'checked';
+        none_selected = '';
+    }
+    var action = (id > 0) ? 'recommend_cat_edit' : 'recommend_cat_add';
+
+    var content = '<form class="form" action="?module=' + action + '" method="post" id="form" enctype="multipart/form-data" target="iframe">';
+    if(id > 0){
+        content += '<input type="hidden" name="id" value="'+id+'">';
+    }
+    content += '<p><span>推荐名称：</span><input type="text" name="name" value="'+name+'"></p>';
+    content += '<p><span>推荐类别：</span><select name="type"><option value="-1">请选择</option>';
+    {foreach $type $key $val}
+        if(type == {$key}){
+            content += '<option value="{$key}" selected>{$val}</option>';
+        }else{
+            content += '<option value="{$key}">{$val}</option>';
+        }
+    {/foreach}
+    content += '</select></p>';
+    content += '<p>';
+        content += '<span>菜单图标：</span>';
+        content += '<span class="tp5"><input type="radio" name="style" value="1" ' + custom_selected + ' id="custom"><label for="custom">自定义</label></span>';
+        content += '<span class="tp5"><input type="radio" name="style" value="0" ' + none_selected + ' id="none"><label for="none">无</label></span>';
+    content += '</p>';
+    if(icon){
+        content += '<p><span>当前图标：</span><img src="{php echo cdn_url(PIC_API_PATH."/p/' + icon + '/0/0.jpg");}" /></p>'
+        content += '<p id="upload_text">';
+        content += '<input type="hidden" name="icon" value="' + icon + '">';
+    }else{
+        content += '<p id="upload_text" class="hide">';
+    }
+    content += '<span>上传图片：</span><input type="file" name="custom_icon"></p>';
+    content += '</form>';
+    content += '<iframe name="iframe" style="display:none;"></iframe>';
+    return content;
+}
+
+function checkName(name){
+    if(name == ''){
+        _show_msg('推荐名称不能为空');
+        return false;
+    }
+    return true;
+}
+
+function checkType(type){
+    if(type < 1){
+        _show_msg('请选择推荐类别');
+        return false;
+    }
+    return true;
+}
+
+function operate(module,data){
+    $.ajax({
+        url: '?module='+module,
+        type: 'POST',
+        data: data,
+        dataType: 'JSON',
+        success: function(json){
+            callback(json.Flag,json.FlagString);
+            /*
+            if(json.Flag == 100){
+                art.dialog({
+                    content: json.FlagString,
+                    icon: 'succeed',
+                    ok: function(){
+                        location.href = '?module=recommend_cat_list';
+                    },
+                    esc: false,
+                    cancel: false,
+                    lock: true,
+                    time: 2
+                });
+            }else{
+                _show_msg(json.FlagString);
+            }*/
+        }
+    });
+}
+
+function callback(flag,msg){
+    if(flag == 100){
+        art.dialog({
+            content: msg,
+            ok: function(){
+                location.href = '?module=recommend_cat_list';
+            },
+            lock: true,
+            cancel: false,
+            esc: false,
+            icon: 'succeed'
+        });
+    }else{
+         _show_msg(msg);
+    }
+}
+
+$(function(){
+    $(document).on('click', 'input[name="style"]', function(){
+        var style = $(this).val();
+        if(style == 1){
+            $('#upload_text').removeClass('hide');
+        }else{
+            $('#upload_text').addClass('hide');
+        }
+    });
+});
+</script>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>手机注册-会员注册</title>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo STATIC_API_PATH ?>/frontend/modules/passport/css/layout.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form-horizontal .control-label {
+	width:100px;
+}
+.form-horizontal .controls {
+margin-left: 120px;
+}
+</style>
+</head>
+<body>
+<div class="container login-hd">
+    <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <?php include THEMES_ROOT.'/left.html';?>
+    <div class="bd-main pull-left">
+        <div class="tab-content">
+            <h3>手机号注册，方便易记</h3>
+            <form id="regForm" method="post" action="/passport/?user_phone&regpost" class="reg-email-form form-horizontal">
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label" for="phone">手机号</label>
+                <div class="controls">
+                    <input type="text" name="username" id="phone" class="input-xlarge"  placeholder="请输入您的常用手机号" autocomplete="off" check-type="phone username">
+                </div>
+            </div>
+            <div class="control-group"> 
+                <div class="controls">
+                    <a href="javascript:void(0);" class="btn" id="get_code">免费获取校验码</a>
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label" for="code">校验码</label>
+                <div class="controls">
+                    <input type="text" name="msgcode" id="code" class="input-xlarge" check-type="required">
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label" for="password">密码</label>
+                <div class="controls">
+                    <input type="password" placeholder="6-20个字符(区分大小写)" name="password" id="password" class="input-xlarge" check-type="password notSpace">
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Appended input-->
+                <label class="control-label" for="repassword">确认密码</label>
+                <div class="controls">
+                    <input type="password" placeholder="再次输入密码" name="repassword" id="repassword" class="input-xlarge" check-type="repassword">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="clearfix"><input type="checkbox" name="read" value="1" checked class="pull-left" style="margin-right:10px;"> 我已经阅读并同意<a href="#">《用户协议》</a></label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-success btn-large" id="reg_now">马上注册</button>
+                </div>
+            </div>
+            </form>
+        </div>
+	</div>
+	<?php include THEMES_ROOT.'/login.html';?>
+</div>
+<?php include "new-footer.html"; ?>
+
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/plugin/validate/bootstrap-validation.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/plugin/passport/username.js"></script>
+<script type="text/javascript" src="<?php echo THEMES_URL ?>resource/js/common.js"></script>
+<script type="text/javascript">
+function openlogin(type){
+    var childWindow;
+    childWindow = window.open("http://openlogin.vvku.com/passport/openlogin/"+type+"/login.php?back=<?php echo $_SERVER['HTTP_HOST'] ?>&redirect=/","OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+
+$(function(){
+	$('#regForm').validation();
+
+    //发送验证码
+	var _get_code = function(){
+		var phone = $('#phone').val();
+		if(phone == '' || !/^(13|14|15|18)\d{9}$/.test(phone)){
+            alert('请输入正确的手机号码');
+			return false;
+		}
+        $(this).unbind('click');
+        $(this).attr('disabled','disabled');
+        $.ajax({
+            url: '/passport/?user_phone&sendcode',
+            type: 'POST',
+            data: {nouser:phone},
+            dataType: 'JSON',
+            success: function(data){
+                if(data.Flag != 100){
+                    getCodeFail(data)
+                }else{
+                    getCodeSuccess(data);
+                }
+            }
+        });
+	}
+
+	//发送失败
+	var getCodeFail = function(data){
+		$('#get_code').bind('click',_get_code);
+		$('#get_code').attr('disabled',false);
+		//$('#phone_tip').html(data.FlagString);
+        alert(data.FlagString);
+	}
+
+	//发送成功
+	var getCodeSuccess = function(data){
+		$('#get_code').html('短信已发送，<span id="sec">60</span>秒后可点此重发');
+        var hideObj = $('input[name="uniqueid"]');
+        if(hideObj.length > 0){
+            hideObj.remove();
+        }
+        var hidden = '<input type="hidden" name="uniqueid" value="' + data.UniqueId + '">';
+        $('#regForm').append(hidden);
+		var sec = 60;
+		var si = setInterval(function(){
+			--sec;
+			if(sec == 0){
+				clearInterval(si);
+                $('#get_code').html('点此重发校验码');
+				$('#get_code').bind('click',_get_code);
+				$('#get_code').attr('disabled',false);
+			}
+			$('#sec').html(sec);
+		},1000);
+	}
+
+	$('#get_code').bind('click',_get_code);
+
+    $(document).on('click', '#sign_in_now', function(){
+        var username = $('input[name="username"]').val();
+        location.href = '/passport/?account&login&username='+username;
+    });
+
+});
+</script>
+
+<!--[if lte IE 6]>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+
+<!--[if lte IE 7]>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+
+</body>
+</html>
+

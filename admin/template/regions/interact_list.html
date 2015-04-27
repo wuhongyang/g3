@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分站游戏管理</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">分站游戏列表</div>
+  <div class="header-button right">{if $link_array[102]['url']}<a class="add-button" href="{$link_array[102]['url']}">添加分站游戏</a>{/if}</div>
+</div>
+
+<ul class="page-tab">
+	<li><a href="interact_manage.php"  class="active">分站游戏列表</a></li>
+	<li><a href="interact_manage.php?module=interactConfig">游戏配置列表</a></li>
+</ul>
+
+<div class="page-tools main-width">
+	<form action="" method="get" name="myform">
+        关键词：<input type="text" name="wd" id="wd" value="{$_GET['wd']}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="hidden" name="module" id="module" value="interact_list">
+        <input type="submit" value="搜索" />
+    </form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+	<tr>
+    <th>游戏名称</th>
+    <th>扩展模块路径</th>
+    <th>一级科目</th>
+    <th>二级科目</th>
+    <th>三级科目</th>
+    <th>所属区域</th>
+    <th>游戏图标URL</th>
+    <th>游戏推广URL</th>
+    <th>状态</th>
+    <th>时间</th>
+    <th>操作</th>
+  </tr>
+  {foreach $interact_arr $arr}
+  <tr>
+  	<td>{$arr['interact_name']}</td>
+    <td>{$arr['cmd_path']}</td>
+    <td>{$arr['bigcase_name']}</td>
+    <td>{$arr['case_name']}</td> 
+    <td>{$arr['parent_name']}</td>
+    <td><{foreach $area_arr["province"] $province}><{if $province['province_id']==$arr['province_id']}>$province['province_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["city"][$arr['province_id']] $city}><{if $city['city_id']==$arr['city_id']}>$city['city_name']<{/if}><{/foreach}>&nbsp;<{foreach $area_arr["area"][$arr['city_id']] $area}><{if $area['area_id']==$arr['area_id']}>$area['area_name']<{/if}><{/foreach}></td>
+    <td>{if $arr['interact_pic'] > 0}<a href="{$arr['interact_img']}" title="点击查看游戏图标" target="_blank">查看游戏图标</a>{else}<span style="color:#bbb">查看游戏图标</span>{/if}</td>
+    <td>{if $arr['status_pic'] > 0}<a href="{$arr['status_img']}" title="点击查看游戏图标" target="_blank">查看推广图标</a>{else}<span style="color:#bbb">查看推广图标</span>{/if}</td> 
+    <td><{if $arr['interact_status']==1}>使用<{else}>不使用<{/if}></td>
+    <td>{echo date('Y-m-d H:i:s',$arr['uptime'])}</td>
+    <td>
+    	{if $link_array[105]['url']}<a href="{$link_array[105]['url']}&id={$arr['id']}&type=up" title="修改">上移</a>&nbsp;{/if}
+        {if $link_array[105]['url']}<a href="{$link_array[105]['url']}&id={$arr['id']}&type=down" title="修改">下移</a>&nbsp;{/if}
+        {if $link_array[105]['url']}<a href="{$link_array[105]['url']}&id={$arr['id']}&type=top" title="修改">置顶</a>&nbsp;{/if}
+        {if $link_array[103]['url']}<a href="{$link_array[103]['url']}?id=<{$arr['id']}>" title="修改">修改信息</a>&nbsp;{/if}
+        {if $link_array[106]['url']}<a href="{$link_array[106]['url']}&cmd={$arr['cmd']}">游戏配置</a>&nbsp;{/if}
+        {if $link_array[104]['url']}<a href="javascript:void(0);" onClick="interact_del('<{$arr[id]}>');" title="删除">删除</a>{/if}&nbsp;
+		{if $link_array[102]['url']}<a href="{$link_array[102]['url']}?id=<{$arr['id']}>&copyto=1" title="复制该条记录至添加页面">复制添加</a>{/if}
+		{if $link_array[106]['url']}<a href="{$link_array[108]['url']}&gameid={$arr['parent_id']}">活动房间</a>&nbsp;{/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<div class="main-width">{$page}</div>
+<script type="text/javascript">
+function interact_del(id){
+	if(confirm('高危操作，确定要删除吗？')){
+		location.href="{$link_array[104]['url']}&id="+id;
+	}
+}
+</script>
+</body>
+</html>

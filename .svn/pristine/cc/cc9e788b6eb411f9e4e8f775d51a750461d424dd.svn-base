@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>安装升级FLASH - vvku</title>
+<style type="text/css">
+/* CSS Document */
+* {padding-right: 0px; padding-left: 0px; padding-bottom: 0px; margin: 0px; padding-top:0px;list-style-type:none;}
+body {font-size: 12px;color: #B4B8BC;FONT-FAMILY: "宋体";text-align: center;text-decoration: none;}
+html{overflow:-moz-scrollbars-vertical;overflow-x:auto;}/* for firefox */
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, code,
+del, dfn, em, img, q, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {margin:0px; padding:0px;}
+h1,h2,h3,h4,h5,h6 {font-size:100%;font-weight:normal;}
+img,fieldset {border:0;}
+table{border-collapse:collapse;border-spacing:0;}
+ol,ul {list-style-type:none;}
+select,input,img{vertical-align:middle;}
+a{color:#666;text-decoration: none;}
+a:hover{color:#09F}
+
+#box{margin-left:auto;margin-right:auto;text-align: left;width:797px;}
+#top{margin-top:110px;border-bottom-width: 1px;border-bottom-style: solid;border-bottom-color: #c2e5f8;padding-bottom:43px;}
+#word{margin-top:25px;margin-left:15px;font-size:14px;color:black}
+#one{margin-top:47px;margin-left:15px;}
+#two{margin-top:18px;margin-left:15px;}
+</style>
+</head>
+
+<body>
+<div id="box">
+     <div id="top"><img src="http://static.vvku.com/web/1/frontend/modules/rooms/img/top.png" width="674" height="98" /></div>
+  <div id="word">为了给您带来更好的视频娱乐体验，请按一下步骤升级flash:</div> 
+     <div id="one"><img src="http://static.vvku.com/web/1/frontend/modules/rooms/img/one.png" width="732" height="146" border="0" usemap="#Map" />
+       <map name="Map" id="Map">
+         <area shape="rect" coords="293,75,437,107" href="http://get.adobe.com/cn/flashplayer/" />
+       </map>
+     </div>
+     <div id="two"><img src="http://static.vvku.com/web/1/frontend/modules/rooms/img/two.png" width="732" height="186" border="0" usemap="#Map2" />
+       <map name="Map2" id="Map2">
+         <area shape="rect" coords="371,164,502,178" href="http://www.adobe.com/cn/support/flashplayer/ts/documents/sp2_view.htm" />
+       </map>
+     </div>
+</div>
+<!--[if IE 6]>
+	<script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+<div style="display:none">
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F5698333870a14f89a37f58c9c30ffe60' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<div class="topmenu clearfix">
+    <span class="logo">商城</span>
+    <div class="menus clearfix">
+        <ul>
+            <li><a href="/shop/index.php?group_id={$GroupData['groupid']}" {if !empty($recharge_style)}class="hover"{/if}>充值</a></li>
+            {foreach $category $val}
+            <li class="line"></li>
+            <li><a href="shop.php?category_id={$val['cate_id']}" {if isset($_GET['category_id']) && $category_id==$val['cate_id']}class="hover"{/if}>{$val['cate_name']}</a></li>
+            {/foreach}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>积分规则主键组添加</title>
+<style>
+td{
+	padding:10px;
+}
+</style>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script>
+$(function(){
+	var key_arr = $.parseJSON('{$key_arr_json}');
+	var type_arr = $.parseJSON('{$type_arr_json}');
+	var key_type = $("#key_type");
+	var key = $("#key");
+	var type_options = "";
+	var key_options = {};
+	for(k in type_arr){
+		type_options += "<option value='"+k+"'>"+type_arr[k]+"</option>";
+	}
+	key_type.html(type_options);
+	for(k in key_arr){
+		for(k2 in key_arr[k]){
+			if(key_options[k]){
+				key_options[k] += "<option value='"+key_arr[k][k2][0]+"'>"+key_arr[k][k2][1]+"</option>"	
+			}else{
+				key_options[k] = "<option value='"+key_arr[k][k2][0]+"'>"+key_arr[k][k2][1]+"</option>"
+			}	
+		}
+	}
+	key_type.change(function(){
+		key.html(key_options[$(this).val()]);
+	}).trigger("change");
+	
+	var table_list = $("#table-list");
+	$("#add").click(function(){
+		var exist = false;
+		$(".exist_key").each(function(){
+			if($(this).val() == key.val()){
+				exist = true;
+			}
+		})
+		if(exist){
+			alert("已经存在相同主键");
+			return false;
+		}
+		table_list.append("<tr class='content'><td><input class='exist_key' type='hidden' name='key_value[]' value='"+key.val()+"'/>"+key.find("option:selected").html()+"</td><td>"+key_type.find("option:selected").html()+"</td><td><a href='#' class='del'>删除</a></td></tr>");
+		return false;
+	});
+	$(".del").live("click", function(){
+		$(this).parent().parent().remove();
+	});
+})
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">积分规则主键组添加</div>
+  <div class="header-button right">
+  {if $link_array[103]['url']}<a href="{$link_array[103]['url']}" class="add-button">主键组列表</a>{/if}
+  </div>
+</div >
+<ul class="page-tab">
+	<li>{if $link_array[101]['url']}<a href="{$link_array[101]['url']}">主键列表</a>{/if}</li>
+	<li>{if $link_array[103]['url']}<a href="{$link_array[103]['url']}"  class="active">主键组</a>{/if}</li>
+</ul>
+<div style="padding:20px;">
+
+<form method="post">
+<table>
+	<tr>
+		<td align="right">名称：</td><td><input type="text" name="name" value="{$row['name']}" /></td>
+	</tr>
+	<tr>
+		<td align="right">英文名称：</td><td><input type="text" name="engname" value="{$row['engname']}" /></td>
+	</tr>
+	<tr>
+		<td align="right">说明：</td><td><textarea name="desc">{$row['desc']}</textarea></td>
+	</tr>
+	<tr>
+		<td align="right">状态：</td><td>
+		<input type="radio" name="status" value="1" {if !isset($row['status']) or $row['status'] == 1}checked="checked"{/if} />启用&nbsp;&nbsp;
+		<input type="radio" name="status" value="0" {if isset($row['status']) and $row['status'] == 0}checked="checked"{/if} />不启用
+		</td>
+	</tr>
+</table>
+<table>
+	<tr>
+		<td align="right">主键选择：</td>
+		<td>
+		<select id="key_type">
+			
+		</select>
+		<select id="key">
+			
+		</select>
+		&nbsp;&nbsp;<button id="add">添加</button>
+		</td>
+	</tr>
+</table>
+
+<table class="table-list" style="width:500px;" id="table-list">
+	<tr>
+		<th>主键名称</th>
+		<th>主键类型</th>
+		<th>操作</th>
+	</tr>
+	{foreach $row_arr $one}
+	<tr>
+		<td><input class="exist_key" type='hidden' name='key_value[]' value='{$one[0]}'/>{$one[1]}</td><td>{$one[2]}</td><td><a href='#' class='del'>删除</a></td>
+	</tr>
+	{/foreach}
+</table>
+<input type="hidden" name="id" value="{$_GET['compose_id']}" />
+<br/>
+&nbsp;&nbsp;&nbsp;<input type="submit" value="保存"/>
+</form>
+</div>
+</body>
+</html>

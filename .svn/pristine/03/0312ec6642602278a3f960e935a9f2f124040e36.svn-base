@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="bodywrap">
+    <div class="clearfix" style="width:250px;margin:20px auto;">
+        <h2 class="clearfix">
+            <span class="sucimg fl"></span>
+            <span class="fs20 fl mgt5 mgL20">金币充值成功!</span>
+        </h2>
+        <p class="fs14 mgt20">当前站金币余额：<span class="fs16 yellow">{$_GET['balance']} 金币</span></p>
+        <a href="mgr.html" class="yellowbtn mgt20 mgL50"><span>返回站管理</span></a>
+    </div>
+</div>
+{include file="foot.html"}
+</body>
+</html>

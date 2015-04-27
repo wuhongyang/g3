@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>群组配置</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="header clean">
+	<div class="header-title left">群组配置</div>
+</div>
+
+<div class="body">
+    <form method="post" action="?module=editGroup" class="form" onSubmit="return checkParam();">
+    	<input type="hidden" name="Id" value="{$case['id']}" />
+        <input type="hidden" name="Uin" value="{$case['uin']}" />
+        <p>
+        	<label>站ID：</label>
+            {$case['groupid']}
+        </p>
+        <p>
+        	<label>站名称：</label>
+            <input type="text" name="GroupName" value="{$case['name']}" size="32" id="group_name" />
+        </p>
+		<p>
+        	<label>站长ID：</label>
+            {$case['uin']}
+        </p>
+        <p>
+            <label>角色套餐：</label>
+            <select name="package_id" id="package_id">
+                <option value="0">--请选择--</option>
+                {foreach $packageList $val}
+                <option value="{$val['id']}" {if $case['package_id']==$val['id']}selected{/if}>{$val['name']}</option>
+                {/foreach}
+            </select>
+        </p>
+        <p>
+            <label>商城方案：</label>
+            <select name="scheme_id">
+                <option value="-1">请选择</option>
+                {foreach $schemes $val}
+                <option value="{$val['id']}" {if $case['scheme_id']==$val['id']}selected{/if}>{$val['name']}</option>
+                {/foreach}
+            </select>
+        </p>
+        <p>
+            <label>站货币单位：</label>
+            <input type="text" name="currency_unit" value="{$case['currency_unit']}">
+        </p>
+        <p>
+            <label>客户端版本：</label>
+            <input type="text" name="client_version" value="{$case['client_version']}">
+        </p>
+        <p>
+        	<label>所属站点：</label>
+            <select name="Province" disabled="disabled" id="province" onChange="show_city(this.value);getCityName(this.value,1);"><option value="0">请选择</option></select>
+            <select name="City" disabled="disabled" id="city" onChange="show_area(this.value);getCityName(this.value,2);"><option value="0">请选择</option></select>
+            <select name="Area" disabled="disabled" id="area"  onChange = "getCityName(this.value,3);"><option value="0">请选择</option></select>
+        </p>
+        <p>
+        	<label>房间额度：</label>
+            {echo (int)$case['open_num']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="?module=openNum&groupid={$case['groupid']}&uin={$case['uin']}&open_num={$case['open_num']}">修改房间额度</a>
+        </p>
+        <p>
+        	<label>下属房间：</label>
+            <font color="red">共{$case['room_total']}个房间</font>
+        </p>
+        {foreach $case['roomList'] $val}
+        <p>
+        	<label></label>
+            {$val['id']}（{$val['name']}）&nbsp;&nbsp;<a href="room_info.php?id={$val['id']}">[查看房间信息]</a>
+        </p>
+        {/foreach}
+        <p>
+        	<label>签约人员：</label>
+            <font color="red">共{$case['room_manager_total']}个室主，共{$case['room_entertainer_total']}个艺人</font>
+        </p>
+        {foreach $case['roomManagerList'] $val}
+        <p>
+        	<label></label>
+            {$val['uid']}（{$val['Nick']}），{$val['room_id']}室主&nbsp;&nbsp;<a href="channel_info.php?module=infoList&id={$val['channel_id']}">[查看渠道资料]</a>
+        </p>
+        {/foreach}
+        {foreach $case['roomEntertainerList'] $val}
+        <p>
+        	<label></label>
+            {$val['uid']}（{$val['Nick']}），{$val['room_id']}艺人&nbsp;&nbsp;<a href="channel_info.php?module=infoList&id={$val['channel_id']}">[查看渠道资料]</a>
+        </p>
+        {/foreach}
+        <p>
+        	<label></label><input type="submit" value="保存信息" />
+        </p>
+	</form>
+</div>
+
+<script type="text/javascript" src="template/js/city.js"></script>
+<script type="text/javascript">
+var province_JSONDATA = eval('({echo json_encode($province)})');
+var city_JSONDATA = eval('({echo json_encode($city)})');
+var area_JSONDATA = eval('({echo json_encode($area)})');
+window.onload = function(){
+	show_province("{$case['province']}");//默认选中省编号
+	show_city("{$case['province']}","{$case['city']}");//省编号，默认选中市编号
+	show_area("{$case['city']}","{$case['area']}");//市编号,默认选中区/县编号
+}
+
+function checkParam(){
+    var group_name = document.getElementById('group_name').value;
+    if(group_name==''){
+        alert('请填写站名称');
+        return false;
+    }
+    var packageObj = document.getElementById('package_id');
+    var package_id = packageObj.options[packageObj.selectedIndex].value;
+    if(package_id < 1){
+        alert('请选择角色套餐');
+        return false;
+    }
+    return true;
+}
+</script>
+</body>
+</html>

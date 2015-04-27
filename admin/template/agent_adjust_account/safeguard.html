@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<title>最低保障金</title>
+<style>
+.warning{color:red;margin-left:20px;}
+</style>
+<script type="text/javascript">
+$(function(){
+	$('#btn').click(function(){
+		var money = $('#money').val();
+		if(money=='' || isNaN(money)){
+			alert('代理调剂账户最低保障金必须为数字');
+			return false;
+		}
+		$('#form').submit();
+	});
+});
+</script>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">设置代理调剂账户最低保障金</div>
+</div >
+<ul class="page-tab">
+	{if $link_array[101]['url']}<li><a {if $module=='safeguard'}class="active"{/if} href="{$link_array[101]['url']}">最低保障金</a></li>{/if}
+	{if $link_array[102]['url']}<li><a {if $module=='in'}class="active"{/if} href="{$link_array[102]['url']}">划入资金</a></li>{/if}
+	{if $link_array[103]['url']}<li><a {if $module=='out'}class="active"{/if} href="{$link_array[103]['url']}">划出资金</a></li>{/if}
+</ul>
+<form method="post" class="form" id="form">
+	<p>
+		<label style="width:200px;">设置代理调剂账户最低保障金：</label>
+		<span><input type="text" name="money" value="{$money}" id="money">&nbsp;&nbsp;元</span>
+	</p>
+	<p>
+		<label style="width:200px;">&nbsp;</label>
+		<span><input type="button" value="保存设置" id="btn"></span>
+	</p>
+</form>
+</body>
+</html>

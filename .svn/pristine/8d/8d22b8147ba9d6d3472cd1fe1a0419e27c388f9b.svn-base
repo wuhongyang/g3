@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript" src="template/js/My97DatePicker/WdatePicker.js"></script>
+<title>财务对账-异常记录</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">财务对账-异常记录</div>
+</div >
+
+<ul class="page-tab">
+  {if $link_array[101]['url']}<li><a href="{$link_array[101]['url']}">总平衡表</a></li>{/if}
+  {if $link_array[102]['url']}<li><a href="{$link_array[102]['url']}">分站平衡表</a></li>{/if}
+  {if $link_array[103]['url']}<li><a href="{$link_array[103]['url']}" class="active">异常记录</a></li>{/if}
+  {if $link_array[104]['url']}<li><a href="{$link_array[104]['url']}">资金管理</a></li>{/if}
+</ul>
+
+<div class="page-tools main-width">
+<form action="" method="get" name="myform" id="theForm">
+当前站点：{$__ADMIN_CURGROUP['name']}（{$__ADMIN_CURGROUP['groupid']}）&nbsp;&nbsp;&nbsp;
+日期：<input type="text" name='Date' id="Date" class="form_value" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="{$_GET['Date']}" />
+<input type="hidden" name="groupid" value="{$__ADMIN_CURGROUP['groupid']}" />
+<input type="hidden" name="module" value="{$_GET['module']}" />
+<input type="submit" value="查询" />
+</form>
+</div>
+
+<table class="table-list main-width" id="table-list">
+    <tr>
+    	<td>编号</td>
+    	<td>时间</td>
+    	<td>一级科目</td>
+    	<td>二级科目</td>
+    	<td>三级科目</td>
+    	<td>四级科目</td>
+    	<td>站ID</td>
+    	<td>交易属性</td>
+    	<td>借贷</td>
+    	<td>发生金额</td>
+    	<td>用户ID</td>
+    	<td>备注</td>
+    </tr>
+	{if !$finance_abnormal_running}
+	<tr><td colspan="12">无记录</td></tr>
+	{else}
+	{foreach $finance_abnormal_running $key $val}
+	<tr>
+		<td>{echo $key+1;}</td>
+		<td>{$val['uptime']}</td>
+		<td>{$val['bigcase_name']}</td>
+		<td>{$val['case_name']}</td>
+		<td>{$val['parent_name']}</td>
+		<td>{$val['child_name']}</td>
+		<td>{$val['group_id']}</td>
+		<td>{if $val['trade_property'] == 3}科目交易{elseif $val['trade_property'] == 4}税金交易{elseif $val['trade_property'] == 5}用户交易{/if}</td>
+		<td>{if $val['trade_type'] == 1}存入{elseif $val['trade_type'] == 2}支出{/if}</td>
+		<td>{$val['trade_money']}</td>
+		<td>{$val['uin']}</td>
+		<td>{$val['trade_desc']}</td>
+	</tr>
+	{/foreach}
+	{/if}   
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

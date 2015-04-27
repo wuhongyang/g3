@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>商城</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/logo.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/topnav-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/public-min.css">
+    <link rel="stylesheet" href="{THEMES_URL}shop/css/style-min.css">
+</head>
+<body>
+<div class="container">
+	{include file="header.html"}
+
+	<div class="bd clearfix" id="bd-daoju">
+        <ul class="step-list clearfix">
+            <li class="active">选择购买道具</li>
+            <li>填写购买信息</li>
+            <li>确认购买信息</li>
+            <li>购买成功</li>
+        </ul>
+        <div class="step1">
+            <h2 class="desc">购买道具，获取v豆</h2>
+            <ul class="pro-list clearfix">
+			{foreach $lists $key $val}
+                <li>
+                    <div class="pro">
+                        <p class="pro-name">{$val['name']}</p>
+                        <div>
+                            <img src="{PIC_API_PATH}{$val['pic_url']}" alt="">
+                        </div>
+                        <div class="pro-price">
+                            <p>价格<span class="red">{$val['price']}</span>v宝</p>
+                                <a href="?module=buy&id={$key}" class="btn-buy">立即购买</a>
+                        </div>
+                    </div>
+                </li>
+			{/foreach}
+            </ul>
+        </div>
+    </div>
+
+	{include file="footer.html"}
+</div>
+
+<!--[if  IE 6]>
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/bsie/js/fixTopNavForIE6.min.js"></script>
+<![endif]-->
+</body>
+</html>
+
+

@@ -1,0 +1,5 @@
+<div class="tips">
+    <span>当前充值方式：<a href="javascript:;" style="cursor:default;">{$recharge_style[$type]}</a></span>
+    <span>充值站点：<a href="/" target="_blank" title="{echo $groupName.'('.$groupId.')'}">{echo $groupName.'('.$groupId.')'}</a></span>
+    {if $roomid>0}<span>来源房间：<a href="/v/{$roomid}" target="_blank" title="{echo $roomName.'('.$roomid.')'}">{echo $roomName.'('.$roomid.')'}</a></span>{/if}
+</div>

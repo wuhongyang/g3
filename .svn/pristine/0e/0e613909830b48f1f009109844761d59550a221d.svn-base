@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>邮箱注册-会员注册</title>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo STATIC_API_PATH ?>/frontend/modules/passport/css/layout.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+.form-horizontal .control-label {
+	width:100px;
+}
+.form-horizontal .controls {
+margin-left: 120px;
+}
+</style>
+</head>
+<body>
+<div class="container login-hd">
+    <div class="hd-nav pull-right"><a href="/">返回首页</a></div>
+</div>
+<div class="container bd">
+    <?php include THEMES_ROOT.'/left.html';?>
+    <div class="bd-main pull-left">
+        <div class="tab-content">
+            <div class="flow-firststep"></div>
+            <form id="regForm" method="post" action="/passport/?user_email" class="reg-email-form form-horizontal">
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">邮箱地址</label>
+                <div class="controls">
+                    <input type="text" name="username" id="Email" placeholder="请输入您的常用邮箱" class="input-xlarge" autocomplete="off" check-type="required username mail">
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">密码</label>
+                <div class="controls">
+                    <input type="password" name="password" placeholder="6-20个字符(区分大小写)" id="password" class="input-xlarge" check-type="notSpace password">
+                </div>
+            </div>
+            <div class="control-group"> 
+                <!-- Text input-->
+                <label class="control-label">重复密码</label>
+                <div class="controls">
+                    <input type="password" placeholder="再次输入密码" class="input-xlarge" check-type="repassword" name="repassword">
+                </div>
+            </div>
+            <div class="control-group"> 
+            <!-- Appended input-->
+                <label class="control-label">验证码</label>
+                <div class="controls">
+                    <div class="input-append">
+                    <input style="width:190px;" name="checkcode" placeholder="验证码" type="text" check-type="required">
+                    <img src="checkcode.php" width="78" height="28" style="border:solid 1px #CCC;border-left:none;border-radius:0px 4px 4px 0px;width:78px;height:28px;" onclick="this.src='checkcode.php?'+Math.random()" title="看不清? 请点击"/>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="clearfix"><input type="checkbox" name="read" value="1" checked class="pull-left" style="margin-right:10px;"> 我已经阅读并同意<a href="#">《用户协议》</a></label>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-success btn-large" id="reg_now">立即注册</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    <?php include THEMES_ROOT.'/login.html';?>
+</div>
+<?php include "new-footer.html"; ?>
+<div class="modal hide fade" id="sending">
+  <div class="modal-body">
+    <p>邮件发送中，请稍等……</p>
+  </div>
+</div>
+
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/plugin/validate/bootstrap-validation.js"></script>
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/plugin/passport/username.js"></script>
+<script type="text/jscript">
+$(document).ready(function (){
+	$(document).on('click', '#sign_in_now', function(){
+        var username = $('input[name="username"]').val();
+        location.href = '/passport/?account&login&username='+username;
+    });
+});
+$(function(){$('#regForm').validation();});
+
+function openlogin(type){
+    var childWindow;
+    childWindow = window.open("http://openlogin.vvku.com/passport/openlogin/"+type+"/login.php?back=<?php echo $_SERVER['HTTP_HOST'] ?>&redirect=/","OpenLogin","width=450,height=320,menubar=0,scrollbars=1, resizable=1,status=1,titlebar=0,toolbar=0,location=1");
+}
+
+/*$('input[name="password"]').blur(function(){
+   var value = $(this).val();
+   if(/^\s+$/.test(value)){
+        alert(34);
+   }
+})*/
+</script>
+
+<!--[if lte IE 6]>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+
+<!--[if lte IE 7]>
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/bootstrap-ie6.css" rel="stylesheet" type="text/css">
+<link href="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/css/ie.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<?php echo STATIC_API_PATH ?>/frontend/base/bsie/js/bootstrap-ie.js"></script>
+<![endif]-->
+
+</body>
+</html>

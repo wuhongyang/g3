@@ -1,0 +1,61 @@
+{if !empty($hotArtists)}
+<div class="actor-navsite">
+    <h2 class="title">
+       	<div class="bar-title">热门艺人</div>
+    </h2>
+    <div class="clearfix" id="J_newartist"> 
+    	{foreach $hotArtists $val}
+     	<dl>
+     		<dt class="pic"> 
+               <img src="{STATIC_API_PATH}/frontend/plugin/lazyload/default.gif" data-original="{php echo cdn_url(PIC_API_PATH.'/'.$val['photo']);}}" width="150" height="110" alt="{$val['Nick']}">
+				<div class="actormask">
+					<a class="play" href="http://{$val['groupid']}.'.'.{$_SERVER['HTTP_HOST']}/v/{$val['roomid']}" target="_blank"></a>
+				</div>
+            </dt>
+            <dd>
+            	<p class="name" style="display:none;">{$val['uin']}</p>
+       			<p>{$val['Nick']}<span id="J_{$val['uin']}"></span></p>
+           		<!--<p id="J_{$val['uin']}"><a href="/city/{$val['region_id']}" class="gray">({$val['SiteName']}站)</a></p>-->
+           		<p>{echo intval($val['curuser'])}<span class="gray">人正在观看</span></p>
+				<p>所属站点：<span class="gray groupname"><a href="http://{$val['groupid']}.'.'.{$_SERVER['HTTP_HOST']}">{$val['groupname']}</a></span></p>
+            </dd>
+     	</dl>
+     	{/foreach}
+  	</div>
+</div>
+{/if}
+<script type="text/javascript">
+$(function(){
+	var obj = $('#J_newartist').find('p.name');
+	var len = obj.length;
+	//var uins = [];
+	var uins = '[';
+	for(var i=0; i<len; i++){
+		uins += '"' + obj[i].innerHTML + '"';
+		if(i < len-1){
+			uins += ',';
+		}
+	}
+	uins += ']';
+	$.ajax({
+		url: '/rooms/ajax_info.php',
+		type: 'POST',
+		data: {Tag:"GetFollow"},
+		success: function(data){
+			var json = jQuery.parseJSON(data);
+			var res = json.Result;
+			var str;
+			for(var i=0; i<len; i++){
+				if(json.Flag !== 100){
+					str = '<a class="red guanzhu" href="javascript:void(0);" id="J_onFocus" value="'+obj[i].innerHTML+'"><span class="green-add">+</span>加关注</a>';
+				}else if(res[obj[i].innerHTML] > 0){
+					str = '<a class="red cancel" href="javascript:void(0);" id="J_cancelFocus" value="'+obj[i].innerHTML+'">取消关注</a> ';
+				}else{
+					str = '<a class="red guanzhu" href="javascript:void(0);" id="J_onFocus" value="'+obj[i].innerHTML+'"><span class="green-add">+</span>加关注</a>';
+				}
+				$('#J_newartist').find("#J_" + obj[i].innerHTML).append(str);
+			}
+		}
+	});
+});
+</script>

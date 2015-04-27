@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>角色图标上传</title>
+<link href="template/css/style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<div class="page-tools main-width">
+  <form method="post" enctype="multipart/form-data" id="up_form">
+    <input type="hidden" name="type" value="{$type}">
+    <input type="file" name="role_icon">
+    <input type="button" value="上  传" style="width:50px;" onclick="post()">
+  </form>
+</div>
+</body>
+<script type="text/javascript" src="template/js/jquery.min.js"></script>
+<script type="text/javascript">
+var fileInfo = '{$rst}';
+var type = '{$type}';
+if(fileInfo){
+  fileInfo = $.parseJSON(fileInfo);
+  if(fileInfo.Flag == 100){
+    var pdocument = parent.document;
+    var obj = pdocument.getElementById('show_img_'+type);
+    var html = '<object width="50" height="50" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">\
+                <param value="{php echo cdn_url(PIC_API_PATH."/p/'+fileInfo.File+'/0/0.jpg") }" name="movie">\
+                <param value="high" name="quality">\
+                <embed width="50" height="50" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" src="{php echo cdn_url(PIC_API_PATH."/p/'+fileInfo.File+'/0/0.jpg") }">\
+                </object>';
+    html += '<a style="cursor:pointer;" class="del_pic">删除</a>';
+    html += '<input type="hidden" name="img_'+type+'" value="'+fileInfo.File+'">';
+    /*var img = $('<img src="{PIC_API_PATH}/p/'+fileInfo.File+'/0/0.jpg">');
+    var del = $('<a style="cursor:pointer;">删除</a>');
+    var hidden = $('<input type="hidden" name="img_'+type+'" value="'+fileInfo.File+'">');*/
+    $(obj).html(html);
+  }else{
+    alert('上传出错');
+  }
+}
+function post(){
+  var pdocument = parent.document;
+  var obj = pdocument.getElementById('show_img_'+type);
+  obj = $(obj);
+  if(obj.find('img').length > 0){
+    alert('已有上传图标，若想上传，先删除');
+    return;
+  }
+  $('#up_form').submit();
+}
+</script>
+</html>

@@ -1,0 +1,116 @@
+<div class="ranklist-room tabswitch">
+	<h2 class="title clearfix">
+		<div class="bar-title">房间排行 <a href="/top/{$site['region_id']}.html" class="more">更多</a></div>
+	</h2>
+	<div class="rank-tabs">
+		<ul>
+			<li class="ranktabs-bg">周榜</li>
+			<li class="">月榜</li>
+			<li class="">总榜</li>
+		</ul>
+	</div>
+	<ul class="ranklist-items" style="display:block;">
+    	{foreach $room_rankweek['Room'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key=='0'}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+      		<a href="/v/{$val['uin']}" title="进入{$room_rankweek['RoomInfo'][$val['uin']]}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$val['uin'].'/48/36.jpg);}" alt="{$region2name[$val['region_id']]}" width="48" height="36"></a>
+          	<p>
+             	<a href="/v/{$val['uin']}" title="进入{$room_rankweek['RoomInfo'][$val['uin']]}" target="_blank">{$room_rankweek['RoomInfo'][$val['uin']]}</a>
+        	 	<a href="/" title="进入{$region2name[$val['region_id']]}站" target="_blank" class="gray">{$region2name[$val['region_id']]}</a>
+          	</p>
+          	<span class="item-num">{$val['money']}万</span>
+      	</li>
+      	{/foreach}
+	 </ul>
+	<ul class="ranklist-items" style="display:none;">
+    	{foreach $room_rankmonth['Room'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key=='0'}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+      		<a href="/v/{$val['uin']}" title="进入{$room_rankmonth['RoomInfo'][$val['uin']]}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$val['uin'].'/48/36.jpg');}" alt="{$region2name[$val['region_id']]}" width="48" height="36"></a>
+          	<p>
+             	<a href="/v/{$val['uin']}" title="进入{$room_rankmonth['RoomInfo'][$val['uin']]}" target="_blank">{$room_rankmonth['RoomInfo'][$val['uin']]}</a>
+        	 	<a href="/" title="进入{$region2name[$val['region_id']]}站" target="_blank" class="gray">{$region2name[$val['region_id']]}</a>
+          	</p>
+          	<span class="item-num">{$val['money']}万</span>
+      	</li>
+      	{/foreach}
+	 </ul>
+	<ul class="ranklist-items" style="display:none;">
+    	{foreach $room_ranktotal['Room'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key=='0'}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+      		<a href="/v/{$val['uin']}" title="进入{$room_ranktotal['RoomInfo'][$val['uin']]}" target="_blank"><img src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$val['uin'].'/48/36.jpg);}" alt="{$region2name[$val['region_id']]}" width="48" height="36"></a>
+          	<p>
+             	<a href="/v/{$val['uin']}" title="进入{$room_ranktotal['RoomInfo'][$val['uin']]}" target="_blank">{$room_ranktotal['RoomInfo'][$val['uin']]}</a>
+        	 	<a href="/" title="进入{$region2name[$val['region_id']]}站" target="_blank" class="gray">{$region2name[$val['region_id']]}</a>
+          	</p>
+          	<span class="item-num">{$val['money']}万</span>
+      	</li>
+      	{/foreach}
+	 </ul>
+</div>
+
+
+<div class="ranklist-artist tabswitch">
+	<h2 class="title clearfix">
+		<div class="bar-title">艺人排行 <a href="/top/{$site['region_id']}.html" class="more">更多</a></div>
+	</h2>
+	<div class="rank-tabs">
+		<ul>
+			<li class="ranktabs-bg">周榜</li>
+			<li class="">月榜</li>
+			<li class="">总榜</li>
+		</ul>
+	</div>
+	<ul class="ranklist-items" style="display:block;">
+    	{foreach $artistweek['Artist'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key==0}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+          	<span class="{if $val['online'] > 0}online{else}offline{/if}"></span>
+          	<a href="/v/{$val['roomid']}" title="进入{$val['roomid']}房间" target="_blank">
+          		<img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$val['uin'].'/40/40.jpg);}" alt="{$artistweek['ArtistInfo'][$val['uin']]}" width="36" height="36">
+          	</a>
+          	<p>
+				<a href="/service/home.php?user={$val['uin']}" title="查看{$artistweek['ArtistInfo'][$val['uin']]}的资料" target="_blank">{$artistweek['ArtistInfo'][$val['uin']]}</a>
+             	<a href="/" class="gray" title="进入{$val['city_name']}站">{php echo iconv_substr($val['city_name'],0,3,'utf-8')}</a>
+          	</p>
+            <a href="/help/help/11.html" title="艺人{$val['level']}级" class="xing" target="_blank"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$val['level']}.png" width="18" height="18" /></a>
+          	<span class="item-num">{$val['money']}万</span>
+         </li>
+      	{/foreach}
+	 </ul>
+	<ul class="ranklist-items" style="display:none;">
+    	{foreach $artistmonth['Artist'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key==0}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+          	<span class="{if $val['online'] > 0}online{else}offline{/if}"></span>
+          	<a href="/v/{$val['roomid']}" title="进入{$val['roomid']}房间" target="_blank">
+          		<img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$val['uin'].'/40/40.jpg);}" alt="{$artistmonth['ArtistInfo'][$val['uin']]}" width="36" height="36">
+          	</a>
+          	<p>
+				<a href="/service/home.php?user={$val['uin']}" title="查看{$artistmonth['ArtistInfo'][$val['uin']]}的资料" target="_blank">{$artistmonth['ArtistInfo'][$val['uin']]}</a>
+             	<a href="/" class="gray" title="进入{$val['city_name']}站">{php echo iconv_substr($val['city_name'],0,3,'utf-8')}</a>
+          	</p>
+            <a href="/help/help/11.html" title="艺人{$val['level']}级" class="xing" target="_blank"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$val['level']}.png" width="18" height="18" /></a>
+          	<span class="item-num">{$val['money']}万</span>
+         </li>
+      	{/foreach}
+	 </ul>
+	<ul class="ranklist-items" style="display:none;">
+    	{foreach $artisttotal['Artist'] $key $val}
+      	<li class="clearfix">
+          	<span class="item-ranknum {if $key==0}first{elseif $key==1}second{elseif $key==2}three{/if}">{php echo $key+1}</span>
+          	<span class="{if $val['online'] > 0}online{else}offline{/if}"></span>
+          	<a href="/v/{$val['roomid']}" title="进入{$val['roomid']}房间" target="_blank">
+          		<img src="{php echo cdn_url(PIC_API_PATH.'/uin/'.$val['uin'].'/40/40.jpg);}" alt="{$artisttotal['ArtistInfo'][$val['uin']]}" width="36" height="36">
+          	</a>
+          	<p>
+				<a href="/service/home.php?user={$val['uin']}" title="查看{$artisttotal['ArtistInfo'][$val['uin']]}的资料" target="_blank">{$artisttotal['ArtistInfo'][$val['uin']]}</a>
+             	<a href="/" class="gray" title="进入{$val['city_name']}站">{php echo iconv_substr($val['city_name'],0,3,'utf-8')}</a>
+          	</p>
+            <a href="/help/help/11.html" title="艺人{$val['level']}级" class="xing" target="_blank"><img src="{STATIC_API_PATH}/static/images/icon_art_level/{$val['level']}.png" width="18" height="18" /></a>
+          	<span class="item-num">{$val['money']}万</span>
+      	</li>
+      	{/foreach}
+	 </ul>
+</div>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>通行证管理-通行证资料</title>
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/base.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/header.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/footer.css');}" rel="stylesheet" type="text/css" />
+<link href="{php echo cdn_url(THEMES_URL.'group_site/'.$themes.'/src/service/css/style.css');}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<!--header-->
+{include file="header.html"}
+<!--header-->
+<div class="bodywrap">
+    <div class="w980">
+        <div id="topmenu">
+            {include file="topmenu.html"}
+        </div>
+        <div class="content">
+            {include file="pass_manager/tool.html"}
+            <div class="rightdiv">
+                <form method="post" id="J_form">
+                    <h1>通行证资料</h1>
+                    <div class="box1">
+                        <ul class="itemlist">
+                            <li class="st">通行证资料是您的真实性身份认证。</li>
+                            <li class="st">渠道人员请务必填写真实信息，否则将无法收到兑换收入。</li>
+                        </ul>
+                    </div>
+                    <ul class="formlist" id="J_form_list">
+                        <li class="clearfix">
+                            <label>绑定邮箱：</label>
+                            <span>{if !empty($info['email'])}{$info['email']}{else}未绑定{/if}</span>
+                        </li>
+                        <li class="clearfix">
+                            <label>真实姓名：</label>
+                            {if !empty($info['name'])}
+                                <span>{$info['name']}</span>
+                            {else}
+                                <input name="name" type="text" class="input" style="width:255px;"/>
+                            {/if}
+                        </li>
+                        <li class="clearfix">
+                            <label>常驻城市：</label>
+                            {if $cityId <= 0}
+                                <select name="province" id="province">
+                                    <option value="-1">请选择</option>
+                                    {foreach $provinces $val}
+                                    <option value="{$val['province_id']}">{$val['province_name']}</option>
+                                    {/foreach}
+                                </select>
+                                <select name="city" id="city" style="width:100px;">
+                                    <option value="-1">请选择</option>
+                                </select>
+                            {else}
+                            <span>{echo $pName.'-'.$cName;}</span>
+                            {/if}
+                        </li>
+                        <li class="clearfix">
+                            <label>绑定手机：</label>
+                            <span>{if !empty($info['phone'])}{echo substr_replace($info['phone'],'****',3,4);}{else}未绑定{/if}</span>
+                        </li>
+                        <li class="clearfix">
+                            <label>身份证号：</label>
+                            {if !empty($info['idcard'])}
+                                <span>{echo substr_replace($info['idcard'],'********',6,8);}</span>
+                            {else}
+                                <input name="idcard" type="text" class="input" style="width:255px;"/>
+                            {/if}
+                        </li>
+                        <li class="clearfix">
+                            <label>常用QQ：</label>
+                            {if !empty($info['qq'])}
+                                <span>{$info['qq']}</span>
+                            {else}
+                                <input name="qq" type="text"  class="input" style="width:255px;"/>
+                                <span class="txt2" style="width:300px;">填写常用QQ，方便官方工作人员与您联系。</span>
+                            {/if}
+                        </li>
+                        {if empty($info['name']) || $cityId<=0 || empty($info['idcard']) || empty($info['qq'])}
+                            <li class="clearfix">
+                                <label>&nbsp;</label>
+                                <a style="cursor:pointer;" class="yellowbtn" id="J_submit"><span>保&nbsp;&nbsp;存</span></a>
+                            </li>
+                        {/if}
+                    </ul>
+                </form>
+            </div>
+         </div>
+    </div>
+</div>
+<!--footer-->
+{include file="foot.html"}
+<!--footer-->
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/common.js');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/artDialog/artDialog.js?skin=default');}"></script>
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/resource/js/id_card_utf.js');}"></script>
+<script type="text/javascript">
+$(function(){
+    $('#province').change(function(){
+        var province_id = $(this).val();
+        _display_cities(province_id);
+    });
+    $('#J_submit').click(function(){
+        var ul = $('#J_form_list');
+        var status = 0;
+        ul.find('input').each(function(i){
+            if($('input[name="'+$(this).attr('name')+'"]').val() != ''){
+                status = 1;
+            }
+        });
+        var iObj = $('input[name="idcard"]');
+        if(iObj.length > 0){
+            var idcard = iObj.val();
+            if(idcard){
+                if(!checkCard(idcard)){
+                    _show_msg('请填写正确的身份证');
+                    return false;
+                }
+            }
+        }
+        if(ul.find('#city').length > 0){
+            if($('#city').val() > -1){
+                status = 1;
+            }
+        }
+        if(status != 1){
+            _show_msg('至少提交一项修改');
+            return false;
+        }
+        $('#J_form').submit();
+    });
+});
+</script>
+</body>
+</html>

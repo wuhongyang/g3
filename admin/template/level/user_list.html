@@ -1,0 +1,47 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<{include file="head.html"}>
+<title>KMS_user_list</title>
+</head>
+<body>
+<div class="header clean">
+  <div class="header-title left">下属系统帐号列表</div>
+  <div class="header-button right">{if $link_array[101]['url']}<a class="add-button" href="<{$link_array[101]['url']}>">{$link_array[101]['child_name']}</a>{/if}</div>
+</div >
+<div class="page-tools main-width">
+<form action="" method="get" name="myform">
+	&nbsp;权限组名称：&nbsp;
+	<input type="text" name="Group" id="Group" value="{$Group}" style="width:150px" maxlength="23">&nbsp;&nbsp;&nbsp;
+	&nbsp;状态：&nbsp;<select name="status" id="status" ><option value="0" {if $Status == 0}selected="selected"{/if}>请选择</option><option value="2" {if $Status == 2}selected="selected"{/if}>启用</option><option value="1" {if $Status == 1}selected="selected"{/if}>未启用</option></select> 			        
+	<input type="submit" value="搜索">
+	<input type="hidden" name="module" id="module" value="user_list">
+</form>
+</div>
+<table class="table-list main-width" id="table-list">
+	<tr>
+		<th>编号</th>
+		<th>通行证ID</th>
+		<th>姓名</th>
+		<th>权限组分类</th>
+		<th>权限组</th>
+		<th>创建时间</th>
+		<th>状态</th>
+		<th>管理选项</th>
+	</tr>
+	<{foreach $list_array $arr}>
+	<tr>
+		<td><{$arr['id']}></td>
+		<td><{$arr['passid']}></td>
+		<td><{$arr['passname']}></td>
+		<td><{$arr['cluster_name']}></td>
+		<td><{$arr['group_name']}></td>
+		<td><{$arr['uptime']}></td>
+		<td><{if $arr['status'] == 0 }>未启用<{elseif $arr['status'] == 1}>启用<{/if}></td>
+		<td>{if $link_array[103]['url']}<a href="{$link_array[103]['url']}&pid=<{$arr['id']}>" title="{$link_array[103]['child_name']}">{$link_array[103]['child_name']}</a>{/if}</td>
+	</tr>
+	<{/foreach}>
+</table>
+<div class="main-width">{$page}</div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="refresh"content="3;url={$_SERVER['REQUEST_URI']}">
+<title>修改头像</title>
+<link href="{THEMES_URL}group_site/{$themes}/src/service/css/layout-min.css" rel="stylesheet" type="text/css" />
+<link href="{THEMES_URL}group_site/{$themes}/src/service/css/ui-min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+window.onload = function(){
+	document.getElementById('face_100').contentWindow.location.reload(true);
+	document.getElementById('face_50').contentWindow.location.reload(true);
+}
+</script>
+</head>
+
+<body>
+{include file="roommanage/tag1.html"}
+<div class="width-960 profile-wrap">
+  <h1 class="profile-title">房间信息</h1>
+  <div class="profile-main">
+    <h2 style="color:#090; font-size:24px; padding:50px;">修改成功！</h2>
+    <iframe src="{php echo cdn_url(PIC_API_PATH.'/roomid/'.$roomid.'/80/60.jpg');}" id="face_100" width="0" height="0" frameborder="0" scrolling="no"></iframe>
+    <iframe src="{php echo cdn_url(PIC_API_PATH.'/roombg/'.$roomid.'/80/60.jpg');}" id="face_50" width="0" height="0" frameborder="0" scrolling="no"></iframe>
+  </div>
+  {include file="./foot.html"}
+</div>
+</body>
+</html>

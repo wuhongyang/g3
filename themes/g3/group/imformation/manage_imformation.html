@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$title}</title>
+<link href="{php echo cdn_url(THEMES_URL.'group/css/style.css');}" rel="stylesheet" type="text/css" />
+<style>
+.type:hover{color:#EB4B01}
+</style>
+</head>
+<body>
+<div class="bodywrap">
+    {include file="header.html"}
+    <div class="mgtb15 clearfix">
+        <h3 class="fl">站内流量</h3>
+        <form method="get" class="fr">
+            <span class="pre">日期：</span> 
+            <input name="flow_time" type="text" onfocus="WdatePicker()" value="{$flow_time}">
+            <input type="hidden" name="module" value="manage_imformation" />
+            &nbsp;<input type="submit" class="normalbtn" value="查询">
+        </form>
+    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+      <tr>
+        <th>时间</th>
+        <th>站ID</th>
+        <th>用户（峰值）</th>
+        <th>IP（峰值）</th>
+      </tr>
+      {foreach $top['Result'] $one_room}
+      <tr>
+        <td>$flow_time</td>
+        <td>$one_room['region_id']</td>
+        <td>$one_room['maxcuruser']</td>
+        <td>$one_room['maxcurip']</td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="mgtb15 clearfix">
+        <h3 class="fl">房间税收</h3>
+        <form method="get" class="fr">
+            统计：
+            <span>
+                <a href="?module=manage_imformation&type=1" {if $type==1} class="ahover" {/if}>日</a> |
+                <a href="?module=manage_imformation&type=2" {if $type==2} class="ahover" {/if}>周</a> |
+                <a href="?module=manage_imformation&type=3" {if $type==3} class="ahover" {/if}>月</a> |
+            </span>
+            <span class="pre">选择日期：</span> 
+            <input type="hidden" name="module" value="manage_imformation" />
+            <input type="hidden" name="type" value="{$_GET['type']}" />
+            <input name="count_time" type="text" value="{$count_time}" onfocus="WdatePicker()">
+            &nbsp;<input name="" type="submit" class="normalbtn" value="查询">
+        </form>
+    </div>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tablecss auto">
+          <tr>
+            <th>日期</th>
+            <th>房间号</th>
+            <th>房间消费</th>
+          </tr>
+          {foreach $tax['Result'] $one_tax}
+          <tr>
+            <td>{if $_GET['type'] == 2 || $_GET['type'] == 3}{$one_tax['Uptime']}{else}{php echo date('Y-m-d',strtotime($one_tax['Uptime']));}{/if}</td>
+            <td>{$one_tax['ChannelUin']}</td>
+            <td>{$one_tax['Weight']}</td>
+          </tr>
+          {/foreach}
+        </table>
+        <div class="page" id="lopage">{$tax['Page']}</div>
+    </div>             
+</div>
+{include file="foot.html"}
+<script type="text/javascript" src="{php echo cdn_url(STATIC_API_PATH.'/frontend/plugin/My97DatePicker/WdatePicker.js');}"></script>
+</body>
+</html>

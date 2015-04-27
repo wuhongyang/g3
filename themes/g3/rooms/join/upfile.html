@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>up</title>
+<link rel="stylesheet" href="{STATIC_API_PATH}/resource/css/base-min.css">
+<link rel="stylesheet" href="{STATIC_API_PATH}/frontend/modules/rooms/css/style-min.css">
+<script type="text/javascript" src="{STATIC_API_PATH}/frontend/base/jquery/jquery.min.js"></script>
+<style type="text/css">
+body {line-height:28px;}
+</style>
+<script type="text/javascript">
+var pobj = parent.document.getElementById('{$id}');
+var upfile_rst = eval('(<{$rst}>)');
+
+function read(obj){
+	value = obj.value;
+	if(value.length > 16){
+		value = '...'+value.substr(value.length-16,value.length);
+	}
+	document.getElementById('readfile').value=value
+}
+
+window.onload = function(){
+	if(typeof upfile_rst=='object' && !upfile_rst.Flag){
+		return;
+	}else if(upfile_rst.Flag > 100){
+		parent.art.dialog({content:upfile_rst.FlagString,lock:true,time:2});
+	}else if(upfile_rst.Flag == 100){
+		var uplist = parent.document.getElementById('{$id}');
+		uplist = $(uplist);
+		uplist.find('iframe').hide();
+		uplist.addClass('up');
+		var html = '<dl><input type="hidden" name="{$name}[]" value="'+upfile_rst.File+'" />'+
+		'<span><a href="{PIC_API_PATH}/p/'+upfile_rst.File+'/0/0.jpg" target="_blank">{$file[$id]}</a></span>'+
+		'<a href="javascript:void(0);" class="remove">×删除</a></dl>';
+		uplist.append(html);
+	}
+}
+</script>
+</head>
+
+<body>
+<form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="name" value="{$name}">
+  <input type="hidden" name="id" value="{$id}">
+  <input type="text" id="readfile" readonly name="filename" />
+  <span class="fl up-input">
+  <input type="file" size="1" name="upfile" onChange="read(this)" />
+  <label>浏览</label>
+  </span>
+  <input type="submit" class="upfile-button" value="上传" />
+</form>
+</body>
+</html>
